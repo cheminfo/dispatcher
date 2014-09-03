@@ -18,6 +18,7 @@ Start your server with a given configuration file (configuration files are
     npm install
     node server.js --config zigbee
 ```
+It may fail on macosx. You need then to install xcode (available for free from the appstore) and start it once to accept the licence !
 
 Use
 ===
