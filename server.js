@@ -4,6 +4,7 @@ var debug = require('debug')('main'),
     cache = require('./cache'),
     express = require('express'),
     middleware = require('./middleware'),
+    appconfig = require('./appconfig.json'),
     _ = require('lodash'),
     app = express();
 
@@ -46,8 +47,8 @@ app.use('/', function(req, res, next) {
     next();
 })
 
-app.set("port", 8080);
-app.set("ipaddr", '127.0.0.1');
+app.set("port", appconfig.port || 80);
+app.set("ipaddr", appconfig.ipaddress || '127.0.0.1');
 
 var http = require("http").createServer(app);
 http.listen(app.get("port"), app.get("ipaddr"), function() {
@@ -89,12 +90,10 @@ app.get('/param/:device/:param',
     }
 );
 
-app.get('/blabla',
+app.get('/save',
     middleware.validateParameters([{name: 'device', type: 'device'}, {name: 'param'}, {name: 'value'}]),
     function(req, res) {
-        console.log('hello');
         var cmd = res.locals.parameters.device + res.locals.parameters.param + res.locals.parameters.value;
-        console.log('put cmd', cmd);
         requestManager.addRequest(cmd).then(function() {
             return res.json({ok: true});
         });
