@@ -1,0 +1,1 @@
+define(["./matrix"],function(a){function b(b,c){for(var d=b.length,e=a.empty(d,d),f=0;d>f;f++)for(var g=b[f],h=f;d>h;h++){var i=b[h],j=c(g,i);e[f][h]=j,e[h][f]=j}return e}return b});

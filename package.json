@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "serialport": "~1.4.5",
+    "express": "~4.8.7",
+    "bluebird": "~2.3.2",
+    "minimist": "~1.1.0",
+    "debug": "~2.0.0",
+    "lodash": "~2.4.1"
+  }
+}

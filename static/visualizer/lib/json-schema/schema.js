@@ -1,0 +1,1 @@
+define(function(){function a(b){var c={};switch(typeof b){case"object":if(null===b){c.type="string";break}if(b instanceof Array)c.type="array",b.length&&(c.items=a(b[0]));else if(c.type="object",Object.keys(b).length){c.properties={};for(var d in b)c.properties[d]=a(b[d])}break;default:c.type=typeof b}return c}return{fromObject:a}});

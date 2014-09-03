@@ -1,0 +1,17 @@
+{
+    "devices" : [
+        {
+            "type":"abc",
+            "description":"The first device",
+            "name":"mydevice",
+            "port":"/dev/tty.USBxx",
+            "prefix":""
+        }
+    ],
+    "options" : {
+
+    },
+    "port":"/dev/tty.usbmodem1421",
+    "baudrate": 38600
+
+}

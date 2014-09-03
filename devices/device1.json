@@ -1,0 +1,18 @@
+{
+    "parameters":{
+        "A": {
+            "label": "Internal temperature",
+            "name":"internalTemperature"
+        },
+        "K": {
+            "label": "External temperature",
+            "name":"externalTemperature"},
+        "C": {
+            "label": "Target temperature",
+            "type":"number",
+            "name": "targetTemperature",
+            "editable":true
+        }
+    },
+    "refresh":1000
+}

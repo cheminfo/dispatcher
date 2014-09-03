@@ -1,0 +1,23 @@
+{
+    "devices" : [
+        {
+            "type":"device1",
+            "description":"The first device",
+            "prefix":"$B",
+            "id": "$B"
+        },
+        {
+            "type":"device1",
+            "description":"The second device",
+            "prefix":"$A",
+            "id": "$A"
+        }
+
+    ],
+    "options" : {
+
+    },
+    "port":"/dev/tty.SLAB_USBtoUART",
+    "baudrate": 38600
+
+}

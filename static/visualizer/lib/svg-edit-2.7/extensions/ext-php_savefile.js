@@ -1,0 +1,1 @@
+svgEditor.addExtension("php_savefile",{callback:function(){function a(){var a=svgCanvas.getDocumentTitle();return $.trim(a)}var b=svgEditor.curConfig.extPath+"savefile.php";svgEditor.setCustomHandlers({save:function(c,d){var e='<?xml version="1.0" encoding="UTF-8"?>\n'+d,f=a();$.post(b,{output_svg:e,filename:f})}})}});
