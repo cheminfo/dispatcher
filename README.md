@@ -21,7 +21,7 @@ Start your server with a given configuration file (configuration files are
 
 Use
 ===
-Go to http://127.0.0.1:8080/
+Go to http://[ip address]:[port]/
 
 Nodemon
 =======
