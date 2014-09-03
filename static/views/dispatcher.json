@@ -749,7 +749,7 @@
             "vars_in": [
                 {
                     "rel": "value",
-                    "name": "cmdResult"
+                    "name": "updateResult"
                 }
             ],
             "actions_in": {},
