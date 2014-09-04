@@ -1,4 +1,6 @@
 {
+  "name": "test",
+  "version": "0.0.0",
   "dependencies": {
     "serialport": "~1.4.5",
     "express": "~4.8.7",
