@@ -39,3 +39,20 @@ Indicate for what files you want to see debug messages separated by commas
 DEBUG=cache,RequestManager,parser nodemon server.js --config zigbee
 ```
 
+Advanced settings
+=================
+
+When you start the program and you specify the argument ``--config zigbee`` the system will look for a file named ``./configs/zigbee.json``.
+You may create any new file in this ``./configs`` folder. For example you could create ``bioreactor.json`` and then start the program with 
+```
+node server.js --config bioreactor
+```
+In this file you will define all the devices that should be monitored (as an array) as well as their type. A device is characterised by :
+* type: corresponds to the name of a file that is in the folder ``./devices`` and that will describe exactly the feature of this type of device.
+* description: free name
+* prefix: the prefix that has to be send to communicate to this device. If you connect directly the device to the computer this should be empty, if you use a master/slave configuration with zigbee this should contain the address of the device.
+* id: ID of the device. Each device should have a unique ID and this will be used to stored in the corresponding database. This should correspond to the ID of the device that is defined using the "q" parameter in the configuration menu and that is calculated based on the ASCII code table. For example, $A (ASCII $: 36, A: 65) should be defined using 36 * 256 + 65 = 9281. On a board you would then enter "q9281"
+Global parameters in this file allow to define:
+* port: the name of the device. For a zigbee hub it could be on linux: ``/dev/ttyUSB0`` or on macosx: ``/dev/tty.SLAB_USBtoUART``. If connected directly on the computer is could be on macosx ``/dev/tty.usbmodem1451``.
+* baudrate: for a zigbee hub from [Shuncom](http://www.shuncomwireless.com/) the speed should be 38400. When connecting directly with an Arduino it should be by default 9600.
+
