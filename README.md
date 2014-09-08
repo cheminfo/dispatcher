@@ -13,31 +13,18 @@ cp default.json appconfig.json
 
 Install
 =======
-Start your server with a given configuration file (configuration files are 
+Start your server with a given configuration file and optionally with a given view file.
+
 ```
     npm install
-    node server.js --config zigbee
+    node server.js --config zigbee --view dispatcher
 ```
+This will look for the configuration file ``` ./configs/zigbee.json ``` and for the view ``` ./static/views/dispatcher.json ```.
 It may fail on macosx. You need then to install xcode (available for free from the appstore) and start it once to accept the licence !
 
 Use
 ===
 Go to http://[ip address]:[port]/
-
-Nodemon
-=======
-Restart your server automatically everytime you save (VERY useful when developping)
-```
-sudo npm install -g nodemon
-nodemon server.js
-```
-
-Debug
-=====
-Indicate for what files you want to see debug messages separated by commas
-```
-DEBUG=cache,RequestManager,parser nodemon server.js --config zigbee
-```
 
 Advanced settings
 =================
@@ -69,4 +56,18 @@ Each device is defined by a file in ``./devices``folder. A device may be the gaz
 
 You may also define how often this device has to be updated.
 
+For Developpers
+===============
 
+## Nodemon
+Restart your server automatically everytime you save (VERY useful when developping)
+```
+sudo npm install -g nodemon
+nodemon server.js
+```
+
+## Debug
+Indicate for what files you want to see debug messages separated by commas
+```
+DEBUG=cache,RequestManager,parser nodemon server.js --config zigbee
+```
