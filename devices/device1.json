@@ -14,5 +14,6 @@
             "editable":true
         }
     },
-    "refresh":1000
+    "refresh":1000,
+    "nbParam": 26
 }

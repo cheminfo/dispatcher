@@ -6,6 +6,7 @@ var _ = require('lodash'),
 
 var data = {};
 var cache = exports = module.exports = {
+    // Regularly send the 'c' command to the device
     init: function(config, requestManager, options) {
         this.options = options || {};
         data.cfg = _.cloneDeep(config.devices);
@@ -16,9 +17,12 @@ var cache = exports = module.exports = {
         var sendEvent=function() {
             for(var i=0; i<data.cfg.length; i++) {
                 (function(i) {
+                    var nbParam = data.cfg[i].nbParam;
                     var cmd = data.cfg[i].prefix+'c';
-                    requestManager.addRequest(cmd , 8+26*4+2).then(function(response) {
-                        var entries = parser.parse(cmd, response);
+                    requestManager.addRequest(cmd).then(function(response) {
+                        var entries = parser.parse(cmd, response, {
+                            nbParam: nbParam
+                        });
                         var id =  data.cfg[i].id;
                         var status = data.status[id] = data.status[id] || {};
                         data.param[id] = data.param[id] || {};
