@@ -1,10 +1,10 @@
 var debug = require('debug')('main'),
     argv = require('minimist')(process.argv.slice(2)),
     network = require('./util/network'),
-    RequestManager = require('./RequestManager'),
-    cache = require('./cache'),
+    RequestManager = require('./lib/RequestManager'),
+    cache = require('./scheduler/cache'),
     express = require('express'),
-    middleware = require('./middleware'),
+    middleware = require('./middleware/common'),
     appconfig = require('./appconfig.json'),
     _ = require('lodash'),
     app = express();
@@ -31,8 +31,10 @@ requestManager.init().then(start).catch(handleError);
 
 
 function start() {
-    require('./epoch').init(config, requestManager);
-    cache.init(config, requestManager);
+    require('./scheduler/epoch').init(config, requestManager);
+    cache.init(config, requestManager, {
+        delay: 1000
+    });
 }
 
 function handleError(error) {

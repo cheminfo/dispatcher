@@ -1,18 +1,18 @@
 "use strict";
 var _ = require('lodash'),
     debug = require('debug')('cache'),
-    parser = require('./parser');
+    parser = require('../lib/parser');
 
 
 var data = {};
 var cache = exports = module.exports = {
-    init: function(config, requestManager) {
-
+    init: function(config, requestManager, options) {
+        this.options = options || {};
         data.cfg = _.cloneDeep(config.devices);
         data.status = {};
         data.param = {};
         // Every 5 seconds, get status of devices
-        var delay=1000;	// delay in ms
+        var delay= options.delay || 2000;
         var sendEvent=function() {
             for(var i=0; i<data.cfg.length; i++) {
                 (function(i) {

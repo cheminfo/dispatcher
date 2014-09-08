@@ -22,6 +22,7 @@ exports = module.exports = {
 
 };
 
+// A version of setInterval that executes as soon as it is called
 function setIntervalAndExecute(fn, t) {
     fn();
     return(setInterval(fn, t));
