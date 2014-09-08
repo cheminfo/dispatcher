@@ -5,8 +5,8 @@ var _ = require('lodash'),
 
 exports = module.exports = {
     getConfig: function(name) {
-        var def = require('./configs/default.json');
-        var conf = require('./configs/'+name+'.json');
+        var def = require('./default.json');
+        var conf = require('./'+name+'.json');
 
         _.defaults(conf, def);
         processConf(conf);
@@ -39,7 +39,7 @@ function processConf(conf) {
     }
 
     for(var i=0; i<conf.devices.length; i++) {
-        _.merge(conf.devices[i], require('./devices/'+conf.devices[i].type+'.json'));
+        _.merge(conf.devices[i], require('../devices/'+conf.devices[i].type+'.json'));
     }
 
 }

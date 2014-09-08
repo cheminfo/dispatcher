@@ -1,5 +1,6 @@
 var debug = require('debug')('main'),
     argv = require('minimist')(process.argv.slice(2)),
+    network = require('./util/network'),
     RequestManager = require('./RequestManager'),
     cache = require('./cache'),
     express = require('express'),
@@ -12,11 +13,10 @@ var debug = require('debug')('main'),
 
 
 // Load configuration file
-console.log(argv);
 var configName = (argv.config && (typeof argv.config === 'string')) ? argv.config : 'default';
 
 debug('config name:', configName);
-var config = require('./config.js').getConfig(configName);
+var config = require('./configs/config').getConfig(configName);
 var devices = config.devices;
 
 var requestManager = new RequestManager(config);
@@ -36,8 +36,7 @@ function start() {
 }
 
 function handleError(error) {
-    console.log('error handled');
-    console.log(error);
+    console.log('error handled', error);
 }
 app.use(express.static(__dirname + '/static'));
 
@@ -45,10 +44,12 @@ app.use('/', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
-})
+});
 
+var ipaddress = appconfig.ipaddress || '';
+var ipValid = network.validateIp(ipaddress);
 app.set("port", appconfig.port || 80);
-app.set("ipaddr", appconfig.ipaddress || '127.0.0.1');
+app.set("ipaddr", ipValid ? appconfig.ipaddress : network.getMyIp() || '127.0.0.1');
 
 var http = require("http").createServer(app);
 http.listen(app.get("port"), app.get("ipaddr"), function() {
