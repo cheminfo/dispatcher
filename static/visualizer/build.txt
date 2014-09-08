@@ -6,6 +6,7 @@ src/util/debug.js
 src/main/datas.js
 src/util/localdb.js
 src/util/versionhandler.js
+src/main/variables.js
 src/util/versioning.js
 src/header/header.js
 src/util/event.js
@@ -13,8 +14,6 @@ src/util/repository.js
 src/data/structures.js
 src/util/datatraversing.js
 src/util/actionmanager.js
-src/main/variable.js
-src/main/variables.js
 src/util/api.js
 src/util/context.js
 src/util/fullscreen.js
