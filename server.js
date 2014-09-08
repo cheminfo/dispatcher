@@ -57,8 +57,10 @@ http.listen(app.get("port"), app.get("ipaddr"), function() {
 });
 
 
+var view = '/visualizer/index.html?viewURL=/views/' + (argv.view || 'dispatcher') + '.json';
+console.log('view: ', view);
 app.get('/', function(req, res) {
-    res.redirect(301, '/visualizer/index.html?viewURL=/views/dispatcher.json');
+    res.redirect(301, view);
 });
 
 app.get('/status', function(req, res) {
