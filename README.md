@@ -1,7 +1,9 @@
-Dispatcher
-==========
-
 Dispatch data from devices to the web. This project is able to capture information from RS232 and distribute it on a webpage
+
+Requirements
+========
+Have gcc installed (C/C++ compiler)
+On Mac OSX, this means you must have XCode install (available for free from the appstore) and start it once to accept the licence !
 
 Configure
 =========
@@ -20,7 +22,6 @@ Start your server with a given configuration file and optionally with a given vi
     node server.js --config zigbee --view dispatcher
 ```
 This will look for the configuration file ``` ./configs/zigbee.json ``` and for the view ``` ./static/views/dispatcher.json ```.
-It may fail on macosx. You need then to install xcode (available for free from the appstore) and start it once to accept the licence !
 
 Use
 ===
