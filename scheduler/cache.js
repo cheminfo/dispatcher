@@ -44,7 +44,7 @@ var cache = exports = module.exports = {
                                     data.entry[id].parameters.push({
                                         name: key,
                                         mappedName: data.cfg[i].parameters[key] ? data.cfg[i].parameters[key].name : 'NA',
-                                        value: entries[0][key],
+                                        value: entries[0].parameters[key],
                                         label: data.cfg[i].parameters[key] ? data.cfg[i].parameters[key].label : 'NA'
                                     });
                                 }

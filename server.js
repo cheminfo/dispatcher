@@ -108,7 +108,7 @@ app.get('/save',
 app.get('/all', function(req, res) {
     var all = {
         config: devices,
-        param: cache.data.param,
+        entry: cache.data.entry,
         status: cache.data.status
     };
 

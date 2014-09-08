@@ -8,7 +8,7 @@
         "xWidth": 10,
         "yHeight": 10
     },
-    "version": "2.4.2",
+    "version": "2.5.1",
     "modules": [
         {
             "url": "modules/types/server_interaction/webservice_cron/",
@@ -41,8 +41,8 @@
                         "top": 0
                     },
                     "size": {
-                        "width": 48.01818182468414,
-                        "height": 24.01818182468414
+                        "width": 48,
+                        "height": 24
                     },
                     "zIndex": 0,
                     "display": true,
@@ -158,8 +158,8 @@
                         "top": 9
                     },
                     "size": {
-                        "width": 25.01818182468414,
-                        "height": 12.018181824684143
+                        "width": 25,
+                        "height": 12
                     },
                     "zIndex": 0,
                     "display": true,
@@ -205,7 +205,7 @@
                     "group": [
                         {
                             "script": [
-                                "//When the result is ready, use resolve(result) to send it.\n//In case of an error, use reject(error)\nrequire(['lodash'], function(_) {\nvar devices = value.config;\nvar status = [];\nfor(var i=0; i<devices.length; i++) {\n    var id = devices[i].id;\n    devices[i].param = value.param[id];\n    var s = value.status[id];\n    s.id = id;\n    s.nbFailures = s.nbFailures.toString();\n    if(+s.nbFailures < 2) {\n        s.bgColor = '#00FF00';\n    }\n    else if(+s.nbFailures <4) {\n        s.bgColor = 'orange';\n    }\n    else {\n        s.bgColor = 'red';\n    }\n    status.push(s);\n}\nvar currentDevice = API.getVar('currentDevice').getValue();\nif(currentDevice) {\n    currentDevice = currentDevice.toString();\n    var idx =_.findIndex(devices, {id: currentDevice});\n    if(idx > -1) {\n        API.createData('currentParameters', devices[idx].param)\n    }\n}\n\n    \nAPI.createData('devices', devices);\nAPI.createData('status', status);\n});\n"
+                                "//When the result is ready, use resolve(result) to send it.\n//In case of an error, use reject(error)\nrequire(['lodash', 'components/bluebird/js/browser/bluebird'], function(_, Promise) {\n    function loadDevices() {\n        return new Promise(function(resolve, reject) {\n            var devices = API.getVar('devices').getValue();\n            if(!devices) {\n                API.createData('devices', []);\n                \n            }\n            setTimeout(function() {\n                resolve(API.getVar('devices').getValue())\n            }, 0);\n            \n        })\n    }\n    \n    loadDevices().then(function(devices) {\n         var config = value.config;\n        var status = [];\n        for(var i=0; i<config.length; i++) {\n            var dev = {};\n            var id = config[i].id;\n            dev.id = id;\n            dev.description = config[i].description;\n            dev.param = value.entry[id].parameters;\n            devices.setChild([i.toString()], dev);\n            var s = value.status[id];\n            s.id = id;\n            s.nbFailures = s.nbFailures.toString();\n            if(+s.nbFailures < 2) {\n                s.bgColor = '#00FF00';\n            }\n            else if(+s.nbFailures <4) {\n                s.bgColor = 'orange';\n            }\n            else {\n                s.bgColor = 'red';\n            }\n            status.push(s);\n        }\n        API.createData('status', status);\n    });\n\n});\n"
                             ]
                         }
                     ],
@@ -223,8 +223,8 @@
                         "top": 25
                     },
                     "size": {
-                        "width": 48.01818182468414,
-                        "height": 49.01818182468414
+                        "width": 48,
+                        "height": 49
                     },
                     "zIndex": 0,
                     "display": true,
@@ -308,8 +308,8 @@
                         "top": 0
                     },
                     "size": {
-                        "width": 29.01818182468414,
-                        "height": 35.01818182468414
+                        "width": 29,
+                        "height": 35
                     },
                     "zIndex": 0,
                     "display": true,
@@ -412,8 +412,8 @@
                         "top": 0
                     },
                     "size": {
-                        "width": 39.01818182468414,
-                        "height": 61.01818182468414
+                        "width": 39,
+                        "height": 61
                     },
                     "zIndex": 0,
                     "display": true,
@@ -491,8 +491,8 @@
                         "top": 36
                     },
                     "size": {
-                        "width": 29.01818182468414,
-                        "height": 38.01818182468414
+                        "width": 29,
+                        "height": 38
                     },
                     "zIndex": 0,
                     "display": true,
@@ -545,8 +545,8 @@
                         "top": 0
                     },
                     "size": {
-                        "width": 26.01818182468414,
-                        "height": 8.018181824684143
+                        "width": 26,
+                        "height": 8
                     },
                     "zIndex": 0,
                     "display": true,
@@ -656,8 +656,8 @@
                         "top": 0
                     },
                     "size": {
-                        "width": 43.01818182468414,
-                        "height": 12.018181824684143
+                        "width": 43,
+                        "height": 12
                     },
                     "zIndex": 0,
                     "display": true,
@@ -728,8 +728,8 @@
                         "top": 22
                     },
                     "size": {
-                        "width": 25.01818182468414,
-                        "height": 20.01818182468414
+                        "width": 25,
+                        "height": 20
                     },
                     "zIndex": 0,
                     "display": true,
@@ -815,8 +815,8 @@
                         "top": 43
                     },
                     "size": {
-                        "width": 52.01818182468414,
-                        "height": 9.018181824684143
+                        "width": 52,
+                        "height": 9
                     },
                     "zIndex": 0,
                     "display": true,
@@ -906,8 +906,8 @@
                         "top": 13
                     },
                     "size": {
-                        "width": 43.01818182468414,
-                        "height": 28.01818182468414
+                        "width": 43,
+                        "height": 28
                     },
                     "zIndex": 0,
                     "display": true,
