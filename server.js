@@ -55,7 +55,7 @@ app.set("ipaddr", ipValid ? appconfig.ipaddress : network.getMyIp() || '127.0.0.
 
 var http = require("http").createServer(app);
 http.listen(app.get("port"), app.get("ipaddr"), function() {
-    debug('Server launched. ', "http://" + app.get("ipaddr") + ":" + app.get("port"));
+    console.log('Server launched. Go to ', "http://" + app.get("ipaddr") + ":" + app.get("port"));
 });
 
 
