@@ -12,6 +12,6 @@
 
     },
     "port":"/dev/tty.usbmodem1421",
-    "baudrate": 38600
-
+    "baudrate": 38600,
+    "waitTime": 250
 }

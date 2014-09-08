@@ -18,8 +18,5 @@
 
     },
     "port":"/dev/tty.SLAB_USBtoUART",
-    "baudrate": 38600,
-    "waitTime": 250
-
-
+    "baudrate": 38600
 }

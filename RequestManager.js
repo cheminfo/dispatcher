@@ -9,6 +9,7 @@ function RequestManager(config) {
     this.queueLength = 0;
     this.buffer = "";
     this.lastRequest = Promise.resolve();
+    this.waitTime = config.waitTime || 250;
 }
 
 
@@ -64,7 +65,7 @@ RequestManager.prototype = {
                     //debug('resolve after timeout');
                     that.resolve(that.buffer);
                     that.buffer = "";
-                },100);
+                },that.waitTime);
                 //debug('write to serial port', cmd);
                 that.serialPort.write(cmd + '\n', function(err, results) {
                     if (err) {
