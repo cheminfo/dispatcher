@@ -2,7 +2,7 @@ var debug = require('debug')('main'),
     argv = require('minimist')(process.argv.slice(2)),
     network = require('./util/network'),
     RequestManager = require('./lib/RequestManager'),
-    cache = require('./scheduler/cache'),
+    Cache = require('./scheduler/cache'), cache,
     express = require('express'),
     middleware = require('./middleware/common'),
     appconfig = require('./appconfig.json'),
@@ -24,18 +24,17 @@ var requestManager = new RequestManager(config);
 // Wait for serial to be ready and then start
 //requestManager.serial.then(start).catch(handleError);
 
-requestManager.init().then(start).catch(handleError);
+requestManager.init();
+console.log('READY TO START');
+require('./scheduler/epoch').init(config, requestManager);
+cache = new Cache(config, requestManager, {
+    delay: 1000
+});
+
 //Promise.resolve().then(function() {
 //    requestManager.init();
 //}).then(start).catch(handleError);
 
-
-function start() {
-    require('./scheduler/epoch').init(config, requestManager);
-    cache.init(config, requestManager, {
-        delay: 1000
-    });
-}
 
 function handleError(error) {
     console.log('error handled', error);
@@ -60,7 +59,6 @@ http.listen(app.get("port"), app.get("ipaddr"), function() {
 
 
 var view = '/visualizer/index.html?viewURL=/views/' + (argv.view || 'dispatcher') + '.json';
-console.log('view: ', view);
 app.get('/', function(req, res) {
     res.redirect(301, view);
 });
@@ -101,6 +99,8 @@ app.get('/save',
         var cmd = res.locals.parameters.device + res.locals.parameters.param + res.locals.parameters.value;
         requestManager.addRequest(cmd).then(function() {
             return res.json({ok: true});
+        }, function() {
+            return res.status(500, {ok: false});
         });
     });
 
@@ -122,6 +122,8 @@ app.get('/command/:device/:command',
         var prefix = devices[idx].prefix;
         requestManager.addRequest(prefix+res.locals.parameters.command).then(function(entries) {
             return res.json(entries);
+        }, function() {
+            return res.status(500);
         });
     });
 
@@ -129,8 +131,9 @@ app.post('/command',
     middleware.validateParameters([{name: 'command'}]),
     function(req, res) {
         var cmd = res.locals.parameters.command;
-        console.log(cmd);
         requestManager.addRequest(cmd).then(function(result) {
             return res.send(result);
+        }, function() {
+            return res.status(500);
         });
     });

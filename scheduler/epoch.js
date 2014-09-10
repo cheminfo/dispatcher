@@ -11,12 +11,14 @@ exports = module.exports = {
             for(var i=0; i<config.devices.length; i++) {
                 (function(i) {
                     var now = Math.round(new Date().getTime()/1000); // now in seconds
-                    requestManager.addRequest(config.devices[i].prefix+'e'+now);
+                    requestManager.addRequest(config.devices[i].prefix+'e'+now).then(function() {
+                        // nothing to do
+                    }, function() {
+                        // we need to put a callback here otherwise bluebird is not happy
+                    });
                 })(i)
             }
         };
-
-
         setIntervalAndExecute(sendEvent, delay);
     }
 
