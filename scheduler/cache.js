@@ -6,26 +6,40 @@ var _ = require('lodash'),
 
 
 var data = {};
-var Cache = exports = module.exports = function Cache(config, requestManager, options) {
-    var that = this;
+var Cache = exports = module.exports = function Cache(requestManager, options) {
+    this.interval = null;
+    this.config = require('../configs/config').get();
+    this.requestManager = requestManager;
+    
     this.options = options || {};
     this.data = {};
-    this.data.cfg = _.cloneDeep(config.devices);
+    this.data.devices = this.config.devices;
     this.data.status = {};
     this.data.entry = {};
+};
 
-    var delay= this.options.delay || 2000;
+
+Cache.prototype.__proto__ = EventEmitter.prototype;
+
+Cache.prototype.get = function(key) {
+    return this.data[key];
+};
+
+Cache.prototype.start = function() {
+    var that = this;
+    var delay= this.options.delay || this.config.cacheRefreshInterval;
+    if(!delay) throw new Error('Cache: no interval specified');
     var sendEvent=function() {
-        for(var i=0; i<that.data.cfg.length; i++) {
+        for(var i=0; i<that.data.devices.length; i++) {
             (function(i) {
-                var nbParam = that.data.cfg[i].nbParam;
-                var cmd = that.data.cfg[i].prefix+'c';
-                requestManager.addRequest(cmd).then(function(response) {
+                var nbParam = that.data.devices[i].nbParam;
+                var cmd = that.data.devices[i].prefix+'c';
+                that.requestManager.addRequest(cmd).then(function(response) {
                     debug('Request done');
                     var entries = parser.parse(cmd, response, {
                         nbParam: nbParam
                     });
-                    var id =  that.data.cfg[i].id;
+                    var id =  that.data.devices[i].id;
                     var status = that.data.status[id] = that.data.status[id] || {};
                     that.data.entry[id] = that.data.entry[id] || {};
 
@@ -45,9 +59,9 @@ var Cache = exports = module.exports = function Cache(config, requestManager, op
                         for(var key in entries[0].parameters) {
                             that.data.entry[id].parameters.push({
                                 name: key,
-                                mappedName: that.data.cfg[i].parameters[key] ? that.data.cfg[i].parameters[key].name : 'NA',
+                                mappedName: that.data.devices[i].parameters[key] ? that.data.devices[i].parameters[key].name : 'NA',
                                 value: entries[0].parameters[key],
-                                label: that.data.cfg[i].parameters[key] ? that.data.cfg[i].parameters[key].label : 'NA'
+                                label: that.data.devices[i].parameters[key] ? that.data.devices[i].parameters[key].label : 'NA'
                             });
                         }
                         that.emit('data', that.data.entry);
@@ -62,12 +76,14 @@ var Cache = exports = module.exports = function Cache(config, requestManager, op
             })(i)
         }
     };
-    setInterval(sendEvent, delay);
+    if(!this.interval) {
+        this.interval = setInterval(sendEvent, delay);
+    }
 };
 
-
-Cache.prototype.__proto__ = EventEmitter.prototype;
-
-Cache.prototype.get = function(key) {
-    return this.data[key];
+Cache.prototype.stop = function() {
+    if(this.interval) {
+        clearInterval(this.interval);
+        this.interval = null;
+    }
 };

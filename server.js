@@ -2,7 +2,8 @@ var debug = require('debug')('main'),
     argv = require('minimist')(process.argv.slice(2)),
     network = require('./util/network'),
     RequestManager = require('./lib/RequestManager'),
-    Cache = require('./scheduler/cache'), cache,
+    EpochManager = require('./scheduler/epoch');
+    Cache = require('./scheduler/cache'),
     express = require('express'),
     middleware = require('./middleware/common'),
     appconfig = require('./appconfig.json'),
@@ -19,16 +20,13 @@ var config = require('./configs/config').load(configName);
 var devices = config.devices;
 
 var requestManager = new RequestManager(config);
-
-// Wait for serial to be ready and then start
-//requestManager.serial.then(start).catch(handleError);
-
 requestManager.init();
-console.log('READY TO START');
-require('./scheduler/epoch').init(config, requestManager);
-cache = new Cache(config, requestManager, {
-    delay: 1000
-});
+
+var epochManager = new EpochManager(requestManager);
+epochManager.start();
+
+var cache = new Cache(requestManager);
+cache.start();
 
 //Promise.resolve().then(function() {
 //    requestManager.init();

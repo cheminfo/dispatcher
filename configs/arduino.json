@@ -16,5 +16,5 @@
         "regexp": "usbmodem.*"
     },
     "baudrate": 9600,
-    "waitTime": 250
+    "serialResponseTimeout": 250
 }

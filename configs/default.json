@@ -3,8 +3,10 @@
     ],
     "port":"/dev/tty.SLAB_USBtoUART",
     "baudrate": 38600,
-    "waitTime": 250,
+    "serialResponseTimeout": 250,
     "sqlite": {
         "dir": "sqlite"
-    }
+    },
+    "epochRefreshInterval": 10000,
+    "cacheRefreshInterval": 2000
 }
