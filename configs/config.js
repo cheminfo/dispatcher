@@ -3,20 +3,34 @@ var _ = require('lodash'),
     path = require('path'),
     fs = require('fs');
 
+var isProcessed = false;
+var configuration = {};
 exports = module.exports = {
-    getConfig: function(name) {
+    load: function(name) {
+        if(isProcessed) {
+            return configuration;
+        }
         // default.json contains default values for mandatory parameters
         var def = require('./default.json');
-        var conf = require('./'+name+'.json');
+        configuration = require('./'+name+'.json');
 
-        _.defaults(conf, def);
-        processConf(conf);
-        if(checkConfig(conf)) {
-            return conf;
+        _.defaults(configuration, def);
+        processConf(configuration);
+        if(checkConfig(configuration)) {
+            // Ensure the returned value is read-only
+            return _.cloneDeep(configuration);
         }
         else {
-            throw new Error('Bad config file')
+            throw new Error('Bad config file');
         }
+    },
+
+    get: function() {
+        if(!isProcessed) {
+            throw new Error('Unspecified configuration file. Use the load function');
+        }
+        // return a copy of the configuration to ensure it is read-only
+        return _.cloneDeep(configuration);
     }
 };
 
@@ -43,8 +57,10 @@ function processConf(conf) {
         }
     }
 
+    // The configuration varibale will eventually contain both
+    // the basic configuration and the devices configuration
     for(var i=0; i<conf.devices.length; i++) {
         _.merge(conf.devices[i], require('../devices/'+conf.devices[i].type+'.json'));
     }
-
+    isProcessed = true;
 }

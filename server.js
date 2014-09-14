@@ -14,9 +14,8 @@ var debug = require('debug')('main'),
 
 // Load configuration file
 var configName = (argv.config && (typeof argv.config === 'string')) ? argv.config : 'default';
-
 debug('config name:', configName);
-var config = require('./configs/config').getConfig(configName);
+var config = require('./configs/config').load(configName);
 var devices = config.devices;
 
 var requestManager = new RequestManager(config);
