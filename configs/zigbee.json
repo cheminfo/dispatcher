@@ -14,9 +14,6 @@
         }
 
     ],
-    "options" : {
-
-    },
     "port":"/dev/tty.SLAB_USBtoUART",
     "baudrate": 38600,
     "sqlite": {

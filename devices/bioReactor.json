@@ -10,202 +10,202 @@
             "label": "Weight",
             "name": "Weight"
         },
-	"D":{
-		"label": "",
-		"name": ""
-	    },
+        "D":{
+            "label": "",
+            "name": ""
+        },
         "E":{
-                "label": "Weight Status",
-                "name": "weightStatus"
-            },
+            "label": "Weight Status",
+            "name": "weightStatus"
+        },
         "F":{
-                "label": "PH value",
-                "name": "phValue"
-            },
+            "label": "PH value",
+            "name": "phValue"
+        },
         "G":{
-                "label": "Flux Gas1",
-                "name": "gas1"
-            },
+            "label": "Flux Gas1",
+            "name": "gas1"
+        },
         "H":{
-                "label": "Flux Gas2",
-                "name": "gas2"
-            },
+            "label": "Flux Gas2",
+            "name": "gas2"
+        },
         "I":{
-                "label": "Flux Gas3",
-                "name": "gas3"
-            },
+            "label": "Flux Gas3",
+            "name": "gas3"
+        },
         "J":{
-                "label": "Flux Gas4",
-                "name": "gas4"
-            },
+            "label": "Flux Gas4",
+            "name": "gas4"
+        },
         "K":{
-                "label": "",
-                "name": ""
-            },
+            "label": "",
+            "name": ""
+        },
         "L":{
-                "label": "",
-                "name": ""
-            },
+            "label": "",
+            "name": ""
+        },
         "M":{
-                "label": "",
-                "name": ""
-            },
+            "label": "",
+            "name": ""
+        },
         "N":{
-                "label": "Annemometre Channel",
-                "name": "annemChan"
-            },
+            "label": "Annemometre Channel",
+            "name": "annemChan"
+        },
         "O":{
-                "label": "Weight factor",
-                "name": "weightFactor"
-            },
+            "label": "Weight factor",
+            "name": "weightFactor"
+        },
         "P":{
-                "label": "Weight Offset",
-                "name": "weightOffset"
-            },
+            "label": "Weight Offset",
+            "name": "weightOffset"
+        },
         "Q":{
-                "label": "Annem Offset1",
-                "name": "offset1"
-            },
+            "label": "Annem Offset1",
+            "name": "offset1"
+        },
         "R":{
-                "label": "Annem Offset2",
-                "name": "offset2"
-            },
+            "label": "Annem Offset2",
+            "name": "offset2"
+        },
         "S":{
-                "label": "Annem Offset3",
-                "name": "offset3"
-            },
+            "label": "Annem Offset3",
+            "name": "offset3"
+        },
         "T":{
-                "label": "Annem Offset4",
-                "name": "offset4"
-            },
+            "label": "Annem Offset4",
+            "name": "offset4"
+        },
         "U":{
-                "label": "Annem Factor1",
-                "name": "factor1"
-            },
+            "label": "Annem Factor1",
+            "name": "factor1"
+        },
         "V":{
-                "label": "Annem Factor2",
-                "name": "factor2"
-            },
+            "label": "Annem Factor2",
+            "name": "factor2"
+        },
         "W":{
-                "label": "Annem Factor3",
-                "name": "factor3"
-            },
+            "label": "Annem Factor3",
+            "name": "factor3"
+        },
         "X":{
-                "label": "Annem Factor4",
-                "name": "Factor4"
-            },
+            "label": "Annem Factor4",
+            "name": "Factor4"
+        },
         "Y":{
-                "label": "",
-                "name": ""
-            },
+            "label": "",
+            "name": ""
+        },
         "Z":{
-                "label": "Status",
-                "name": "status"
-            },
+            "label": "Status",
+            "name": "status"
+        },
         "AA":{
-                "label": "Target Liquid Temp",
-                "name": "targetLiquidTemp"
-            },
+            "label": "Target Liquid Temp",
+            "name": "targetLiquidTemp"
+        },
         "AB":{
-                "label": "Max Temp of the Plate",
-                "name": "tempMaxPlate"
-            },
+            "label": "Max Temp of the Plate",
+            "name": "tempMaxPlate"
+        },
         "AC":{
-                "label": "Heating Regulation Time",
-                "name": "heatRegTime"
-            },
+            "label": "Heating Regulation Time",
+            "name": "heatRegTime"
+        },
         "AD":{
-                "label": "Min Temp",
-                "name": "minTemp"
-            },
+            "label": "Min Temp",
+            "name": "minTemp"
+        },
         "AE":{
-                "label": "Max Temp",
-                "name": "maxTemp"
-            },
+            "label": "Max Temp",
+            "name": "maxTemp"
+        },
         "AF":{
-                "label": "Min Weight",
-                "name": "minWeight"
-            },
+            "label": "Min Weight",
+            "name": "minWeight"
+        },
         "AG":{
-                "label": "Max Weight",
-                "name": "maxWeight"
-            },
+            "label": "Max Weight",
+            "name": "maxWeight"
+        },
         "AH":{
-                "label": "Min Absolute Weight",
-                "name": "minAbsWeight"
-            },
+            "label": "Min Absolute Weight",
+            "name": "minAbsWeight"
+        },
         "AI":{
-                "label": "Max bsolute Weight",
-                "name": "maxAbsWeight"
-            },
+            "label": "Max bsolute Weight",
+            "name": "maxAbsWeight"
+        },
         "AJ":{
-                "label": "Sedimentation Time",
-                "name": "sedTime"
-            },
+            "label": "Sedimentation Time",
+            "name": "sedTime"
+        },
         "AK":{
-                "label": "Min Filled Time",
-                "name": "minFilledTime"
-            },
+            "label": "Min Filled Time",
+            "name": "minFilledTime"
+        },
         "AL":{
-                "label": "",
-                "name": ""
-            },
+            "label": "",
+            "name": ""
+        },
         "AM":{
-                "label": "Target PH",
-                "name": "targetPh"
-            },
+            "label": "Target PH",
+            "name": "targetPh"
+        },
         "AN":{
-                "label": "PH Factor A",
-                "name": "factorPhA"
-            },
+            "label": "PH Factor A",
+            "name": "factorPhA"
+        },
         "AO":{
-                "label": "PH Factor B",
-                "name": "factorPhB"
-            },
+            "label": "PH Factor B",
+            "name": "factorPhB"
+        },
         "AP":{
-                "label": "PH State",
-                "name": "phState"
-            },
+            "label": "PH State",
+            "name": "phState"
+        },
         "AQ":{
-                "label": "PH Adjust Delay",
-                "name": "phAdjustDelay"
-            },
+            "label": "PH Adjust Delay",
+            "name": "phAdjustDelay"
+        },
         "AR":{
-                "label": "PH Opening Time",
-                "name": "phOpenTime"
-            },
+            "label": "PH Opening Time",
+            "name": "phOpenTime"
+        },
         "AS":{
-                "label": "PH Tolerance",
-                "name": "phTol"
-            },
+            "label": "PH Tolerance",
+            "name": "phTol"
+        },
         "AT":{
-                "label": "Desired Flux Gas1",
-                "name": "desiredFlux1"
-            },
+            "label": "Desired Flux Gas1",
+            "name": "desiredFlux1"
+        },
         "AU":{
-                "label": "Desired Flux Gas2",
-                "name": "desiredFlux2"
-            },
+            "label": "Desired Flux Gas2",
+            "name": "desiredFlux2"
+        },
         "AV":{
-                "label": "Desired Flux Gas3",
-                "name": "desiredFlux3"
-            },
+            "label": "Desired Flux Gas3",
+            "name": "desiredFlux3"
+        },
         "AW":{
-                "label": "Desired Flux Gas4",
-                "name": "desiredFlux4"
-            },
+            "label": "Desired Flux Gas4",
+            "name": "desiredFlux4"
+        },
         "AX":{
-                "label": "Flux Tolerance",
-                "name": "fluxTol"
-            },
+            "label": "Flux Tolerance",
+            "name": "fluxTol"
+        },
         "AY":{
-                "label": "Flux Time Windows",
-                "name": "fluxTimeWindows"
-            },
+            "label": "Flux Time Windows",
+            "name": "fluxTimeWindows"
+        },
         "AZ":{
-                "label": "",
-                "name": ""
-            }
+            "label": "",
+            "name": ""
+        }
 
 
     },

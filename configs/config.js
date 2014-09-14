@@ -5,6 +5,7 @@ var _ = require('lodash'),
 
 exports = module.exports = {
     getConfig: function(name) {
+        // default.json contains default values for mandatory parameters
         var def = require('./default.json');
         var conf = require('./'+name+'.json');
 

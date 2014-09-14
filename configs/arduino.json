@@ -15,5 +15,6 @@
         "dir": "/dev",
         "regexp": "usbmodem.*"
     },
-    "baudrate": 9600
+    "baudrate": 9600,
+    "waitTime": 250
 }

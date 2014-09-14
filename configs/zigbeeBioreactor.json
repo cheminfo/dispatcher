@@ -14,9 +14,6 @@
         }
 
     ],
-    "options" : {
-
-    },
     "port":"/dev/ttyUSB0",
     "baudrate": 38400
 }

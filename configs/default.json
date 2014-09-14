@@ -1,17 +1,10 @@
 {
     "devices" : [
-        {
-            "type":"abc",
-            "description":"The first device",
-            "name":"mydevice",
-            "port":"/dev/tty.USBxx",
-            "prefix":""
-        }
     ],
-    "options" : {
-
-    },
-    "port":"/dev/tty.usbmodem1421",
+    "port":"/dev/tty.SLAB_USBtoUART",
     "baudrate": 38600,
-    "waitTime": 250
+    "waitTime": 250,
+    "sqlite": {
+        "dir": "sqlite"
+    }
 }
