@@ -25,6 +25,10 @@ function checkConfig(config) {
 
 function processConf(conf) {
     debug('process conf file');
+    if(conf.sqlite && conf.sqlite.dir) {
+        conf.sqlite.dir = path.join(__dirname, conf.sqlite.dir);
+    }
+
     if(typeof conf.port === 'object' && conf.port.regexp) {
         var dir = conf.port.dir || '/dev';
         var l = fs.readdirSync(dir);
