@@ -30,8 +30,10 @@ var epochManager = new EpochManager(requestManager);
 epochManager.start();
 
 var cache = new Cache(requestManager);
-var cacheDatabase = new CacheDatabase(cache);
-cacheDatabase.start();
+if(config.sqlite) {
+    var cacheDatabase = new CacheDatabase(cache);
+    cacheDatabase.start();
+}
 cache.start();
 
 
