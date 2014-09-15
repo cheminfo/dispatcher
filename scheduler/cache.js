@@ -44,7 +44,7 @@ Cache.prototype.start = function() {
 
 
                     var id =  that.data.devices[i].id;
-                    var status = that.data.status[id] = that.data.status[id] || {};
+                    var status = that.data.status[id] = that.data.status[id] || { id: id};
                     that.data.entry[id] = that.data.entry[id] || {};
 
                     if(entries.length > 1) {
@@ -54,10 +54,14 @@ Cache.prototype.start = function() {
                     status.lastTrial = new Date().getTime();
                     status.active = (entries.length === 1);
                     if(status.active) {
+                        var isNew = (status.lastUpdate !== entries[0].epoch);
                         status.lastUpdate = entries[0].epoch;
                         status.nbFailures = 0;
                         that.data.entry[id] = entries[0];
                         that.emit('data', that.data.entry[id]);
+                        if(isNew) {
+                            that.emit('newdata', id, that.data.entry[id]);
+                        }
 
                     }
                     else {

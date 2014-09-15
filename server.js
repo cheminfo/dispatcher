@@ -3,6 +3,7 @@ var debug = require('debug')('main'),
     network = require('./util/network'),
     SerialQueueManager = require('./lib/SerialQueueManager'),
     EpochManager = require('./scheduler/epoch'),
+    CacheDatabase = require('./db/CacheDatabase'),
     Filter = require('./lib/filter'),
     Cache = require('./scheduler/cache'),
     express = require('express'),
@@ -29,16 +30,14 @@ var epochManager = new EpochManager(requestManager);
 epochManager.start();
 
 var cache = new Cache(requestManager);
+var cacheDatabase = new CacheDatabase(cache);
+cacheDatabase.start();
 cache.start();
 
-//Promise.resolve().then(function() {
-//    requestManager.init();
-//}).then(start).catch(handleError);
 
 
-function handleError(error) {
-    console.log('error handled', error);
-}
+// The static directory is where all the statically served files go
+// Like jpg, js, css etc...
 app.use(express.static(__dirname + '/static'));
 
 app.use('/', function(req, res, next) {
@@ -58,6 +57,7 @@ http.listen(app.get("port"), app.get("ipaddr"), function() {
 });
 
 
+// The root element redirects to the default visualizer view
 var view = '/visualizer/index.html?viewURL=/views/' + (argv.view || 'dispatcher') + '.json';
 app.get('/', function(req, res) {
     res.redirect(301, view);

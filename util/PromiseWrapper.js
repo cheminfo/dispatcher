@@ -1,4 +1,5 @@
-var Promise = require('bluebird');
+var Promise = require('bluebird'),
+    debug = require('debug')('PromiseWrapper');
 
 
 exports = module.exports = function(wrappedObj, wrappedFn) {
@@ -11,7 +12,7 @@ exports = module.exports = function(wrappedObj, wrappedFn) {
             that[wrappedFn[i]] = function() {
                 var args = arguments;
                 return new Promise(function(resolve, reject) {
-                    console.log('Run query ', args[0]);
+                    debug(args);
                     var callback = function(err, res) {
                         if(err) {
                             return reject(err);
