@@ -105,14 +105,14 @@ app.get('/save',
     });
 
 
-app.get('/all', function(req, res) {
+app.get('/all/:filter', middleware.validateParameters( {type: 'filter', name: 'filter'}), function(req, res) {
     // visualizer filter converts object to an array
     // for easy display in a table
     var entry = cache.data.entry;
     console.log(entry);
     var all = {
         config: devices,
-        entry: filter.visualizer(entry),
+        entry: filter[res.locals.parameters.filter](entry),
         status: cache.data.status
     };
 

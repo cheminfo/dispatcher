@@ -1,3 +1,5 @@
+
+
 exports.validateParameters = function (params) {
     if (!(params instanceof Array))
         params = [params];
@@ -29,6 +31,13 @@ exports.validateParameters = function (params) {
                         var regexp = /\$[A-Z]/;
                         if(!value.match(regexp)) {
                             return res.status(400).json('parameter '+ paramName + ' must match regular expression: ', regexp.toString());
+                        }
+                        break;
+                    case 'filter':
+                        var Filter = require('../lib/filter');
+                        var filter = new Filter();
+                        if(!filter[value]) {
+                            return res.status(400).json('the filter ' + value + ' does not exist');
                         }
                 }
             }
