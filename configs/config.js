@@ -34,15 +34,24 @@ exports = module.exports = {
     }
 };
 
-function checkConfig(config) {
-    return !!config;
+function checkConfig(conf) {
+    // Check that the database directory exists
+    if(conf.sqlite.dir) {
+        if(!fs.existsSync(conf.sqlite.dir)) {
+            throw new Error('Config Error: The sqlite directory ' + conf.sqlite.dir + ' does not exist');
+        }
+    }
+
+    return !!conf;
 }
 
 function processConf(conf) {
     debug('process conf file');
+    //
     if(conf.sqlite && conf.sqlite.dir) {
-        conf.sqlite.dir = path.join(__dirname, conf.sqlite.dir);
+        conf.sqlite.dir = path.join(__dirname, '..', conf.sqlite.dir);
     }
+    console.log('the dir: ', conf.sqlite.dir);
 
     if(typeof conf.port === 'object' && conf.port.regexp) {
         var dir = conf.port.dir || '/dev';
