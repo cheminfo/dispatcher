@@ -43,6 +43,11 @@ function onNewData(id, data) {
         }
     }
 
+    // Get max records authorized from device
+    var specOptions = this.config.devices[idx].sqlite || {};
+    var defaultOptions = this.config.sqlite || {};
+
+    _.defaults(specOptions, defaultOptions);
     debug('CacheDatabased received new data from cache');
-    db.save(d);
+    db.save(d, specOptions);
 }

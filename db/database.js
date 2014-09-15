@@ -5,7 +5,8 @@ var PromiseWrapper = require('../util/PromiseWrapper'),
     Promise = require('bluebird'),
     sqlite = require('sqlite3'),
     _ = require('lodash'),
-    debug = require('debug')('database');
+    debug = require('debug')('database'),
+    path = require('path');
 
 
 
@@ -221,11 +222,17 @@ function getAllMeanEpoch(wdb) {
 function keepRecentMeanEpoch(wdb, maxNb) {
     return function(res) {
         var promises = [];
+        if(!(maxNb instanceof Array)) {
+            maxNb = _.times(means.length, function() { return maxNb; });
+        }
 
+        if(maxNb.length !== means.length) {
+            throw new Error('Unexpected length of parameter maxNb');
+        }
         for(var i=0; i<means.length; i++) {
             if(res[i].length > maxNb) {
                 debug('perform mean delete');
-                promises.push(wdb.run('DELETE FROM ' + means[i].name + ' where epoch<=' + res[i][maxNb].epoch))
+                promises.push(wdb.run('DELETE FROM ' + means[i].name + ' where epoch<=' + res[i][maxNb[i]].epoch))
             }
         }
         return Promise.all(promises);
@@ -309,8 +316,17 @@ function handleError(err) {
 }
 
 function save(entry, options) {
-    var wdb = getWrappedDB(entry.deviceId);
-
+    var wdb = getWrappedDB(entry.deviceId, options);
+    if(!options.maxRecords) {
+        return Promise.reject(new Error('maxRecords option is mandatory'));
+    }
+    var names = _.pluck(means, 'name');
+    var maxRecords= [];
+    for(var i=0; i<names.length; i++) {
+        if(options.maxRecords[names[i]])
+            maxRecords.push(options.maxRecords[names[i]])
+    }
+    console.log(options);
     return Promise.resolve()
         .then(createTables(wdb))
         .then(createIndexes(wdb))
@@ -320,8 +336,8 @@ function save(entry, options) {
         .then(getEntryMean(wdb, entry))
         .then(insertEntryMean(wdb, entry))
         .then(getAllEntryIds(wdb))
-        .then(keepRecentIds(wdb, 5))
-        .then(getAllMeanEpoch(wdb))
+        .then(keepRecentIds(wdb, options.maxRecords.entry))
+        .then(getAllMeanEpoch(wdb, maxRecords))
         .then(keepRecentMeanEpoch(wdb, 5))
         .catch(handleError);
 }
@@ -375,9 +391,12 @@ function status(deviceId) {
 }
 
 
-function getWrappedDB(id, mode) {
-    var dbname = './sqlite/' + id + '.sqlite';
-    var db = new sqlite.Database(dbname, mode);
+function getWrappedDB(id, options, mode) {
+    options = options || {};
+    var dir = options.dir || './sqlite/';
+
+    var dbloc = path.join(dir, id+'.sqlite');
+    var db = new sqlite.Database(dbloc, mode);
     return new PromiseWrapper(db, ['all', 'run', 'get']);
 }
 

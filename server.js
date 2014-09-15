@@ -21,14 +21,14 @@ debug('config name:', configName);
 var config = require('./configs/config').load(configName);
 var devices = config.devices;
 
-var filter = new Filter();
+
 
 var requestManager = new SerialQueueManager(config);
 requestManager.init();
-
 var epochManager = new EpochManager(requestManager);
 epochManager.start();
 
+// Cache and Cache database
 var cache = new Cache(requestManager);
 if(config.sqlite) {
     var cacheDatabase = new CacheDatabase(cache);
@@ -106,7 +106,7 @@ app.get('/save',
         });
     });
 
-
+var filter = new Filter();
 app.get('/all/:filter', middleware.validateParameters( {type: 'filter', name: 'filter'}), function(req, res) {
     // visualizer filter converts object to an array
     // for easy display in a table
