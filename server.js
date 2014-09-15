@@ -1,7 +1,7 @@
 var debug = require('debug')('main'),
     argv = require('minimist')(process.argv.slice(2)),
     network = require('./util/network'),
-    RequestManager = require('./lib/RequestManager'),
+    SerialQueueManager = require('./lib/SerialQueueManager'),
     EpochManager = require('./scheduler/epoch'),
     Filter = require('./lib/filter'),
     Cache = require('./scheduler/cache'),
@@ -22,7 +22,7 @@ var devices = config.devices;
 
 var filter = new Filter();
 
-var requestManager = new RequestManager(config);
+var requestManager = new SerialQueueManager(config);
 requestManager.init();
 
 var epochManager = new EpochManager(requestManager);
