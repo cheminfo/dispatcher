@@ -10,7 +10,7 @@ var Cache = exports = module.exports = function Cache(requestManager, options) {
     this.interval = null;
     this.config = require('../configs/config').get();
     this.requestManager = requestManager;
-    
+
     this.options = options || {};
     this.data = {};
     this.data.devices = this.config.devices;
@@ -36,9 +36,13 @@ Cache.prototype.start = function() {
                 var cmd = that.data.devices[i].prefix+'c';
                 that.requestManager.addRequest(cmd).then(function(response) {
                     debug('Request done');
+
+                    // Pass the response given by the serial device to the parser
                     var entries = parser.parse(cmd, response, {
                         nbParam: nbParam
                     });
+
+
                     var id =  that.data.devices[i].id;
                     var status = that.data.status[id] = that.data.status[id] || {};
                     that.data.entry[id] = that.data.entry[id] || {};
@@ -52,19 +56,8 @@ Cache.prototype.start = function() {
                     if(status.active) {
                         status.lastUpdate = entries[0].epoch;
                         status.nbFailures = 0;
-                        that.data.entry[id] = {};
-                        that.data.entry[id].parameters = [];
-                        that.data.entry[id].epoch = entries[0].epoch;
-                        that.data.entry[id].deviceId = entries[0].deviceId;
-                        for(var key in entries[0].parameters) {
-                            that.data.entry[id].parameters.push({
-                                name: key,
-                                mappedName: that.data.devices[i].parameters[key] ? that.data.devices[i].parameters[key].name : 'NA',
-                                value: entries[0].parameters[key],
-                                label: that.data.devices[i].parameters[key] ? that.data.devices[i].parameters[key].label : 'NA'
-                            });
-                        }
-                        that.emit('data', that.data.entry);
+                        that.data.entry[id] = entries[0];
+                        that.emit('data', that.data.entry[id]);
 
                     }
                     else {

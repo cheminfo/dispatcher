@@ -2,7 +2,8 @@ var debug = require('debug')('main'),
     argv = require('minimist')(process.argv.slice(2)),
     network = require('./util/network'),
     RequestManager = require('./lib/RequestManager'),
-    EpochManager = require('./scheduler/epoch');
+    EpochManager = require('./scheduler/epoch'),
+    Filter = require('./lib/filter'),
     Cache = require('./scheduler/cache'),
     express = require('express'),
     middleware = require('./middleware/common'),
@@ -18,6 +19,8 @@ var configName = (argv.config && (typeof argv.config === 'string')) ? argv.confi
 debug('config name:', configName);
 var config = require('./configs/config').load(configName);
 var devices = config.devices;
+
+var filter = new Filter();
 
 var requestManager = new RequestManager(config);
 requestManager.init();
@@ -103,9 +106,13 @@ app.get('/save',
 
 
 app.get('/all', function(req, res) {
+    // visualizer filter converts object to an array
+    // for easy display in a table
+    var entry = cache.data.entry;
+    console.log(entry);
     var all = {
         config: devices,
-        entry: cache.data.entry,
+        entry: filter.visualizer(entry),
         status: cache.data.status
     };
 
