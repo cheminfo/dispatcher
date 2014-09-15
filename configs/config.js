@@ -51,7 +51,6 @@ function processConf(conf) {
     if(conf.sqlite && conf.sqlite.dir) {
         conf.sqlite.dir = path.join(__dirname, '..', conf.sqlite.dir);
     }
-    console.log('the dir: ', conf.sqlite.dir);
 
     if(typeof conf.port === 'object' && conf.port.regexp) {
         var dir = conf.port.dir || '/dev';

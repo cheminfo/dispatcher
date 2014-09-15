@@ -9,10 +9,6 @@ var debug = require('debug')('CacheDatabase'),
 var CacheDatabase = exports = module.exports = function CacheDatabase(cache) {
     this.cache = cache;
     this.config = require('../configs/config').get();
-    this.cache.on('newdata', function(data) {
-
-    });
-
 };
 
 CacheDatabase.prototype.start = function() {

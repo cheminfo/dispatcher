@@ -326,7 +326,6 @@ function save(entry, options) {
         if(options.maxRecords[names[i]])
             maxRecords.push(options.maxRecords[names[i]])
     }
-    console.log(options);
     return Promise.resolve()
         .then(createTables(wdb))
         .then(createIndexes(wdb))
@@ -358,12 +357,14 @@ function get(deviceId, options) {
     else fn = getEntries(wdb, options);
 
 
-    return Promise.resolve()
-        .then(fn)
-        .then(function(res) {
-            console.log('all entries: ', res)
-        })
-        .catch(handleError)
+    var res =  Promise.resolve()
+        .then(fn);
+
+    res.then(function(res) {
+        console.log('all entries: ', res)
+    }).catch(handleError);
+    
+    return res;
 }
 
 function status(deviceId) {

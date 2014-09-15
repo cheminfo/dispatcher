@@ -16,6 +16,7 @@ var Cache = exports = module.exports = function Cache(requestManager, options) {
     this.data.devices = this.config.devices;
     this.data.status = {};
     this.data.entry = {};
+    this.data.deviceIds = {};
 };
 
 
@@ -54,6 +55,7 @@ Cache.prototype.start = function() {
                     status.lastTrial = new Date().getTime();
                     status.active = (entries.length === 1);
                     if(status.active) {
+                        that.data.deviceIds[id] = entries[0].deviceId;
                         var isNew = (status.lastUpdate !== entries[0].epoch);
                         status.lastUpdate = entries[0].epoch;
                         status.nbFailures = 0;

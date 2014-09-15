@@ -6,6 +6,7 @@ var debug = require('debug')('main'),
     CacheDatabase = require('./db/CacheDatabase'),
     Filter = require('./lib/filter'),
     Cache = require('./scheduler/cache'),
+    database = require('./db/database'),
     express = require('express'),
     middleware = require('./middleware/common'),
     appconfig = require('./appconfig.json'),
@@ -37,6 +38,9 @@ if(config.sqlite) {
 cache.start();
 
 
+// Middleware
+var validateFilter = middleware.validateParameters( {type: 'filter', name: 'filter'});
+var validateDevice = middleware.validateParameters({type: 'device', name: 'device'});
 
 // The static directory is where all the statically served files go
 // Like jpg, js, css etc...
@@ -70,7 +74,7 @@ app.get('/status', function(req, res) {
 });
 
 app.get('/status/:device',
-    middleware.validateParameters([{name: 'device', type: 'device'}]),
+    validateDevice,
     function(req, res) {
         // get parameter from cache
         var device = res.locals.parameters.device;
@@ -78,7 +82,7 @@ app.get('/status/:device',
     });
 
 app.get('/param/:device',
-    middleware.validateParameters([{name: 'device', type: 'device'}]),
+    validateDevice,
     function(req, res) {
         var device = res.locals.parameters.device;
         return res.json(cache.data.param[device]);
@@ -90,7 +94,6 @@ app.get('/param/:device/:param',
     function(req, res) {
         var device = res.locals.parameters.device;
         var param = res.locals.parameters.param;
-        console.log(cache.data.param[device]);
         return res.json(cache.data.param[device][param]);
     }
 );
@@ -107,11 +110,10 @@ app.get('/save',
     });
 
 var filter = new Filter();
-app.get('/all/:filter', middleware.validateParameters( {type: 'filter', name: 'filter'}), function(req, res) {
+app.get('/all/:filter', validateFilter, function(req, res) {
     // visualizer filter converts object to an array
     // for easy display in a table
     var entry = cache.data.entry;
-    console.log(entry);
     var all = {
         config: devices,
         entry: filter[res.locals.parameters.filter](entry),
@@ -143,3 +145,24 @@ app.post('/command',
             return res.status(500);
         });
     });
+
+app.get('/database/all/:filter', validateFilter, function(req, res) {
+    var all = {};
+});
+
+app.get('/database/:device', [
+    validateDevice
+    ], function(req, res) {
+    var deviceId = cache.data.deviceIds[res.locals.parameters.device];
+
+    var options = {
+        limit: 10
+    };
+
+    database.get(deviceId, options).then(function(result) {
+        console.log('the result', result);
+        return res.status(200).json(result);
+    }).catch(function() {
+        return res.status(400).json('Database error');
+    });
+});
