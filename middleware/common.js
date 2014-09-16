@@ -1,4 +1,4 @@
-
+var _ = require('lodash');
 
 exports.validateParameters = function (params) {
     if (!(params instanceof Array))
@@ -10,16 +10,15 @@ exports.validateParameters = function (params) {
         for (var i = 0; i < params.length; i++) {
 
             var param = params[i];
-
+            param.required = param.required || true;
             var paramName = (typeof param === 'object') ? param.name : param;
 
             var value = req.params[paramName] || req.query[paramName] || (req.body ? req.body[paramName] : null);
-
-            if (!value) {
+            if (!value && param.required) {
                 return res.status(400).json('required parameter: ' + paramName);
             }
 
-            if (param.type) {
+            if (param.type && value) {
                 switch (param.type) {
                     case 'enum':
                         var enums = param.possible || [];
@@ -44,8 +43,7 @@ exports.validateParameters = function (params) {
 
             validParameters[paramName] = value;
         }
-
-        res.locals.parameters = validParameters;
-        next()
+        res.locals.parameters = _.merge(res.locals.parameters || {}, validParameters);
+        next();
     };
 };

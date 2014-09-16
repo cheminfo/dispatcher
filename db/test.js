@@ -34,11 +34,12 @@ if(argv.save) {
 
 if(argv.getAll) {
     console.log('get');
-    database.get('test1', {
-        from: 2,
-        to: 3,
-        limit: 4,
-        fields: ['A', 'B']
+    database.get('9281', {
+        limit: 10,
+        fields: ['K'],
+        mean: 'minute'
+    }).then(function(res) {
+        console.log(res);
     });
 }
 

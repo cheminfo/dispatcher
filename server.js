@@ -150,19 +150,31 @@ app.get('/database/all/:filter', validateFilter, function(req, res) {
     var all = {};
 });
 
-app.get('/database/:device', [
-    validateDevice
-    ], function(req, res) {
-    var deviceId = cache.data.deviceIds[res.locals.parameters.device];
+var queryValidator = middleware.validateParameters([
+    {name: 'fields', required: false},
+    {name: 'device', type: 'device', required: true},
+    {name: 'limit', required: false},
+    {name: 'mean', required: false}
+]);
 
+
+app.get('/database/:device', queryValidator, function(req, res) {
+    var deviceId = cache.data.deviceIds[res.locals.parameters.device];
+    var fields = res.locals.parameters.fields || '*';
+    var mean = res.locals.parameters.mean || 'entry';
+    var limit = res.locals.parameters.limit || 10;
     var options = {
-        limit: 10
+        limit: limit,
+        fields: fields.split(','),
+        mean: mean
     };
 
     database.get(deviceId, options).then(function(result) {
-        console.log('the result', result);
-        return res.status(200).json(result);
-    }).catch(function() {
+        var chart = filter.visualizerChart(res.locals.parameters.device, result);
+        return res.status(200).json(chart);
+    }).catch(function(err) {
+        console.log('Error: ', err);
+        console.log('Error stack', err.stack);
         return res.status(400).json('Database error');
     });
 });

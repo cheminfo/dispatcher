@@ -1,0 +1,441 @@
+{
+    "version": "2.5.1",
+    "grid": {
+        "layers": {
+            "Default layer": {
+                "name": "Default layer"
+            }
+        },
+        "xWidth": 10,
+        "yHeight": 10
+    },
+    "modules": [
+        {
+            "url": "modules/types/science/spectra/spectra_displayer/",
+            "configuration": {
+                "sections": {},
+                "groups": {
+                    "group": [
+                        {
+                            "graphurl": [
+                                ""
+                            ],
+                            "flip": [
+                                []
+                            ],
+                            "displayAxis": [
+                                [
+                                    "y",
+                                    "x"
+                                ]
+                            ],
+                            "grids": [
+                                []
+                            ],
+                            "xLabel": [
+                                ""
+                            ],
+                            "yTopSpacing": [
+                                0
+                            ],
+                            "yBottomSpacing": [
+                                0
+                            ],
+                            "xLeftSpacing": [
+                                0
+                            ],
+                            "xRightSpacing": [
+                                0
+                            ],
+                            "yLabel": [
+                                ""
+                            ],
+                            "minX": [
+                                ""
+                            ],
+                            "maxX": [
+                                ""
+                            ],
+                            "minY": [
+                                ""
+                            ],
+                            "maxY": [
+                                ""
+                            ],
+                            "zoom": [
+                                "x"
+                            ],
+                            "shiftxtozero": [
+                                []
+                            ],
+                            "xastime": [
+                                []
+                            ],
+                            "wheelAction": [
+                                "none"
+                            ],
+                            "fullOut": [
+                                "both"
+                            ]
+                        }
+                    ],
+                    "plotinfos": [
+                        [
+                            {
+                                "variable": "searchResult",
+                                "plotcolor": [
+                                    1,
+                                    1,
+                                    255,
+                                    1
+                                ],
+                                "strokewidth": "1",
+                                "plotcontinuous": [
+                                    "continuous"
+                                ],
+                                "peakpicking": [],
+                                "markers": [
+                                    "markers"
+                                ],
+                                "normalize": "none",
+                                "optimizeSlots": [
+                                    "slots"
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            },
+            "layers": {
+                "Default layer": {
+                    "position": {
+                        "left": 82,
+                        "top": 1
+                    },
+                    "size": {
+                        "width": 72,
+                        "height": 57
+                    },
+                    "zIndex": 0,
+                    "display": true,
+                    "title": "Untitled",
+                    "bgColor": [
+                        255,
+                        255,
+                        255,
+                        0
+                    ],
+                    "wrapper": true,
+                    "created": true,
+                    "name": "Default layer"
+                }
+            },
+            "id": 1,
+            "vars_in": [
+                {
+                    "rel": "chart",
+                    "name": "searchResult"
+                }
+            ],
+            "actions_in": [
+                {}
+            ],
+            "title": "Untitled",
+            "vars_out": [
+                {
+                    "jpath": []
+                }
+            ],
+            "actions_out": [
+                {
+                    "jpath": []
+                }
+            ]
+        },
+        {
+            "url": "modules/types/edition/object_editor/",
+            "configuration": {
+                "sections": {},
+                "groups": {
+                    "group": [
+                        {
+                            "editable": [
+                                "view"
+                            ],
+                            "expanded": [
+                                []
+                            ],
+                            "storeObject": [
+                                []
+                            ],
+                            "output": [
+                                "new"
+                            ],
+                            "storedObject": [
+                                "{}"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "layers": {
+                "Default layer": {
+                    "position": {
+                        "left": 1,
+                        "top": 0
+                    },
+                    "size": {
+                        "width": 32,
+                        "height": 61
+                    },
+                    "zIndex": 0,
+                    "display": true,
+                    "title": "Untitled",
+                    "bgColor": [
+                        255,
+                        255,
+                        255,
+                        0
+                    ],
+                    "wrapper": true,
+                    "created": true,
+                    "name": "Default layer"
+                }
+            },
+            "id": 2,
+            "vars_in": [
+                {
+                    "rel": "value",
+                    "name": "searchResult"
+                }
+            ],
+            "actions_in": {},
+            "vars_out": [
+                {
+                    "jpath": []
+                }
+            ],
+            "title": "Untitled",
+            "actions_out": {}
+        },
+        {
+            "url": "modules/types/server_interaction/webservice_search/",
+            "configuration": {
+                "sections": {
+                    "postvariables": [
+                        {
+                            "sections": {},
+                            "groups": {
+                                "postvariables": [
+                                    [
+                                        {
+                                            "destination": "data",
+                                            "filter": "none"
+                                        }
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "groups": {
+                    "group": [
+                        {
+                            "url": [
+                                "/database/{device}"
+                            ],
+                            "method": [
+                                "GET"
+                            ],
+                            "dataType": [
+                                "form"
+                            ],
+                            "button": [
+                                [
+                                    "button"
+                                ]
+                            ],
+                            "buttonlabel": [
+                                "GET"
+                            ],
+                            "buttonlabel_exec": [
+                                "Getting data..."
+                            ],
+                            "onloadsearch": [
+                                [
+                                    "button"
+                                ]
+                            ],
+                            "debounce": [
+                                0
+                            ],
+                            "resultfilter": [
+                                null
+                            ]
+                        }
+                    ],
+                    "headers": [
+                        [
+                            {}
+                        ]
+                    ],
+                    "searchparams": [
+                        [
+                            {
+                                "name": "device",
+                                "destination": "url",
+                                "label": "Device (zigbee id)",
+                                "defaultvalue": "$A",
+                                "fieldtype": "text"
+                            },
+                            {
+                                "name": "limit",
+                                "destination": "query",
+                                "label": "Limit",
+                                "defaultvalue": "10",
+                                "fieldtype": "text"
+                            },
+                            {
+                                "name": "fields",
+                                "destination": "query",
+                                "label": "Fields (comma-separated)",
+                                "defaultvalue": "A",
+                                "fieldtype": "text"
+                            },
+                            {
+                                "name": "mean",
+                                "destination": "query",
+                                "label": "Time scale",
+                                "defaultvalue": "entry",
+                                "fieldtype": "combo",
+                                "fieldoptions": "entry:Entry;minute:Minute;hour:Hour;day:Day"
+                            }
+                        ]
+                    ]
+                }
+            },
+            "layers": {
+                "Default layer": {
+                    "position": {
+                        "left": 34,
+                        "top": 1
+                    },
+                    "size": {
+                        "width": 37,
+                        "height": 26
+                    },
+                    "zIndex": 0,
+                    "display": true,
+                    "title": "Untitled",
+                    "bgColor": [
+                        255,
+                        255,
+                        255,
+                        0
+                    ],
+                    "wrapper": true,
+                    "created": true,
+                    "name": "Default layer"
+                }
+            },
+            "id": 3,
+            "vars_in": [
+                {}
+            ],
+            "actions_in": [
+                {
+                    "rel": "doSearch",
+                    "name": "updateSearch"
+                }
+            ],
+            "title": "Untitled",
+            "vars_out": [
+                {
+                    "event": "onSearchReturn",
+                    "rel": "results",
+                    "jpath": [],
+                    "name": "searchResult"
+                }
+            ],
+            "actions_out": [
+                {
+                    "jpath": []
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "jpath": [
+                ""
+            ]
+        }
+    ],
+    "pouchvariables": [
+        {}
+    ],
+    "configuration": {
+        "title": "No title"
+    },
+    "actionscripts": [
+        {
+            "sections": {},
+            "groups": {
+                "action": [
+                    {
+                        "name": [
+                            null
+                        ],
+                        "script": [
+                            null
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "crons": [
+        {}
+    ],
+    "couch_replication": [
+        {
+            "sections": {},
+            "groups": {
+                "couch": [
+                    [
+                        {
+                            "direction": "both",
+                            "continuous": []
+                        }
+                    ]
+                ]
+            }
+        }
+    ],
+    "init_script": [
+        {
+            "sections": {},
+            "groups": {
+                "general": [
+                    {
+                        "script": [
+                            "setInterval(function(){\n    API.doAction('updateSearch');\n} , 5000);\n"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "actionfiles": [
+        {
+            "sections": {},
+            "groups": {
+                "action": [
+                    [
+                        {}
+                    ]
+                ]
+            }
+        }
+    ]
+}
