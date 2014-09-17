@@ -4,6 +4,7 @@ var sqlite = require('sqlite3'),
     argv = require('minimist')(process.argv.slice(2));
 
 
+var dbname = '1000';
 function openDatabase(name) {
     return new Promise(function(resolve, reject) {
         var db = new sqlite.Database(name, function(err) {
@@ -17,7 +18,7 @@ function openDatabase(name) {
 
 if(argv.save) {
     database.save({
-        deviceId: 'test1',
+        deviceId: dbname,
         epoch: Math.round((Math.random() + 1)*400000),
         parameters: {
             A: 1000000000,
@@ -34,10 +35,9 @@ if(argv.save) {
 
 if(argv.getAll) {
     console.log('get');
-    database.get('9281', {
+    database.get(dbname, {
         limit: 10,
-        fields: ['K'],
-        mean: 'minute'
+        mean: 'entry'
     }).then(function(res) {
         console.log(res);
     });
@@ -45,34 +45,20 @@ if(argv.getAll) {
 
 if(argv.query) {
     console.log('query');
-    database.query('test1', 'SELECT * FROM entry').then(function(res) {
+    database.query(dbname, 'SELECT * FROM entry').then(function(res) {
         console.log(res);
     });
 }
 
 if(argv.status) {
     console.log('status');
-    database.status('test1');
+    database.status(dbname);
 }
 
 //database.getLastId('1000').then(function( res) {
 //    console.log('last id', res);
 //});
 
-database.test();
 
-//openDatabase('./sqlite/test.sqlite').then(function(db) {
-//    var wdb = new Wrapper(db, ['all', 'get', 'run']);
-//    console.log(wdb.all);
-//    wdb.run("SELECT name FROM sqlite_master WHERE type='table' AND name='tbl1';").then(function() {
-//        console.log(res);
-//    }).catch(function(err) {
-//        console.log('An error occured', err);
-//        console.log(err.trace());
-//    });
-//}).catch(function(err) {
-//    console.log('An error occured', err);
-//    console.log(err.trace());
-//});
 
 

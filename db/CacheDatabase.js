@@ -34,7 +34,6 @@ function onNewData(id, data) {
     }
 
 
-
     // Find where the corresponding device is
     var idx = _.findIndex(this.config.devices, function(device) {
         return device.id === id;
@@ -59,5 +58,6 @@ function onNewData(id, data) {
         debug('No database configuration specified for device', this.config.devices[idx].id, ' therefore not saving to database');
         return;
     }
+
     db.save(d, specOptions);
 }

@@ -8,5 +8,5 @@
         "dir": "sqlite"
     },
     "epochRefreshInterval": 10000,
-    "cacheRefreshInterval": 2000
+    "cacheRefreshInterval": 5000
 }

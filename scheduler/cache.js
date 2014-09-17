@@ -78,7 +78,8 @@ function doMultilogRequest(that, device) {
         var entries = parser.parse(cmd, response);
 
         var id =  device.id;
-        var status = that.data.status[id] || { id: id};
+        that.data.status[id] = that.data.status[id] || { id: id};
+        var status = that.data.status[id];
         that.data.entry[id] = that.data.entry[id] || {};
 
         status.lastTrial = new Date().getTime();
@@ -89,7 +90,6 @@ function doMultilogRequest(that, device) {
         }
 
         status.active = (entries.length >= 1);
-        var isNew = false;
         if(status.active) {
             that.data.deviceIds[id] = entries[0].deviceId;
             status.nbFailures = 0;
@@ -103,10 +103,10 @@ function doMultilogRequest(that, device) {
 
         if(entries.length > 1) {
             console.log('length', entries.length);
-            that.data.entry[id] = entries.slice(1);
+            that.data.entry[id] = _.last(entries);
             status.lastUpdate = entries[entries.length-1].epoch;
             lastIds[device.id] = entries[entries.length-1].id;
-            that.emit('newdata', device.id, that.data.entry[id]);
+            that.emit('newdata', device.id, entries.slice(1));
             doMultilogRequest(that, device);
         }
 

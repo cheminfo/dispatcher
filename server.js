@@ -20,7 +20,6 @@ var debug = require('debug')('main'),
 var configName = (argv.config && (typeof argv.config === 'string')) ? argv.config : 'default';
 debug('config name:', configName);
 var config = require('./configs/config').load(configName);
-console.log(config);
 var devices = config.devices;
 
 
@@ -114,7 +113,7 @@ var filter = new Filter();
 app.get('/all/:filter', validateFilter, function(req, res) {
     // visualizer filter converts object to an array
     // for easy display in a table
-    var entry = cache.data.entry;
+    var entry = cache.get('entry');
     var all = {
         config: devices,
         entry: filter[res.locals.parameters.filter](entry),

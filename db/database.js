@@ -446,11 +446,36 @@ function get(deviceId, options) {
 
 
     var res =  Promise.resolve()
-        .then(fn);
+        .then(fn)
+        .then(filterOut);
 
     res.catch(handleError);
     
     return res;
+}
+
+function filterOut(out) {
+    if(!(out instanceof Array)) {
+        out = [out];
+    }
+    var paramReg = /^([A-Z]{1,2})(_mean|_nb|_min|_max)?$/;
+
+    for(var i=0; i<out.length; i++) {
+        out[i].parameters =  {};
+        // Unflatten
+        for(var key in out[i]) {
+            var m = paramReg.exec(key);
+            if(m && m[1]) {
+                out[i].parameters[m[1]] = out[i][key];
+                delete out[i][key];
+            }
+        }
+    }
+
+    if(out.length === 1) {
+        return out[0];
+    }
+    return out;
 }
 
 function status(deviceId) {
