@@ -101,7 +101,9 @@ app.get('/param/:device/:param',
 app.get('/save',
     middleware.validateParameters([{name: 'device', type: 'device'}, {name: 'param'}, {name: 'value'}]),
     function(req, res) {
-        var cmd = res.locals.parameters.device + res.locals.parameters.param + res.locals.parameters.value;
+        var idx = _.findIndex(config.devices, { 'id': res.locals.parameters.device });
+        var devPrefix = config.devices[idx].prefix;
+        var cmd = devPrefix + res.locals.parameters.param + res.locals.parameters.value;
         requestManager.addRequest(cmd).then(function() {
             return res.json({ok: true});
         }, function() {

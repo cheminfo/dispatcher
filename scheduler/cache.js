@@ -45,11 +45,10 @@ Cache.prototype.start = function() {
 
                 if(multiLog && !doingMultiLog) {
                     getLastId(that, that.data.devices[i]).then(function(lastId) {
-                        console.log('in then resolve');
                         lastIds[that.data.devices[i].id] = lastId || 0;
                         doMultilogRequest(that, that.data.devices[i]);
                     }).catch(function() {
-                        console.log('in catch');
+                        // TODO: Be more specific. Do this only if error is that table entry does not exist...
                         lastIds[that.data.devices[i].id] = 0;
                         doMultilogRequest(that, that.data.devices[i]);
                     });
@@ -102,7 +101,7 @@ function doMultilogRequest(that, device) {
         }
 
         if(entries.length > 1) {
-            console.log('length', entries.length);
+            debug('m returned ', entries.length-1, 'new entries');
             that.data.entry[id] = _.last(entries);
             status.lastUpdate = entries[entries.length-1].epoch;
             lastIds[device.id] = entries[entries.length-1].id;
