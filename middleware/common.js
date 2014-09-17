@@ -10,7 +10,7 @@ exports.validateParameters = function (params) {
         for (var i = 0; i < params.length; i++) {
 
             var param = params[i];
-            param.required = param.required || true;
+            if(param.required === undefined) param.required = true;
             var paramName = (typeof param === 'object') ? param.name : param;
 
             var value = req.params[paramName] || req.query[paramName] || (req.body ? req.body[paramName] : null);

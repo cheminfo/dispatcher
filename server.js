@@ -11,7 +11,9 @@ var debug = require('debug')('main'),
     middleware = require('./middleware/common'),
     appconfig = require('./appconfig.json'),
     _ = require('lodash'),
-    app = express();
+    app = express(),
+    path = require('path'),
+    fs = require('fs');
 
 
 
@@ -64,7 +66,7 @@ http.listen(app.get("port"), app.get("ipaddr"), function() {
 
 
 // The root element redirects to the default visualizer view
-var view = '/visualizer/index.html?viewURL=/views/' + (argv.view || 'dispatcher') + '.json';
+var view = '/visualizer/index.html?config=/configs/default.json&viewURL=/views/' + (argv.view || 'dispatcher') + '.json';
 app.get('/', function(req, res) {
     res.redirect(301, view);
 });
@@ -180,3 +182,45 @@ app.get('/database/:device', queryValidator, function(req, res) {
         return res.status(400).json('Database error');
     });
 });
+
+app.get('/navview/list', middleware.validateParameters({ name: 'dir', required: false}), function(req, res){
+    var dir = './static/views';
+    if(res.locals.parameters.dir) {
+        if(res.locals.parameters.dir.indexOf('..') > -1) {
+            return res.status(400).json();
+        }
+        dir = path.join(dir, res.locals.parameters.dir);
+        console.log('dir: ', dir);
+    }
+    console.log('get directories');
+    var list = getDirectories(dir, res.locals.parameters.dir);
+    if(!list) {
+        return res.status(404).json();
+    }
+    list.map(function(el) {
+        el.rel = res.locals.parameters.dir ? path.normalize(res.locals.parameters.dir) + '/' :  './';
+        return el;
+    });
+    return res.status(200).json(list);
+});
+
+function getDirectories(dir, relDir) {
+    try{
+        console.log(dir, relDir);
+        return fs.readdirSync(dir).filter(function(file) {
+            return file[0] !== '.';
+        }).map(function (file) {
+            return {
+                name: file,
+                isDir: fs.statSync(path.join(dir, file)).isDirectory(),
+                rel: dir,
+                url: path.join('/views/', relDir || '', file)
+            };
+        });
+    }
+    catch(err) {
+        console.log(err);
+        return null;
+    }
+
+}

@@ -114,6 +114,11 @@ function doMultilogRequest(that, device) {
         }
 
         return entries.length;
+    }, function(err) {
+        debug('rejected...', err);
+        var status = that.data.status[device.id];
+        status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+        doingMultiLog = false;
     });
 }
 
@@ -161,6 +166,8 @@ function doCRequest(that, device) {
         }
     }, function(err) {
         debug('rejected...', err);
+        var status = that.data.status[device.id];
+        status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
     });
 
 }
