@@ -15,7 +15,9 @@ exports = module.exports = {
     save: save,
     get: get,
     query: query,
-    status: status
+    status: status,
+    getLastId: getLastId,
+    test: test
 };
 
 
@@ -50,10 +52,29 @@ function createTables(wdb) {
         promises.push(wdb.run('CREATE TABLE IF NOT EXISTS entry(' +
             'id INTEGER PRIMARY KEY AUTOINCREMENT,' +
             'epoch INTEGER NOT NULL,' +
-            'timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)'));
+            'timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);'));
 
         for(var i=0; i<means.length; i++) {
-            promises.push(wdb.run('CREATE TABLE IF NOT EXISTS ' + means[i].name + '(epoch INTEGER PRIMARY KEY NOT NULL)'));
+            promises.push(wdb.run('CREATE TABLE IF NOT EXISTS ' + means[i].name + '(epoch INTEGER PRIMARY KEY NOT NULL);'));
+        }
+
+        debug('create all tables');
+        return Promise.all(promises);
+    }
+}
+
+function createTables1(wdb) {
+    return function() {
+        var promises = [];
+        promises.push(wdb.run('CREATE TABLE IF NOT EXISTS entry(' +
+            'id INTEGER PRIMARY KEY NOT NULL,' +
+            'epoch INTEGER NOT NULL,' +
+            'timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,' +
+            'event INTEGER,' +
+            'eventParam INTEGER);'));
+
+        for(var i=0; i<means.length; i++) {
+            promises.push(wdb.run('CREATE TABLE IF NOT EXISTS ' + means[i].name + '(epoch INTEGER PRIMARY KEY NOT NULL);'));
         }
 
         debug('create all tables');
@@ -127,6 +148,13 @@ function getAllEntryIds(wdb) {
     return function() {
         debug('Get all entry ids');
         return wdb.all('SELECT id FROM entry;');
+    }
+}
+
+function getLastEntryId(wdb) {
+    return function() {
+        debug('Get last entry id');
+        return wdb.get('SELECT id FROM entry ORDER BY id DESC');
     }
 }
 
@@ -254,9 +282,26 @@ function insertEntry(wdb, entry) {
             values.push(entry.parameters[keys[i]]);
         }
 
-
         var command = 'INSERT INTO entry (epoch, ' + keys.join(',') + ')' +
             ' values(' + entry.epoch + ',' + values.join(',') + ')';
+        debug('run insert entry');
+        return wdb.run(command);
+    }
+}
+
+function insertEntry1(wdb, entry) {
+    return function() {
+        var keys = _.keys(entry.parameters);
+        var values = [];
+        for(var i=0; i<keys.length; i++) {
+            var value = entry.parameters[keys[i]];
+            if(typeof value === 'string') value = "'" + value + "'";
+            values.push(entry.parameters[keys[i]]);
+        }
+
+
+        var command = 'INSERT INTO entry (id, epoch, ' + keys.join(',') + ')' +
+            ' values(' + entry.id + ',' + entry.epoch + ',' + values.join(',') + ')';
         debug('run insert entry');
         return wdb.run(command);
     }
@@ -312,6 +357,7 @@ function insertEntryMean(wdb, entry) {
                     })
                     .flatten().value();
             }
+
             promises.push(wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");"));
         }
         debug('Insert entries mean');
@@ -323,8 +369,20 @@ function handleError(err) {
     debug('Error: ', err);
 }
 
+function test() {
+    var wdb = getWrappedDB('1000');
+    return Promise.resolve()
+        .then(createTables1(wdb));
+}
+
 function save(entry, options) {
+    if(entry instanceof Array) {
+        saveEntryArray(entry, options);
+        return;
+    }
+
     var wdb = getWrappedDB(entry.deviceId, options);
+
     if(!options.maxRecords) {
         return Promise.reject(new Error('maxRecords option is mandatory'));
     }
@@ -334,19 +392,38 @@ function save(entry, options) {
         if(options.maxRecords[names[i]])
             maxRecords.push(options.maxRecords[names[i]])
     }
-    return Promise.resolve()
-        .then(createTables(wdb))
+
+    var createTablesFn = entry.id ? createTables1 : createTables;
+    var insertEntryFn = entry.id ? insertEntry1 : insertEntry;
+    //insertEntryFn = insertEntry;
+    var res =  Promise.resolve()
+        .then(createTablesFn(wdb))
         .then(createIndexes(wdb))
         .then(getTableInfo(wdb))
         .then(createMissingColumns(wdb, _.keys(entry.parameters)))
-        .then(insertEntry(wdb, entry))
+        .then(insertEntryFn(wdb, entry))
         .then(getEntryMean(wdb, entry))
         .then(insertEntryMean(wdb, entry))
         .then(getAllEntryIds(wdb))
         .then(keepRecentIds(wdb, options.maxRecords.entry))
         .then(getAllMeanEpoch(wdb, maxRecords))
-        .then(keepRecentMeanEpoch(wdb, 5))
-        .catch(handleError);
+        .then(keepRecentMeanEpoch(wdb, 5));
+
+    res.catch(handleError);
+    return res;
+}
+
+function saveEntryArray(entries, options) {
+    var promise = Promise.resolve();
+    for(var i=0; i<entries.length; i++) {
+        (function(i) {
+            promise = promise.then(function() {
+                return save(entries[i], options);
+            });
+        })(i)
+
+    }
+    return promise;
 }
 
 function get(deviceId, options) {
@@ -400,13 +477,14 @@ function status(deviceId) {
     });
 }
 
-var count = 0;
 function getWrappedDB(id, options, mode) {
     options = options || {};
     var dir = options.dir || './sqlite/';
 
-    debug('count:', ++count);
-    var dbloc = path.join(dir, id+'.sqlite');
+
+    var file = id + '.sqlite';
+    var dbloc = path.join(dir, file);
+    debug('opening database', dbloc);
     var db = new sqlite.cached.Database(dbloc, mode);
     return new PromiseWrapper(db, ['all', 'run', 'get']);
 }
@@ -415,4 +493,16 @@ function query(id) {
     var wdb = getWrappedDB(id);
     [].shift.apply(arguments);
     return wdb.all.apply(wdb, arguments);
+}
+
+function getLastId(deviceId) {
+    var wdb = getWrappedDB(deviceId);
+    var res = Promise.resolve()
+        .then(getLastEntryId(wdb))
+        .then(function(res) {
+            return res.id;
+        });
+
+    res.catch(handleError);
+    return res;
 }

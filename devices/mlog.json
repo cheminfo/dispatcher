@@ -1,0 +1,19 @@
+{
+    "parameters":{
+        "K": {
+            "label": "Internal temperature",
+            "name":"internalTemperature"
+        },
+        "L": {
+            "label": "External temperature",
+            "name":"externalTemperature"},
+        "M": {
+            "label": "Target temperature",
+            "type":"number",
+            "editable":true
+        }
+    },
+    "refresh":1000,
+    "nbParam": 52,
+    "multiLog": true
+}

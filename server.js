@@ -20,6 +20,7 @@ var debug = require('debug')('main'),
 var configName = (argv.config && (typeof argv.config === 'string')) ? argv.config : 'default';
 debug('config name:', configName);
 var config = require('./configs/config').load(configName);
+console.log(config);
 var devices = config.devices;
 
 

@@ -2,9 +2,12 @@
 var _ = require('lodash'),
     EventEmitter = require('events').EventEmitter,
     debug = require('debug')('cache'),
-    parser = require('../lib/parser');
+    database = require('../db/database'),
+    parser = require('../lib/parser'),
+    Promise = require('bluebird');
 
-
+var lastIds = {};
+var doingMultiLog = false;
 var data = {};
 var Cache = exports = module.exports = function Cache(requestManager, options) {
     this.interval = null;
@@ -33,45 +36,27 @@ Cache.prototype.start = function() {
     var sendEvent=function() {
         for(var i=0; i<that.data.devices.length; i++) {
             (function(i) {
-                var nbParam = that.data.devices[i].nbParam;
-                var cmd = that.data.devices[i].prefix+'c';
-                that.requestManager.addRequest(cmd).then(function(response) {
-                    debug('Request done');
 
-                    // Pass the response given by the serial device to the parser
-                    var entries = parser.parse(cmd, response, {
-                        nbParam: nbParam
+                // The command depends if the device is a multilog
+                // We use c for non-multi-log
+                // And m for multi-log
+                var multiLog = that.data.devices[i].multiLog;
+
+
+                if(multiLog && !doingMultiLog) {
+                    getLastId(that, that.data.devices[i]).then(function(lastId) {
+                        console.log('in then resolve');
+                        lastIds[that.data.devices[i].id] = lastId || 0;
+                        doMultilogRequest(that, that.data.devices[i]);
+                    }).catch(function() {
+                        console.log('in catch');
+                        lastIds[that.data.devices[i].id] = 0;
+                        doMultilogRequest(that, that.data.devices[i]);
                     });
-
-
-                    var id =  that.data.devices[i].id;
-                    var status = that.data.status[id] = that.data.status[id] || { id: id};
-                    that.data.entry[id] = that.data.entry[id] || {};
-
-                    if(entries.length > 1) {
-                        debug('Unexpected error..., ', entries.length, 'entries when 1 expected');
-                    }
-
-                    status.lastTrial = new Date().getTime();
-                    status.active = (entries.length === 1);
-                    if(status.active) {
-                        that.data.deviceIds[id] = entries[0].deviceId;
-                        var isNew = (status.lastUpdate !== entries[0].epoch);
-                        status.lastUpdate = entries[0].epoch;
-                        status.nbFailures = 0;
-                        that.data.entry[id] = entries[0];
-                        that.emit('data', that.data.entry[id]);
-                        if(isNew) {
-                            that.emit('newdata', id, that.data.entry[id]);
-                        }
-
-                    }
-                    else {
-                        status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
-                    }
-                }, function(err) {
-                    debug('rejected...', err);
-                });
+                }
+                else if(!multiLog){
+                    doCRequest(that, that.data.devices[i]);
+                }
             })(i)
         }
     };
@@ -79,6 +64,131 @@ Cache.prototype.start = function() {
         this.interval = setInterval(sendEvent, delay);
     }
 };
+
+function doMultilogRequest(that, device) {
+    debug('do multilog request', lastIds[device.id]);
+    var lastId = lastIds[device.id];
+    doingMultiLog = true;
+    var cmd = 'm' + lastId;
+
+    // Enforce longer timeout for the m command
+    return that.requestManager.addRequest(cmd, {
+        timeout: 1000
+    }).then(function(response) {
+        var entries = parser.parse(cmd, response);
+
+        var id =  device.id;
+        var status = that.data.status[id] || { id: id};
+        that.data.entry[id] = that.data.entry[id] || {};
+
+        status.lastTrial = new Date().getTime();
+        if(entries.length === 0) {
+            debug('Unexpected error... m command should return at least 1 result');
+            doingMultiLog = false;
+            return;
+        }
+
+        status.active = (entries.length >= 1);
+        var isNew = false;
+        if(status.active) {
+            that.data.deviceIds[id] = entries[0].deviceId;
+            status.nbFailures = 0;
+
+        }
+        if(entries.length === 1) {
+            doingMultiLog = false;
+
+            // Nothing to do
+        }
+
+        if(entries.length > 1) {
+            console.log('length', entries.length);
+            that.data.entry[id] = entries.slice(1);
+            status.lastUpdate = entries[entries.length-1].epoch;
+            lastIds[device.id] = entries[entries.length-1].id;
+            that.emit('newdata', device.id, that.data.entry[id]);
+            doMultilogRequest(that, device);
+        }
+
+        if(entries.length === 0) {
+            status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+        }
+
+        return entries.length;
+    });
+}
+
+function doCRequest(that, device) {
+    debug('do c request');
+    var nbParam = device.nbParam;
+    var cmdLetter = 'c';
+    var cmd = device.prefix + cmdLetter;
+    return that.requestManager.addRequest(cmd).then(function(response) {
+        debug('Request done');
+
+        // Pass the response given by the serial device to the parser
+        var entries = parser.parse(cmd, response, {
+            nbParam: nbParam
+        });
+
+
+        var id =  device.id;
+        var status = that.data.status[id] || { id: id};
+        that.data.entry[id] = that.data.entry[id] || {};
+
+
+        if(entries.length > 1) {
+            debug('Unexpected error..., ', entries.length, ', multilog is ', multiLog);
+        }
+
+        status.lastTrial = new Date().getTime();
+
+        status.active = (entries.length === 1);
+        if(status.active) {
+            debug('active');
+            that.data.deviceIds[id] = entries[0].deviceId;
+            var isNew = (status.lastUpdate !== entries[0].epoch);
+            status.lastUpdate = entries[0].epoch;
+            status.nbFailures = 0;
+            that.data.entry[id] = entries[0];
+            that.emit('data', that.data.entry[id]);
+            if(isNew) {
+                that.emit('newdata', id, that.data.entry[id]);
+            }
+
+        }
+        else {
+            status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+        }
+    }, function(err) {
+        debug('rejected...', err);
+    });
+
+}
+
+
+
+
+function getLastId(that, device) {
+
+    // If it is a multilog, we want to know what the last id is
+    // We look in the cache, if we don't find it we look for the
+    // last id in the database, if we don't find it we use the m
+    // command
+    if (lastIds[device.id]) return Promise.resolve(lastIds[device.id]);
+
+    // Get the device id from database
+    // that operation can fail for example if the database
+    // Does not yet exist
+    var cmd = device.prefix + 'q';
+    return that.requestManager.addRequest(cmd).then(function(deviceId) {
+        // Remove newline
+        deviceId = deviceId.slice(0, deviceId.length-2);
+        console.log('device id', deviceId);
+        return database.getLastId(deviceId);
+    });
+
+}
 
 Cache.prototype.stop = function() {
     if(this.interval) {

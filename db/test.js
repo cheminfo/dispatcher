@@ -55,6 +55,12 @@ if(argv.status) {
     database.status('test1');
 }
 
+//database.getLastId('1000').then(function( res) {
+//    console.log('last id', res);
+//});
+
+database.test();
+
 //openDatabase('./sqlite/test.sqlite').then(function(db) {
 //    var wdb = new Wrapper(db, ['all', 'get', 'run']);
 //    console.log(wdb.all);
