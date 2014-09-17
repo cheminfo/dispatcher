@@ -3,3 +3,4 @@ appconfig.json
 .idea/workspace.xml
 sqlite
 db/sqlite
+static/.idea
