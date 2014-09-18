@@ -72,3 +72,86 @@ Indicate for what files you want to see debug messages separated by commas
 ```
 DEBUG=cache,SerialQueueManager,parser nodemon server.js --config zigbee
 ```
+
+On a raspberry PI
+=================
+
+## Create a boot SD card
+
+* Download raspbian and unzip the file to get the .img. (http://www.raspberrypi.org/downloads)
+* unmount the disk (don't eject it !!!) and remember the ID of the disk. On MacOSX:
+```
+sudo diskutil unmount /dev/disk3s1
+```
+* or on linux
+```
+unmount /dev/sdXN
+```
+* dump the image to the sd card (add the “r” in front of “disk” to use a faster device (http://elinux.org/RPi_Easy_SD_Card_Setup)). It will take several minutes to complete. Dump to the disk and not to the partition. Be sure you write on the correct disk number or YOU WILL LOSE ALL YOUR DATA ON YOUR COMPUTER.
+```
+sudo dd bs=1m if=2014-01-07-wheezy-raspbian.img of=/dev/rdiskXXX
+```
+* eject the SD after dd is over
+
+## Post install configuration raspi-config
+
+* resize the partition
+* change password (user=pi)
+* choose default locale to en_US.UTF-8 UTF-8
+* set time zone
+
+## Fixed IP address
+
+```
+vi /etc/network/interfaces
+auto eth0
+iface eth0 inet static
+address 192.168.2.1
+netmask 255.255.255.0
+gateway 192.1.2.254
+/etc/init.d/networking restart
+```
+
+## Must have packages
+````
+sudo bash
+apt-get update
+apt-get install dnsutils
+apt-get install apt-file
+apt-file update
+```
+
+## Install node JS
+```
+cd /usr/local/src
+wget "http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-arm-pi.tar.gz"
+tar -xzvf "node*tar.gz"
+mkdir -p /usr/local/node
+mv "node-*pi" /usr/local/node
+ln -s /usr/local/node/node*pi /usr/local/node/latest
+ln -s /usr/local/node/latest/bin/node /usr/local/bin/node
+ln -s /usr/local/node/latest/bin/npm /usr/local/bin/npm
+```
+
+## Install dispatcher
+```
+cd /usr/local/node
+git clone "https://github.com/cheminfo/dispatcher.git"
+cd dispatcher
+cp default.json appconfig.json
+npm install
+```
+
+## Install monitoring
+```
+apt-get install monit
+```
+
+
+
+
+
+
+
+
+
