@@ -20,6 +20,9 @@ exports = module.exports = {
     test: test
 };
 
+// epoch value is in seconds
+// We set this to 1 year (from 1970)
+var minEpochValue = 356 * 24 * 3600;
 
 var means = [
     {
@@ -381,6 +384,12 @@ function save(entry, options) {
         return;
     }
 
+    // Don't save anything that has a small epoch
+    // This means the device's epoch has not yet
+    // been updated
+    if(entry.epoch < minEpochValue) {
+        return Promise.resolve();;
+    }
     var wdb = getWrappedDB(entry.deviceId, options);
 
     if(!options.maxRecords) {
