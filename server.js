@@ -65,6 +65,16 @@ http.listen(app.get("port"), app.get("ipaddr"), function() {
 });
 
 
+var modules = ['navview'];
+debug('Mounting modules', modules);
+
+for(var i=0; i<modules.length; i++) {
+    var router = require('./routes/'+modules[i]);
+    app.use('/'+modules[i], router);
+}
+
+
+
 // The root element redirects to the default visualizer view
 var view = '/visualizer/index.html?config=/configs/default.json&viewURL=/views/' + (argv.view || 'dispatcher') + '.json';
 app.get('/', function(req, res) {
@@ -167,9 +177,10 @@ app.get('/database/:device', queryValidator, function(req, res) {
     var fields = res.locals.parameters.fields || '*';
     var mean = res.locals.parameters.mean || 'entry';
     var limit = res.locals.parameters.limit || 10;
+    fields = fields.split(',');
     var options = {
         limit: limit,
-        fields: fields.split(','),
+        fields: fields,
         mean: mean
     };
 
@@ -183,44 +194,3 @@ app.get('/database/:device', queryValidator, function(req, res) {
     });
 });
 
-app.get('/navview/list', middleware.validateParameters({ name: 'dir', required: false}), function(req, res){
-    var dir = './static/views';
-    if(res.locals.parameters.dir) {
-        if(res.locals.parameters.dir.indexOf('..') > -1) {
-            return res.status(400).json();
-        }
-        dir = path.join(dir, res.locals.parameters.dir);
-        console.log('dir: ', dir);
-    }
-    console.log('get directories');
-    var list = getDirectories(dir, res.locals.parameters.dir);
-    if(!list) {
-        return res.status(404).json();
-    }
-    list.map(function(el) {
-        el.rel = res.locals.parameters.dir ? path.normalize(res.locals.parameters.dir) + '/' :  './';
-        return el;
-    });
-    return res.status(200).json(list);
-});
-
-function getDirectories(dir, relDir) {
-    try{
-        console.log(dir, relDir);
-        return fs.readdirSync(dir).filter(function(file) {
-            return file[0] !== '.';
-        }).map(function (file) {
-            return {
-                name: file,
-                isDir: fs.statSync(path.join(dir, file)).isDirectory(),
-                rel: dir,
-                url: path.join('/views/', relDir || '', file)
-            };
-        });
-    }
-    catch(err) {
-        console.log(err);
-        return null;
-    }
-
-}
