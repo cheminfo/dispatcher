@@ -2,15 +2,19 @@
     "parameters":{
         "K": {
             "label": "Internal temperature",
-            "name":"internalTemperature"
+            "name":"internalTemperature",
+            "factor": 0.1
         },
         "L": {
             "label": "External temperature",
-            "name":"externalTemperature"},
+            "name":"externalTemperature",
+            "factor": 0.1
+        },
         "M": {
             "label": "Target temperature",
             "type":"number",
-            "editable":true
+            "editable":true,
+            "factor": 0.1
         }
     },
     "refresh":1000,
