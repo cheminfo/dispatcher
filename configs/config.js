@@ -52,20 +52,10 @@ function processConf(conf) {
         conf.sqlite.dir = path.join(__dirname, '..', conf.sqlite.dir);
     }
 
-    if(typeof conf.port === 'object' && conf.port.regexp) {
-        var dir = conf.port.dir || '/dev';
-        var l = fs.readdirSync(dir);
-        var regexp = new RegExp(conf.port.regexp);
-        var isMatch = false;
-        for(var i=0; i< l.length; i++) {
-            if(l[i].match(regexp)) {
-                isMatch = true;
-                conf.port = path.join(dir, l[i]);
-                break;
-            }
-        }
-        if(!isMatch) throw new Error('Cannot find port based on Regular Expression');
+    if(!conf.port) {
+        throw new Error("You must specify a port");
     }
+
 
     // The configuration varibale will eventually contain both
     // the basic configuration and the devices configuration

@@ -11,9 +11,7 @@ var debug = require('debug')('main'),
     middleware = require('./middleware/common'),
     appconfig = require('./appconfig.json'),
     _ = require('lodash'),
-    app = express(),
-    path = require('path'),
-    fs = require('fs');
+    app = express();
 
 
 
@@ -193,4 +191,3 @@ app.get('/database/:device', queryValidator, function(req, res) {
         return res.status(400).json('Database error');
     });
 });
-

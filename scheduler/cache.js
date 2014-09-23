@@ -69,15 +69,14 @@ function doMultilogRequest(that, device) {
     var lastId = lastIds[device.id];
     doingMultiLog = true;
     var cmd = 'm' + lastId;
-
+    var id =  device.id;
+    that.data.status[id] = that.data.status[id] || { id: id};
+    
     // Enforce longer timeout for the m command
     return that.requestManager.addRequest(cmd, {
         timeout: 1000
     }).then(function(response) {
         var entries = parser.parse(cmd, response);
-
-        var id =  device.id;
-        that.data.status[id] = that.data.status[id] || { id: id};
         var status = that.data.status[id];
         that.data.entry[id] = that.data.entry[id] || {};
 
