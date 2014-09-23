@@ -23,6 +23,7 @@ exports = module.exports = {
 // epoch value is in seconds
 // We set this to 1 year (from 1970)
 var minEpochValue = 356 * 24 * 3600;
+var saveCount = 0; cleanPeriod = 100;
 
 var means = [
     {
@@ -412,11 +413,15 @@ function save(entry, options) {
         .then(createMissingColumns(wdb, _.keys(entry.parameters)))
         .then(insertEntryFn(wdb, entry))
         .then(getEntryMean(wdb, entry))
-        .then(insertEntryMean(wdb, entry))
-        .then(getAllEntryIds(wdb))
-        .then(keepRecentIds(wdb, options.maxRecords.entry))
-        .then(getAllMeanEpoch(wdb, maxRecords))
-        .then(keepRecentMeanEpoch(wdb, 5));
+        .then(insertEntryMean(wdb, entry));
+
+    if(saveCount % cleanPeriod === 0) {
+        res = res.then(getAllEntryIds(wdb))
+            .then(keepRecentIds(wdb, options.maxRecords.entry))
+            .then(getAllMeanEpoch(wdb, maxRecords))
+            .then(keepRecentMeanEpoch(wdb, 5));
+    }
+     saveCount += 1;
 
     res.catch(handleError);
     return res;
