@@ -127,6 +127,8 @@ function doCRequest(that, device) {
     var nbParam = device.nbParam;
     var cmdLetter = 'c';
     var cmd = device.prefix + cmdLetter;
+    var id =  device.id;
+    var status = that.data.status[id] || { id: id};
     return that.requestManager.addRequest(cmd).then(function(response) {
         debug('Request done');
 
@@ -134,10 +136,6 @@ function doCRequest(that, device) {
         var entries = parser.parse(cmd, response, {
             nbParam: nbParam
         });
-
-
-        var id =  device.id;
-        var status = that.data.status[id] || { id: id};
         that.data.entry[id] = that.data.entry[id] || {};
 
 
@@ -167,7 +165,9 @@ function doCRequest(that, device) {
     }, function(err) {
         debug('rejected...', err);
         var status = that.data.status[device.id];
-        status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+        if(status) {
+            status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+        }
     });
 
 }
