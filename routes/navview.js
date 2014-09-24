@@ -1,22 +1,24 @@
 var router = require('express').Router(),
     middleware = require('../middleware/common'),
     fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    debug = require('debug')('navview');
 
 exports  = module.exports = router;
 
+var viewDirectory = './static/views';
 
 router.get('/list', middleware.validateParameters({ name: 'dir', required: false}), function(req, res){
-    var dir = './static/views';
+    var dir = viewDirectory;
     if(res.locals.parameters.dir) {
         if(res.locals.parameters.dir.indexOf('..') > -1) {
-            return res.status(400).json();
+            return res.status(400).json({});
         }
-        dir = path.join(dir, res.locals.parameters.dir);
+        dir = path.join(viewDirectory, res.locals.parameters.dir);
     }
     var list = getDirectories(dir, res.locals.parameters.dir);
     if(!list) {
-        return res.status(404).json();
+        return res.status(404).json({});
     }
     list.map(function(el) {
         el.rel = res.locals.parameters.dir ? path.normalize(res.locals.parameters.dir) + '/' :  './';
@@ -25,9 +27,117 @@ router.get('/list', middleware.validateParameters({ name: 'dir', required: false
     return res.status(200).json(list);
 });
 
+router.post('/mkdir',
+    middleware.validateParameters([{ name: 'dir', required: true}, {name: 'name', required: true}]),
+    checkDir('dir'),
+    function(req, res) {
+    var dir = res.locals.parameters.dir;
+    var name = res.locals.parameters.name;
+
+
+    try{
+        fs.mkdirSync(path.join(dir, name));
+        return res.status(200).json({});
+    } catch(err) {
+        debug('Error creating directory', err);
+        return res.status(400).json({});
+    }
+});
+
+router.post('/touch',
+    middleware.validateParameters([ {name: 'dir'},{name: 'name'}]),
+    checkDir('dir'),
+    checkFileNotExist('dir','name'),
+    function(req, res) {
+    debug('touch');
+
+        var dir = res.locals.parameters.dir;
+        var name = res.locals.parameters.name;
+        fs.writeFile(path.join(dir,name), '', function(err) {
+            if(err) {
+                debug('error writing file', err);
+                return res.status(400).json({});
+            }
+            return res.status(200).json({});
+        });
+    return res.status(200).json({});
+});
+
+router.post('/copy',
+    middleware.validateParameters([{name: 'dir'}, {name: 'name'}, {name: 'newDir'}, {name: 'newName'}]),
+    checkDir('dir'),
+    checkDir('newDir'),
+    checkFileExist('dir','name'),
+    checkFileNotExist('newDir', 'newName'),
+    function(req, res) {
+        var dir = res.locals.parameters.dir;
+        var newDir = res.locals.parameters.newDir;
+        var name = res.locals.parameters.name;
+        var newName = res.locals.parameters.newName;
+
+        copyFile(path.join(dir, name), path.join(newDir, newName), function(err) {
+            if(err) {
+                return res.status(400).json({});
+            }
+            return res.status(200).json({});
+        });
+    }
+);
+
+router.post('/save',
+    middleware.validateParameters([{name: 'dir'}, {name: 'name'}, {name: 'content'}]),
+    checkDir('dir'),
+    checkFileExist('dir','name'),
+    function(req, res) {
+        var content = res.locals.parameters.content;
+        var dir = res.locals.parameters.dir;
+        var name = res.locals.parameters.name;
+        fs.writeFile(path.join(dir, name), content, function(err) {
+            if(err) {
+                return res.status(400).json({});
+            }
+            return res.status(200).json({});
+        });
+    }
+);
+
+router.put('/rename',
+    middleware.validateParameters([{name: 'dir'}, {name: 'name'}, {name: 'newName'}]),
+    checkDir('dir'),
+    checkFileExist('dir','name'),
+    function(req, res) {
+        var dir = res.locals.parameters.dir;
+        var name = res.locals.parameters.name;
+        var newName = res.locals.parameters.newName;
+
+        fs.rename(path.join(dir, name), path.join(dir, newName), function(err) {
+            if(err) return res.status(400).json({});
+        });
+        return res.status(200).json({});
+    }
+);
+
+router.put('/move',
+    middleware.validateParameters([{name: 'dir'}, {name: 'name'}, {name: 'newDir'}, {name: 'newName'}]),
+    checkDir('dir'),
+    checkDir('newDir'),
+    checkFileExist('dir','name'),
+    checkFileNotExist('newDir', 'newName'),
+    function(req, res) {
+        var dir = res.locals.parameters.dir;
+        var newDir = res.locals.parameters.newDir;
+        var name = res.locals.parameters.name;
+        var newName = res.locals.parameters.newName;
+
+        fs.rename(path.join(dir, name), path.join(newDir, newName), function(err) {
+            if(err) return res.status(400).json({});
+        });
+        return res.status(200).json({});
+    }
+);
+
 function getDirectories(dir, relDir) {
     try{
-        console.log(dir, relDir);
         return fs.readdirSync(dir).filter(function(file) {
             return file[0] !== '.';
         }).map(function (file) {
@@ -42,5 +152,91 @@ function getDirectories(dir, relDir) {
     catch(err) {
         console.log(err);
         return null;
+    }
+}
+
+function checkDir(name) {
+    return function(req, res, next) {
+        if(res.locals.parameters[name].indexOf('..') > -1) {
+            debug('The directory cannot contain ".."');
+            return res.status(400).json({});
+        }
+
+        // Check that the directory exists
+        res.locals.parameters[name] = path.join(viewDirectory, res.locals.parameters[name]);
+        var dir = res.locals.parameters[name];
+        if(!fs.existsSync(dir)) {
+            debug('Dir does not exist', dir);
+            return res.status(400).json({});
+        }
+        next();
+    };
+}
+
+
+
+function checkFile(file) {
+    return function(req, res, next) {
+        fs.exists(file, function(err) {
+            if(err) {
+                return res.status(400).json({});
+                debug('Error: file does not exist')
+            }
+        });
+        next();
+    }
+}
+
+
+function checkFileNotExist(dir, name) {
+    return function (req, res, next) {
+        var file = path.join(res.locals.parameters[dir], res.locals.parameters[name]);
+        fs.exists(file, function (exists) {
+            if (!exists) {
+                next();
+                return;
+            }
+            debug('Error: file already exists');
+            return res.status(400).json({});
+        });
+    };
+}
+
+function checkFileExist(dir, name) {
+    return function (req, res, next) {
+        var file = path.join(res.locals.parameters[dir], res.locals.parameters[name]);
+        fs.exists(file, function(exists) {
+            if(exists) {
+                next();
+                return;
+            }
+            debug('Error: file does not exist', file, process.cwd());
+            return res.status(400).json({});
+        });
+    }
+}
+
+
+function copyFile(source, target, cb) {
+    var cbCalled = false;
+
+    var rd = fs.createReadStream(source);
+    rd.on("error", function(err) {
+        done(err);
+    });
+    var wr = fs.createWriteStream(target);
+    wr.on("error", function(err) {
+        done(err);
+    });
+    wr.on("close", function(ex) {
+        done();
+    });
+    rd.pipe(wr);
+
+    function done(err) {
+        if (!cbCalled) {
+            cb(err);
+            cbCalled = true;
+        }
     }
 }

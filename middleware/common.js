@@ -6,7 +6,6 @@ exports.validateParameters = function (params) {
 
     return function(req, res, next) {
         var validParameters = {};
-
         for (var i = 0; i < params.length; i++) {
 
             var param = params[i];

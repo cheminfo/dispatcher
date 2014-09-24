@@ -72,12 +72,17 @@ var validateDevice = middleware.validateParameters({type: 'device', name: 'devic
 // The static directory is where all the statically served files go
 // Like jpg, js, css etc...
 app.use(express.static(__dirname + '/static'));
+var bodyParser = require('body-parser');
+app.use( bodyParser.json() );
+app.use( bodyParser.urlencoded() );
+app.use(bodyParser.raw());
 
 app.use('/', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
+
 
 var ipaddress = appconfig.ipaddress || '';
 var ipValid = network.validateIp(ipaddress);
@@ -228,8 +233,6 @@ app.get('/database/:device', queryValidator, function(req, res) {
         var chart = filter.visualizerChart(res.locals.parameters.device, result);
         return res.status(200).json(chart);
     }).catch(function(err) {
-        console.log('Error: ', err);
-        console.log('Error stack', err.stack);
         return res.status(400).json('Database error');
     });
 });
