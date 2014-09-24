@@ -16,13 +16,7 @@ exports = module.exports = {
 
         _.defaults(configuration, def);
         processConf(configuration);
-        if(checkConfig(configuration)) {
-            // Ensure the returned value is read-only
-            return _.cloneDeep(configuration);
-        }
-        else {
-            throw new Error('Bad config file');
-        }
+        checkConfig(configuration);
     },
 
     get: function() {
@@ -35,6 +29,9 @@ exports = module.exports = {
 };
 
 function checkConfig(conf) {
+    if(!conf) {
+        throw new Error('Config Error: config undefined');
+    }
     // Check that the database directory exists
     if(conf.sqlite.dir) {
         if(!fs.existsSync(conf.sqlite.dir)) {
@@ -42,7 +39,9 @@ function checkConfig(conf) {
         }
     }
 
-    return !!conf;
+    if(!conf.port) {
+        throw new Error("You must specify a port");
+    }
 }
 
 function processConf(conf) {
@@ -51,11 +50,6 @@ function processConf(conf) {
     if(conf.sqlite && conf.sqlite.dir) {
         conf.sqlite.dir = path.join(__dirname, '..', conf.sqlite.dir);
     }
-
-    if(!conf.port) {
-        throw new Error("You must specify a port");
-    }
-
 
     // The configuration varibale will eventually contain both
     // the basic configuration and the devices configuration

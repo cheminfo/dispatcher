@@ -6,9 +6,11 @@ var debug = require('debug')('CacheDatabase'),
     db = require('./database'),
     _ = require('lodash');
 
-var CacheDatabase = exports = module.exports = function CacheDatabase(cache) {
+var CacheDatabase = exports = module.exports = function CacheDatabase(cache, config) {
     this.cache = cache;
-    this.config = require('../configs/config').get();
+    this.config = config;
+    //require('../configs/config').get();
+
 };
 
 CacheDatabase.prototype.start = function() {

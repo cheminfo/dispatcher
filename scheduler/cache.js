@@ -9,14 +9,14 @@ var _ = require('lodash'),
 var lastIds = {};
 var doingMultiLog = false;
 var data = {};
-var Cache = exports = module.exports = function Cache(requestManager, options) {
+var Cache = exports = module.exports = function Cache(requestManager, config, options) {
     this.interval = null;
-    this.config = require('../configs/config').get();
+    this.config = config;
     this.requestManager = requestManager;
 
     this.options = options || {};
     this.data = {};
-    this.data.devices = this.config.devices;
+    this.data.devices = _.cloneDeep(this.config.devices);
     this.data.status = {};
     this.data.entry = {};
     this.data.deviceIds = {};
@@ -71,7 +71,7 @@ function doMultilogRequest(that, device) {
     var cmd = 'm' + lastId;
     var id =  device.id;
     that.data.status[id] = that.data.status[id] || { id: id};
-    
+
     // Enforce longer timeout for the m command
     return that.requestManager.addRequest(cmd, {
         timeout: 1000
@@ -127,10 +127,10 @@ function doCRequest(that, device) {
     var cmdLetter = 'c';
     var cmd = device.prefix + cmdLetter;
     var id =  device.id;
-    var status = that.data.status[id] || { id: id};
+    that.data.status[id] = that.data.status[id] || { id: id};
     return that.requestManager.addRequest(cmd).then(function(response) {
         debug('Request done');
-
+        var status = that.data.status[id];
         // Pass the response given by the serial device to the parser
         var entries = parser.parse(cmd, response, {
             nbParam: nbParam
@@ -159,6 +159,7 @@ function doCRequest(that, device) {
 
         }
         else {
+            that.data.entry[id].parameters = that.data.entry[id].parameters || {};
             status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
         }
     }, function(err) {
@@ -189,7 +190,6 @@ function getLastId(that, device) {
     return that.requestManager.addRequest(cmd).then(function(deviceId) {
         // Remove newline
         deviceId = deviceId.slice(0, deviceId.length-2);
-        console.log('device id', deviceId);
         return database.getLastId(deviceId);
     });
 

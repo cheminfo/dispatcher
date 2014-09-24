@@ -1,8 +1,8 @@
 "use strict";
 var _ = require('lodash');
 
-var EpochScheduler = exports = module.exports = function EpochScheduler(reqManager) {
-    this.config = require('../configs/config').get();
+var EpochScheduler = exports = module.exports = function EpochScheduler(reqManager, config) {
+    this.config = config;
     this.requestManager = reqManager;
 };
 

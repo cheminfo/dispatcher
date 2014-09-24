@@ -2,15 +2,20 @@
     "parameters":{
         "A": {
             "label": "Internal temperature",
-            "name":"internalTemperature"
+            "name":"internalTemperature",
+            "factor": 0.1
         },
         "K": {
             "label": "External temperature",
-            "name":"externalTemperature"},
+            "name":"externalTemperature",
+            "factor": 0.1
+        },
         "C": {
             "label": "Target temperature",
             "type":"number",
             "name": "targetTemperature",
+            "factor": 0.1,
+            "unit": "Celcius",
             "editable":true
         }
     },

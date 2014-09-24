@@ -7,6 +7,7 @@ var debug = require('debug')('main'),
     Filter = require('./lib/filter'),
     Cache = require('./scheduler/cache'),
     database = require('./db/database'),
+    Config = require('./configs/config_new'),
     express = require('express'),
     middleware = require('./middleware/common'),
     appconfig = require('./appconfig.json'),
@@ -18,24 +19,50 @@ var debug = require('debug')('main'),
 
 // Load configuration file
 var configName = (argv.config && (typeof argv.config === 'string')) ? argv.config : 'default';
-debug('config name:', configName);
-var config = require('./configs/config').load(configName);
-var devices = config.devices;
+debug('config arg', configName);
+configName = configName.split(',');
 
+debug('config names:', configName);
 
+var config = new Config();
+var caches = [];
+for(var i=0; i<configName.length; i++) {
+    config.addConfiguration(configName[i]);
+}
 
-var requestManager = new SerialQueueManager(config);
-requestManager.init();
-var epochManager = new EpochManager(requestManager);
-epochManager.start();
+// The configuration variable
+var conf = config.config;
+
+// A hash to easily retrieve serial managers from a device id
+var requestManagers = {};
+
+// First level of config describes the plugged devices,
+// i.e. a device connected to the usb port
+// We have one serial manager per plugged device
+for(var i=0; i<conf.length; i++) {
+    var requestManager = new SerialQueueManager(conf[i]);
+    requestManager.init();
+    var epochManager = new EpochManager(requestManager, conf[i]);
+    epochManager.start();
 
 // Cache and Cache database
-var cache = new Cache(requestManager);
-if(config.sqlite) {
-    var cacheDatabase = new CacheDatabase(cache);
-    cacheDatabase.start();
+    var cache = new Cache(requestManager, conf[i]);
+    caches.push(cache);
+    if(conf[i].sqlite) {
+        var cacheDatabase = new CacheDatabase(cache, conf);
+        cacheDatabase.start();
+    }
+    cache.start();
+
+    for(var j=0; j<conf[i].devices.length; j++) {
+        requestManagers[conf[i].devices[j].id] = requestManager;
+    }
 }
-cache.start();
+//var devices = config.devices;
+
+
+
+
 
 
 // Middleware
@@ -109,27 +136,34 @@ app.get('/param/:device/:param',
 );
 
 app.get('/save',
-    middleware.validateParameters([{name: 'device', type: 'device'}, {name: 'param'}, {name: 'value'}]),
+    middleware.validateParameters([{name: 'device'}, {name: 'param'}, {name: 'value'}]),
     function(req, res) {
-        var idx = _.findIndex(config.devices, { 'id': res.locals.parameters.device });
-        var devPrefix = config.devices[idx].prefix;
-        var cmd = devPrefix + res.locals.parameters.param + res.locals.parameters.value;
-        requestManager.addRequest(cmd).then(function() {
+        var deviceId = res.locals.parameters.device;
+        var reqManager = requestManagers[deviceId];
+        var pluggedDevice = config.findPluggedDevice(deviceId);
+        var prefix = pluggedDevice.findDeviceById(deviceId).prefix;
+        var cmd = prefix + res.locals.parameters.param + res.locals.parameters.value;
+        reqManager.addRequest(cmd).then(function() {
             return res.json({ok: true});
         }, function() {
             return res.status(500, {ok: false});
         });
     });
 
-var filter = new Filter();
+var filter = new Filter(config);
 app.get('/all/:filter', validateFilter, function(req, res) {
     // visualizer filter converts object to an array
     // for easy display in a table
-    var entry = cache.get('entry');
+    //var entry = cache.get('entry');
+    var entry = {}, status = {};
+    for(var i=0; i<caches.length; i++) {
+        entry = _.merge(entry, filter[res.locals.parameters.filter](caches[i].get('entry')));
+        status = _.merge(status, caches[i].get('status'));
+    }
     var all = {
-        config: devices,
-        entry: filter[res.locals.parameters.filter](entry),
-        status: cache.data.status
+        config: config.getMergedDevices(),
+        entry: entry,
+        status: status
     };
 
     res.json(all);
@@ -148,10 +182,18 @@ app.get('/command/:device/:command',
     });
 
 app.post('/command',
-    middleware.validateParameters([{name: 'command'}]),
+    middleware.validateParameters([{name: 'command', required: true}, {name: 'device', required: true}]),
     function(req, res) {
+        var deviceId = res.locals.parameters.device;
+        var reqManager = requestManagers[deviceId];
+        var pluggedDevice = config.findPluggedDevice(deviceId);
+        var prefix = pluggedDevice.findDeviceById(deviceId).prefix;
+        if(!deviceId) {
+            return res.status(400);
+        }
+
         var cmd = res.locals.parameters.command;
-        requestManager.addRequest(cmd).then(function(result) {
+        reqManager.addRequest(prefix+cmd).then(function(result) {
             return res.send(result);
         }, function() {
             return res.status(500);
@@ -191,3 +233,13 @@ app.get('/database/:device', queryValidator, function(req, res) {
         return res.status(400).json('Database error');
     });
 });
+
+function findDevice(id) {
+    for(var i=0; i<config.length; i++) {
+        var d;
+        if(d = config[i].findDeviceById(id)) {
+            return d;
+        }
+    }
+    return null;
+}

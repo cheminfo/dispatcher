@@ -1,7 +1,10 @@
 var Promise = require('bluebird'),
     debug = require('debug')('PromiseWrapper');
 
-
+// Encapsulates an object in a new one, that maps its methods
+// that use callbacks in Promises
+// It works with any methods which have a callback of the form
+// function(err, res) as their last argument
 exports = module.exports = function(wrappedObj, wrappedFn) {
     this.wrappedObj = wrappedObj;
     this.wrappedFn = wrappedFn;

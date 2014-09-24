@@ -205,7 +205,7 @@
                     "group": [
                         {
                             "script": [
-                                "//When the result is ready, use resolve(result) to send it.\n//In case of an error, use reject(error)\nrequire(['lodash', 'components/bluebird/js/browser/bluebird'], function(_, Promise) {\n    function loadDevices() {\n        return new Promise(function(resolve, reject) {\n            var devices = API.getVar('devices').getValue();\n            if(!devices) {\n                API.createData('devices', []);\n                \n            }\n            setTimeout(function() {\n                resolve(API.getVar('devices').getValue())\n            }, 0);\n            \n        })\n    }\n    \n    loadDevices().then(function(devices) {\n         var config = value.config;\n        var status = [];\n        for(var i=0; i<config.length; i++) {\n            var dev = {};\n            var id = config[i].id;\n            dev.id = id;\n            dev.description = config[i].description;\n            dev.param = value.entry[id].parameters;\n            devices.setChild([i.toString()], dev);\n            var s = value.status[id];\n            s.id = id;\n            s.nbFailures = s.nbFailures.toString();\n            if(+s.nbFailures < 2) {\n                s.bgColor = '#00FF00';\n            }\n            else if(+s.nbFailures <4) {\n                s.bgColor = 'orange';\n            }\n            else {\n                s.bgColor = 'red';\n            }\n            status.push(s);\n        }\n        API.createData('status', status);\n    });\n\n});\n"
+                                "//When the result is ready, use resolve(result) to send it.\n//In case of an error, use reject(error)\nrequire(['lodash', 'components/bluebird/js/browser/bluebird'], function(_, Promise) {\n    function loadDevices() {\n        return new Promise(function(resolve, reject) {\n            var devices = API.getVar('devices').getValue();\n            if(!devices) {\n                API.createData('devices', []);\n                \n            }\n            setTimeout(function() {\n                resolve(API.getVar('devices').getValue())\n            }, 0);\n            \n        })\n    }\n    \n    loadDevices().then(function(devices) {\n         var config = value.config;\n        var status = [];\n        for(var i=0; i<config.length; i++) {\n            var dev = {};\n            var id = config[i].id;\n            dev.id = id;\n            dev.description = config[i].description;\n            if(!value.entry[id]) {\n                dev.param = {};\n            }\n            else {\n                dev.param = value.entry[id].parameters;    \n            }\n            devices.setChild([i.toString()], dev);\n            var s = value.status[id];\n            s.id = id;\n            s.nbFailures = s.nbFailures.toString();\n            if(+s.nbFailures < 2) {\n                s.bgColor = '#00FF00';\n            }\n            else if(+s.nbFailures <4) {\n                s.bgColor = 'orange';\n            }\n            else {\n                s.bgColor = 'red';\n            }\n            status.push(s);\n        }\n        API.createData('status', status);\n    });\n\n});\n"
                             ]
                         }
                     ],
@@ -589,7 +589,9 @@
                                 "postvariables": [
                                     [
                                         {
-                                            "destination": "data",
+                                            "name": "device",
+                                            "destination": "query",
+                                            "variable": "currentDevice",
                                             "filter": "none"
                                         }
                                     ]
@@ -816,7 +818,7 @@
                     },
                     "size": {
                         "width": 52,
-                        "height": 9
+                        "height": 18
                     },
                     "zIndex": 0,
                     "display": true,
