@@ -1,0 +1,28 @@
+{
+    "devices" : [
+        {
+            "type":"device1",
+            "description":"The first device",
+            "prefix":"%A",
+            "id": "%A"
+        },
+        {
+            "type":"flameMaster",
+            "description":"Flame and entrance",
+            "prefix":"%C",
+            "id": "%C"
+        }
+
+    ],
+    "port":"/dev/tty.SLAB_USBtoUART",
+    "baudrate": 38400,
+    "sqlite": {
+        "dir": "sqlite",
+        "maxRecords": {
+            "entry": 100000,
+            "minute": 10000,
+            "hour": 7200,
+            "day": 300
+        }
+    }
+}
