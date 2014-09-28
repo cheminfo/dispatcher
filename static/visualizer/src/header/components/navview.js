@@ -35,6 +35,37 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             return "ci-navview-header-" + this.id + "-" + name;
         },
 
+        reloadTree: function() {
+            this.$tree.fancytree('destroy');
+            this.initTree();
+        },
+
+        reloadActiveNode: function () {
+            this.reloadNode(this.$tree.fancytree('getActiveNode'));
+        },
+
+        reloadNode: function(node) {
+            if(!node.isFolder()) {
+                node = node.getParent();
+            }
+            if(node.isRoot()) {
+                this.reloadTree();
+                return;
+            }
+            var wasExpanded = node.isExpanded();
+            node.load(true).then(function() {
+                if(wasExpanded) {
+                    node.setExpanded(true, {
+                        noAnimation: true
+                    });
+                }
+            });
+        },
+
+        getDir: function(path) {
+            return path.replace(new RegExp(/\/[^\/]+$/), '/');
+        },
+
         load: function(name) {
             console.log('load', name);
         },
@@ -42,9 +73,7 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
         save: function() {
             var that = this;
             console.log('save');
-            var dir = this.activeNode.data.path;
-            console.log(dir);
-            dir = dir.replace(new RegExp(/\/[^\/]+$/), '/');
+            var dir = this.getDir(this.activeNode.data.path);
             console.log('dir to save', dir);
             var req = $.ajax({
                 url: '/navview/save',
@@ -59,7 +88,7 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
 
             req.done(function() {
                 that.log('success-log', 'Successfully saved view');
-                that.reloadTree();
+                that.reloadActiveNode();
             });
             req.fail(function() {
                 that.log('error-log', 'Failed to save view');
@@ -70,6 +99,10 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             var that = this;
             console.log('make dir');
             var dir = this.activeNode.data.path;
+            if(!this.activeNode.isFolder()) {
+                dir = this.getDir(dir);
+            }
+            console.log('dir.....', dir);
             var name = this.getFormContent('docName');
             if(dir && name) {
                 var req = $.ajax({
@@ -83,7 +116,7 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
                 });
                 req.done(function() {
                     that.log('success-log', 'Successfully created directory');
-                    that.reloadTree();
+                    that.reloadActiveNode();
                 });
                 req.fail(function() {
                     that.log('error-log', 'Failed create directory');
@@ -91,8 +124,58 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             }
         },
 
-        reloadTree: function() {
-            this.initTree();
+        remove: function(node) {
+            var that = this;
+            if(node.isFolder()) {
+                return this.log('error-log', 'Failed remove file');
+            }
+
+            var dir = this.getDir(node.data.path);
+            var name = node.title;
+            console.log(dir, name);
+            var req = $.ajax({
+                url: '/navview/file',
+                type: 'DELETE',
+                data: {
+                    dir: dir,
+                    name: name
+                },
+                dataType: 'json'
+            });
+
+            req.done(function() {
+                node.remove();
+                that.log('success-log', 'Successfully removed file');
+            });
+
+            req.fail(function() {
+                that.log('error-log', 'Failed remove file');
+            });
+        },
+
+        removeDir: function(node) {
+            var that = this;
+            if(!node.isFolder()) {
+                return this.log('error-log', 'Failed remove directory');
+            }
+
+            var req = $.ajax({
+                url: '/navview/dir',
+                type: 'DELETE',
+                data: {
+                    dir: node.data.path
+                },
+                dataType: 'json'
+            });
+
+            req.done(function() {
+                node.remove();
+                that.log('success-log', 'Successfully removed directory');
+            });
+
+            req.fail(function() {
+                that.log('error-log', 'Failed remove directory');
+            });
         },
 
         rename: function() {
@@ -113,24 +196,72 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
 
             console.log(dir, name);
 
-            var req = $.ajax({
+            var req = this.ajaxRename({
+                dir: dir,
+                newDir: newDir,
+                name: name,
+                newName: newName
+            });
+
+            req.done(function() {
+                that.log('success-log', 'Successfully renamed file');
+                that.reloadActiveNode();
+            });
+            req.fail(function() {
+                that.log('error-log', 'Failed to rename file');
+            });
+        },
+
+        ajaxRename: function(data) {
+            return $.ajax({
                 url: '/navview/rename',
                 type: 'PUT',
-                data:{
-                    dir: dir,
-                    newDir: newDir,
-                    name: name,
-                    newName: newName
+                data: data,
+                dataType: 'json'
+            });
+        },
+
+        inlineRename: function(node) {
+            var that = this;
+            var data = {
+                dir: node.data.dir,
+                newDir: node.data.dir,
+                newName: node.title,
+                name: that.inlineOldTitle
+            };
+            console.log(data);
+            var req = this.ajaxRename(data);
+
+            req.done(function() {
+                node.setTitle(node.title);
+                that.log('success-log', 'Successfully renamed file');
+            });
+
+            req.fail(function() {
+                node.setTitle(that.inlineOldTitle);
+                that.log('error-log', 'Failed to rename file');
+            })
+        },
+
+        newFile: function() {
+            var that = this;
+            var req = $.ajax({
+                url: '/navview/touch',
+                type: 'POST',
+                data: {
+                    dir: that.activeNode.data.dir,
+                    name: that.getFormContent('docName')
                 },
                 dataType: 'json'
             });
 
             req.done(function() {
-                that.log('success-log', 'Successfully renamed file');
-                that.reloadTree();
+                that.log('success-log', 'File successfully created');
+                that.reloadActiveNode();
             });
+
             req.fail(function() {
-                that.log('error-log', 'Failed to rename file');
+                that.log('error-log', 'Failed to create new file');
             });
         },
 
@@ -140,9 +271,19 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
 
         log: function(name, text) {
 
-            var $log = $('#'+ this.cssId(name));
-            console.log('log', $log);
-            $log.html(text);
+            var $slog = this.$log.find('#'+ this.cssId(name));
+
+            if($slog.length > 0) {
+                if(this.currentLogTimeout) {
+                    clearTimeout(this.currentLogTimeout);
+                }
+                this.$log.find('div').html('');
+                $slog.html(text);
+            }
+
+            this.currentLogTimeout = setTimeout(function() {
+                $slog.html('');
+            }, 5000);
         },
 
         loadRootTree: function() {
@@ -159,6 +300,7 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             return this.loadRootTree().then(function(res) {
                 var source = fancyTreeDirStructure(res);
                 that.$tree.fancytree({
+                    extensions: ["edit"],
                     source: source,
                     lazyLoad: function(event, data) {
                         data.result = $.ajax({
@@ -176,6 +318,53 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
                                 url:  data.node.data.url
                             }
                         }, true);
+                    },
+
+                    keydown: function(event, data) {
+                        event.preventDefault();
+                        switch(event.which) {
+                            case 8:
+                                if(data.node.isFolder()) {
+                                    that.removeDir.apply(that, [data.node]);
+                                }
+                                else {
+                                    that.remove.apply(that, [data.node]);
+                                }
+                                break;
+                        }
+                    },
+                    edit: {
+                        triggerStart: ["f2", "shift+click", "mac+enter"],
+                        beforeEdit: function(event, data){
+                            if(data.node.isFolder()) {
+                                return false;
+                            }
+                            that.inlineOldTitle = data.node.title;
+                            // Return false to prevent edit mode
+                        },
+                        edit: function(event, data){
+                            // Editor was opened (available as data.input)
+                        },
+                        beforeClose: function(event, data){
+                            // Return false to prevent cancel/save (data.input is available)
+                        },
+                        save: function(event, data){
+                            // Save data.input.val() or return false to keep editor open
+                            // Simulate to start a slow ajax request...
+                            data.node.setTitle(data.input.val());
+                            $(data.node.span).addClass('pending');
+                            that.inlineRename.apply(that, [data.node]);
+                            // We return true, so ext-edit will set the current user input
+                            // as title
+                            return true;
+                        },
+                        close: function(event, data){
+                            // Editor was removed
+                            if( data.save ) {
+                                // Since we started an async request, mark the node as preliminary
+                                $(data.node.span).addClass("pending");
+                            }
+                        }
                     }
                 });
             });
@@ -187,21 +376,19 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             this.$_elToOpen.append($("<p>").append('<input type="text" id="' + this.cssId("docName") + '"/>')
                     .append('<br/>')
                     .append(new Button('Save view', function() {
-                        that.save("View", that.getFormContent("docName"));
+                        that.save();
                     }, {color: 'red'}).render())
                     .append(new Button('Mkdir', function() {
-                        that.mkdir(that.getFormContent("docName"));
+                        that.mkdir();
                     }, {color: 'blue'}).render())
-                    .append(new Button('Duplicate view', function() {
-                        that.duplicate(that.getFormContent("docName"))
-                    }, {color: 'gray'}).render())
-                    .append(new Button('Rename view', function() {
-                        that.rename(that.getFormContent("docName"))
-                    }, {color: 'gray'}).render())
+                    .append(new Button('New file', function() {
+                        that.newFile();
+                    }, {color: 'blue'}).render())
             );
-
-            this.$_elToOpen.append($("<div/>").attr('id', this.cssId('error-log')).css('color', 'red'));
-            this.$_elToOpen.append($("<div/>").attr('id', this.cssId('success-log')).css('color', 'green'));
+            this.$log = $('<div/>').attr('id', this.cssId('log'));
+            this.$_elToOpen.append(this.$log);
+            this.$log.append($("<div/>").attr('id', this.cssId('error-log')).css('color', 'red'));
+            this.$log.append($("<div/>").attr('id', this.cssId('success-log')).css('color', 'green'));
             //this.$_elToOpen.append(menu);
             this._buttons = true;
         },
@@ -218,7 +405,8 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
 });
 
 function fancyTreeDirStructure(list) {
-    return list.map(function(el) {
+
+    var x =  list.map(function(el) {
         return {
             title: el.name,
             folder: el.isDir,
@@ -226,8 +414,11 @@ function fancyTreeDirStructure(list) {
             key: el.rel + el.name,
             data: {
                 url: el.url,
-                path: el.rel + el.name
+                path: el.rel + el.name,
+                dir: el.rel
             }
         }
     });
+    console.log('XXXX',  x);
+    return x;
 }

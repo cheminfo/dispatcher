@@ -81,6 +81,7 @@ router.delete('/file',
 );
 
 // This will actually work both for files and directories
+// !!! Acts as rm -rf
 router.delete('/dir',
     middleware.validateParameters({name: 'dir'}),
     checkDir('dir'),
