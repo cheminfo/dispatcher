@@ -1,6 +1,6 @@
 var router = require('express').Router(),
     middleware = require('../middleware/common'),
-    fs = require('fs'),
+    fs = require('fs-extra'),
     path = require('path'),
     debug = require('debug')('navview');
 
@@ -60,8 +60,42 @@ router.post('/touch',
             }
             return res.status(200).json({});
         });
-    return res.status(200).json({});
 });
+
+// "Safe" delete. Won't remove directories
+router.delete('/file',
+    middleware.validateParameters([{name: 'dir'}, {name: 'name'}]),
+    checkDir('dir'),
+    checkFileExist('dir', 'name'),
+    function(req, res) {
+        var dir = res.locals.parameters.dir;
+        var name = res.locals.parameters.name;
+        fs.unlink(path.join(dir, name), function(err) {
+            if(err) {
+                debug('Error removing file');
+                return res.status(400).json({});
+            }
+            return res.status(200).json({});
+        })
+    }
+);
+
+// This will actually work both for files and directories
+router.delete('/dir',
+    middleware.validateParameters({name: 'dir'}),
+    checkDir('dir'),
+    function(req, res) {
+        // remove the directory
+        var dir = res.locals.parameters.dir;
+        fs.remove(dir, function(err) {
+            if(err) {
+                debug('Error removing directory');
+                return res.status(400).json({});
+            }
+            return res.status(200).json({});
+        })
+    }
+);
 
 router.post('/copy',
     middleware.validateParameters([{name: 'dir'}, {name: 'name'}, {name: 'newDir'}, {name: 'newName'}]),
