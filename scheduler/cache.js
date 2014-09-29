@@ -71,36 +71,35 @@ function doMultilogRequest(that, device) {
     var cmd = 'm' + lastId;
     var id =  device.id;
     that.data.status[id] = that.data.status[id] || { id: id};
-
+    var status = that.data.status[id];
+    status.lastTrial = new Date().getTime();
+    status.failure = '';
     // Enforce longer timeout for the m command
     return that.requestManager.addRequest(cmd, {
         timeout: 1000
     }).then(function(response) {
         var entries = parser.parse(cmd, response);
-        var status = that.data.status[id];
         that.data.entry[id] = that.data.entry[id] || {};
 
-        status.lastTrial = new Date().getTime();
-        if(entries.length === 0) {
-            debug('Unexpected error... m command should return at least 1 result');
-            doingMultiLog = false;
-            return;
-        }
 
         status.active = (entries.length >= 1);
         if(status.active) {
             that.data.deviceIds[id] = entries[0].deviceId;
             status.nbFailures = 0;
-
         }
+
+        if(entries.length === 0) {
+            debug('Unexpected error... m command should return at least 1 result');
+            doingMultiLog = false;
+            status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+            status.failure = 'Device did not respond';
+        }
+
         if(entries.length === 1) {
             doingMultiLog = false;
-
-            // Nothing to do
         }
 
         if(entries.length > 1) {
-            debug('m returned ', entries.length-1, 'new entries');
             that.data.entry[id] = _.last(entries);
             status.lastUpdate = entries[entries.length-1].epoch;
             lastIds[device.id] = entries[entries.length-1].id;
@@ -108,15 +107,12 @@ function doMultilogRequest(that, device) {
             doMultilogRequest(that, device);
         }
 
-        if(entries.length === 0) {
-            status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
-        }
-
         return entries.length;
     }, function(err) {
+        var msg = (err instanceof Error) ? err.message : err;
         debug('rejected...', err);
-        var status = that.data.status[device.id];
         status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+        status.failure  = msg;
         doingMultiLog = false;
     });
 }
@@ -131,18 +127,25 @@ function doCRequest(that, device) {
     return that.requestManager.addRequest(cmd).then(function(response) {
         debug('Request done');
         var status = that.data.status[id];
+        status.lastTrial = new Date().getTime();
+        status.failure = '';
         // Pass the response given by the serial device to the parser
-        var entries = parser.parse(cmd, response, {
-            nbParam: nbParam
-        });
+        try {
+            var entries = parser.parse(cmd, response, {
+                nbParam: nbParam
+            });
+        }
+        catch(err) {
+            status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+            status.failure = err.message;
+        }
+
         that.data.entry[id] = that.data.entry[id] || {};
 
 
         if(entries.length > 1) {
             debug('Unexpected error..., ', entries.length, ', multilog is ', multiLog);
         }
-
-        status.lastTrial = new Date().getTime();
 
         status.active = (entries.length === 1);
         if(status.active) {
@@ -161,12 +164,16 @@ function doCRequest(that, device) {
         else {
             that.data.entry[id].parameters = that.data.entry[id].parameters || {};
             status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+            status.failure = 'Device did not respond';
         }
     }, function(err) {
         debug('rejected...', err);
+        var msg = (err instanceof Error) ? err.message : err;
         var status = that.data.status[device.id];
         if(status) {
+            status.lastTrial = new Date().getTime();
             status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
+            status.failure = msg;
         }
     });
 

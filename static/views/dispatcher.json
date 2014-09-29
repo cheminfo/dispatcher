@@ -793,8 +793,8 @@
 								"editable": "none"
 							},
 							{
-								"name": "Last Update",
-								"jpath": "element.lastUpdate",
+								"name": "Last Trial",
+								"jpath": "element.lastTrial",
 								"number": [],
 								"editable": "none"
 							},
@@ -804,6 +804,12 @@
 								"number": [
 									"number"
 								],
+								"editable": "none"
+							},
+							{
+								"name": "Failure reason",
+								"jpath": "element.failure",
+								"number": [],
 								"editable": "none"
 							}
 						]
