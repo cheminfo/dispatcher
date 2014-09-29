@@ -200,7 +200,6 @@ function getDirectories(dir, relDir) {
 
 function checkDir(name) {
     return function(req, res, next) {
-        console.log('HELLO');
         if(res.locals.parameters[name].indexOf('..') > -1) {
             debug('The directory cannot contain ".."');
             return res.status(400).json({});
