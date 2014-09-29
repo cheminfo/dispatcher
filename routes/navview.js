@@ -275,3 +275,22 @@ function copyFile(source, target, cb) {
         }
     }
 }
+
+function getDuplicateFile(file) {
+    var regex = /(.*?)(_\d+)?(\..*)?$/
+
+    var m = regex.exec(file);
+    var root = m[1];
+    var rev = m[2];
+    var ext = m[3];
+
+    if(!rev) {
+        rev = '_1';
+    }
+    else {
+        rev = '_' + (+rev.slice(1) + 1).toString();
+    }
+    ext = ext || '';
+
+    return root + rev + ext;
+}
