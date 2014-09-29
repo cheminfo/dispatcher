@@ -1,0 +1,89 @@
+{
+    "parameters":{
+        "A": {
+            "label": "Detector 1 (flame)",
+            "name":"PARAM_DETECTOR1",
+	    "editable":false
+        },
+        "B": {
+            "label": "Detector 2 (flame)",
+            "name":"PARAM_DETECTOR2",
+	    "editable":false
+        },
+
+        "E": {
+            "label": "First song",
+            "name":"PARAM_FIRST_SONG"
+        },
+        "F": {
+            "label": "Last song",
+            "name":"PARAM_LAST_SONG"
+        },
+        "G": {
+            "label": "Current song",
+            "name":"PARAM_CURRENT_SONG",
+	    "editable":false
+        },
+        "K": {
+            "label": "Delay start sound (1/25s)",
+            "name":"PARAM_DELAY0"
+        },
+        "L": {
+            "label": "Delay flame 1 (1/25s)",
+            "name":"PARAM_DELAY1"
+        },
+        "M": {
+            "label": "Delay flame 2 (1/25s)",
+            "name":"PARAM_DELAY2"
+        },
+        "N": {
+            "label": "Delay flame 3 (1/25s)",
+            "name":"PARAM_DELAY3"
+        },
+        "O": {
+            "label": "Delay flame 4 (1/25s)",
+            "name":"PARAM_DELAY4"
+        },
+        "P": {
+            "label": "Delay flame 5 (1/25s)",
+            "name":"PARAM_DELAY5"
+        },
+        "Q": {
+            "label": "Delay flame 6 (1/25s)",
+            "name":"PARAM_DELAY6"
+        },
+        "R": {
+            "label": "Delay flame 7 (1/25s)",
+            "name":"PARAM_DELAY7"
+        },
+        "S": {
+            "label": "Delay flame 8 (1/25s)",
+            "name":"PARAM_DELAY8"
+        },
+        "T": {
+            "label": "Delay OFF (1/25s)",
+            "name":"PARAM_DELAY9"
+        },
+        "U": {
+            "label": "Green light",
+            "name":"PARAM_STATUS0",
+	    "editable":false
+        },
+        "AF": {
+            "label": "Delay green light (s)",
+            "name":"PARAM_VAR1"
+        },
+        "AO": {
+            "label": "Counter 1 (1/25s)",
+            "name":"PARAM_ACTION1",
+	    "editable":false
+        },
+        "AP": {
+            "label": "Counter 2 (1/25s)",
+            "name":"PARAM_ACTION2",
+	    "editable":false
+        }
+    },
+    "refresh":1000,
+    "nbParam": 52
+}

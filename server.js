@@ -87,11 +87,13 @@ app.use('/', function(req, res, next) {
 var ipaddress = appconfig.ipaddress || '';
 var ipValid = network.validateIp(ipaddress);
 app.set("port", appconfig.port || 80);
-app.set("ipaddr", ipValid ? appconfig.ipaddress : network.getMyIp() || '127.0.0.1');
+app.set("ipaddr", ipValid ? appconfig.ipaddress : ''); // by default we listen to all the ips
+app.set("serveraddress", ipValid ? appconfig.ipaddress : network.getMyIp() || '127.0.0.1');
+
 
 var http = require("http").createServer(app);
 http.listen(app.get("port"), app.get("ipaddr"), function() {
-    console.log('Server launched. Go to ', "http://" + app.get("ipaddr") + ":" + app.get("port"));
+    console.log('Server launched. Go to ', "http://" + app.get("serveraddress") + ":" + app.get("port"));
 });
 
 

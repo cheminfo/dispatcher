@@ -2,7 +2,7 @@
     "devices" : [
     ],
     "port":"/dev/tty.SLAB_USBtoUART",
-    "baudrate": 38600,
+    "baudrate": 38400,
     "serialResponseTimeout": 250,
     "sqlite": {
         "dir": "sqlite"

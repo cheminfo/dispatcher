@@ -3,14 +3,14 @@
         {
             "type":"device1",
             "description":"The first device",
-            "prefix":"$B",
-            "id": "$B"
+            "prefix":"%A",
+            "id": "%A"
         },
         {
-            "type":"device1",
-            "description":"The second device",
-            "prefix":"$A",
-            "id": "$A"
+            "type":"flameMaster",
+            "description":"Flame and entrance",
+            "prefix":"%C",
+            "id": "%C"
         }
 
     ],
