@@ -1,7 +1,7 @@
 var _ = require('lodash'),
     debug = require('debug')('config'),
     path = require('path'),
-    fs = require('fs');
+    fs = require('fs-extra');
 
 var isProcessed = false;
 var configuration = {};
@@ -35,7 +35,12 @@ function checkConfig(conf) {
     // Check that the database directory exists
     if(conf.sqlite.dir) {
         if(!fs.existsSync(conf.sqlite.dir)) {
-            throw new Error('Config Error: The sqlite directory ' + conf.sqlite.dir + ' does not exist');
+            // Create the directory
+            debug('The sqlite directory does not exist. We will try creating it.');
+            if(!fs.mkdirsSync(conf.sqlite.dir)) {
+                throw new Error('Config Error: The sqlite directory ' + conf.sqlite.dir + ' does not exist and unable to create it');
+            }
+
         }
     }
 
