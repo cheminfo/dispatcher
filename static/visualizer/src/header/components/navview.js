@@ -72,7 +72,6 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
 
         save: function() {
             var that = this;
-            console.log('save');
             var dir = this.getDir(this.activeNode.data.path);
             var name = this.activeNode.title;
             console.log('dir to save', dir);
@@ -274,6 +273,12 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             console.log('duplicate');
         },
 
+        checkNode: function() {
+            if(!this.activeNode) {
+                this.log('error-log', 'Error: you must select a node');
+            }
+        },
+
         log: function(name, text) {
 
             var $slog = this.$log.find('#'+ this.cssId(name));
@@ -384,30 +389,34 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             this.$log.append($("<div/>").attr('id', this.cssId('error-log')).css('color', 'red'));
             this.$log.append($("<div/>").attr('id', this.cssId('success-log')).css('color', 'green'));
 
+            // Append instructions
+            this.$_elToOpen.append('<div style="margin-top: 20px;">\n<ul>\n    <li style="color:black;">Double-click a view to load it</li>\n    <li style="color: black;">Shift+click to rename a view</li>\n</ul></div>');
+
+            // Append buttons
             var $buttons = $('<div>\n    <table>\n        <tr>\n            <td></td>\n            <td></td>\n        </tr>\n        <tr>\n            <td><input type="text"/></td>\n            <td></td>\n        </tr>\n        <tr>\n            <td><input type="text"/></td>\n            <td></td>\n        </tr>\n    </table>\n</div>');
             this.$_elToOpen.append($buttons);
             var $inputs = $buttons.find('input');
-            console.log($inputs);
             this.$dirnameInput = $($inputs[0]);
-            this.$dirnameInput.css('id', this.cssId('newDirName'));
             this.$filenameInput = $($inputs[1]);
-            this.$filenameInput.css('id', this.cssId('newFileName'));
 
             var $tds = $buttons.find('td');
             this.$saveViewText = $($tds[0]);
             $($tds[1]).append(new Button('Save view', function() {
+                that.checkNode();
                 that.save();
             }, {color: 'red'}).render());
 
             $($tds[3]).append(new Button('Mkdir', function() {
+                that.checkNode();
                 that.mkdir();
             }, {color: 'blue'}).render());
 
             $($tds[5]).append(new Button('New file', function() {
+                that.checkNode();
                 that.newFile();
             }, {color: 'blue'}).render());
 
-            //this.$_elToOpen.append(menu);
+            // Remember we've already created the UI dom
             this._buttons = true;
         },
 
@@ -419,7 +428,7 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             if(typeof type === 'string')
                 return $("#" + this.cssId(type)).val().trim();
             else if(type instanceof jQuery) {
-                return type.val().trim(); 
+                return type.val().trim();
             }
         },
         setFormContent: function(type, value) {
