@@ -390,7 +390,7 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             this.$log.append($("<div/>").attr('id', this.cssId('success-log')).css('color', 'green'));
 
             // Append instructions
-            this.$_elToOpen.append('<div style="margin-top: 20px;">\n<ul>\n    <li style="color:black;">Double-click a view to load it</li>\n    <li style="color: black;">Shift+click to rename a view</li>\n</ul></div>');
+            this.$_elToOpen.append('<div style="margin-top: 20px;">\n<ul>\n    <li style="color:black;">Double-click a view to load it</li>\n    <li style="color: black;">Shift+click to rename a view</li>\n    <li style="color: black;">Press delete key to remove a view or a directory</li>\n</ul></div>');
 
             // Append buttons
             var $buttons = $('<div>\n    <table>\n        <tr>\n            <td></td>\n            <td></td>\n        </tr>\n        <tr>\n            <td><input type="text"/></td>\n            <td></td>\n        </tr>\n        <tr>\n            <td><input type="text"/></td>\n            <td></td>\n        </tr>\n    </table>\n</div>');
