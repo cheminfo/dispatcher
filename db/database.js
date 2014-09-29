@@ -224,8 +224,10 @@ function getMeanEntries(wdb, options) {
         fields.push('epoch');
         fields = _.unique(fields);
         var query = 'SELECT ' + fields + ' FROM ' + options.mean;
-        query += condition + ' LIMIT '  + options.limit;
-        debug('Get mean values');
+        query += condition;
+        query += ' ORDER BY epoch ' + options.order;
+        query += ' LIMIT '  + options.limit;
+        debug('Get mean values', query);
         return wdb.all(query);
     };
 
@@ -460,8 +462,8 @@ function get(deviceId, options) {
 
 
     var res =  Promise.resolve()
-        .then(fn)
-        .then(filterOut);
+        .then(fn);
+
 
     res.catch(handleError);
     
@@ -472,7 +474,7 @@ function filterOut(out) {
     if(!(out instanceof Array)) {
         out = [out];
     }
-    var paramReg = /^([A-Z]{1,2})(_mean|_nb|_min|_max)?$/;
+    var paramReg = /^([A-Z]{1,2})(_mean)?$/;
 
     for(var i=0; i<out.length; i++) {
         out[i].parameters =  {};
