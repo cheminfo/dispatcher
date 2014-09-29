@@ -237,12 +237,10 @@ app.get('/database/:device', queryValidator, function(req, res) {
     };
 
     database.get(deviceId, options).then(function(result) {
-        console.log(result);
         //var chart = filter.visualizerChart(res.locals.parameters.device, result);
         var chart = filter.chartFromDatabaseEntries(result);
         return res.status(200).json(chart);
     }).catch(function(err) {
-        console.log(err);
         return res.status(400).json('Database error');
     });
 });
