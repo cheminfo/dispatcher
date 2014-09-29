@@ -18,8 +18,9 @@ var debug = require('debug')('main'),
 
 
 // Load configuration file
-var configName = (argv.config && (typeof argv.config === 'string')) ? argv.config : 'default';
-debug('config arg', configName);
+// Command line in prioritary over appconfig file
+var configName = getOption('config', 'default');
+debug('config name', configName);
 configName = configName.split(',');
 
 debug('config names:', configName);
@@ -74,7 +75,6 @@ var validateDevice = middleware.validateParameters({type: 'device', name: 'devic
 app.use(express.static(__dirname + '/static'));
 var bodyParser = require('body-parser');
 app.use( bodyParser.json() );
-app.use( bodyParser.urlencoded() );
 app.use(bodyParser.raw());
 
 app.use('/', function(req, res, next) {
@@ -108,7 +108,11 @@ for(var i=0; i<modules.length; i++) {
 
 
 // The root element redirects to the default visualizer view
-var view = '/visualizer/index.html?config=/configs/default.json&viewURL=/views/' + (argv.view || 'dispatcher') + '.json';
+getOption('config');
+
+var defaultView = getOption('view', 'dispatcher');
+console.log('default view', defaultView);
+var view = '/visualizer/index.html?config=/configs/default.json&viewURL=/views/' + defaultView + '.json';
 app.get('/', function(req, res) {
     res.redirect(301, view);
 });
@@ -247,4 +251,9 @@ function findDevice(id) {
         }
     }
     return null;
+}
+
+function getOption(name, def) {
+    var opt = (argv[name] && (typeof argv[name] === 'string')) ? argv[name] : null;
+    return opt || appconfig[name] || def;
 }
