@@ -74,8 +74,10 @@ var validateDevice = middleware.validateParameters({type: 'device', name: 'devic
 // Like jpg, js, css etc...
 app.use(express.static(__dirname + '/static'));
 var bodyParser = require('body-parser');
-app.use( bodyParser.json() );
-app.use(bodyParser.raw());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 app.use('/', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -111,7 +113,6 @@ for(var i=0; i<modules.length; i++) {
 getOption('config');
 
 var defaultView = getOption('view', 'dispatcher');
-console.log('default view', defaultView);
 var view = '/visualizer/index.html?config=/configs/default.json&viewURL=/views/' + defaultView + '.json';
 app.get('/', function(req, res) {
     res.redirect(301, view);

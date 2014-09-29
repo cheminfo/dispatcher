@@ -29,6 +29,7 @@ router.get('/list', middleware.validateParameters({ name: 'dir', required: false
 
 router.post('/mkdir',
     middleware.validateParameters([{ name: 'dir', required: true}, {name: 'name', required: true}]),
+    checkFile('name'),
     checkDir('dir'),
     function(req, res) {
     var dir = res.locals.parameters.dir;
@@ -47,10 +48,10 @@ router.post('/mkdir',
 router.post('/touch',
     middleware.validateParameters([ {name: 'dir'},{name: 'name'}]),
     checkDir('dir'),
+    checkFile('name'),
     checkFileNotExist('dir','name'),
     function(req, res) {
-    debug('touch');
-
+        debug('touch');
         var dir = res.locals.parameters.dir;
         var name = res.locals.parameters.name;
         fs.writeFile(path.join(dir,name), '', function(err) {
@@ -66,6 +67,7 @@ router.post('/touch',
 router.delete('/file',
     middleware.validateParameters([{name: 'dir'}, {name: 'name'}]),
     checkDir('dir'),
+    checkFile('name'),
     checkFileExist('dir', 'name'),
     function(req, res) {
         var dir = res.locals.parameters.dir;
@@ -102,6 +104,8 @@ router.post('/copy',
     middleware.validateParameters([{name: 'dir'}, {name: 'name'}, {name: 'newDir'}, {name: 'newName'}]),
     checkDir('dir'),
     checkDir('newDir'),
+    checkFile('name'),
+    checkFile('newName'),
     checkFileExist('dir','name'),
     checkFileNotExist('newDir', 'newName'),
     function(req, res) {
@@ -139,6 +143,8 @@ router.post('/save',
 router.put('/rename',
     middleware.validateParameters([{name: 'dir'}, {name: 'name'}, {name: 'newName'}]),
     checkDir('dir'),
+    checkFile('name'),
+    checkFile('newName'),
     checkFileExist('dir','name'),
     function(req, res) {
         var dir = res.locals.parameters.dir;
@@ -156,6 +162,8 @@ router.put('/move',
     middleware.validateParameters([{name: 'dir'}, {name: 'name'}, {name: 'newDir'}, {name: 'newName'}]),
     checkDir('dir'),
     checkDir('newDir'),
+    checkFile('name'),
+    checkFile('newName'),
     checkFileExist('dir','name'),
     checkFileNotExist('newDir', 'newName'),
     function(req, res) {
@@ -192,6 +200,7 @@ function getDirectories(dir, relDir) {
 
 function checkDir(name) {
     return function(req, res, next) {
+        console.log('HELLO');
         if(res.locals.parameters[name].indexOf('..') > -1) {
             debug('The directory cannot contain ".."');
             return res.status(400).json({});
@@ -212,12 +221,12 @@ function checkDir(name) {
 
 function checkFile(file) {
     return function(req, res, next) {
-        fs.exists(file, function(err) {
-            if(err) {
-                return res.status(400).json({});
-                debug('Error: file does not exist')
-            }
-        });
+        // check file has no slashed and no ..
+        var f = res.locals.parameters[file];
+        if(!f || f.indexOf('..') > -1 || f.indexOf('/') > -1) {
+            debug('File did not pass check');
+            return res.status(400).json({});
+        }
         next();
     }
 }

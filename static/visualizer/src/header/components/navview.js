@@ -14,7 +14,7 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             var that = this;
             if(!this.$_elToOpen) {
                 this.$_elToOpen = $("<div/>").css("width", 550);
-                this.$tree = $('<div/>').css('id', this.cssId('tree')).css('display', 'inline-block');
+                this.$tree = $('<div/>').css('id', this.cssId('tree')).css('display', 'inline-block').css('margin-right', 20);
                 this.$_elToOpen.append(this.$tree);
             }
 
@@ -384,13 +384,13 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             var that = this;
             if(this._buttons) return;
 
-            this.$log = $('<div/>').attr('id', this.cssId('log')).css('display', 'inline-block').css('vertical-align', 'top');
-            this.$_elToOpen.append(this.$log);
+            this.$log = $('<div/>').attr('id', this.cssId('log')).css('margin-bottom', 10);
+            this.$_elToOpen.append('<div/>').children().css('display', 'inline-block').css('vertical-align', 'top').append(this.$log);
             this.$log.append($("<div/>").attr('id', this.cssId('error-log')).css('color', 'red'));
             this.$log.append($("<div/>").attr('id', this.cssId('success-log')).css('color', 'green'));
 
             // Append instructions
-            this.$_elToOpen.append('<div style="margin-top: 20px;">\n<ul>\n    <li style="color:black;">Double-click a view to load it</li>\n    <li style="color: black;">Shift+click to rename a view</li>\n    <li style="color: black;">Press delete key to remove a view or a directory</li>\n</ul></div>');
+            this.$log.parent().append('<div>\n<ul>\n    <li style="color:black;">Double-click a view to load it</li>\n    <li style="color: black;">Shift+click to rename a view</li>\n    <li style="color: black;">Press delete key to remove a view or a directory</li>\n</ul></div>');
 
             // Append buttons
             var $buttons = $('<div>\n    <table>\n        <tr>\n            <td></td>\n            <td></td>\n        </tr>\n        <tr>\n            <td><input type="text"/></td>\n            <td></td>\n        </tr>\n        <tr>\n            <td><input type="text"/></td>\n            <td></td>\n        </tr>\n    </table>\n</div>');
