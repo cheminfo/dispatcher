@@ -1,6 +1,10 @@
+"use strict";
+
 var debug = require('debug')('main'),
     argv = require('minimist')(process.argv.slice(2)),
+    appconfig = require('./appconfig.json'),
     network = require('./util/network'),
+    Promise = require('bluebird'),
     SerialQueueManager = require('./lib/SerialQueueManager'),
     EpochManager = require('./scheduler/epoch'),
     CacheDatabase = require('./db/CacheDatabase'),
@@ -10,61 +14,18 @@ var debug = require('debug')('main'),
     Config = require('./configs/config'),
     express = require('express'),
     middleware = require('./middleware/common'),
-    appconfig = require('./appconfig.json'),
     _ = require('lodash'),
     app = express();
 
 
-
-
-// Load configuration file
-// Command line in prioritary over appconfig file
-var configName = getOption('config', 'default');
-debug('config name', configName);
-configName = configName.split(',');
-
-debug('config names:', configName);
-
-var config = new Config();
-var caches = [];
-for(var i=0; i<configName.length; i++) {
-    config.addConfiguration(configName[i]);
-}
-
-// The configuration variable
-var conf = config.config;
-
-// A hash to easily retrieve serial managers from a device id
+var filter, config;
 var requestManagers = {};
+var caches = [];
+var epochs = [];
+var cacheDatabases = [];
+var defaultView;
 
-// First level of config describes the plugged devices,
-// i.e. a device connected to the usb port
-// We have one serial manager per plugged device
-for(var i=0; i<conf.length; i++) {
-    var requestManager = new SerialQueueManager(conf[i]);
-    requestManager.init();
-    var epochManager = new EpochManager(requestManager, conf[i]);
-    epochManager.start();
-
-// Cache and Cache database
-    var cache = new Cache(requestManager, conf[i]);
-    caches.push(cache);
-    if(conf[i].sqlite) {
-        var cacheDatabase = new CacheDatabase(cache, conf);
-        cacheDatabase.start();
-    }
-    cache.start();
-
-    for(var j=0; j<conf[i].devices.length; j++) {
-        requestManagers[conf[i].devices[j].id] = requestManager;
-    }
-}
-//var devices = config.devices;
-
-
-
-
-
+restart();
 
 // Middleware
 var validateFilter = middleware.validateParameters( {type: 'filter', name: 'filter'});
@@ -110,12 +71,17 @@ for(var i=0; i<modules.length; i++) {
 
 
 // The root element redirects to the default visualizer view
-getOption('config');
-
-var defaultView = getOption('view', 'dispatcher');
 var view = '/visualizer/index.html?config=/configs/default.json&viewURL=/views/' + defaultView + '.json';
 app.get('/', function(req, res) {
     res.redirect(301, view);
+});
+
+app.get('/restart', function(req, res) {
+    restart().then(function() {
+        return res.status(200).json({ok: true});
+    }, function(err) {
+        return res.status(500).json({ok: false, message: err});
+    });
 });
 
 app.get('/status', function(req, res) {
@@ -162,7 +128,7 @@ app.get('/save',
         });
     });
 
-var filter = new Filter(config);
+
 app.get('/all/:filter', validateFilter, function(req, res) {
     // visualizer filter converts object to an array
     // for easy display in a table
@@ -255,7 +221,99 @@ function findDevice(id) {
     return null;
 }
 
-function getOption(name, def) {
-    var opt = (argv[name] && (typeof argv[name] === 'string')) ? argv[name] : null;
-    return opt || appconfig[name] || def;
+function stopManagers() {
+    var promises = [];
+    _.keys(requestManagers).forEach(function(key) {
+        promises.push(requestManagers[key].close());
+    });
+
+    return Promise.all(promises);
+}
+
+function stopSchedulers() {
+    for(var i=0; i<caches.length; i++) {
+        caches[i].stop();
+    }
+
+    for(i=0; i<epochs.length; i++) {
+        epochs[i].stop();
+    }
+}
+
+function stopCacheDatabases() {
+    for(var i=0; i<cacheDatabases.length; i++) {
+        cacheDatabases[i].stop();
+    }
+}
+
+function restart() {
+    return new Promise(function(resolve) {
+        debug('restart');
+        stopSchedulers();
+        stopManagers().then(function() {
+            stopCacheDatabases();
+            // Reset some vars
+            caches = [];
+            epochs = [];
+            cacheDatabases = [];
+
+
+            // Load configuration file
+            // Command line in prioritary over appconfig file
+            var appconfig = require('./appconfig.json');
+            defaultView = getOption('view', 'dispatcher');
+            var configName = getOption('config', 'default');
+            debug('config name', configName);
+            configName = configName.split(',');
+
+
+            config = new Config();
+            for(var i=0; i<configName.length; i++) {
+                config.addConfiguration(configName[i]);
+            }
+
+            // The configuration variable
+            var conf = config.config;
+            filter = new Filter(config);
+
+            // A hash to easily retrieve serial managers from a device id
+
+
+            // First level of config describes the plugged devices,
+            // i.e. a device connected to the usb port
+            // We have one serial manager per plugged device
+            for(var i=0; i<conf.length; i++) {
+                var requestManager = new SerialQueueManager(conf[i]);
+                requestManager.init();
+                var epochManager = new EpochManager(requestManager, conf[i]);
+                epochs.push(epochManager);
+                epochManager.start();
+
+                // Cache and Cache database
+                var cache = new Cache(requestManager, conf[i]);
+                caches.push(cache);
+                if(conf[i].sqlite) {
+                    var cacheDatabase = new CacheDatabase(cache, conf);
+                    cacheDatabases.push(cacheDatabase);
+                    cacheDatabase.start();
+                }
+                cache.start();
+
+                for(var j=0; j<conf[i].devices.length; j++) {
+                    requestManagers[conf[i].devices[j].id] = requestManager;
+                }
+            }
+            resolve();
+
+            function getOption(name, def) {
+                var opt = (argv[name] && (typeof argv[name] === 'string')) ? argv[name] : null;
+                return opt || appconfig[name] || def;
+            }
+        }, function() {
+            debug('Could not restart?');
+            reject('Failed restart');
+        });
+    });
+
+
 }
