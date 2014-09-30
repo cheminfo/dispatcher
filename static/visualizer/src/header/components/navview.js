@@ -255,7 +255,7 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             var that = this;
             var dir = that.activeNode.data.path;
             if(!that.activeNode.isFolder()) {
-                  dir = that.getDir(dir);
+                dir = that.getDir(dir);
             }
             var req = $.ajax({
                 url: '/navview/touch',

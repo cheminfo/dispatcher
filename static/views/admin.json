@@ -45,12 +45,12 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 9,
-						"top": 1
+						"left": 0,
+						"top": 0
 					},
 					"size": {
-						"width": 31,
-						"height": 26
+						"width": 41,
+						"height": 25
 					},
 					"zIndex": 0,
 					"display": true,
@@ -66,11 +66,11 @@
 					"name": "Default layer"
 				}
 			},
-			"id": 27,
+			"id": 12,
 			"vars_in": [
 				{
 					"rel": "list",
-					"name": "urlout"
+					"name": "configs"
 				}
 			],
 			"actions_in": [
@@ -101,13 +101,18 @@
 					"group": [
 						{
 							"editable": [
-								"view"
+								"tree"
 							],
 							"expanded": [
 								[]
 							],
 							"storeObject": [
 								[]
+							],
+							"displayValue": [
+								[
+									"display"
+								]
 							],
 							"output": [
 								"new"
@@ -122,8 +127,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 48,
-						"top": 1
+						"left": 42,
+						"top": 0
 					},
 					"size": {
 						"width": 55,
@@ -143,7 +148,7 @@
 					"name": "Default layer"
 				}
 			},
-			"id": 28,
+			"id": 13,
 			"vars_in": [
 				{
 					"rel": "value",

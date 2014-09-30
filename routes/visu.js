@@ -17,7 +17,7 @@ router.get('/configs', function(req, res) {
     if(!files) {
         return res.json(400).json({});
     }
-    files.filter(function(file) {
+    files = files.filter(function(file) {
         return file.indexOf('.json') > -1;
     });
 
