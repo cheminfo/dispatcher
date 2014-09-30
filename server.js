@@ -20,8 +20,8 @@ var debug = require('debug')('main'),
 
 var filter, config;
 var requestManagers = {};
-var caches = [];
-var epochs = [];
+var caches = [], cachesHash = {};
+var epochs = [], epochsHash = {};
 var cacheDatabases = [];
 var defaultView;
 
@@ -31,9 +31,21 @@ restart();
 var validateFilter = middleware.validateParameters( {type: 'filter', name: 'filter'});
 var validateDevice = middleware.validateParameters({type: 'device', name: 'device'});
 
+// Allow cross-origin
+app.use('/', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
+
+
 // The static directory is where all the statically served files go
 // Like jpg, js, css etc...
 app.use(express.static(__dirname + '/static'));
+app.use('/configs', express.static(__dirname + '/configs'));
+app.use('/devices', express.static(__dirname + '/devices'));
+
+
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -60,7 +72,7 @@ http.listen(app.get("port"), app.get("ipaddr"), function() {
 });
 
 
-var modules = ['navview'];
+var modules = ['navview', 'visu'];
 debug('Mounting modules', modules);
 
 for(var i=0; i<modules.length; i++) {
@@ -71,7 +83,7 @@ for(var i=0; i<modules.length; i++) {
 
 
 // The root element redirects to the default visualizer view
-var view = '/visualizer/index.html?config=/configs/default.json&viewURL=/views/' + defaultView + '.json';
+var view = '/visualizer/index.html?config=/config/default.json&viewURL=/views/' + defaultView + '.json&dataURL=/data/default.json';
 app.get('/', function(req, res) {
     res.redirect(301, view);
 });
@@ -191,6 +203,10 @@ var queryValidator = middleware.validateParameters([
 
 
 app.get('/database/:device', queryValidator, function(req, res) {
+    var cache = cachesHash[res.locals.parameters.device];
+    if(!cache) {
+        return res.status(500).json('Device does not exist');
+    }
     var deviceId = cache.data.deviceIds[res.locals.parameters.device];
     var fields = res.locals.parameters.fields || '*';
     var mean = res.locals.parameters.mean || 'entry';
@@ -231,13 +247,13 @@ function stopManagers() {
 }
 
 function stopSchedulers() {
-    for(var i=0; i<caches.length; i++) {
-        caches[i].stop();
-    }
+    _.keys(caches).forEach(function(key) {
+        caches[key].stop();
+    });
 
-    for(i=0; i<epochs.length; i++) {
-        epochs[i].stop();
-    }
+    _.keys(epochs).forEach(function(key) {
+        epochs[key].stop();
+    });
 }
 
 function stopCacheDatabases() {
@@ -247,21 +263,20 @@ function stopCacheDatabases() {
 }
 
 function restart() {
-    return new Promise(function(resolve) {
+    return new Promise(function(resolve, reject) {
         debug('restart');
+        var appconfig = require('./appconfig.json');
+        defaultView = getOption('view', 'dispatcher');
         stopSchedulers();
         stopManagers().then(function() {
             stopCacheDatabases();
             // Reset some vars
-            caches = [];
-            epochs = [];
+            caches = []; cachesHash = {};
+            epochs = []; epochsHash = {};
             cacheDatabases = [];
 
 
             // Load configuration file
-            // Command line in prioritary over appconfig file
-            var appconfig = require('./appconfig.json');
-            defaultView = getOption('view', 'dispatcher');
             var configName = getOption('config', 'default');
             debug('config name', configName);
             configName = configName.split(',');
@@ -286,12 +301,11 @@ function restart() {
                 var requestManager = new SerialQueueManager(conf[i]);
                 requestManager.init();
                 var epochManager = new EpochManager(requestManager, conf[i]);
-                epochs.push(epochManager);
                 epochManager.start();
 
                 // Cache and Cache database
                 var cache = new Cache(requestManager, conf[i]);
-                caches.push(cache);
+
                 if(conf[i].sqlite) {
                     var cacheDatabase = new CacheDatabase(cache, conf);
                     cacheDatabases.push(cacheDatabase);
@@ -299,21 +313,23 @@ function restart() {
                 }
                 cache.start();
 
+                caches.push(cache);
+                epochs.push(epochManager);
                 for(var j=0; j<conf[i].devices.length; j++) {
                     requestManagers[conf[i].devices[j].id] = requestManager;
+                    cachesHash[conf[i].devices[j].id] = cache;
+                    epochsHash[conf[i].devices[j].id] = epochManager;
                 }
             }
             resolve();
-
-            function getOption(name, def) {
-                var opt = (argv[name] && (typeof argv[name] === 'string')) ? argv[name] : null;
-                return opt || appconfig[name] || def;
-            }
         }, function() {
             debug('Could not restart?');
             reject('Failed restart');
         });
     });
-
+    function getOption(name, def) {
+        var opt = (argv[name] && (typeof argv[name] === 'string')) ? argv[name] : null;
+        return opt || appconfig[name] || def;
+    }
 
 }

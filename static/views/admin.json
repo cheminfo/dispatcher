@@ -1,0 +1,199 @@
+{
+	"version": "2.5.1",
+	"grid": {
+		"layers": {
+			"Default layer": {
+				"name": "Default layer"
+			}
+		},
+		"xWidth": 10,
+		"yHeight": 10
+	},
+	"modules": [
+		{
+			"url": "modules/types/display/fasttable/",
+			"configuration": {
+				"sections": {},
+				"groups": {
+					"group": [
+						{
+							"nblines": [
+								20
+							],
+							"toggle": [
+								null
+							],
+							"colorjpath": [
+								null
+							],
+							"filterRow": [
+								null
+							]
+						}
+					],
+					"cols": [
+						[
+							{
+								"jpath": "element.name",
+								"number": [],
+								"editable": "none"
+							}
+						]
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 9,
+						"top": 1
+					},
+					"size": {
+						"width": 31,
+						"height": 26
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Untitled",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": true,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 27,
+			"vars_in": [
+				{
+					"rel": "list",
+					"name": "urlout"
+				}
+			],
+			"actions_in": [
+				{}
+			],
+			"title": "Untitled",
+			"vars_out": [
+				{
+					"event": "onSelect",
+					"rel": "row",
+					"jpath": [
+						"value"
+					],
+					"name": "editedConfig"
+				}
+			],
+			"actions_out": [
+				{
+					"jpath": []
+				}
+			]
+		},
+		{
+			"url": "modules/types/edition/object_editor/",
+			"configuration": {
+				"sections": {},
+				"groups": {
+					"group": [
+						{
+							"editable": [
+								"view"
+							],
+							"expanded": [
+								[]
+							],
+							"storeObject": [
+								[]
+							],
+							"output": [
+								"new"
+							],
+							"storedObject": [
+								"{}"
+							]
+						}
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 48,
+						"top": 1
+					},
+					"size": {
+						"width": 55,
+						"height": 50
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Untitled",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": true,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 28,
+			"vars_in": [
+				{
+					"rel": "value",
+					"name": "editedConfig"
+				}
+			],
+			"actions_in": {},
+			"vars_out": [
+				{
+					"jpath": []
+				}
+			],
+			"title": "Untitled",
+			"actions_out": {}
+		}
+	],
+	"variables": [
+		{
+			"varname": "configs",
+			"jpath": [
+				"configs"
+			]
+		},
+		{
+			"varname": "param",
+			"jpath": [
+				"param"
+			]
+		},
+		{
+			"varname": "data",
+			"jpath": [
+				"data"
+			]
+		},
+		{
+			"varname": "devices",
+			"jpath": [
+				"devices"
+			]
+		},
+		{
+			"varname": "status",
+			"jpath": [
+				"status"
+			]
+		}
+	],
+	"pouchvariables": [],
+	"configuration": {
+		"title": "No title"
+	}
+}

@@ -67,7 +67,6 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
         },
 
         load: function(name) {
-            console.log('load', name);
         },
 
         save: function() {
@@ -101,12 +100,10 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
 
         mkdir: function() {
             var that = this;
-            console.log('make dir');
             var dir = this.activeNode.data.path;
             if(!this.activeNode.isFolder()) {
                 dir = this.getDir(dir);
             }
-            console.log('dir.....', dir);
             var name = this.getFormContent(this.$dirnameInput);
             if(dir && name) {
                 var req = $.ajax({
@@ -194,7 +191,6 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
 
         rename: function() {
             var that = this;
-            console.log('rename');
             var reg = new RegExp(/(^.*)\/([^\/]+$)/);
 
             var m = reg.exec(this.activeNode.data.path);
@@ -208,7 +204,6 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
             var newDir = dir;
             var name = m[2];
 
-            console.log(dir, name);
 
             var req = this.ajaxRename({
                 dir: dir,
@@ -243,7 +238,6 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
                 newName: node.title,
                 name: that.inlineOldTitle
             };
-            console.log(data);
             var req = this.ajaxRename(data);
 
             req.done(function() {
@@ -284,7 +278,6 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
         },
 
         duplicate: function() {
-            console.log('duplicate');
         },
 
         checkNode: function() {
@@ -311,7 +304,6 @@ define(['jquery', 'components/superagent/superagent', 'src/header/components/def
         },
 
         loadRootTree: function() {
-            console.log('load tree');
             return $.ajax({
                 url: '/navview/list',
                 dataType: 'json'
@@ -468,7 +460,6 @@ function fancyTreeDirStructure(list) {
             }
         }
     });
-    console.log('XXXX',  x);
     return x;
 }
 
@@ -487,7 +478,6 @@ function confirm(message) {
                     $(this).dialog('close');
                 },
                 Ok: function() {
-                    console.log('ok...');
                     resolve(true);
                     $(this).dialog('close');
                 }
