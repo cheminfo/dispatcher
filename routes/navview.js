@@ -54,7 +54,7 @@ router.post('/touch',
         debug('touch');
         var dir = res.locals.parameters.dir;
         var name = res.locals.parameters.name;
-        fs.writeFile(path.join(dir,name), '', function(err) {
+        fs.writeFile(path.join(dir,name), '{}', function(err) {
             if(err) {
                 debug('error writing file', err);
                 return res.status(400).json({});
