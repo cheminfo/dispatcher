@@ -236,9 +236,9 @@ function getMeanEntries(wdb, options) {
 function keepRecentIds(wdb, maxIds) {
     return function(res) {
         var ids = _.pluck(res, 'id');
+        debug('keep recent ids (max ' + maxIds + ')');
         ids.sort().reverse();
         if(ids.length > maxIds) {
-            debug('keep recent ids');
             return wdb.run('DELETE FROM entry WHERE id<=' + ids[maxIds]);
         }
         else return true;

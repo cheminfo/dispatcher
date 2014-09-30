@@ -74,10 +74,8 @@ function doMultilogRequest(that, device) {
     var status = that.data.status[id];
     status.lastTrial = new Date().getTime();
     status.failure = '';
-    // Enforce longer timeout for the m command
-    return that.requestManager.addRequest(cmd, {
-        timeout: 1000
-    }).then(function(response) {
+
+    return that.requestManager.addRequest(cmd).then(function(response) {
         var entries = parser.parse(cmd, response);
         that.data.entry[id] = that.data.entry[id] || {};
 
