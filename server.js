@@ -19,7 +19,7 @@ var debug = require('debug')('main'),
 
 
 var filter, config;
-var requestManagers = {};
+var requestManagers = [], requestManagersHash = {};
 var caches = [], cachesHash = {};
 var epochs = [], epochsHash = {};
 var cacheDatabases = [];
@@ -129,7 +129,7 @@ app.get('/save',
     middleware.validateParameters([{name: 'device'}, {name: 'param'}, {name: 'value'}]),
     function(req, res) {
         var deviceId = res.locals.parameters.device;
-        var reqManager = requestManagers[deviceId];
+        var reqManager = requestManagersHash[deviceId];
         var pluggedDevice = config.findPluggedDevice(deviceId);
         var prefix = pluggedDevice.findDeviceById(deviceId).prefix;
         var cmd = prefix + res.locals.parameters.param + res.locals.parameters.value;
@@ -175,7 +175,7 @@ app.post('/command',
     middleware.validateParameters([{name: 'command', required: true}, {name: 'device', required: true}]),
     function(req, res) {
         var deviceId = res.locals.parameters.device;
-        var reqManager = requestManagers[deviceId];
+        var reqManager = requestManagersHash[deviceId];
         var pluggedDevice = config.findPluggedDevice(deviceId);
         var prefix = pluggedDevice.findDeviceById(deviceId).prefix;
         if(!deviceId) {
@@ -239,10 +239,9 @@ function findDevice(id) {
 
 function stopManagers() {
     var promises = [];
-    _.keys(requestManagers).forEach(function(key) {
-        promises.push(requestManagers[key].close());
-    });
-
+    for(var i=0; i<requestManagers.length; i++) {
+        promises.push(requestManagers[i].close());
+    }
     return Promise.all(promises);
 }
 
@@ -269,10 +268,12 @@ function restart() {
         defaultView = getOption('view', 'dispatcher');
         stopSchedulers();
         stopManagers().then(function() {
+            debug('manages stopped');
             stopCacheDatabases();
             // Reset some vars
             caches = []; cachesHash = {};
             epochs = []; epochsHash = {};
+            requestManagers = []; requestManagersHash = {};
             cacheDatabases = [];
 
 
@@ -315,8 +316,9 @@ function restart() {
 
                 caches.push(cache);
                 epochs.push(epochManager);
+                requestManagers.push(requestManager);
                 for(var j=0; j<conf[i].devices.length; j++) {
-                    requestManagers[conf[i].devices[j].id] = requestManager;
+                    requestManagersHash[conf[i].devices[j].id] = requestManager;
                     cachesHash[conf[i].devices[j].id] = cache;
                     epochsHash[conf[i].devices[j].id] = epochManager;
                 }
