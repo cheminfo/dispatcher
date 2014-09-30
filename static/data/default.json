@@ -1,6 +1,10 @@
 {
-    "configs": {
+    "configsList": {
         "type": "object",
         "url": "/visu/configs"
+    },
+    "devicesList": {
+        "type": "object",
+        "url": "/visu/devices"
     }
 }

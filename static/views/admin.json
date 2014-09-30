@@ -66,11 +66,11 @@
 					"name": "Default layer"
 				}
 			},
-			"id": 12,
+			"id": 1,
 			"vars_in": [
 				{
 					"rel": "list",
-					"name": "configs"
+					"name": "configsList"
 				}
 			],
 			"actions_in": [
@@ -136,7 +136,7 @@
 					},
 					"zIndex": 0,
 					"display": true,
-					"title": "Untitled",
+					"title": "Config edition",
 					"bgColor": [
 						255,
 						255,
@@ -148,7 +148,7 @@
 					"name": "Default layer"
 				}
 			},
-			"id": 13,
+			"id": 2,
 			"vars_in": [
 				{
 					"rel": "value",
@@ -161,8 +161,163 @@
 					"jpath": []
 				}
 			],
-			"title": "Untitled",
+			"title": "Config edition",
 			"actions_out": {}
+		},
+		{
+			"url": "modules/types/edition/object_editor/",
+			"configuration": {
+				"sections": {},
+				"groups": {
+					"group": [
+						{
+							"editable": [
+								"view"
+							],
+							"expanded": [
+								[]
+							],
+							"storeObject": [
+								[]
+							],
+							"displayValue": [
+								[
+									"display"
+								]
+							],
+							"output": [
+								"new"
+							],
+							"storedObject": [
+								"{}"
+							]
+						}
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 98,
+						"top": 0
+					},
+					"size": {
+						"width": 54,
+						"height": 50
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Device edition",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": true,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 3,
+			"vars_in": [
+				{
+					"rel": "value",
+					"name": "editedDevice"
+				}
+			],
+			"actions_in": {},
+			"vars_out": [
+				{
+					"jpath": []
+				}
+			],
+			"title": "Device edition",
+			"actions_out": {}
+		},
+		{
+			"url": "modules/types/display/fasttable/",
+			"configuration": {
+				"sections": {},
+				"groups": {
+					"group": [
+						{
+							"nblines": [
+								20
+							],
+							"toggle": [
+								null
+							],
+							"colorjpath": [
+								null
+							],
+							"filterRow": [
+								null
+							]
+						}
+					],
+					"cols": [
+						[
+							{
+								"name": "File name",
+								"jpath": "element.name",
+								"number": [],
+								"editable": "none"
+							}
+						]
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 0,
+						"top": 26
+					},
+					"size": {
+						"width": 41,
+						"height": 24
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Untitled",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": true,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 4,
+			"vars_in": [
+				{
+					"rel": "list",
+					"name": "devicesList"
+				}
+			],
+			"actions_in": [
+				{}
+			],
+			"title": "Untitled",
+			"vars_out": [
+				{
+					"event": "onSelect",
+					"rel": "row",
+					"jpath": [
+						"value"
+					],
+					"name": "editedDevice"
+				}
+			],
+			"actions_out": [
+				{
+					"jpath": []
+				}
+			]
 		}
 	],
 	"variables": [
