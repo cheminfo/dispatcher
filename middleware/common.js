@@ -26,7 +26,7 @@ exports.validateParameters = function (params) {
                         }
                         break;
                     case 'device':
-                        var regexp = /\$[A-Z]/;
+                        var regexp = /^.{2}$/;
                         if(!value.match(regexp)) {
                             return res.status(400).json('parameter '+ paramName + ' must match regular expression: ', regexp.toString());
                         }
