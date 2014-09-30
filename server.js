@@ -72,7 +72,7 @@ http.listen(app.get("port"), app.get("ipaddr"), function() {
 });
 
 
-var modules = ['navview', 'visu'];
+var modules = ['navview', 'visu', 'config'];
 debug('Mounting modules', modules);
 
 for(var i=0; i<modules.length; i++) {
@@ -321,6 +321,7 @@ function restart() {
                     epochsHash[conf[i].devices[j].id] = epochManager;
                 }
             }
+            console.log('RESOLVE');
             resolve();
         }, function() {
             debug('Could not restart?');

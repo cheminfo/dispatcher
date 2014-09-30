@@ -34,6 +34,7 @@
 					"cols": [
 						[
 							{
+								"name": "File name",
 								"jpath": "element.name",
 								"number": [],
 								"editable": "none"
@@ -54,7 +55,7 @@
 					},
 					"zIndex": 0,
 					"display": true,
-					"title": "Untitled",
+					"title": "List of configuration files",
 					"bgColor": [
 						255,
 						255,
@@ -76,7 +77,7 @@
 			"actions_in": [
 				{}
 			],
-			"title": "Untitled",
+			"title": "List of configuration files",
 			"vars_out": [
 				{
 					"event": "onSelect",
@@ -85,6 +86,14 @@
 						"value"
 					],
 					"name": "editedConfig"
+				},
+				{
+					"event": "onSelect",
+					"rel": "row",
+					"jpath": [
+						"name"
+					],
+					"name": "editedConfigName"
 				}
 			],
 			"actions_out": [
@@ -158,7 +167,10 @@
 			"actions_in": {},
 			"vars_out": [
 				{
-					"jpath": []
+					"event": "onObjectChange",
+					"rel": "output",
+					"jpath": [],
+					"name": "editedConfigToBeSaved"
 				}
 			],
 			"title": "Config edition",
@@ -172,7 +184,7 @@
 					"group": [
 						{
 							"editable": [
-								"view"
+								"tree"
 							],
 							"expanded": [
 								[]
@@ -229,7 +241,10 @@
 			"actions_in": {},
 			"vars_out": [
 				{
-					"jpath": []
+					"event": "onObjectChange",
+					"rel": "output",
+					"jpath": [],
+					"name": "editedDeviceToBeSaved"
 				}
 			],
 			"title": "Device edition",
@@ -280,7 +295,7 @@
 					},
 					"zIndex": 0,
 					"display": true,
-					"title": "Untitled",
+					"title": "List of device files",
 					"bgColor": [
 						255,
 						255,
@@ -302,7 +317,7 @@
 			"actions_in": [
 				{}
 			],
-			"title": "Untitled",
+			"title": "List of device files",
 			"vars_out": [
 				{
 					"event": "onSelect",
@@ -311,6 +326,370 @@
 						"value"
 					],
 					"name": "editedDevice"
+				},
+				{
+					"event": "onSelect",
+					"rel": "row",
+					"jpath": [
+						"name"
+					],
+					"name": "editedDeviceName"
+				}
+			],
+			"actions_out": [
+				{
+					"jpath": []
+				}
+			]
+		},
+		{
+			"url": "modules/types/server_interaction/webservice_search/",
+			"configuration": {
+				"sections": {
+					"postvariables": [
+						{
+							"sections": {},
+							"groups": {
+								"postvariables": [
+									[
+										{
+											"name": "content",
+											"destination": "data",
+											"variable": "editedDeviceToBeSaved",
+											"filter": "value"
+										},
+										{
+											"name": "defaultName",
+											"destination": "data",
+											"variable": "editedDeviceName",
+											"filter": "value"
+										}
+									]
+								]
+							}
+						}
+					]
+				},
+				"groups": {
+					"group": [
+						{
+							"url": [
+								"/config/save/device"
+							],
+							"method": [
+								"POST"
+							],
+							"dataType": [
+								"json"
+							],
+							"button": [
+								[
+									"button"
+								]
+							],
+							"buttonlabel": [
+								"Save"
+							],
+							"buttonlabel_exec": [
+								"Saving..."
+							],
+							"onloadsearch": [
+								[]
+							],
+							"debounce": [
+								0
+							],
+							"resultfilter": [
+								null
+							]
+						}
+					],
+					"headers": [
+						[
+							{}
+						]
+					],
+					"searchparams": [
+						[
+							{
+								"name": "name",
+								"destination": "data",
+								"label": "File name",
+								"fieldtype": "text"
+							}
+						]
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 128,
+						"top": 35
+					},
+					"size": {
+						"width": 23,
+						"height": 14
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Untitled",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": true,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 5,
+			"vars_in": [
+				{}
+			],
+			"actions_in": [
+				{}
+			],
+			"title": "Untitled",
+			"vars_out": [
+				{
+					"jpath": []
+				}
+			],
+			"actions_out": [
+				{
+					"jpath": []
+				}
+			]
+		},
+		{
+			"url": "modules/types/server_interaction/webservice_search/",
+			"configuration": {
+				"sections": {
+					"postvariables": [
+						{
+							"sections": {},
+							"groups": {
+								"postvariables": [
+									[
+										{
+											"name": "content",
+											"destination": "data",
+											"variable": "editedConfigToBeSaved",
+											"filter": "value"
+										},
+										{
+											"name": "defaultName",
+											"destination": "data",
+											"variable": "editedConfigName",
+											"filter": "none"
+										}
+									]
+								]
+							}
+						}
+					]
+				},
+				"groups": {
+					"group": [
+						{
+							"url": [
+								"/config/save/config"
+							],
+							"method": [
+								"POST"
+							],
+							"dataType": [
+								"json"
+							],
+							"button": [
+								[
+									"button"
+								]
+							],
+							"buttonlabel": [
+								"Save"
+							],
+							"buttonlabel_exec": [
+								"Saving..."
+							],
+							"onloadsearch": [
+								[]
+							],
+							"debounce": [
+								0
+							],
+							"resultfilter": [
+								null
+							]
+						}
+					],
+					"headers": [
+						[
+							{}
+						]
+					],
+					"searchparams": [
+						[
+							{
+								"name": "name",
+								"destination": "data",
+								"label": "File name",
+								"fieldtype": "text"
+							}
+						]
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 73,
+						"top": 35
+					},
+					"size": {
+						"width": 23,
+						"height": 14
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Untitled",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": true,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 6,
+			"vars_in": [
+				{}
+			],
+			"actions_in": [
+				{}
+			],
+			"title": "Untitled",
+			"vars_out": [
+				{
+					"jpath": []
+				}
+			],
+			"actions_out": [
+				{
+					"jpath": []
+				}
+			]
+		},
+		{
+			"url": "modules/types/server_interaction/webservice_search/",
+			"configuration": {
+				"sections": {
+					"postvariables": [
+						{
+							"sections": {},
+							"groups": {
+								"postvariables": [
+									[
+										{
+											"destination": "data",
+											"filter": "none"
+										}
+									]
+								]
+							}
+						}
+					]
+				},
+				"groups": {
+					"group": [
+						{
+							"url": [
+								"/restart"
+							],
+							"method": [
+								"GET"
+							],
+							"dataType": [
+								"form"
+							],
+							"button": [
+								[
+									"button"
+								]
+							],
+							"buttonlabel": [
+								"Reload configuration"
+							],
+							"buttonlabel_exec": [
+								"Reloading..."
+							],
+							"onloadsearch": [
+								[]
+							],
+							"debounce": [
+								0
+							],
+							"resultfilter": [
+								null
+							]
+						}
+					],
+					"headers": [
+						[
+							{}
+						]
+					],
+					"searchparams": [
+						[
+							{
+								"destination": "url",
+								"fieldtype": "text"
+							}
+						]
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 1,
+						"top": 51
+					},
+					"size": {
+						"width": 39,
+						"height": 22
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Untitled",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": false,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 7,
+			"vars_in": [
+				{}
+			],
+			"actions_in": [
+				{}
+			],
+			"title": "Untitled",
+			"vars_out": [
+				{
+					"jpath": []
 				}
 			],
 			"actions_out": [

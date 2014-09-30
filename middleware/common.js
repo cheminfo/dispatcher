@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var debug = require('debug')('middleware');
 
 exports.validateParameters = function (params) {
     if (!(params instanceof Array))
@@ -14,6 +15,7 @@ exports.validateParameters = function (params) {
 
             var value = req.params[paramName] || req.query[paramName] || (req.body ? req.body[paramName] : null);
             if (!value && param.required) {
+                debug(paramName + ' is required');
                 return res.status(400).json('required parameter: ' + paramName);
             }
 
@@ -22,12 +24,14 @@ exports.validateParameters = function (params) {
                     case 'enum':
                         var enums = param.possible || [];
                         if(enums.indexOf(value) === -1) {
+                            debug(paramName + ' did not pass enum validation');
                             return res.status(400).json('parameter ' + paramName + ' must be on of the following: [' + enums.join(', ') + ']');
                         }
                         break;
                     case 'device':
                         var regexp = /^.{2}$/;
                         if(!value.match(regexp)) {
+                            debug(paramName + ' did not pass device validation');
                             return res.status(400).json('parameter '+ paramName + ' must match regular expression: ', regexp.toString());
                         }
                         break;
@@ -35,6 +39,7 @@ exports.validateParameters = function (params) {
                         var Filter = require('../lib/filter');
                         var filter = new Filter();
                         if(!filter[value]) {
+                            debug(paramName + ' did not pass the filter validation');
                             return res.status(400).json('the filter ' + value + ' does not exist');
                         }
                 }
