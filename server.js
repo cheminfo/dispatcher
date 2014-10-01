@@ -19,7 +19,7 @@ var debug = require('debug')('main'),
     serverConfig = getServerConfig();
 
 
-var filter, config, appconfig;
+var filter, config, appconfig = getAppconfig();
 var requestManagers = [], requestManagersHash = {};
 var caches = [], cachesHash = {};
 var epochs = [], epochsHash = {};
@@ -258,7 +258,8 @@ function stopCacheDatabases() {
 function restart() {
     return new Promise(function(resolve, reject) {
         debug('restart');
-        appconfig = getAppconfig();
+        appconfig = fs.readJsonSync('./appconfig.json');
+        debug('appconfig', appconfig);
         defaultView = getOption('view', 'dispatcher');
         stopSchedulers();
         stopManagers().then(function() {
