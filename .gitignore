@@ -4,3 +4,4 @@ appconfig.json
 sqlite
 db/sqlite
 static/.idea
+serverConfig.json

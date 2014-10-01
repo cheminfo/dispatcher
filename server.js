@@ -2,7 +2,7 @@
 
 var debug = require('debug')('main'),
     argv = require('minimist')(process.argv.slice(2)),
-    appconfig = require('./appconfig.json'),
+    fs = require('fs-extra'),
     network = require('./util/network'),
     Promise = require('bluebird'),
     SerialQueueManager = require('./lib/SerialQueueManager'),
@@ -15,10 +15,11 @@ var debug = require('debug')('main'),
     express = require('express'),
     middleware = require('./middleware/common'),
     _ = require('lodash'),
-    app = express();
+    app = express(),
+    serverConfig = getServerConfig();
 
 
-var filter, config;
+var filter, config, appconfig;
 var requestManagers = [], requestManagersHash = {};
 var caches = [], cachesHash = {};
 var epochs = [], epochsHash = {};
@@ -40,19 +41,19 @@ app.use('/devices', express.static(__dirname + '/devices'));
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json({
-    limit: appconfig.bodyLimit
+    limit: serverConfig.bodyLimit
 }));
 app.use(bodyParser.urlencoded({
     extended: true,
-    limit: appconfig.bodyLimit
+    limit: serverConfig.bodyLimit
 }));
 
 
-var ipaddress = appconfig.ipaddress || '';
+var ipaddress = serverConfig.ipaddress || '';
 var ipValid = network.validateIp(ipaddress);
-app.set("port", appconfig.port || 80);
-app.set("ipaddr", ipValid ? appconfig.ipaddress : ''); // by default we listen to all the ips
-app.set("serveraddress", ipValid ? appconfig.ipaddress : network.getMyIp() || '127.0.0.1');
+app.set("port", serverConfig.port || 80);
+app.set("ipaddr", ipValid ? serverConfig.ipaddress : ''); // by default we listen to all the ips
+app.set("serveraddress", ipValid ? serverConfig.ipaddress : network.getMyIp() || '127.0.0.1');
 
 
 // Initialize modules
@@ -254,7 +255,7 @@ function stopCacheDatabases() {
 function restart() {
     return new Promise(function(resolve, reject) {
         debug('restart');
-        var appconfig = require('./appconfig.json');
+        appconfig = getAppconfig();
         defaultView = getOption('view', 'dispatcher');
         stopSchedulers();
         stopManagers().then(function() {
@@ -324,4 +325,23 @@ function restart() {
         return opt || appconfig[name] || def;
     }
 
+}
+
+function getServerConfig() {
+    try {
+        return require('./serverConfig.json');
+    }
+    catch(err) {
+        fs.copySync('./defaultServerConfig.json', './serverConfig.json');
+        return getServerConfig();
+    }
+}
+
+function getAppconfig() {
+    try {
+        return require('./appconfig.json');
+    } catch(err) {
+        fs.copySync('./defaultAppconfig.json', './appconfig.json');
+        return getAppconfig();
+    }
 }
