@@ -424,8 +424,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 128,
-						"top": 35
+						"left": 130,
+						"top": 42
 					},
 					"size": {
 						"width": 23,
@@ -440,7 +440,7 @@
 						255,
 						0
 					],
-					"wrapper": true,
+					"wrapper": false,
 					"created": true,
 					"name": "Default layer"
 				}
@@ -546,8 +546,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 73,
-						"top": 35
+						"left": 75,
+						"top": 42
 					},
 					"size": {
 						"width": 23,
@@ -562,7 +562,7 @@
 						255,
 						0
 					],
-					"wrapper": true,
+					"wrapper": false,
 					"created": true,
 					"name": "Default layer"
 				}
@@ -658,8 +658,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 1,
-						"top": 51
+						"left": 38,
+						"top": 50
 					},
 					"size": {
 						"width": 39,
@@ -680,6 +680,194 @@
 				}
 			},
 			"id": 7,
+			"vars_in": [
+				{}
+			],
+			"actions_in": [
+				{}
+			],
+			"title": "Untitled",
+			"vars_out": [
+				{
+					"jpath": []
+				}
+			],
+			"actions_out": [
+				{
+					"jpath": []
+				}
+			]
+		},
+		{
+			"url": "modules/types/edition/object_editor/",
+			"configuration": {
+				"sections": {},
+				"groups": {
+					"group": [
+						{
+							"editable": [
+								"tree"
+							],
+							"expanded": [
+								[]
+							],
+							"storeObject": [
+								[]
+							],
+							"displayValue": [
+								[
+									"display"
+								]
+							],
+							"output": [
+								"new"
+							],
+							"storedObject": [
+								"{}"
+							]
+						}
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 0,
+						"top": 51
+					},
+					"size": {
+						"width": 38,
+						"height": 20
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Appconfig",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": true,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 8,
+			"vars_in": [
+				{
+					"rel": "value",
+					"name": "appconfig"
+				}
+			],
+			"actions_in": {},
+			"vars_out": [
+				{
+					"event": "onObjectChange",
+					"rel": "output",
+					"jpath": [],
+					"name": "appconfigToSave"
+				}
+			],
+			"title": "Appconfig",
+			"actions_out": {}
+		},
+		{
+			"url": "modules/types/server_interaction/webservice_search/",
+			"configuration": {
+				"sections": {
+					"postvariables": [
+						{
+							"sections": {},
+							"groups": {
+								"postvariables": [
+									[
+										{
+											"name": "content",
+											"destination": "data",
+											"variable": "appconfigToSave",
+											"filter": "value"
+										}
+									]
+								]
+							}
+						}
+					]
+				},
+				"groups": {
+					"group": [
+						{
+							"url": [
+								"/config/save/appconfig"
+							],
+							"method": [
+								"POST"
+							],
+							"dataType": [
+								"json"
+							],
+							"button": [
+								[
+									"button"
+								]
+							],
+							"buttonlabel": [
+								"Save"
+							],
+							"buttonlabel_exec": [
+								"Saving..."
+							],
+							"onloadsearch": [
+								[]
+							],
+							"debounce": [
+								0
+							],
+							"resultfilter": [
+								null
+							]
+						}
+					],
+					"headers": [
+						[
+							{}
+						]
+					],
+					"searchparams": [
+						[
+							{
+								"destination": "url",
+								"fieldtype": "text"
+							}
+						]
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 32,
+						"top": 66
+					},
+					"size": {
+						"width": 22,
+						"height": 22
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Untitled",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": false,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 9,
 			"vars_in": [
 				{}
 			],

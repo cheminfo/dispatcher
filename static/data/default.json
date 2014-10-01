@@ -6,5 +6,9 @@
     "devicesList": {
         "type": "object",
         "url": "/visu/devices"
+    },
+    "appconfig": {
+        "type": "object",
+        "url": "/config/appconfig"
     }
 }

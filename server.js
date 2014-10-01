@@ -31,16 +31,8 @@ restart();
 var validateFilter = middleware.validateParameters( {type: 'filter', name: 'filter'});
 var validateDevice = middleware.validateParameters({type: 'device', name: 'device'});
 
-// Allow cross-origin
-app.use('/', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-});
 
-
-// The static directory is where all the statically served files go
-// Like jpg, js, css etc...
+// Static files
 app.use(express.static(__dirname + '/static'));
 app.use('/configs', express.static(__dirname + '/configs'));
 app.use('/devices', express.static(__dirname + '/devices'));
@@ -52,12 +44,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.use('/', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-});
-
 
 var ipaddress = appconfig.ipaddress || '';
 var ipValid = network.validateIp(ipaddress);
@@ -66,12 +52,7 @@ app.set("ipaddr", ipValid ? appconfig.ipaddress : ''); // by default we listen t
 app.set("serveraddress", ipValid ? appconfig.ipaddress : network.getMyIp() || '127.0.0.1');
 
 
-var http = require("http").createServer(app);
-http.listen(app.get("port"), app.get("ipaddr"), function() {
-    console.log('Server launched. Go to ', "http://" + app.get("serveraddress") + ":" + app.get("port"));
-});
-
-
+// Initialize modules
 var modules = ['navview', 'visu', 'config'];
 debug('Mounting modules', modules);
 
@@ -79,6 +60,12 @@ for(var i=0; i<modules.length; i++) {
     var router = require('./routes/'+modules[i]);
     app.use('/'+modules[i], router);
 }
+
+// Create and launch server
+var http = require("http").createServer(app);
+http.listen(app.get("port"), app.get("ipaddr"), function() {
+    console.log('Server launched. Go to ', "http://" + app.get("serveraddress") + ":" + app.get("port"));
+});
 
 
 

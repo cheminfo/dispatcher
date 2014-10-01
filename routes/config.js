@@ -36,9 +36,27 @@ router.post('/save/config', middleware.validateParameters([
     {name: 'defaultName', required: false}
 ]), save('configs'));
 
+router.post('/save/appconfig',
+    middleware.validateParameters({
+        name: 'content'
+    }), function(req, res) {
+        var content = res.locals.parameters.content;
+
+        if(!content || _.isEmpty(content)) {
+            return res.status(400).json({});
+        }
+
+        fs.writeJson('./appconfig.json', content, function(err) {
+            if(err) {
+                return res.status(500).json({});
+            }
+            return res.status(200).json({});
+        });
+    }
+);
+
 function save(dir) {
     return function(req, res) {
-        console.log('save', dir);
         var name = res.locals.parameters.name;
         var content = res.locals.parameters.content;
         var defaultName = res.locals.parameters.defaultName;
@@ -56,7 +74,6 @@ function save(dir) {
         }
 
         var filePath = path.join(dir, name);
-        console.log('name: ', name);
 
         fs.writeFile(filePath, JSON.stringify(content), function(err) {
             if(err) return res.status(500).json({});
