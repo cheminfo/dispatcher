@@ -39,9 +39,12 @@ app.use('/devices', express.static(__dirname + '/devices'));
 
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+    limit: appconfig.bodyLimit
+}));
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: true,
+    limit: appconfig.bodyLimit
 }));
 
 
