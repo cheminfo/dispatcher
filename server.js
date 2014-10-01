@@ -310,7 +310,6 @@ function restart() {
                     epochsHash[conf[i].devices[j].id] = epochManager;
                 }
             }
-            console.log('RESOLVE');
             resolve();
         }, function() {
             debug('Could not restart?');

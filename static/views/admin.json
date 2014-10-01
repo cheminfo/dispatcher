@@ -55,7 +55,7 @@
 					},
 					"zIndex": 0,
 					"display": true,
-					"title": "List of configuration files",
+					"title": "Click the configuration file you want to edit",
 					"bgColor": [
 						255,
 						255,
@@ -77,7 +77,7 @@
 			"actions_in": [
 				{}
 			],
-			"title": "List of configuration files",
+			"title": "Click the configuration file you want to edit",
 			"vars_out": [
 				{
 					"event": "onSelect",
@@ -295,7 +295,7 @@
 					},
 					"zIndex": 0,
 					"display": true,
-					"title": "List of device files",
+					"title": "Click the device file you want to edit",
 					"bgColor": [
 						255,
 						255,
@@ -317,7 +317,7 @@
 			"actions_in": [
 				{}
 			],
-			"title": "List of device files",
+			"title": "Click the device file you want to edit",
 			"vars_out": [
 				{
 					"event": "onSelect",
@@ -412,9 +412,7 @@
 					"searchparams": [
 						[
 							{
-								"name": "name",
-								"destination": "data",
-								"label": "File name",
+								"destination": "url",
 								"fieldtype": "text"
 							}
 						]
@@ -424,8 +422,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 130,
-						"top": 42
+						"left": 146,
+						"top": 45
 					},
 					"size": {
 						"width": 23,
@@ -534,9 +532,7 @@
 					"searchparams": [
 						[
 							{
-								"name": "name",
-								"destination": "data",
-								"label": "File name",
+								"destination": "url",
 								"fieldtype": "text"
 							}
 						]
@@ -546,8 +542,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 75,
-						"top": 42
+						"left": 91,
+						"top": 45
 					},
 					"size": {
 						"width": 23,
@@ -658,8 +654,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 38,
-						"top": 50
+						"left": 119,
+						"top": 64
 					},
 					"size": {
 						"width": 39,
@@ -732,12 +728,12 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 0,
+						"left": 42,
 						"top": 51
 					},
 					"size": {
-						"width": 38,
-						"height": 20
+						"width": 55,
+						"height": 28
 					},
 					"zIndex": 0,
 					"display": true,
@@ -846,8 +842,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 32,
-						"top": 66
+						"left": 91,
+						"top": 74
 					},
 					"size": {
 						"width": 22,
@@ -875,6 +871,250 @@
 				{}
 			],
 			"title": "Untitled",
+			"vars_out": [
+				{
+					"jpath": []
+				}
+			],
+			"actions_out": [
+				{
+					"jpath": []
+				}
+			]
+		},
+		{
+			"url": "modules/types/server_interaction/webservice_search/",
+			"configuration": {
+				"sections": {
+					"postvariables": [
+						{
+							"sections": {},
+							"groups": {
+								"postvariables": [
+									[
+										{
+											"name": "content",
+											"destination": "data",
+											"variable": "editedConfigToBeSaved",
+											"filter": "value"
+										},
+										{
+											"name": "defaultName",
+											"destination": "data",
+											"variable": "editedConfigName",
+											"filter": "none"
+										}
+									]
+								]
+							}
+						}
+					]
+				},
+				"groups": {
+					"group": [
+						{
+							"url": [
+								"/config/save/config"
+							],
+							"method": [
+								"POST"
+							],
+							"dataType": [
+								"json"
+							],
+							"button": [
+								[
+									"button"
+								]
+							],
+							"buttonlabel": [
+								"Create"
+							],
+							"buttonlabel_exec": [
+								"Creating..."
+							],
+							"onloadsearch": [
+								[]
+							],
+							"debounce": [
+								0
+							],
+							"resultfilter": [
+								null
+							]
+						}
+					],
+					"headers": [
+						[
+							{}
+						]
+					],
+					"searchparams": [
+						[
+							{
+								"name": "name",
+								"destination": "data",
+								"label": "File name",
+								"fieldtype": "text"
+							}
+						]
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 0,
+						"top": 51
+					},
+					"size": {
+						"width": 41,
+						"height": 13
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Create a new config file",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": true,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 10,
+			"vars_in": [
+				{}
+			],
+			"actions_in": [
+				{}
+			],
+			"title": "Create a new config file",
+			"vars_out": [
+				{
+					"jpath": []
+				}
+			],
+			"actions_out": [
+				{
+					"jpath": []
+				}
+			]
+		},
+		{
+			"url": "modules/types/server_interaction/webservice_search/",
+			"configuration": {
+				"sections": {
+					"postvariables": [
+						{
+							"sections": {},
+							"groups": {
+								"postvariables": [
+									[
+										{
+											"name": "content",
+											"destination": "data",
+											"variable": "editedDeviceToBeSaved",
+											"filter": "value"
+										},
+										{
+											"name": "defaultName",
+											"destination": "data",
+											"variable": "editedDeviceName",
+											"filter": "value"
+										}
+									]
+								]
+							}
+						}
+					]
+				},
+				"groups": {
+					"group": [
+						{
+							"url": [
+								"/config/save/device"
+							],
+							"method": [
+								"POST"
+							],
+							"dataType": [
+								"json"
+							],
+							"button": [
+								[
+									"button"
+								]
+							],
+							"buttonlabel": [
+								"Create"
+							],
+							"buttonlabel_exec": [
+								"Creating..."
+							],
+							"onloadsearch": [
+								[]
+							],
+							"debounce": [
+								0
+							],
+							"resultfilter": [
+								null
+							]
+						}
+					],
+					"headers": [
+						[
+							{}
+						]
+					],
+					"searchparams": [
+						[
+							{
+								"name": "name",
+								"destination": "data",
+								"label": "File name",
+								"fieldtype": "text"
+							}
+						]
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 0,
+						"top": 65
+					},
+					"size": {
+						"width": 41,
+						"height": 14
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Create a new device file",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": true,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 11,
+			"vars_in": [
+				{}
+			],
+			"actions_in": [
+				{}
+			],
+			"title": "Create a new device file",
 			"vars_out": [
 				{
 					"jpath": []

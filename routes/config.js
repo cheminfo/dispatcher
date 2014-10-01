@@ -75,7 +75,7 @@ function save(dir) {
 
         var filePath = path.join(dir, name);
 
-        fs.writeFile(filePath, JSON.stringify(content), function(err) {
+        fs.writeJson(filePath, content, function(err) {
             if(err) return res.status(500).json({});
             return res.status(200).json({});
         });

@@ -1,11 +1,11 @@
 {
     "configsList": {
         "type": "object",
-        "url": "/visu/configs"
+        "url": "/visu/configs/table"
     },
     "devicesList": {
         "type": "object",
-        "url": "/visu/devices"
+        "url": "/visu/devices/table"
     },
     "appconfig": {
         "type": "object",

@@ -9,9 +9,9 @@ var router = require('express').Router(),
 exports  = module.exports = router;
 
 
-router.get('/configs', getJsonFiles('configs'));
+router.get('/configs/table', getJsonFiles('configs'));
 
-router.get('/devices', getJsonFiles('devices'));
+router.get('/devices/table', getJsonFiles('devices'));
 
 function getFiles(dir) {
     try {
@@ -40,7 +40,8 @@ function getJsonFiles(dir) {
                 name: files[i],
                 value: {
                     type: 'object',
-                    url: path.join('/',dir, files[i])
+                    url: path.join('/',dir, files[i]),
+                    timeout: 1000
                 }
             });
         }
