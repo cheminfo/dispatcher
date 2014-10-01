@@ -51,7 +51,7 @@
 					},
 					"size": {
 						"width": 41,
-						"height": 25
+						"height": 27
 					},
 					"zIndex": 0,
 					"display": true,
@@ -137,11 +137,11 @@
 				"Default layer": {
 					"position": {
 						"left": 42,
-						"top": 0
+						"top": 3
 					},
 					"size": {
 						"width": 55,
-						"height": 50
+						"height": 52
 					},
 					"zIndex": 0,
 					"display": true,
@@ -211,11 +211,11 @@
 				"Default layer": {
 					"position": {
 						"left": 98,
-						"top": 0
+						"top": 3
 					},
 					"size": {
 						"width": 54,
-						"height": 50
+						"height": 52
 					},
 					"zIndex": 0,
 					"display": true,
@@ -287,11 +287,11 @@
 				"Default layer": {
 					"position": {
 						"left": 0,
-						"top": 26
+						"top": 28
 					},
 					"size": {
 						"width": 41,
-						"height": 24
+						"height": 27
 					},
 					"zIndex": 0,
 					"display": true,
@@ -422,8 +422,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 146,
-						"top": 45
+						"left": 145,
+						"top": 50
 					},
 					"size": {
 						"width": 23,
@@ -542,8 +542,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 91,
-						"top": 45
+						"left": 90,
+						"top": 50
 					},
 					"size": {
 						"width": 23,
@@ -654,8 +654,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 119,
-						"top": 64
+						"left": 121,
+						"top": 70
 					},
 					"size": {
 						"width": 39,
@@ -729,7 +729,7 @@
 				"Default layer": {
 					"position": {
 						"left": 42,
-						"top": 51
+						"top": 56
 					},
 					"size": {
 						"width": 55,
@@ -842,8 +842,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 91,
-						"top": 74
+						"left": 90,
+						"top": 79
 					},
 					"size": {
 						"width": 22,
@@ -922,6 +922,9 @@
 							"dataType": [
 								"json"
 							],
+							"showStatus": [
+								[]
+							],
 							"button": [
 								[
 									"button"
@@ -965,7 +968,7 @@
 				"Default layer": {
 					"position": {
 						"left": 0,
-						"top": 51
+						"top": 56
 					},
 					"size": {
 						"width": 41,
@@ -1000,7 +1003,10 @@
 			],
 			"actions_out": [
 				{
-					"jpath": []
+					"event": "onSearchReturn",
+					"rel": "results",
+					"jpath": [],
+					"name": "reloadConfigs"
 				}
 			]
 		},
@@ -1044,6 +1050,9 @@
 							"dataType": [
 								"json"
 							],
+							"showStatus": [
+								[]
+							],
 							"button": [
 								[
 									"button"
@@ -1087,7 +1096,7 @@
 				"Default layer": {
 					"position": {
 						"left": 0,
-						"top": 65
+						"top": 70
 					},
 					"size": {
 						"width": 41,
@@ -1122,9 +1131,112 @@
 			],
 			"actions_out": [
 				{
-					"jpath": []
+					"event": "onSearchReturn",
+					"rel": "results",
+					"jpath": [],
+					"name": "reloadDevices"
 				}
 			]
+		},
+		{
+			"url": "modules/types/display/template-twig/",
+			"configuration": {
+				"sections": {},
+				"groups": {
+					"group": [
+						{
+							"template": [
+								"<h1 style=\"text-align:center;\">Edited configuration: {{editedConfigName}}</h1>"
+							]
+						}
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 42,
+						"top": 0
+					},
+					"size": {
+						"width": 55,
+						"height": 7
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Untitled",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": false,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 12,
+			"vars_in": [
+				{
+					"rel": "value",
+					"name": "editedConfigName"
+				}
+			],
+			"actions_in": {},
+			"title": "Untitled",
+			"vars_out": {},
+			"actions_out": {}
+		},
+		{
+			"url": "modules/types/display/template-twig/",
+			"configuration": {
+				"sections": {},
+				"groups": {
+					"group": [
+						{
+							"template": [
+								"<h1 style=\"text-align:center;\">Edited configuration: {{editedDeviceName}}</h1>"
+							]
+						}
+					]
+				}
+			},
+			"layers": {
+				"Default layer": {
+					"position": {
+						"left": 96,
+						"top": 0
+					},
+					"size": {
+						"width": 55,
+						"height": 7
+					},
+					"zIndex": 0,
+					"display": true,
+					"title": "Untitled",
+					"bgColor": [
+						255,
+						255,
+						255,
+						0
+					],
+					"wrapper": false,
+					"created": true,
+					"name": "Default layer"
+				}
+			},
+			"id": 13,
+			"vars_in": [
+				{
+					"rel": "value",
+					"name": "editedDeviceName"
+				}
+			],
+			"actions_in": {},
+			"title": "Untitled",
+			"vars_out": {},
+			"actions_out": {}
 		}
 	],
 	"variables": [
@@ -1159,8 +1271,86 @@
 			]
 		}
 	],
-	"pouchvariables": [],
+	"pouchvariables": [
+		{}
+	],
 	"configuration": {
 		"title": "No title"
-	}
+	},
+	"actionscripts": [
+		{
+			"sections": {},
+			"groups": {
+				"action": [
+					{
+						"name": [
+							"reloadConfigs"
+						],
+						"script": [
+							"API.getVariable('configsList').currentPromise.then(function(val) {val.triggerChange()});"
+						]
+					}
+				]
+			}
+		},
+		{
+			"sections": {},
+			"groups": {
+				"action": [
+					{
+						"name": [
+							"reloadDevices"
+						],
+						"script": [
+							"API.getVariable('devicesList').currentPromise.then(function(val) {val.triggerChange()});"
+						]
+					}
+				]
+			}
+		}
+	],
+	"crons": [
+		{}
+	],
+	"couch_replication": [
+		{
+			"sections": {},
+			"groups": {
+				"couch": [
+					[
+						{
+							"direction": "both",
+							"continuous": []
+						}
+					]
+				]
+			}
+		}
+	],
+	"init_script": [
+		{
+			"sections": {},
+			"groups": {
+				"general": [
+					{
+						"script": [
+							null
+						]
+					}
+				]
+			}
+		}
+	],
+	"actionfiles": [
+		{
+			"sections": {},
+			"groups": {
+				"action": [
+					[
+						{}
+					]
+				]
+			}
+		}
+	]
 }

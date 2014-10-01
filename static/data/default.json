@@ -1,14 +1,17 @@
 {
     "configsList": {
         "type": "object",
-        "url": "/visu/configs/table"
+        "url": "/visu/configs/table",
+        "timeout": 1
     },
     "devicesList": {
         "type": "object",
-        "url": "/visu/devices/table"
+        "url": "/visu/devices/table",
+        "timeout": 1
     },
     "appconfig": {
         "type": "object",
-        "url": "/config/appconfig"
+        "url": "/config/appconfig",
+        "timeout": 1
     }
 }

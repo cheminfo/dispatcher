@@ -57,16 +57,17 @@ router.post('/save/appconfig',
 
 function save(dir) {
     return function(req, res) {
+        console.log('save...');
         var name = res.locals.parameters.name;
         var content = res.locals.parameters.content;
         var defaultName = res.locals.parameters.defaultName;
 
         if(!name && !defaultName) {
-            return res.status(400).json({});
+            return res.status(400).json('Either name or defaultName must be defined');
         }
 
-        if(_.isEmpty(content)) {
-            return res.status(400).json({});
+        if(_.isEmpty(content) && defaultName) {
+            return res.status(400).json('Content is empty');
         }
 
         if(!name || _.isEmpty(name)) {
@@ -75,8 +76,9 @@ function save(dir) {
 
         var filePath = path.join(dir, name);
 
+        console.log('Write json');
         fs.writeJson(filePath, content, function(err) {
-            if(err) return res.status(500).json({});
+            if(err) return res.status(500).json('Could not write json file');
             return res.status(200).json({});
         });
     }

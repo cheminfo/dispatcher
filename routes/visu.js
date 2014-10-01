@@ -41,7 +41,7 @@ function getJsonFiles(dir) {
                 value: {
                     type: 'object',
                     url: path.join('/',dir, files[i]),
-                    timeout: 1000
+                    timeout: 0
                 }
             });
         }
