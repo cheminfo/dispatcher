@@ -76,6 +76,9 @@ http.listen(app.get("port"), app.get("ipaddr"), function() {
 // The root element redirects to the default visualizer view
 var view = '/visualizer/index.html?config=/config/default.json&viewURL=/views/' + defaultView + '.json&dataURL=/data/default.json';
 app.get('/', function(req, res) {
+    res.set({
+        'Cache-Control': 'no-cache'
+    });
     res.redirect(301, view);
 });
 
