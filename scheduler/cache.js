@@ -10,7 +10,7 @@ var lastIds = {};
 var doingMultiLog = false;
 var data = {};
 var Cache = exports = module.exports = function Cache(requestManager, config, options) {
-    this.interval = null;
+    this.intervals = [];
     this.config = config;
     this.requestManager = requestManager;
 
@@ -31,11 +31,14 @@ Cache.prototype.get = function(key) {
 
 Cache.prototype.start = function() {
     var that = this;
-    var delay= this.options.delay || this.config.cacheRefreshInterval;
-    if(!delay) throw new Error('Cache: no interval specified');
-    var sendEvent=function() {
-        for(var i=0; i<that.data.devices.length; i++) {
-            (function(i) {
+
+    for(var i=0; i<that.data.devices.length; i++) {
+        (function(i) {
+            var delay= that.options.delay || that.data.devices[i].refresh || this.config.refresh;
+            debug('Refresh cache every ' + delay + ' ms');
+            if(!delay) throw new Error('Cache: no interval specified');
+            var sendEvent=function() {
+
 
                 // The command depends if the device is a multilog
                 // We use c for non-multi-log
@@ -56,11 +59,11 @@ Cache.prototype.start = function() {
                 else if(!multiLog){
                     doCRequest(that, that.data.devices[i]);
                 }
-            })(i)
-        }
-    };
-    if(!this.interval) {
-        this.interval = setInterval(sendEvent, delay);
+
+            };
+            that.intervals.push(setInterval(sendEvent, delay));
+        })(i)
+
     }
 };
 
@@ -74,7 +77,7 @@ function doMultilogRequest(that, device) {
     var status = that.data.status[id];
     status.lastTrial = new Date().getTime();
     status.failure = '';
-
+    debug('Send multilog request', cmd);
     return that.requestManager.addRequest(cmd).then(function(response) {
         var entries = parser.parse(cmd, response);
         that.data.entry[id] = that.data.entry[id] || {};
@@ -201,8 +204,11 @@ function getLastId(that, device) {
 }
 
 Cache.prototype.stop = function() {
-    if(this.interval) {
-        clearInterval(this.interval);
-        this.interval = null;
+    for(var i=0; i<this.intervals.length; i++) {
+        if(this.intervals[i]) {
+            clearInterval(this.interval[i]);
+        }
     }
+    this.intervals = [];
+
 };
