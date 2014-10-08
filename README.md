@@ -14,20 +14,6 @@ Start your server.
     node server.js
 ```
 
-
-Server configuration
-=========
-```serverConfig.json``` contains all the server configuration option, like ip address and port. By default, the ip address is automatically detected and the port used is 80.
-For advanced users, you can edit the server configuration. You must create a file named ```serverConfig.json```. You can use ```defaultServerConfig.json``` as a template.
-
-```
-cp serverConfigDefault.json appconfig.json       # Copy from template
-vim appconfig.json                               # Edit
-```
-
-For changes to be effective you must relaunch the server.
-
-
 App configuration
 ==============
 Go to http://[ip address]:[port]/ to configure your application. This will load an admin view where you can see and edit all your configurations. Edit and save the "appconfig" window and click "Reload configuration". This will relaunch the dispatcher with the new settings.
@@ -43,6 +29,19 @@ Go to http://[ip address]:[port]/. Make sure you have a valid configuration load
 * dispatcher view: enables you to view the state of connected devices, edit parameters on them, send commands etc...
 
 You can also create your own views and save them easily.
+
+Server configuration
+=========
+```serverConfig.json``` contains all the server configuration option, like ip address and port. By default, the ip address is automatically detected and the port used is 80.
+For advanced users, you can edit the server configuration. You must create a file named ```serverConfig.json```. You can use ```defaultServerConfig.json``` as a template.
+
+```
+cp serverConfigDefault.json appconfig.json       # Copy from template
+vim appconfig.json                               # Edit
+```
+
+For changes to be effective you must relaunch the server.
+
 
 Advanced settings
 =================
