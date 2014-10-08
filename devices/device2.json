@@ -1,1 +1,22 @@
-{"parameters":{"A":{"label":"Internal temperature","name":"internalTemperature"},"B":{"label":"External temperature","name":"externalTemperature"},"C":{"label":"Target temperature","type":"number","editable":true}},"refresh":1000,"nbParam":26}
+{
+    "parameters": {
+        "A": {
+            "label": "Internal temperature",
+            "name": "internalTemperature",
+            "factor": 0.01
+        },
+        "B": {
+            "label": "External temperature",
+            "name": "externalTemperature",
+            "factor": 0.01
+        },
+        "C": {
+            "label": "Target temperature",
+            "type": "number",
+            "factor": 0.01,
+            "editable": true
+        }
+    },
+    "refresh": 1000,
+    "nbParam": 26
+}
