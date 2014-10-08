@@ -8,7 +8,7 @@ On Mac OSX, this means you must have XCode install (available for free from the 
 Server configuration
 =========
 ```serverConfig.json``` contains all the server configuration option, like ip address and port. By default, the ip address is automatically detected and the port used is 80.
-For advanced users, you can edit the server configuration. You must create a file named serverConfig.json. You can use defaultServerConfig.json as a template.
+For advanced users, you can edit the server configuration. You must create a file named ```serverConfig.json```. You can use ```defaultServerConfig.json``` as a template.
 
 ```
 cp serverConfigDefault.json appconfig.json       # Copy from template
@@ -17,7 +17,7 @@ vim appconfig.json                               # Edit
 
 Launch the server
 =======
-Start your server with a given configuration file and optionally with a given view file.
+Start your server.
 
 ```
     npm install
