@@ -245,12 +245,10 @@ function stopManagers() {
 
 function stopSchedulers() {
     _.keys(caches).forEach(function(key) {
-        console.log(key);
         caches[key].stop();
     });
 
     _.keys(epochs).forEach(function(key) {
-        console.log(key);
         epochs[key].stop();
     });
 }
@@ -265,10 +263,7 @@ function restart() {
     process.chdir(__dirname);
     return new Promise(function(resolve, reject) {
         debug('restart');
-        console.log(process.cwd());
         appconfig = JSON.parse(fs.readFileSync('appconfig.json'));
-        console.log('after parse appconfig');
-        debug('appconfig loaded', appconfig);
         defaultView = getOption('view', 'dispatcher');
         stopSchedulers();
         debug('schedulers stopped');
