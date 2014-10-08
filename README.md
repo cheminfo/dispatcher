@@ -5,6 +5,16 @@ Requirements
 Have gcc installed (C/C++ compiler)
 On Mac OSX, this means you must have XCode install (available for free from the appstore) and start it once to accept the licence !
 
+Launch the server
+=======
+Start your server.
+
+```
+    npm install
+    node server.js
+```
+
+
 Server configuration
 =========
 ```serverConfig.json``` contains all the server configuration option, like ip address and port. By default, the ip address is automatically detected and the port used is 80.
@@ -15,14 +25,8 @@ cp serverConfigDefault.json appconfig.json       # Copy from template
 vim appconfig.json                               # Edit
 ```
 
-Launch the server
-=======
-Start your server.
+For changes to be effective you must relaunch the server.
 
-```
-    npm install
-    node server.js
-```
 
 App configuration
 ==============
@@ -34,9 +38,11 @@ Configuration options:
 
 View navigation
 =============
-Go to http://[ip address]:[port]/. Make sure you have a valid configuration loaded. Click on "Nav views" in the header. Then browse the available views and click any you would like to load. The default available views are:
+Go to http://[ip address]:[port]/. Make sure you have a valid configuration loaded. Click on "Nav views" in the header. Then browse the available views and double-click any you would like to load. The default available views are:
 * admin view: enables you to edit your configuration files and relaunch the dispatcher.
 * dispatcher view: enables you to view the state of connected devices, edit parameters on them, send commands etc...
+
+You can also create your own views and save them easily.
 
 Advanced settings
 =================
