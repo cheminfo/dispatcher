@@ -26,6 +26,8 @@ var epochs = [], epochsHash = {};
 var cacheDatabases = [];
 var defaultView;
 
+process.chdir(__dirname);
+
 restart();
 
 // Middleware
