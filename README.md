@@ -5,27 +5,38 @@ Requirements
 Have gcc installed (C/C++ compiler)
 On Mac OSX, this means you must have XCode install (available for free from the appstore) and start it once to accept the licence !
 
-Configure
+Server configuration
 =========
-Create appconfig.json file (configure your ip address and the port you want to use). Use default.json as a template. Don't commit appconfig.json
+```serverConfig.json``` contains all the server configuration option, like ip address and port. By default, the ip address is automatically detected and the port used is 80.
+For advanced users, you can edit the server configuration. You must create a file named serverConfig.json. You can use defaultServerConfig.json as a template.
 
 ```
-cp default.json appconfig.json
+cp serverConfigDefault.json appconfig.json       # Copy from template
+vim appconfig.json                               # Edit
 ```
 
-Install
+Launch the server
 =======
 Start your server with a given configuration file and optionally with a given view file.
 
 ```
     npm install
-    node server.js --config zigbee --view dispatcher
+    node server.js
 ```
-This will look for the configuration file ``` ./configs/zigbee.json ``` and for the view ``` ./static/views/dispatcher.json ```.
 
-Use
-===
-Go to http://[ip address]:[port]/
+App configuration
+==============
+Go to http://[ip address]:[port]/ to configure your application. This will load an admin view where you can see and edit all your configurations. Edit and save the "appconfig" window and click "Reload configuration". This will relaunch the dispatcher with the new settings.
+
+Configuration options:
+* config: the name of the configuration file. The configuration file contains a description of all connected devices.
+* view: the name of the default view. This is the view that will be loaded when requesting the root path in your browser.
+
+View navigation
+=============
+Go to http://[ip address]:[port]/. Make sure you have a valid configuration loaded. Click on "Nav views" in the header. Then browse the available views and click any you would like to load. The default available views are:
+* admin view: enables you to edit your configuration files and relaunch the dispatcher.
+* dispatcher view: enables you to view the state of connected devices, edit parameters on them, send commands etc...
 
 Advanced settings
 =================
