@@ -1,4 +1,4 @@
 {
-    "config": "zigbee",
+    "config": "default",
     "view": "admin"
 }
