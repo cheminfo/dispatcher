@@ -207,7 +207,7 @@ function getLastId(that, device) {
 Cache.prototype.stop = function() {
     for(var i=0; i<this.intervals.length; i++) {
         if(this.intervals[i]) {
-            clearInterval(this.interval[i]);
+            clearInterval(this.intervals[i]);
         }
     }
     this.intervals = [];
