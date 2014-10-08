@@ -48,6 +48,7 @@ Cache.prototype.start = function() {
 
                 if(multiLog && !doingMultiLog) {
                     getLastId(that, that.data.devices[i]).then(function(lastId) {
+                        debug('Last id successfully retrieved from database: ' + lastId);
                         lastIds[that.data.devices[i].id] = lastId || 0;
                         doMultilogRequest(that, that.data.devices[i]);
                     }).catch(function() {
