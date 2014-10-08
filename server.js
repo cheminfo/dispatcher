@@ -218,7 +218,7 @@ app.get('/database/:device', queryValidator, function(req, res) {
 
     database.get(deviceId, options).then(function(result) {
         //var chart = filter.visualizerChart(res.locals.parameters.device, result);
-        var chart = filter.chartFromDatabaseEntries(result);
+        var chart = filter.chartFromDatabaseEntries(result, deviceId);
         return res.status(200).json(chart);
     }).catch(function(err) {
         return res.status(400).json('Database error');
@@ -245,10 +245,12 @@ function stopManagers() {
 
 function stopSchedulers() {
     _.keys(caches).forEach(function(key) {
+        console.log(key);
         caches[key].stop();
     });
 
     _.keys(epochs).forEach(function(key) {
+        console.log(key);
         epochs[key].stop();
     });
 }
@@ -260,14 +262,18 @@ function stopCacheDatabases() {
 }
 
 function restart() {
+    process.chdir(__dirname);
     return new Promise(function(resolve, reject) {
         debug('restart');
-        appconfig = fs.readJsonSync('./appconfig.json');
-        debug('appconfig', appconfig);
+        console.log(process.cwd());
+        appconfig = JSON.parse(fs.readFileSync('appconfig.json'));
+        console.log('after parse appconfig');
+        debug('appconfig loaded', appconfig);
         defaultView = getOption('view', 'dispatcher');
         stopSchedulers();
+        debug('schedulers stopped');
         stopManagers().then(function() {
-            debug('manages stopped');
+            debug('managers stopped');
             stopCacheDatabases();
             // Reset some vars
             caches = []; cachesHash = {};
