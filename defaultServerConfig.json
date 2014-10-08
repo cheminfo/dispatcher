@@ -1,5 +1,5 @@
 {
     "ipaddress": "",
-    "port": "8080",
+    "port": "80",
     "bodyLimit": "200kb"
 }
