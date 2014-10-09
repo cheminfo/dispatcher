@@ -15,8 +15,8 @@
 		"name": ""
 	    },
         "E":{
-                "label": "Maximum Weight",
-                "name": "maxWeight"
+                "label": "Weight Status",
+                "name": "weightStatus"
             },
         "F":{
                 "label": "PH value",
@@ -103,11 +103,112 @@
                 "name": "status"
             },
         "AA":{
+                "label": "Target Liquid Temp",
+                "name": "targetLiquidTemp"
+            },
+        "AB":{
+                "label": "Max Temp of the Plate",
+                "name": "tempMaxPlate"
+            },
+        "AC":{
+                "label": "Heating Regulation Time",
+                "name": "heatRegTime"
+            },
+        "AD":{
+                "label": "Min Temp",
+                "name": "minTemp"
+            },
+        "AE":{
+                "label": "Max Temp",
+                "name": "maxTemp"
+            },
+        "AF":{
+                "label": "Min Weight",
+                "name": "minWeight"
+            },
+        "AG":{
+                "label": "Max Weight",
+                "name": "maxWeight"
+            },
+        "AH":{
+                "label": "Min Absolute Weight",
+                "name": "minAbsWeight"
+            },
+        "AI":{
+                "label": "Max bsolute Weight",
+                "name": "maxAbsWeight"
+            },
+        "AJ":{
+                "label": "Sedimentation Time",
+                "name": "sedTime"
+            },
+        "AK":{
+                "label": "Min Filled Time",
+                "name": "minFilledTime"
+            },
+        "AL":{
+                "label": "",
+                "name": ""
+            },
+        "AM":{
+                "label": "Target PH",
+                "name": "targetPh"
+            },
+        "AN":{
+                "label": "PH Factor A",
+                "name": "factorPhA"
+            },
+        "AO":{
+                "label": "PH Factor B",
+                "name": "factorPhB"
+            },
+        "AP":{
+                "label": "PH State",
+                "name": "phState"
+            },
+        "AQ":{
+                "label": "PH Adjust Delay",
+                "name": "phAdjustDelay"
+            },
+        "AR":{
+                "label": "PH Opening Time",
+                "name": "phOpenTime"
+            },
+        "AS":{
+                "label": "PH Tolerance",
+                "name": "phTol"
+            },
+        "AT":{
+                "label": "Desired Flux Gas1",
+                "name": "desiredFlux1"
+            },
+        "AU":{
+                "label": "Desired Flux Gas2",
+                "name": "desiredFlux2"
+            },
+        "AV":{
+                "label": "Desired Flux Gas3",
+                "name": "desiredFlux3"
+            },
+        "AW":{
+                "label": "Desired Flux Gas4",
+                "name": "desiredFlux4"
+            },
+        "AX":{
+                "label": "Flux Tolerance",
+                "name": "fluxTol"
+            },
+        "AY":{
+                "label": "Flux Time Windows",
+                "name": "fluxTimeWindows"
+            },
+        "AZ":{
                 "label": "",
                 "name": ""
             }
 
+
     },
-    "refresh":1000,
+    "refresh":5000,
     "nbParam": 52
 }
