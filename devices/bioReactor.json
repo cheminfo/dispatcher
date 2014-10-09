@@ -1,0 +1,113 @@
+{
+    "parameters":{
+        "A": {
+            "label": "Temperature of the solution",
+            "name": "solutionTemperature"},
+        "B": {
+            "label": "Temperature of the heatingplate",
+            "name":"plateTemperature"},
+        "C": {
+            "label": "Weight",
+            "name": "Weight"
+        },
+	"D":{
+		"label": "",
+		"name": ""
+	    },
+        "E":{
+                "label": "Maximum Weight",
+                "name": "maxWeight"
+            },
+        "F":{
+                "label": "PH value",
+                "name": "phValue"
+            },
+        "G":{
+                "label": "Flux Gas1",
+                "name": "gas1"
+            },
+        "H":{
+                "label": "Flux Gas2",
+                "name": "gas2"
+            },
+        "I":{
+                "label": "Flux Gas3",
+                "name": "gas3"
+            },
+        "J":{
+                "label": "Flux Gas4",
+                "name": "gas4"
+            },
+        "K":{
+                "label": "",
+                "name": ""
+            },
+        "L":{
+                "label": "",
+                "name": ""
+            },
+        "M":{
+                "label": "",
+                "name": ""
+            },
+        "N":{
+                "label": "Annemometre Channel",
+                "name": "annemChan"
+            },
+        "O":{
+                "label": "Weight factor",
+                "name": "weightFactor"
+            },
+        "P":{
+                "label": "Weight Offset",
+                "name": "weightOffset"
+            },
+        "Q":{
+                "label": "Annem Offset1",
+                "name": "offset1"
+            },
+        "R":{
+                "label": "Annem Offset2",
+                "name": "offset2"
+            },
+        "S":{
+                "label": "Annem Offset3",
+                "name": "offset3"
+            },
+        "T":{
+                "label": "Annem Offset4",
+                "name": "offset4"
+            },
+        "U":{
+                "label": "Annem Factor1",
+                "name": "factor1"
+            },
+        "V":{
+                "label": "Annem Factor2",
+                "name": "factor2"
+            },
+        "W":{
+                "label": "Annem Factor3",
+                "name": "factor3"
+            },
+        "X":{
+                "label": "Annem Factor4",
+                "name": "Factor4"
+            },
+        "Y":{
+                "label": "",
+                "name": ""
+            },
+        "Z":{
+                "label": "Status",
+                "name": "status"
+            },
+        "AA":{
+                "label": "",
+                "name": ""
+            }
+
+    },
+    "refresh":1000,
+    "nbParam": 52
+}
