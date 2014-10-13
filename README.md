@@ -19,7 +19,7 @@ App configuration
 Go to http://[ip address]:[port]/ to configure your application. This will load an admin view where you can see and edit all your configurations. Edit and save the "appconfig" window and click "Reload configuration". This will relaunch the dispatcher with the new settings.
 
 Configuration options:
-* config: the name of the configuration file. The configuration file contains a description of all connected devices.
+* config: the name of the configuration file. The configuration file contains a description of all connected devices. You can specify several configuration files separating them with commas.
 * view: the name of the default view. This is the view that will be loaded when requesting the root path in your browser.
 
 View navigation
