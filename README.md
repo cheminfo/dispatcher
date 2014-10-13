@@ -42,6 +42,9 @@ vim appconfig.json                               # Edit
 
 For changes to be effective you must relaunch the server.
 
+## Other server options
+* bodyLimit: You may have to change this if you want to send large amounts of data to the server. This may be required when saving a large view.
+
 
 Advanced settings
 =================
@@ -164,7 +167,9 @@ apt-get install monit
 ```
 
 
-
+Known issues
+===========
+* Getting an error when saving file in the nav view: it could be that what you are trying to save is too large. Open the server configuration file ```serverConfig.json``` and edit the ```bodyLimit``` option. Increase it.
 
 
 
