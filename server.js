@@ -280,7 +280,7 @@ function restart() {
             // Load configuration file
             var configName = getOption('config', 'default');
             debug('config name', configName);
-            configName = configName.split(',');
+            configName = configName.trim().split(',');
 
 
             config = new Config();
