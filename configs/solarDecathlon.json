@@ -1,0 +1,22 @@
+{
+  "devices": [
+    {
+      "type": "bioReactor",
+      "description": "The solar decathon device",
+      "prefix": "$I",
+      "id": "$I"
+    }
+  ],
+  "serialResponseTimeout": 250,
+  "port": "/dev/ttyUSB0",
+  "baudrate": 38400,
+  "sqlite": {
+    "dir": "sqlite",
+    "maxRecords": {
+      "entry": 100000,
+      "minute": 10000,
+      "hour": 7200,
+      "day": 300
+    }
+  }
+}
