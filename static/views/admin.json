@@ -1,5 +1,5 @@
 {
-	"version": "2.5.1",
+	"version": "2.9.6",
 	"grid": {
 		"layers": {
 			"Default layer": {
@@ -100,7 +100,8 @@
 				{
 					"jpath": []
 				}
-			]
+			],
+			"zindex": 0
 		},
 		{
 			"url": "modules/types/edition/object_editor/",
@@ -164,7 +165,14 @@
 					"name": "editedConfig"
 				}
 			],
-			"actions_in": {},
+			"actions_in": {
+				"rel": [
+					null
+				],
+				"name": [
+					null
+				]
+			},
 			"vars_out": [
 				{
 					"event": "onObjectChange",
@@ -174,7 +182,8 @@
 				}
 			],
 			"title": "Config edition",
-			"actions_out": {}
+			"actions_out": {},
+			"zindex": 0
 		},
 		{
 			"url": "modules/types/edition/object_editor/",
@@ -248,7 +257,8 @@
 				}
 			],
 			"title": "Device edition",
-			"actions_out": {}
+			"actions_out": {},
+			"zindex": 0
 		},
 		{
 			"url": "modules/types/display/fasttable/",
@@ -340,7 +350,8 @@
 				{
 					"jpath": []
 				}
-			]
+			],
+			"zindex": 0
 		},
 		{
 			"url": "modules/types/server_interaction/webservice_search/",
@@ -460,7 +471,8 @@
 				{
 					"jpath": []
 				}
-			]
+			],
+			"zindex": 13
 		},
 		{
 			"url": "modules/types/server_interaction/webservice_search/",
@@ -580,7 +592,8 @@
 				{
 					"jpath": []
 				}
-			]
+			],
+			"zindex": 11
 		},
 		{
 			"url": "modules/types/server_interaction/webservice_search/",
@@ -692,7 +705,8 @@
 				{
 					"jpath": []
 				}
-			]
+			],
+			"zindex": 0
 		},
 		{
 			"url": "modules/types/edition/object_editor/",
@@ -766,7 +780,8 @@
 				}
 			],
 			"title": "Appconfig",
-			"actions_out": {}
+			"actions_out": {},
+			"zindex": 0
 		},
 		{
 			"url": "modules/types/server_interaction/webservice_search/",
@@ -880,7 +895,8 @@
 				{
 					"jpath": []
 				}
-			]
+			],
+			"zindex": 12
 		},
 		{
 			"url": "modules/types/server_interaction/webservice_search/",
@@ -1008,7 +1024,8 @@
 					"jpath": [],
 					"name": "reloadConfigs"
 				}
-			]
+			],
+			"zindex": 0
 		},
 		{
 			"url": "modules/types/server_interaction/webservice_search/",
@@ -1136,7 +1153,8 @@
 					"jpath": [],
 					"name": "reloadDevices"
 				}
-			]
+			],
+			"zindex": 0
 		},
 		{
 			"url": "modules/types/display/template-twig/",
@@ -1186,7 +1204,8 @@
 			"actions_in": {},
 			"title": "Untitled",
 			"vars_out": {},
-			"actions_out": {}
+			"actions_out": {},
+			"zindex": 0
 		},
 		{
 			"url": "modules/types/display/template-twig/",
@@ -1236,7 +1255,8 @@
 			"actions_in": {},
 			"title": "Untitled",
 			"vars_out": {},
-			"actions_out": {}
+			"actions_out": {},
+			"zindex": 0
 		}
 	],
 	"variables": [
