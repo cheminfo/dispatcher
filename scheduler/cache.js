@@ -120,14 +120,14 @@ function doMultilogRequest(that, device) {
 }
 
 function doCRequest(that, device) {
-    debug('do c request');
     var nbParam = device.nbParam;
     var cmdLetter = 'c';
     var cmd = device.prefix + cmdLetter;
     var id =  device.id;
     that.data.status[id] = that.data.status[id] || { id: id};
+    debug('send c command: ' + cmd);
     return that.requestManager.addRequest(cmd).then(function(response) {
-        debug('Request done');
+        debug('response to c command ' + cmd + ' received');
         var status = that.data.status[id];
         status.lastTrial = new Date().getTime();
         status.failure = '';
