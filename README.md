@@ -89,7 +89,7 @@ nodemon server.js
 ## Debug
 Indicate for what files you want to see debug messages separated by commas
 ```
-DEBUG=cache,SerialQueueManager,parser nodemon server.js --config zigbee
+DEBUG=cache,SerialQueueManager,parser,database,PromiseWrapper nodemon server.js --config zigbee
 ```
 
 On a raspberry PI
