@@ -69,7 +69,6 @@ Cache.prototype.start = function() {
 };
 
 function doMultilogRequest(that, device) {
-    debug('do multilog request', lastIds[device.id]);
     var lastId = lastIds[device.id];
     doingMultiLog = true;
     var cmd = 'm' + lastId;
@@ -78,7 +77,7 @@ function doMultilogRequest(that, device) {
     var status = that.data.status[id];
     status.lastTrial = new Date().getTime();
     status.failure = '';
-    debug('Send multilog request', cmd);
+    debug('Send multilog command', cmd);
     return that.requestManager.addRequest(cmd).then(function(response) {
         var entries = parser.parse(cmd, response);
         that.data.entry[id] = that.data.entry[id] || {};
@@ -127,7 +126,7 @@ function doCRequest(that, device) {
     that.data.status[id] = that.data.status[id] || { id: id};
     debug('send c command: ' + cmd);
     return that.requestManager.addRequest(cmd).then(function(response) {
-        debug('response to c command ' + cmd + ' received');
+        //debug('response to c command ' + cmd + ' received');
         var status = that.data.status[id];
         status.lastTrial = new Date().getTime();
         status.failure = '';
