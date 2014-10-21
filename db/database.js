@@ -305,8 +305,15 @@ function insertEntry(wdb, entry) {
         for(var i=0; i<keys.length; i++) {
             var value = entry.parameters[keys[i]];
             if(typeof value === 'string') value = "'" + value + "'";
-            values.push(entry.parameters[keys[i]]);
+            if(entry.parameters[keys[i]] === null) {
+                values.push('NULL');
+            }
+            else {
+                values.push(entry.parameters[keys[i]]);
+            }
+
         }
+
 
         var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
             ' values(' + entry.epoch + ',' + values.join(',') + ')';
@@ -315,6 +322,7 @@ function insertEntry(wdb, entry) {
     }
 }
 
+
 function insertEntry1(wdb, entry) {
     return function() {
         var keys = _.keys(entry.parameters);
@@ -322,7 +330,12 @@ function insertEntry1(wdb, entry) {
         for(var i=0; i<keys.length; i++) {
             var value = entry.parameters[keys[i]];
             if(typeof value === 'string') value = "'" + value + "'";
-            values.push(entry.parameters[keys[i]]);
+            if(entry.parameters[keys[i]] === null) {
+                values.push('NULL');
+            }
+            else {
+                values.push(entry.parameters[keys[i]]);
+            }
         }
 
 
