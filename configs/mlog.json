@@ -1,7 +1,7 @@
 {
     "devices" : [
         {
-            "type":"mlog",
+            "type":"bioReactor",
             "description":"Mlog device",
             "prefix":"",
             "id": "Arbitrary"

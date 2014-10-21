@@ -125,10 +125,13 @@ function createMissingColumns(wdb, wantedColumns) {
         var missingColumns = _.difference(wantedColumns, existingColumns);
 
         var promises = [];
-        var i=0;
+        var i;
 
         for(i=0; i<missingColumns.length; i++) {
-            promises.push(wdb.run('ALTER TABLE entry ADD COLUMN ' + missingColumns[i] + " INT;"))
+//            promises.push(wdb.run('ALTER TABLE entry ADD COLUMN $col INT;', {
+//                $col: missingColumns[i]
+//            }));
+            promises.push(wdb.run('ALTER TABLE entry ADD COLUMN "' + missingColumns[i] + '" INT;'))
         }
 
         var meanWantedColumns = _.chain(wantedColumns).map(mapMeanCol).flatten().value();
@@ -140,7 +143,11 @@ function createMissingColumns(wdb, wantedColumns) {
             var mcol = _.difference(meanWantedColumns, ecol);
 
             for(var j=0; j<mcol.length; j++) {
-                promises.push(wdb.run('ALTER TABLE ' + names[i] + ' ADD COLUMN ' + mcol[j] + ' INT;'));
+                /*promises.push(wdb.run('ALTER TABLE $name ADD COLUMN $col INT;', {
+                    $name: names[i],
+                    $col: mcol[j]
+                }));*/
+                promises.push(wdb.run('ALTER TABLE ' + names[i] + ' ADD COLUMN "' + mcol[j] + '" INT;'));
             }
         }
         debug('run create missing columns');
@@ -190,9 +197,15 @@ function getEntries(wdb, options) {
 
 
         var condition = (conditions.length) === 0 ? '' : ' WHERE ' + conditions.join(' AND ');
-        if(fields.indexOf('*') === -1) fields.push('id', 'epoch');
-        fields = _.unique(fields);
-        var query = 'SELECT ' + fields + ' FROM entry';
+        var query;
+        if(fields.indexOf('*') === -1) {
+            fields.push('id', 'epoch');
+            fields = _.unique(fields);
+            query = 'SELECT "' + fields.join('","') + '" FROM entry';
+        }
+        else {
+            query = 'SELECT * FROM entry';
+        }
         query += condition;
         query += ' ORDER BY epoch ' + options.order;
         query += ' LIMIT ' + options.limit;
@@ -205,7 +218,7 @@ function getMeanEntries(wdb, options) {
     return function() {
         var conditions = [];
         var fields = options.fields;
-        if(!options.fields) fields = '*';
+        if(!options.fields) fields = ['*'];
         else {
             fields = _.chain(fields).map(function(c) {return [c+'_min', c + '_max']}).push(
                 _.map(fields, function(c) {return c + '_sum' +  '/' + c + '_nb as ' + c + '_mean'})
@@ -221,9 +234,16 @@ function getMeanEntries(wdb, options) {
 
 
         var condition = (conditions.length) === 0 ? '' : ' WHERE ' + conditions.join(' AND ');
-        fields.push('epoch');
-        fields = _.unique(fields);
-        var query = 'SELECT ' + fields + ' FROM ' + options.mean;
+        var query;
+        if(fields.indexOf('*') > -1) {
+            query = 'SELECT * FROM ' + options.mean;
+        }
+        else {
+            fields.push('epoch');
+            fields = _.unique(fields);
+            query = 'SELECT ' + fields.join(',') + ' FROM ' + options.mean;
+        }
+
         query += condition;
         query += ' ORDER BY epoch ' + options.order;
         query += ' LIMIT '  + options.limit;
@@ -288,7 +308,7 @@ function insertEntry(wdb, entry) {
             values.push(entry.parameters[keys[i]]);
         }
 
-        var command = 'INSERT INTO entry (epoch, ' + keys.join(',') + ')' +
+        var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
             ' values(' + entry.epoch + ',' + values.join(',') + ')';
         debug('run insert entry');
         return wdb.run(command);
@@ -306,7 +326,7 @@ function insertEntry1(wdb, entry) {
         }
 
 
-        var command = 'INSERT INTO entry (id, epoch, ' + keys.join(',') + ')' +
+        var command = 'INSERT INTO entry (id, epoch, "' + keys.join('","') + '")' +
             ' values(' + entry.id + ',' + entry.epoch + ',' + values.join(',') + ')';
         debug('run insert entry');
         return wdb.run(command);
