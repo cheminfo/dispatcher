@@ -209,6 +209,7 @@
 
 
     },
+    "multiLog": false,
     "refresh":5000,
     "nbParam": 52
 }
