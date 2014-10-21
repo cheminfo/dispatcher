@@ -4,7 +4,7 @@
             "type":"bioReactor",
             "description":"Mlog device",
             "prefix":"",
-            "id": "Arbitrary"
+            "id": "$A"
         }
 
     ],
