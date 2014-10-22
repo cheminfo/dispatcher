@@ -394,8 +394,14 @@ function insertEntryMean(wdb, entry) {
                             Math.min(res[i][0][meanCol[0]], entry.parameters[col]), Math.max(res[i][0][meanCol[1]], entry.parameters[col]), res[i][0][meanCol[2]] + entry.parameters[col], res[i][0][meanCol[3]] + 1
                         ];
                     })
-                    .flatten().value();
+                    .flatten().map(function(val) {
+                        if(val === null) {
+                            return 'NULL'
+                        }
+                        return val;
+                    }).value();
             }
+
 
             promises.push(wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");"));
         }
