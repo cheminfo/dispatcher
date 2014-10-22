@@ -91,6 +91,11 @@ Indicate for what files you want to see debug messages separated by commas
 ```
 DEBUG=cache,SerialQueueManager,parser,database,PromiseWrapper nodemon server.js --config zigbee
 ```
+You can also debug with all the debug informations
+```
+DEBUG=* nodemon server.js --config zigbee
+```
+
 
 On a raspberry PI
 =================
