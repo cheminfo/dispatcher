@@ -69,9 +69,10 @@ Cache.prototype.start = function() {
 };
 
 function doMultilogRequest(that, device) {
+
     var lastId = lastIds[device.id];
     doingMultiLog = true;
-    var cmd = 'm' + lastId;
+    var cmd = device.prefix +  'm' + lastId;
     var id =  device.id;
     that.data.status[id] = that.data.status[id] || { id: id};
     var status = that.data.status[id];
