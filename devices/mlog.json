@@ -1,5 +1,10 @@
 {
     "parameters":{
+        "B": {
+            "label": "",
+            "name": "",
+            "factor": 0.01
+        },
         "K": {
             "label": "Internal temperature",
             "name":"internalTemperature",
@@ -16,8 +21,9 @@
             "editable":true,
             "factor": 0.01
         }
+
     },
-    "refresh":1000,
+    "refresh":5000,
     "nbParam": 52,
     "multiLog": true
 }

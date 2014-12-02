@@ -82,7 +82,14 @@ app.get('/', function(req, res) {
         'Cache-Control': 'no-cache'
     });
     var df = defaultView || 'dispatcher';
-    var view = '/visualizer/index.html?config=/config/default.json&viewURL=/views/' + df + '.json&dataURL=/data/default.json';
+    var view;
+    if(appconfig.useLactame) {
+        view = '/visualizer_lactame/index.html?config=/config/default.json&viewURL=/views/' + df + '.json&dataURL=/data/default.json';
+    }
+    else {
+        view  = '/visualizer/index.html?config=/config/default.json&viewURL=/views/' + df + '.json&dataURL=/data/default.json';
+    }
+
     res.redirect(301, view);
 });
 
