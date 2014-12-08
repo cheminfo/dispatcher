@@ -201,7 +201,7 @@ app.get('/database/all/:filter', validateFilter, function(req, res) {
 
 var queryValidator = middleware.validateParameters([
     {name: 'fields', required: false},
-    {name: 'device', type: 'device', required: true},
+    {name: 'device', required: true},
     {name: 'limit', required: false},
     {name: 'mean', required: false}
 ]);
