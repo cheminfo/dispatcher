@@ -209,10 +209,16 @@ var queryValidator = middleware.validateParameters([
 
 app.get('/database/:device', queryValidator, function(req, res) {
     var cache = cachesHash[res.locals.parameters.device];
+    var deviceId;
     if(!cache) {
-        return res.status(500).json('Device does not exist');
+        deviceId = res.locals.parameters.device;
+        //return res.status(500).json('Device does not exist');
     }
-    var deviceId = cache.data.deviceIds[res.locals.parameters.device];
+    else {
+        deviceId = cache.data.deviceIds[res.locals.parameters.device];
+    }
+    //
+
     var fields = res.locals.parameters.fields || '*';
     var mean = res.locals.parameters.mean || 'entry';
     var limit = res.locals.parameters.limit || 10;
@@ -222,6 +228,7 @@ app.get('/database/:device', queryValidator, function(req, res) {
         fields: fields,
         mean: mean
     };
+
 
     database.get(deviceId, options).then(function(result) {
         //var chart = filter.visualizerChart(res.locals.parameters.device, result);
