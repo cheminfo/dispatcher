@@ -1,0 +1,20 @@
+{
+  "parameters":{
+    "B": {
+      "label": "Temperature of the heatingplate",
+      "name":"plateTemperature"},
+    "C": {
+      "label": "Weight",
+      "name": "Weight"
+    },
+    "D":{
+      "label": "",
+      "name": ""
+    }
+
+
+  },
+  "multiLog": true,
+  "refresh":5000,
+  "nbParam": 52
+}
