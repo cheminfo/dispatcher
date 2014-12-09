@@ -209,15 +209,9 @@ var queryValidator = middleware.validateParameters([
 
 app.get('/database/:device', queryValidator, function(req, res) {
     var cache = cachesHash[res.locals.parameters.device];
-    var deviceId;
-    if(!cache) {
-        deviceId = res.locals.parameters.device;
-        //return res.status(500).json('Device does not exist');
-    }
-    else {
-        deviceId = cache.data.deviceIds[res.locals.parameters.device];
-    }
-    //
+
+
+    var deviceId = idStringToNumber(res.locals.parameters.device);
 
     var fields = res.locals.parameters.fields || '*';
     var mean = res.locals.parameters.mean || 'entry';
@@ -367,4 +361,12 @@ function getAppconfig() {
         fs.copySync('./defaultAppconfig.json', './appconfig.json');
         return getAppconfig();
     }
+}
+
+function idStringToNumber(idString) {
+    return idString.charCodeAt(0) * 256 + idString.charCodeAt(1);
+}
+
+function idNumberToString(idNumber) {
+
 }

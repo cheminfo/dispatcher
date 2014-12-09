@@ -62,7 +62,7 @@ Config.prototype.findPluggedDevice = function(id) {
         }
     }
     return null;
-}
+};
 
 
 function checkPluggedDevice(conf) {
