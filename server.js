@@ -199,18 +199,15 @@ app.get('/database/all/:filter', validateFilter, function(req, res) {
     var all = {};
 });
 
-var queryValidator = middleware.validateParameters([
+var queryValidator = [
     {name: 'fields', required: false},
     {name: 'device', required: true},
     {name: 'limit', required: false},
     {name: 'mean', required: false}
-]);
+];
 
 
-app.get('/database/:device', queryValidator, function(req, res) {
-    var cache = cachesHash[res.locals.parameters.device];
-
-
+app.get('/database/:device', middleware.validateParameters(_.flatten([queryValidator, {name:'filter', required: false}])), function(req, res) {
     var deviceId = idStringToNumber(res.locals.parameters.device);
 
     var fields = res.locals.parameters.fields || '*';
@@ -225,9 +222,14 @@ app.get('/database/:device', queryValidator, function(req, res) {
 
 
     database.get(deviceId, options).then(function(result) {
-        //var chart = filter.visualizerChart(res.locals.parameters.device, result);
-        var chart = filter.chartFromDatabaseEntries(result, res.locals.parameters.device);
-        return res.status(200).json(chart);
+        switch(res.locals.parameters.filter) {
+            case 'chart':
+                var chart = filter.chartFromDatabaseEntries(result, res.locals.parameters.device);
+                return res.status(200).json(chart);
+            default:
+                return res.status(200).json(result);
+        }
+
     }).catch(function(err) {
         return res.status(400).json('Database error');
     });
