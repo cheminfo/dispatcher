@@ -1,7 +1,7 @@
 {
   "devices": [
     {
-      "type": "bioReactor",
+      "type": "solar1",
       "description": "The solar decathon device",
       "prefix": "$I",
       "id": "$I"
