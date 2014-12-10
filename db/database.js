@@ -10,7 +10,7 @@ var PromiseWrapper = require('../util/PromiseWrapper'),
     Timer = require('../util/Timer');
 
 
-
+var dbs = [];
 
 exports = module.exports = {
     save: save,
@@ -587,10 +587,13 @@ function getWrappedDB(id, options, mode) {
     var file = id + '.sqlite';
     var dbloc = path.join(dir, file);
     debug('opening database', dbloc);
-    var db = new sqlite.cached.Database(dbloc, mode);
-    var pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
-    pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
-    return pdb
+    var pdb = dbs[id];
+    if(!pdb) {
+        var db = new sqlite.cached.Database(dbloc, mode);
+        pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
+        pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
+    }
+    return pdb;
 }
 
 function query(id) {

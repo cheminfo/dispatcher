@@ -13,6 +13,8 @@ var CacheDatabase = exports = module.exports = function CacheDatabase(cache, con
 
 };
 
+CacheDatabase.prototype.__proto__ = EventEmitter.prototype;
+
 CacheDatabase.prototype.start = function() {
     this.cache.on('newdata', onNewData);
 };
@@ -51,6 +53,7 @@ function onNewData(id, data) {
     }
 
     // Get max records authorized from device
+    // General options can be specified in config an overridden by device
     var specOptions = this.config.devices[idx].sqlite || {};
     var defaultOptions = this.config.sqlite || {};
 
