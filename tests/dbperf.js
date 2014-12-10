@@ -15,7 +15,6 @@ d = _.map(d,function() {
     return obj;
 });
 
-console.log(d);
 
 database.save(d, {
     "dir": "../sqlite",

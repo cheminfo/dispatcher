@@ -405,6 +405,11 @@ function test() {
 }
 
 function save(entry, options) {
+    var timer = new Timer();
+    timer.start();
+    console.log('start');
+
+    console.log('start', timer.start());
     if(entry instanceof Array) {
         saveEntryArray(entry, options);
         return;
@@ -431,8 +436,7 @@ function save(entry, options) {
     var createTablesFn = entry.id ? createTables1 : createTables;
     var insertEntryFn = entry.id ? insertEntry1 : insertEntry;
 
-    var timer = new Timer();
-    timer.start();
+
 
     function timerStep(msg) {
         return function(arg) {
@@ -440,15 +444,10 @@ function save(entry, options) {
             return arg;
         }
     }
+
+    console.log('db opened', timer.step('ms'));
     //insertEntryFn = insertEntry;
-    var res =  Promise.resolve()
-        .then(createTablesFn(wdb)).then(timerStep('create tables'))
-        .then(createIndexes(wdb)).then(timerStep('create indexes'))
-        .then(getTableInfo(wdb)).then(timerStep('get table info'))
-        .then(createMissingColumns(wdb, _.keys(entry.parameters))).then(timerStep('create missing columns'))
-        .then(insertEntryFn(wdb, entry)).then(timerStep('insert entry'))
-        .then(getEntryMean(wdb, entry)).then(timerStep('get mean entry'))
-        .then(insertEntryMean(wdb, entry)).then(timerStep('insert mean entry'));
+    var res =  Promise.resolve().then(writeEntry());
 
     if(saveCount % cleanPeriod === 0) {
         res = res.then(getAllEntryIds(wdb))
@@ -460,7 +459,29 @@ function save(entry, options) {
 
     res.catch(handleError);
     return res;
+
+    function writeEntry(ok) {
+        return function() {
+            return Promise.resolve().then(insertEntryFn(wdb, entry)).then(continueEntry, ok ? null : adminDB);
+        };
+    }
+
+    function continueEntry() {
+        timerStep('insert entry');
+        return Promise.resolve().then(getEntryMean(wdb, entry)).then(timerStep('get mean entry'))
+            .then(insertEntryMean(wdb, entry)).then(timerStep('insert mean entry'));
+    }
+
+    function adminDB() {
+        return Promise.resolve().then(createTablesFn(wdb)).then(timerStep('create tables'))
+            .then(createIndexes(wdb)).then(timerStep('create indexes'))
+            .then(getTableInfo(wdb)).then(timerStep('get table info'))
+            .then(createMissingColumns(wdb, _.keys(entry.parameters))).then(timerStep('create missing columns'))
+            .then(writeEntry(true));
+    }
 }
+
+
 
 function saveEntryArray(entries, options) {
     debug('Save entry array begin');
@@ -568,7 +589,7 @@ function getWrappedDB(id, options, mode) {
     debug('opening database', dbloc);
     var db = new sqlite.cached.Database(dbloc, mode);
     var pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
-    pdb.run('PRAGMA synchronous = OFF');
+    pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
     return pdb
 }
 
