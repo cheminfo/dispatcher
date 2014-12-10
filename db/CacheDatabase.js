@@ -13,8 +13,6 @@ var CacheDatabase = exports = module.exports = function CacheDatabase(cache, con
 
 };
 
-CacheDatabase.prototype.__proto__ = EventEmitter.prototype;
-
 CacheDatabase.prototype.start = function() {
     this.cache.on('newdata', onNewData);
 };
