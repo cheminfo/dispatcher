@@ -567,7 +567,9 @@ function getWrappedDB(id, options, mode) {
     var dbloc = path.join(dir, file);
     debug('opening database', dbloc);
     var db = new sqlite.cached.Database(dbloc, mode);
-    return new PromiseWrapper(db, ['all', 'run', 'get']);
+    var pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
+    pdb.run('PRAGMA synchronous = OFF');
+    return pdb
 }
 
 function query(id) {
