@@ -2,9 +2,17 @@ var database = require('../db/database');
 var _ = require('lodash');
 
 // Generate some data
-var params = ['A', 'B'];
+var nbParam = 10;
+var params = new Array(nbParam);
+var c = 0;
+var charCode = 'A'.charCodeAt(0) -1 ;
+params = _.map(params, function() {
+   return String.fromCharCode(++charCode);
+});
 
-var n = 10;
+console.log(params);
+
+var n = 20;
 var d = new Array(n);
 
 d = _.map(d,function() {
