@@ -6,7 +6,8 @@ var PromiseWrapper = require('../util/PromiseWrapper'),
     sqlite = require('sqlite3'),
     _ = require('lodash'),
     debug = require('debug')('database'),
-    path = require('path');
+    path = require('path'),
+    Timer = require('../util/Timer');
 
 
 
@@ -62,7 +63,6 @@ function createTables(wdb) {
             promises.push(wdb.run('CREATE TABLE IF NOT EXISTS ' + means[i].name + '(epoch INTEGER PRIMARY KEY NOT NULL);'));
         }
 
-        debug('create all tables');
         return Promise.all(promises);
     }
 }
@@ -81,7 +81,6 @@ function createTables1(wdb) {
             promises.push(wdb.run('CREATE TABLE IF NOT EXISTS ' + means[i].name + '(epoch INTEGER PRIMARY KEY NOT NULL);'));
         }
 
-        debug('create all tables');
         return Promise.all(promises);
     }
 }
@@ -95,7 +94,6 @@ function createIndexes(wdb) {
             promises.push(wdb.run('CREATE INDEX IF NOT EXISTS ' + means[i].name + '_epoch ON minute(epoch)'));
         }
 
-        debug('create all indexes');
         return Promise.all(promises);
     }
 }
@@ -110,7 +108,6 @@ function getTableInfo(wdb) {
             promises.push(wdb.all("PRAGMA table_info(" + means[i].name + ");"));
         }
 
-        debug('run get table info');
         return Promise.all(promises);
     }
 }
@@ -150,28 +147,24 @@ function createMissingColumns(wdb, wantedColumns) {
                 promises.push(wdb.run('ALTER TABLE ' + names[i] + ' ADD COLUMN "' + mcol[j] + '" INT;'));
             }
         }
-        debug('run create missing columns');
         return Promise.all(promises);
     }
 }
 
 function getAllEntryIds(wdb) {
     return function() {
-        debug('Get all entry ids');
         return wdb.all('SELECT id FROM entry;');
     }
 }
 
 function getLastEntryId(wdb) {
     return function() {
-        debug('Get last entry id');
         return wdb.get('SELECT id FROM entry ORDER BY id DESC');
     }
 }
 
 function getAllEntries(wdb) {
     return function() {
-        debug('Get all entries');
         return wdb.all('SELECT * FROM entry');
     }
 }
@@ -247,7 +240,6 @@ function getMeanEntries(wdb, options) {
         query += condition;
         query += ' ORDER BY epoch ' + options.order;
         query += ' LIMIT '  + options.limit;
-        debug('Get mean values', query);
         return wdb.all(query);
     };
 
@@ -256,7 +248,6 @@ function getMeanEntries(wdb, options) {
 function keepRecentIds(wdb, maxIds) {
     return function(res) {
         var ids = _.pluck(res, 'id');
-        debug('keep recent ids (max ' + maxIds + ')');
         ids.sort().reverse();
         if(ids.length > maxIds) {
             return wdb.run('DELETE FROM entry WHERE id<=' + ids[maxIds]);
@@ -267,7 +258,6 @@ function keepRecentIds(wdb, maxIds) {
 
 function getAllMeanEpoch(wdb) {
     return function() {
-        debug('get epoch from all mean tables');
         var promises = [];
         for(var i=0; i<means.length; i++) {
             promises.push(wdb.all("SELECT epoch FROM " + means[i].name + " ORDER BY epoch DESC"));
@@ -289,11 +279,9 @@ function keepRecentMeanEpoch(wdb, maxNb) {
         }
         for(var i=0; i<means.length; i++) {
             if(res[i].length > maxNb) {
-                debug('perform mean delete');
                 promises.push(wdb.run('DELETE FROM ' + means[i].name + ' where epoch<=' + res[i][maxNb[i]].epoch))
             }
         }
-        debug('Keep recent mean entries');
         return Promise.all(promises);
     }
 }
@@ -317,7 +305,6 @@ function insertEntry(wdb, entry) {
 
         var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
             ' values(' + entry.epoch + ',' + values.join(',') + ')';
-        debug('run insert entry');
         return wdb.run(command);
     }
 }
@@ -341,7 +328,6 @@ function insertEntry1(wdb, entry) {
 
         var command = 'INSERT INTO entry (id, epoch, "' + keys.join('","') + '")' +
             ' values(' + entry.id + ',' + entry.epoch + ',' + values.join(',') + ')';
-        debug('run insert entry');
         return wdb.run(command);
     }
 }
@@ -356,7 +342,6 @@ function getEntryMean(wdb, entry) {
             promises.push(wdb.all('SELECT * FROM ' + means[i].name + ' WHERE epoch=' + epoch));
         }
 
-        debug('Get mean entries');
         return Promise.all(promises);
     }
 }
@@ -405,7 +390,6 @@ function insertEntryMean(wdb, entry) {
 
             promises.push(wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");"));
         }
-        debug('Insert entries mean');
         return Promise.all(promises);
     }
 }
@@ -430,7 +414,7 @@ function save(entry, options) {
     // This means the device's epoch has not yet
     // been updated
     if(entry.epoch < minEpochValue) {
-        return Promise.resolve();;
+        return Promise.resolve();
     }
     var wdb = getWrappedDB(entry.deviceId, options);
 
@@ -446,21 +430,31 @@ function save(entry, options) {
 
     var createTablesFn = entry.id ? createTables1 : createTables;
     var insertEntryFn = entry.id ? insertEntry1 : insertEntry;
+
+    var timer = new Timer();
+    timer.start();
+
+    function timerStep(msg) {
+        return function(arg) {
+            debug(msg + ' ' + timer.step('ms'));
+            return arg;
+        }
+    }
     //insertEntryFn = insertEntry;
     var res =  Promise.resolve()
-        .then(createTablesFn(wdb))
-        .then(createIndexes(wdb))
-        .then(getTableInfo(wdb))
-        .then(createMissingColumns(wdb, _.keys(entry.parameters)))
-        .then(insertEntryFn(wdb, entry))
-        .then(getEntryMean(wdb, entry))
-        .then(insertEntryMean(wdb, entry));
+        .then(createTablesFn(wdb)).then(timerStep('create tables'))
+        .then(createIndexes(wdb)).then(timerStep('create indexes'))
+        .then(getTableInfo(wdb)).then(timerStep('get table info'))
+        .then(createMissingColumns(wdb, _.keys(entry.parameters))).then(timerStep('create missing columns'))
+        .then(insertEntryFn(wdb, entry)).then(timerStep('insert entry'))
+        .then(getEntryMean(wdb, entry)).then(timerStep('get mean entry'))
+        .then(insertEntryMean(wdb, entry)).then(timerStep('insert mean entry'));
 
     if(saveCount % cleanPeriod === 0) {
         res = res.then(getAllEntryIds(wdb))
-            .then(keepRecentIds(wdb, options.maxRecords.entry))
-            .then(getAllMeanEpoch(wdb, maxRecords))
-            .then(keepRecentMeanEpoch(wdb, 5));
+            .then(keepRecentIds(wdb, options.maxRecords.entry)).then('keep recent ids')
+            .then(getAllMeanEpoch(wdb, maxRecords)).then('get all mean epoch')
+            .then(keepRecentMeanEpoch(wdb, 5)).then('keep recent mean epoch');
     }
      saveCount += 1;
 
@@ -469,6 +463,8 @@ function save(entry, options) {
 }
 
 function saveEntryArray(entries, options) {
+    debug('Save entry array begin');
+    var d = new Date().getTime();
     var promise = Promise.resolve();
     for(var i=0; i<entries.length; i++) {
         (function(i) {
@@ -478,6 +474,11 @@ function saveEntryArray(entries, options) {
         })(i)
 
     }
+    // Log performance when done
+    promise.then(function() {
+        var delta = new Date().getTime() - d;
+        debug('Saved ' + entries.length + ' entries in ' + delta + ' ms');
+    });
     return promise;
 }
 
