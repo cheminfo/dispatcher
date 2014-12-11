@@ -227,7 +227,8 @@ app.get('/database/:device', middleware.validateParameters(_.flatten([queryValid
                 var chart = filter.chartFromDatabaseEntries(result, res.locals.parameters.device);
                 return res.status(200).json(chart);
             default:
-                return res.status(200).json(result);
+                var data = filter.normalizeData(result, res.locals.parameters.device);
+                return res.status(200).json(data);
         }
 
     }).catch(function(err) {

@@ -38,8 +38,6 @@ Cache.prototype.start = function() {
             debug('Refresh cache every ' + delay + ' ms');
             if(!delay) throw new Error('Cache: no interval specified');
             var sendEvent=function() {
-                console.log('Updating cache');
-
                 // The command depends if the device is a multilog
                 // We use c for non-multi-log
                 // And m for multi-log
@@ -47,7 +45,7 @@ Cache.prototype.start = function() {
 
 
                 if(multiLog && !doingMultiLog) {
-                    console.log('Updating multilog cache');
+                    debug('Updating multilog');
                     getLastId(that, that.data.devices[i]).then(function(lastId) {
                         debug('Last id successfully retrieved from database: ' + lastId);
                         lastIds[that.data.devices[i].id] = lastId || 0;

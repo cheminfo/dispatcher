@@ -411,14 +411,14 @@ function save(entry, options) {
 
 
     if(entry instanceof Array) {
-        saveEntryArray(entry, options);
-        return;
+        return saveEntryArray(entry, options);
     }
 
     // Don't save anything that has a small epoch
     // This means the device's epoch has not yet
     // been updated
     if(entry.epoch < minEpochValue) {
+        debug('Not saving because small epoch');
         return Promise.resolve();
     }
     var wdb = getWrappedDB(entry.deviceId, options);
@@ -460,7 +460,6 @@ function save(entry, options) {
      saveCount += 1;
 
     res.catch(handleError);
-    return res;
 
     function writeEntry(ok) {
         return function() {
@@ -481,6 +480,7 @@ function save(entry, options) {
             .then(createMissingColumns(wdb, _.keys(entry.parameters))).then(timerStep('create missing columns'))
             .then(writeEntry(true));
     }
+    return res;
 }
 
 
@@ -492,7 +492,7 @@ function saveEntryArray(entries, options) {
     for(var i=0; i<entries.length; i++) {
         (function(i) {
             promise = promise.then(function() {
-                debug('Save anothe entry');
+                debug('Save another entry');
                 return save(entries[i], options);
             });
         })(i)
@@ -518,7 +518,7 @@ function get(deviceId, options) {
 
     _.defaults(options, defaultOptions);
 
-    var wdb = getWrappedDB(deviceId, sqlite.OPEN_READONLY);
+    var wdb = getWrappedDB(deviceId, options, sqlite.OPEN_READONLY);
 
     var fn;
     if(options.mean && options.mean !== 'entry') fn = getMeanEntries(wdb, options);
