@@ -1,1 +1,508 @@
-Pixastic.Actions.blend={process:function(a){var b=parseFloat(a.options.amount),c=(a.options.mode||"normal").toLowerCase(),d=a.options.image;if(b=Math.max(0,Math.min(1,b)),!d)return!1;if(Pixastic.Client.hasCanvasImageData()){var e=a.options.rect,f=Pixastic.prepareData(a),g=e.width,h=e.height;a.useData=!1;var i=document.createElement("canvas");i.width=a.canvas.width,i.height=a.canvas.height;var j=i.getContext("2d");j.drawImage(d,0,0);var k,l,m,n,o,p,q,r,s,t,u,v,w,x,y={canvas:i,options:a.options},z=Pixastic.prepareData(y),A=y.canvasData,B=g*h,C=4*B,D=!1;switch(c){case"normal":break;case"multiply":for(;B--;)z[C-=4]=f[C]*z[C]/255,z[k=C+1]=f[k]*z[k]/255,z[l=C+2]=f[l]*z[l]/255;D=!0;break;case"lighten":for(;B--;)(m=f[C-=4])>z[C]&&(z[C]=m),(n=f[k=C+1])>z[k]&&(z[k]=n),(o=f[l=C+2])>z[l]&&(z[l]=o);D=!0;break;case"darken":for(;B--;)(m=f[C-=4])<z[C]&&(z[C]=m),(n=f[k=C+1])<z[k]&&(z[k]=n),(o=f[l=C+2])<z[l]&&(z[l]=o);D=!0;break;case"darkercolor":for(;B--;).3*(m=f[C-=4])+.59*(n=f[k=C+1])+.11*(o=f[l=C+2])<=.3*z[C]+.59*z[k]+.11*z[l]&&(z[C]=m,z[k]=n,z[l]=o);D=!0;break;case"lightercolor":for(;B--;).3*(m=f[C-=4])+.59*(n=f[k=C+1])+.11*(o=f[l=C+2])>.3*z[C]+.59*z[k]+.11*z[l]&&(z[C]=m,z[k]=n,z[l]=o);D=!0;break;case"lineardodge":for(;B--;)z[C]=(s=f[C-=4]+z[C])>255?255:s,z[k]=(t=f[k=C+1]+z[k])>255?255:t,z[l]=(u=f[l=C+2]+z[l])>255?255:u;D=!0;break;case"linearburn":for(;B--;)z[C]=(s=f[C-=4]+z[C])<255?0:s-255,z[k]=(t=f[k=C+1]+z[k])<255?0:t-255,z[l]=(u=f[l=C+2]+z[l])<255?0:u-255;D=!0;break;case"difference":for(;B--;)z[C]=(s=f[C-=4]-z[C])<0?-s:s,z[k]=(t=f[k=C+1]-z[k])<0?-t:t,z[l]=(u=f[l=C+2]-z[l])<0?-u:u;D=!0;break;case"screen":for(;B--;)z[C-=4]=255-((255-z[C])*(255-f[C])>>8),z[k=C+1]=255-((255-z[k])*(255-f[k])>>8),z[l=C+2]=255-((255-z[l])*(255-f[l])>>8);D=!0;break;case"exclusion":for(var E=2/255;B--;)z[C-=4]=(m=f[C])-(m*E-1)*z[C],z[k=C+1]=(n=f[k])-(n*E-1)*z[k],z[l=C+2]=(o=f[l])-(o*E-1)*z[l];D=!0;break;case"overlay":for(var E=2/255;B--;)z[C]=(m=f[C-=4])<128?z[C]*m*E:255-(255-z[C])*(255-m)*E,z[k]=(n=f[k=C+1])<128?z[k]*n*E:255-(255-z[k])*(255-n)*E,z[l]=(o=f[l=C+2])<128?z[l]*o*E:255-(255-z[l])*(255-o)*E;D=!0;break;case"softlight":for(var E=2/255;B--;)z[C]=(m=f[C-=4])<128?((z[C]>>1)+64)*m*E:255-(191-(z[C]>>1))*(255-m)*E,z[k]=(n=f[k=C+1])<128?((z[k]>>1)+64)*n*E:255-(191-(z[k]>>1))*(255-n)*E,z[l]=(o=f[l=C+2])<128?((z[l]>>1)+64)*o*E:255-(191-(z[l]>>1))*(255-o)*E;D=!0;break;case"hardlight":for(var E=2/255;B--;)z[C]=(p=z[C-=4])<128?f[C]*p*E:255-(255-f[C])*(255-p)*E,z[k]=(q=z[k=C+1])<128?f[k]*q*E:255-(255-f[k])*(255-q)*E,z[l]=(r=z[l=C+2])<128?f[l]*r*E:255-(255-f[l])*(255-r)*E;D=!0;break;case"colordodge":for(;B--;)z[C]=(s=(f[C-=4]<<8)/(255-(p=z[C])))>255||255==p?255:s,z[k]=(t=(f[k=C+1]<<8)/(255-(q=z[k])))>255||255==q?255:t,z[l]=(u=(f[l=C+2]<<8)/(255-(r=z[l])))>255||255==r?255:u;D=!0;break;case"colorburn":for(;B--;)z[C]=(s=255-(255-f[C-=4]<<8)/z[C])<0||0==z[C]?0:s,z[k]=(t=255-(255-f[k=C+1]<<8)/z[k])<0||0==z[k]?0:t,z[l]=(u=255-(255-f[l=C+2]<<8)/z[l])<0||0==z[l]?0:u;D=!0;break;case"linearlight":for(;B--;)z[C]=(s=2*(p=z[C-=4])+f[C]-256)<0||128>p&&0>s?0:s>255?255:s,z[k]=(t=2*(q=z[k=C+1])+f[k]-256)<0||128>q&&0>t?0:t>255?255:t,z[l]=(u=2*(r=z[l=C+2])+f[l]-256)<0||128>r&&0>u?0:u>255?255:u;D=!0;break;case"vividlight":for(;B--;)z[C]=(p=z[C-=4])<128?p?(s=255-(255-f[C]<<8)/(2*p))<0?0:s:0:(s=v=2*p-256)<255?(s=(f[C]<<8)/(255-v))>255?255:s:0>s?0:s,z[k]=(q=z[k=C+1])<128?q?(t=255-(255-f[k]<<8)/(2*q))<0?0:t:0:(t=w=2*q-256)<255?(t=(f[k]<<8)/(255-w))>255?255:t:0>t?0:t,z[l]=(r=z[l=C+2])<128?r?(u=255-(255-f[l]<<8)/(2*r))<0?0:u:0:(u=x=2*r-256)<255?(u=(f[l]<<8)/(255-x))>255?255:u:0>u?0:u;D=!0;break;case"pinlight":for(;B--;)z[C]=(p=z[C-=4])<128?(m=f[C])<(v=2*p)?m:v:(m=f[C])>(v=2*p-256)?m:v,z[k]=(q=z[k=C+1])<128?(n=f[k])<(w=2*q)?n:w:(n=f[k])>(w=2*q-256)?n:w,z[l]=(p=z[l=C+2])<128?(m=f[l])<(v=2*p)?m:v:(m=f[l])>(v=2*p-256)?m:v;D=!0;break;case"hardmix":for(;B--;)z[C]=(p=z[C-=4])<128?255-(255-f[C]<<8)/(2*p)<128||0==p?0:255:(v=2*p-256)<255&&(f[C]<<8)/(255-v)<128?0:255,z[k]=(q=z[k=C+1])<128?255-(255-f[k]<<8)/(2*q)<128||0==q?0:255:(w=2*q-256)<255&&(f[k]<<8)/(255-w)<128?0:255,z[l]=(r=z[l=C+2])<128?255-(255-f[l]<<8)/(2*r)<128||0==r?0:255:(x=2*r-256)<255&&(f[l]<<8)/(255-x)<128?0:255;D=!0}if(D&&j.putImageData(A,0,0),1==b||Pixastic.Client.hasGlobalAlpha()){var F=a.canvas.getContext("2d");F.save(),F.globalAlpha=b,F.drawImage(i,0,0,e.width,e.height,e.left,e.top,e.width,e.height),F.globalAlpha=1,F.restore()}else{for(var B=g*h,G=b,H=1-b;B--;){var C=4*B,I=f[C]*H+z[C]*G>>0,J=f[C+1]*H+z[C+1]*G>>0,K=f[C+2]*H+z[C+2]*G>>0;f[C]=I,f[C+1]=J,f[C+2]=K}a.useData=!0}return!0}},checkSupport:function(){return Pixastic.Client.hasCanvasImageData()}};
+/*
+ * Pixastic Lib - Blend - v0.1.1
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.blend = {
+
+	process : function(params) {
+		var amount = parseFloat(params.options.amount);
+		var mode = (params.options.mode || "normal").toLowerCase();
+		var image = params.options.image;
+
+		amount = Math.max(0,Math.min(1,amount));
+
+		if (!image) return false;
+
+		if (Pixastic.Client.hasCanvasImageData()) {
+
+			var rect = params.options.rect;
+			var data = Pixastic.prepareData(params);
+			var w = rect.width;
+			var h = rect.height;
+
+			params.useData = false;
+
+			var otherCanvas = document.createElement("canvas");
+			otherCanvas.width = params.canvas.width;
+			otherCanvas.height = params.canvas.height;
+			var otherCtx = otherCanvas.getContext("2d");
+			otherCtx.drawImage(image,0,0);
+
+			var params2 = {canvas:otherCanvas,options:params.options};
+			var data2 = Pixastic.prepareData(params2);
+			var dataDesc2 = params2.canvasData;
+
+			var p = w*h;
+			var pix = p*4;
+			var pix1, pix2;
+			var r1, g1, b1;
+			var r2, g2, b2;
+			var r3, g3, b3;
+			var r4, g4, b4;
+
+			var dataChanged = false;
+
+			switch (mode) {
+				case "normal" : 
+					//while (p--) {
+					//	data2[pix-=4] = data2[pix];
+					//	data2[pix1=pix+1] = data2[pix1];
+					//	data2[pix2=pix+2] = data2[pix2];
+					//}
+					break;
+
+				case "multiply" : 
+					while (p--) {
+						data2[pix-=4] = data[pix] * data2[pix] / 255;
+						data2[pix1=pix+1] = data[pix1] * data2[pix1] / 255;
+						data2[pix2=pix+2] = data[pix2] * data2[pix2] / 255;
+					}
+					dataChanged = true;
+					break;
+
+				case "lighten" : 
+					while (p--) {
+						if ((r1 = data[pix-=4]) > data2[pix])
+							data2[pix] = r1;
+						if ((g1 = data[pix1=pix+1]) > data2[pix1])
+							data2[pix1] = g1;
+						if ((b1 = data[pix2=pix+2]) > data2[pix2])
+							data2[pix2] = b1;
+					}
+					dataChanged = true;
+					break;
+
+				case "darken" : 
+					while (p--) {
+						if ((r1 = data[pix-=4]) < data2[pix])
+							data2[pix] = r1;
+						if ((g1 = data[pix1=pix+1]) < data2[pix1])
+							data2[pix1] = g1;
+						if ((b1 = data[pix2=pix+2]) < data2[pix2])
+							data2[pix2] = b1;
+
+					}
+					dataChanged = true;
+					break;
+
+				case "darkercolor" : 
+					while (p--) {
+						if (((r1 = data[pix-=4])*0.3+(g1 = data[pix1=pix+1])*0.59+(b1 = data[pix2=pix+2])*0.11) <= (data2[pix]*0.3+data2[pix1]*0.59+data2[pix2]*0.11)) {
+							data2[pix] = r1;
+							data2[pix1] = g1;
+							data2[pix2] = b1;
+						}
+					}
+					dataChanged = true;
+					break;
+
+				case "lightercolor" : 
+					while (p--) {
+						if (((r1 = data[pix-=4])*0.3+(g1 = data[pix1=pix+1])*0.59+(b1 = data[pix2=pix+2])*0.11) > (data2[pix]*0.3+data2[pix1]*0.59+data2[pix2]*0.11)) {
+							data2[pix] = r1;
+							data2[pix1] = g1;
+							data2[pix2] = b1;
+						}
+					}
+					dataChanged = true;
+					break;
+
+				case "lineardodge" : 
+					/*
+					otherCtx.globalCompositeOperation = "source-over";
+					otherCtx.drawImage(params.canvas, 0, 0);
+					otherCtx.globalCompositeOperation = "lighter";
+					otherCtx.drawImage(image, 0, 0);
+					*/
+
+					while (p--) {
+						if ((r3 = data[pix-=4] + data2[pix]) > 255)
+							data2[pix] = 255;
+						else
+							data2[pix] = r3;
+						if ((g3 = data[pix1=pix+1] + data2[pix1]) > 255)
+							data2[pix1] = 255;
+						else
+							data2[pix1] = g3;
+						if ((b3 = data[pix2=pix+2] + data2[pix2]) > 255)
+							data2[pix2] = 255;
+						else
+							data2[pix2] = b3;
+					}
+					dataChanged = true;
+
+					break;
+
+				case "linearburn" : 
+					while (p--) {
+						if ((r3 = data[pix-=4] + data2[pix]) < 255)
+							data2[pix] = 0;
+						else
+							data2[pix] = (r3 - 255);
+						if ((g3 = data[pix1=pix+1] + data2[pix1]) < 255)
+							data2[pix1] = 0;
+						else
+							data2[pix1] = (g3 - 255);
+						if ((b3 = data[pix2=pix+2] + data2[pix2]) < 255)
+							data2[pix2] = 0;
+						else
+							data2[pix2] = (b3 - 255);
+					}
+					dataChanged = true;
+					break;
+
+				case "difference" : 
+					while (p--) {
+						if ((r3 = data[pix-=4] - data2[pix]) < 0)
+							data2[pix] = -r3;
+						else
+							data2[pix] = r3;
+						if ((g3 = data[pix1=pix+1] - data2[pix1]) < 0)
+							data2[pix1] = -g3;
+						else
+							data2[pix1] = g3;
+						if ((b3 = data[pix2=pix+2] - data2[pix2]) < 0)
+							data2[pix2] = -b3;
+						else
+							data2[pix2] = b3;
+					}
+					dataChanged = true;
+					break;
+
+				case "screen" : 
+					while (p--) {
+						data2[pix-=4] = (255 - ( ((255-data2[pix])*(255-data[pix])) >> 8));
+						data2[pix1=pix+1] = (255 - ( ((255-data2[pix1])*(255-data[pix1])) >> 8));
+						data2[pix2=pix+2] = (255 - ( ((255-data2[pix2])*(255-data[pix2])) >> 8));
+					}
+					dataChanged = true;
+					break;
+
+				case "exclusion" : 
+					var div_2_255 = 2 / 255;
+					while (p--) {
+						data2[pix-=4] = (r1 = data[pix]) - (r1 * div_2_255 - 1) * data2[pix];
+						data2[pix1=pix+1] = (g1 = data[pix1]) - (g1 * div_2_255 - 1) * data2[pix1];
+						data2[pix2=pix+2] = (b1 = data[pix2]) - (b1 * div_2_255 - 1) * data2[pix2];
+					}
+					dataChanged = true;
+					break;
+
+				case "overlay" : 
+					var div_2_255 = 2 / 255;
+					while (p--) {
+						if ((r1 = data[pix-=4]) < 128)
+							data2[pix] = data2[pix]*r1*div_2_255;
+						else
+							data2[pix] = 255 - (255-data2[pix])*(255-r1)*div_2_255;
+
+						if ((g1 = data[pix1=pix+1]) < 128)
+							data2[pix1] = data2[pix1]*g1*div_2_255;
+						else
+							data2[pix1] = 255 - (255-data2[pix1])*(255-g1)*div_2_255;
+
+						if ((b1 = data[pix2=pix+2]) < 128)
+							data2[pix2] = data2[pix2]*b1*div_2_255;
+						else
+							data2[pix2] = 255 - (255-data2[pix2])*(255-b1)*div_2_255;
+
+					}
+					dataChanged = true;
+					break;
+
+				case "softlight" : 
+					var div_2_255 = 2 / 255;
+					while (p--) {
+						if ((r1 = data[pix-=4]) < 128)
+							data2[pix] = ((data2[pix]>>1) + 64) * r1 * div_2_255;
+						else
+							data2[pix] = 255 - (191 - (data2[pix]>>1)) * (255-r1) * div_2_255;
+
+						if ((g1 = data[pix1=pix+1]) < 128)
+							data2[pix1] = ((data2[pix1]>>1)+64) * g1 * div_2_255;
+						else
+							data2[pix1] = 255 - (191 - (data2[pix1]>>1)) * (255-g1) * div_2_255;
+
+						if ((b1 = data[pix2=pix+2]) < 128)
+							data2[pix2] = ((data2[pix2]>>1)+64) * b1 * div_2_255;
+						else
+							data2[pix2] = 255 - (191 - (data2[pix2]>>1)) * (255-b1) * div_2_255;
+
+					}
+					dataChanged = true;
+					break;
+
+				case "hardlight" : 
+					var div_2_255 = 2 / 255;
+					while (p--) {
+						if ((r2 = data2[pix-=4]) < 128)
+							data2[pix] = data[pix] * r2 * div_2_255;
+						else
+							data2[pix] = 255 - (255-data[pix]) * (255-r2) * div_2_255;
+
+						if ((g2 = data2[pix1=pix+1]) < 128)
+							data2[pix1] = data[pix1] * g2 * div_2_255;
+						else
+							data2[pix1] = 255 - (255-data[pix1]) * (255-g2) * div_2_255;
+
+						if ((b2 = data2[pix2=pix+2]) < 128)
+							data2[pix2] = data[pix2] * b2 * div_2_255;
+						else
+							data2[pix2] = 255 - (255-data[pix2]) * (255-b2) * div_2_255;
+
+					}
+					dataChanged = true;
+					break;
+
+				case "colordodge" : 
+					while (p--) {
+						if ((r3 = (data[pix-=4]<<8)/(255-(r2 = data2[pix]))) > 255 || r2 == 255)
+							data2[pix] = 255;
+						else
+							data2[pix] = r3;
+
+						if ((g3 = (data[pix1=pix+1]<<8)/(255-(g2 = data2[pix1]))) > 255 || g2 == 255)
+							data2[pix1] = 255;
+						else
+							data2[pix1] = g3;
+
+						if ((b3 = (data[pix2=pix+2]<<8)/(255-(b2 = data2[pix2]))) > 255 || b2 == 255)
+							data2[pix2] = 255;
+						else
+							data2[pix2] = b3;
+					}
+					dataChanged = true;
+					break;
+
+				case "colorburn" : 
+					while (p--) {
+						if ((r3 = 255-((255-data[pix-=4])<<8)/data2[pix]) < 0 || data2[pix] == 0)
+							data2[pix] = 0;
+						else
+							data2[pix] = r3;
+
+						if ((g3 = 255-((255-data[pix1=pix+1])<<8)/data2[pix1]) < 0 || data2[pix1] == 0)
+							data2[pix1] = 0;
+						else
+							data2[pix1] = g3;
+
+						if ((b3 = 255-((255-data[pix2=pix+2])<<8)/data2[pix2]) < 0 || data2[pix2] == 0)
+							data2[pix2] = 0;
+						else
+							data2[pix2] = b3;
+					}
+					dataChanged = true;
+					break;
+
+				case "linearlight" : 
+					while (p--) {
+						if ( ((r3 = 2*(r2=data2[pix-=4])+data[pix]-256) < 0) || (r2 < 128 && r3 < 0)) {
+							data2[pix] = 0
+						} else {
+							if (r3 > 255)
+								data2[pix] = 255;
+							else
+								data2[pix] = r3;
+						}
+						if ( ((g3 = 2*(g2=data2[pix1=pix+1])+data[pix1]-256) < 0) || (g2 < 128 && g3 < 0)) {
+							data2[pix1] = 0
+						} else {
+							if (g3 > 255)
+								data2[pix1] = 255;
+							else
+								data2[pix1] = g3;
+						}
+						if ( ((b3 = 2*(b2=data2[pix2=pix+2])+data[pix2]-256) < 0) || (b2 < 128 && b3 < 0)) {
+							data2[pix2] = 0
+						} else {
+							if (b3 > 255)
+								data2[pix2] = 255;
+							else
+								data2[pix2] = b3;
+						}
+					}
+					dataChanged = true;
+					break;
+
+				case "vividlight" : 
+					while (p--) {
+						if ((r2=data2[pix-=4]) < 128) {
+							if (r2) {
+								if ((r3 = 255 - ((255-data[pix])<<8) / (2*r2)) < 0) 
+									data2[pix] = 0;
+								else
+									data2[pix] = r3
+							} else {
+								data2[pix] = 0;
+							}
+						} else if ((r3 = (r4=2*r2-256)) < 255) {
+							if ((r3 = (data[pix]<<8)/(255-r4)) > 255) 
+								data2[pix] = 255;
+							else
+								data2[pix] = r3;
+						} else {
+							if (r3 < 0) 
+								data2[pix] = 0;
+							else
+								data2[pix] = r3
+						}
+
+						if ((g2=data2[pix1=pix+1]) < 128) {
+							if (g2) {
+								if ((g3 = 255 - ((255-data[pix1])<<8) / (2*g2)) < 0) 
+									data2[pix1] = 0;
+								else
+									data2[pix1] = g3;
+							} else {
+								data2[pix1] = 0;
+							}
+						} else if ((g3 = (g4=2*g2-256)) < 255) {
+							if ((g3 = (data[pix1]<<8)/(255-g4)) > 255)
+								data2[pix1] = 255;
+							else
+								data2[pix1] = g3;
+						} else {
+							if (g3 < 0) 
+								data2[pix1] = 0;
+							else
+								data2[pix1] = g3;
+						}
+
+						if ((b2=data2[pix2=pix+2]) < 128) {
+							if (b2) {
+								if ((b3 = 255 - ((255-data[pix2])<<8) / (2*b2)) < 0) 
+									data2[pix2] = 0;
+								else
+									data2[pix2] = b3;
+							} else {
+								data2[pix2] = 0;
+							}
+						} else if ((b3 = (b4=2*b2-256)) < 255) {
+							if ((b3 = (data[pix2]<<8)/(255-b4)) > 255) 
+								data2[pix2] = 255;
+							else
+								data2[pix2] = b3;
+						} else {
+							if (b3 < 0) 
+								data2[pix2] = 0;
+							else
+								data2[pix2] = b3;
+						}
+					}
+					dataChanged = true;
+					break;
+
+				case "pinlight" : 
+					while (p--) {
+						if ((r2=data2[pix-=4]) < 128)
+							if ((r1=data[pix]) < (r4=2*r2))
+								data2[pix] = r1;
+							else
+								data2[pix] = r4;
+						else
+							if ((r1=data[pix]) > (r4=2*r2-256))
+								data2[pix] = r1;
+							else
+								data2[pix] = r4;
+
+						if ((g2=data2[pix1=pix+1]) < 128)
+							if ((g1=data[pix1]) < (g4=2*g2))
+								data2[pix1] = g1;
+							else
+								data2[pix1] = g4;
+						else
+							if ((g1=data[pix1]) > (g4=2*g2-256))
+								data2[pix1] = g1;
+							else
+								data2[pix1] = g4;
+
+						if ((r2=data2[pix2=pix+2]) < 128)
+							if ((r1=data[pix2]) < (r4=2*r2))
+								data2[pix2] = r1;
+							else
+								data2[pix2] = r4;
+						else
+							if ((r1=data[pix2]) > (r4=2*r2-256))
+								data2[pix2] = r1;
+							else
+								data2[pix2] = r4;
+					}
+					dataChanged = true;
+					break;
+
+				case "hardmix" : 
+					while (p--) {
+						if ((r2 = data2[pix-=4]) < 128)
+							if (255 - ((255-data[pix])<<8)/(2*r2) < 128 || r2 == 0)
+								data2[pix] = 0;
+							else
+								data2[pix] = 255;
+						else if ((r4=2*r2-256) < 255 && (data[pix]<<8)/(255-r4) < 128)
+							data2[pix] = 0;
+						else
+							data2[pix] = 255;
+
+						if ((g2 = data2[pix1=pix+1]) < 128)
+							if (255 - ((255-data[pix1])<<8)/(2*g2) < 128 || g2 == 0)
+								data2[pix1] = 0;
+							else
+								data2[pix1] = 255;
+						else if ((g4=2*g2-256) < 255 && (data[pix1]<<8)/(255-g4) < 128)
+							data2[pix1] = 0;
+						else
+							data2[pix1] = 255;
+
+						if ((b2 = data2[pix2=pix+2]) < 128)
+							if (255 - ((255-data[pix2])<<8)/(2*b2) < 128 || b2 == 0)
+								data2[pix2] = 0;
+							else
+								data2[pix2] = 255;
+						else if ((b4=2*b2-256) < 255 && (data[pix2]<<8)/(255-b4) < 128)
+							data2[pix2] = 0;
+						else
+							data2[pix2] = 255;
+					}
+					dataChanged = true;
+					break;
+			}
+
+			if (dataChanged) 
+				otherCtx.putImageData(dataDesc2,0,0);
+
+			if (amount != 1 && !Pixastic.Client.hasGlobalAlpha()) {
+				var p = w*h;
+				var amount2 = amount;
+				var amount1 = 1 - amount;
+				while (p--) {
+					var pix = p*4;
+					var r = (data[pix] * amount1 + data2[pix] * amount2)>>0;
+					var g = (data[pix+1] * amount1 + data2[pix+1] * amount2)>>0;
+					var b = (data[pix+2] * amount1 + data2[pix+2] * amount2)>>0;
+
+					data[pix] = r;
+					data[pix+1] = g;
+					data[pix+2] = b;
+				}
+				params.useData = true;
+			} else {
+				var ctx = params.canvas.getContext("2d");
+				ctx.save();
+				ctx.globalAlpha = amount;
+				ctx.drawImage(
+					otherCanvas,
+					0,0,rect.width,rect.height,
+					rect.left,rect.top,rect.width,rect.height
+				);
+				ctx.globalAlpha = 1;
+				ctx.restore();
+			}
+
+			return true;
+		}
+	},
+	checkSupport : function() {
+		return Pixastic.Client.hasCanvasImageData();
+	}
+}

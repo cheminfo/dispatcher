@@ -1,1 +1,614 @@
-define(function(){function a(b){if(b instanceof a)return b;var c,d,e;if(c=b.length,d=b[0].length,void 0===d)throw"data must be a 2D array";for(e=0;c>e;e++)if(b[e].length!==d)throw"Inconsistent array dimensions";return b.rows=c,b.columns=d,b.__proto__=a.prototype,b}return a.from1DArray=function(b,c,d){var e,f,g;if(e=b*c,e!==d.length)throw"Data length does not match dimensions";for(g=new Array(b),f=0;b>f;f++)g[f]=d.slice(f*c,(f+1)*c);return new a(g)},a.rowVector=function(b){return new a([b])},a.columnVector=function(b){for(var c=new Array(b.length),d=0,e=b.length;e>d;d++)c[d]=[b[d]];return new a(c)},a.empty=function(b,c){for(var d=new Array(b),e=0;b>e;e++)d[e]=new Array(c);return new a(d)},a.zeros=function(b,c){return a.empty(b,c).fill(0)},a.ones=function(b,c){return a.empty(b,c).fill(1)},a.rand=function(b,c){var d=new Array(b*c),e=a.from1DArray(b,c,d);return e.apply(function(a,b,c){a[b][c]=Math.random()})},a.eye=function(b){for(var c=a.zeros(b,b),d=0;d<c.rows;d++)c[d][d]=1;return c},a.diag=function(b){for(var c=b.length,d=a.zeros(c,c),e=0;c>e;e++)d[e][e]=b[e];return d},a.prototype={checkRowIndex:function(a){if(0>a||a>this.rows-1)throw"Row index out of range."},checkColumnIndex:function(a){if(0>a||a>this.columns-1)throw"Column index out of range."},checkDimensions:function(a){if(this.rows!==a.rows||this.columns!==a.columns)throw"Matrices dimensions must be equal."},checkMultiply:function(a){if(this.columns!==a.rows)throw"Number of columns of left matrix must be equal to number of rows of right matrix."},apply:function(a){var b,c;for(b=0;b<this.rows;b++)for(c=0;c<this.columns;c++)a(this,b,c);return this},clone:function(){for(var b=this.rows,c=new Array(b),d=0;b>d;d++)c[d]=this[d].slice();return new a(c)},to1DArray:function(){for(var a=[],b=0;b<this.rows;b++)a=a.concat(this[b]);return a},to2DArray:function(){return this},isRowVector:function(){return 1===this.rows},isColumnVector:function(){return 1===this.columns},isVector:function(){return 1===this.rows||1===this.columns},isSquare:function(){return this.rows===this.columns},isSymmetric:function(){if(this.isSquare){for(var a=0;a<this.rows;a++)for(var b=0;a>=b;b++)if(this[a][b]!=this[b][a])return!1;return!0}return!1},set:function(a,b,c){return this[a][b]=c,this},get:function(a,b){return this[a][b]},fill:function(a){return this.apply(function(b,c,d){b[c][d]=a})},neg:function(){return this.mulS(-1)},add:function(b){return"number"==typeof b?this.addS(b):b instanceof a?this.addM(b):void 0},addS:function(a){return this.apply(function(b,c,d){b[c][d]+=a})},addM:function(a){return this.checkDimensions(a),this.apply(function(b,c,d){b[c][d]+=a[c][d]})},sub:function(b){return"number"==typeof b?this.subS(b):b instanceof a?this.subM(b):void 0},subS:function(a){return this.apply(function(b,c,d){b[c][d]-=a})},subM:function(a){return this.checkDimensions(a),this.apply(function(b,c,d){b[c][d]+=a[c][d]})},mul:function(b){return"number"==typeof b?this.mulS(b):b instanceof a?this.mulM(b):void 0},mulS:function(a){return this.apply(function(b,c,d){b[c][d]*=a})},mulM:function(a){return this.checkDimensions(a),this.apply(function(b,c,d){b[c][d]*=a[c][d]})},div:function(b){return"number"==typeof b?this.divS(b):b instanceof a?this.divM(b):void 0},divS:function(a){return this.apply(function(b,c,d){b[c][d]/=a})},divM:function(a){return this.checkDimensions(a),this.apply(function(b,c,d){b[c][d]/=a[c][d]})},getRow:function(b){return this.checkRowIndex(b),new a([this[b]])},setRow:function(b,c){if(this.checkRowIndex(b),c instanceof a||(c=a.rowVector(c)),c.columns!==this.columns)throw"Invalid row size";return this[b]=c[0],this},removeRow:function(a){if(this.checkRowIndex(a),1===this.rows)throw"A matrix cannot have less than one row";return this.splice(a,1),this.rows-=1,this},addRow:function(b,c){if(0>b||b>this.rows)throw"Row index out of range.";if(c instanceof a||(c=a.rowVector(c)),c.columns!==this.columns)throw"Invalid row size";return this.splice(b,0,c[0]),this.rows+=1,this},swapRows:function(a,b){this.checkRowIndex(a),this.checkRowIndex(b);var c=this[a];return this[a]=this[b],this[b]=c,this},getColumn:function(b){var c,d;for(this.checkColumnIndex(b),c=new Array(this.rows),d=0;d<this.rows;d++)c[d]=[this[d][b]];return new a(c)},setColumn:function(b,c){if(this.checkColumnIndex(b),c instanceof a||(c=a.columnVector(c)),c.rows!==this.rows)throw"Invalid column size";for(var d=0;d<this.rows;d++)this[d][b]=c[d][0];return this},removeColumn:function(a){if(this.checkColumnIndex(a),1===this.columns)throw"A matrix cannot have less than one column";for(var b=0,c=this.rows;c>b;b++)this[b].splice(a,1);return this.columns-=1,this},addColumn:function(b,c){if(0>b||b>this.columns)throw"Column index out of range.";if(c instanceof a||(c=a.columnVector(c)),c.rows!==this.rows)throw"Invalid column size";for(var d=0;d<this.rows;d++)this[d].splice(b,0,c[d][0]);return this.columns+=1,this},swapColumns:function(a,b){this.checkRowIndex(a),this.checkRowIndex(b);for(var c,d,e=this.rows,f=0;e>f;f++)d=this[f],c=d[a],d[a]=d[b],d[b]=c;return this},checkRowVector:function(b){if(b instanceof a&&b.isRowVector()&&(b=b.getRow(0)),b.length!==this.columns)throw"vector size must be the same as the number of columns";return b},checkColumnVector:function(b){if(b instanceof a&&b.isColumnVector()&&(b=b.getColumn(0)),b.length!==this.rows)throw"vector size must be the same as the number of rows";return b},addRowVector:function(a){return a=this.checkRowvector(a),this.apply(function(b,c,d){b[c][d]+=a[d]})},subRowVector:function(a){return a=this.checkRowvector(a),this.apply(function(b,c,d){b[c][d]-=a[d]})},mulRowVector:function(a){return a=this.checkRowvector(a),this.apply(function(b,c,d){b[c][d]*=a[d]})},divRowVector:function(a){return a=this.checkRowvector(a),this.apply(function(b,c,d){b[c][d]/=a[d]})},addColumnVector:function(a){return a=this.checkColumnVector(a),this.apply(function(b,c,d){b[c][d]+=a[c]})},subColumnVector:function(a){return a=this.checkColumnVector(a),this.apply(function(b,c,d){b[c][d]-=a[c]})},mulColumnVector:function(a){return a=this.checkColumnVector(a),this.apply(function(b,c,d){b[c][d]*=a[c]})},divColumnVector:function(a){return a=this.checkColumnVector(a),this.apply(function(b,c,d){b[c][d]/=a[c]})},mulRow:function(a,b){checkRowIndex(a);for(var c=0;c<this.columns;c++)this[a][c]*=b},mulColumn:function(a,b){checkColumnIndex(a);for(var c=0;c<this.rows;c++)this[c][a]*=b},max:function(){var a=-1/0;return this.apply(function(b,c,d){b[c][d]>a&&(a=b[c][d])}),a},maxIndex:function(){var a=-1/0,b={};return this.apply(function(c,d,e){c[d][e]>a&&(a=c[d][e],b.row=d,b.column=e)}),b},min:function(){var a=1/0;return this.apply(function(b,c,d){b[c][d]<a&&(a=b[c][d])}),a},minIndex:function(){var a=1/0,b={};return this.apply(function(c,d,e){c[d][e]<a&&(a=c[d][e],b.row=d,b.column=e)}),b},rowMins:function(){for(var b=a.empty(this.rows,1),c=0;c<this.rows;c++)b[c][0]=this.getRow(c).min();return b},rowMinsIndex:function(){for(var a=new Array(this.rows),b=0;b<this.rows;b++)a[b]=this.getRow(b).minIndex();return a},rowMaxs:function(){for(var b=a.empty(this.rows,1),c=0;c<this.rows;c++)b[c][0]=this.getRow(c).max();return b},rowMaxsIndex:function(){for(var a=new Array(this.rows),b=0;b<this.rows;b++)a[b]=this.getRow(b).maxIndex();return a},columnMins:function(){for(var b=a.empty(1,this.columns),c=0;c<this.columns;c++)b[0][c]=this.getColumn(c).min();return b},columnMinsIndex:function(){for(var a=new Array(this.columns),b=0;b<this.columns;b++)a[b]=this.getColumn(b).minIndex();return a},columnMaxs:function(){for(var b=a.empty(1,this.columns),c=0;c<this.columns;c++)b[0][c]=this.getColumn(c).max();return b},columnMaxsIndex:function(){for(var a=new Array(this.columns),b=0;b<this.columns;b++)a[b]=this.getColumn(b).maxIndex();return a},diag:function(){if(!this.isSquare())throw"Only square matrices have a diagonal.";for(var a=new Array(this.rows),b=0;b<this.rows;b++)a[b]=this[b][b];return a},columnSums:function(){if(1===this.rows)return this.clone();var b=a.zeros(1,this.columns);return this.apply(function(a,c,d){b[0][d]+=a[c][d]}),b},columnMeans:function(){return this.columnSums().div(this.rows)},rowSums:function(){if(1===this.columns)return this.clone();var b=a.zeros(this.rows,1);return this.apply(function(a,c,d){b[c][0]+=a[c][d]}),b},rowMeans:function(){return this.rowSums().div(this.columns)},cumulativeSum:function(){var a=0;return this.apply(function(b,c,d){a+=b[c][d],b[c][d]=a})},dot:function(a){if(!this.isVector()||!a.isVector())throw"Dot product only applicable to vectors";var b=this.to1DArray(),c=a.to1DArray();if(b.length!==c.length)throw"Vectors do not have the same size";for(var d=0,e=b.length,f=0;e>f;f++)d+=b[f]*c[f];return d},sum:function(){var a=0;return this.apply(function(b,c,d){a+=b[c][d]}),a},mean:function(){return this.sum()/(this.rows*this.columns)},mmul:function(b){this.checkMultiply(b);var c,d,e,f,g=a.empty(this.rows,b.columns);for(c=0;c<g.rows;c++)for(e=this.getRow(c),d=0;d<g.columns;d++)f=b.getColumn(d),g[c][d]=e.dot(f);return g},prod:function(){var a=1;return this.apply(function(b,c,d){a*=b[c][d]}),a},sortRows:function(){for(var a=0;a<this.rows;a++)this[a].sort();return this},sortColumns:function(){for(var a=0;a<this.columns;a++)this.setColumn(a,this.getColumn(a).to1DArray().sort());return this},transpose:function(){var b=a.empty(this.columns,this.rows);return this.apply(function(a,c,d){b[d][c]=a[c][d]}),b},subMatrix:function(b,c,d,e){if(b>c||d>e||0>b||b>=this.rows||0>c||c>=this.rows||0>d||d>=this.columns||0>e||e>=this.columns)throw"Argument out of range";for(var f=a.empty(c-b+1,e-d+1),g=b;c>=g;g++)for(var h=d;e>=h;h++)f[g-b][h-d]=this[g][h];return f},subMatrixRow:function(b,c,d){if(c>d||0>c||c>=this.columns||0>d||d>=this.columns)throw"Argument out of range.";for(var e=a.empty(b.length,d-c+1),f=0;f<b.length;f++)for(var g=c;d>=g;g++){if(b[f]<0||b[f]>=this.rows)throw"Argument out of range.";e[f][g-c]=this[b[f]][g]}return e},trace:function(){if(!this.isSquare)throw"The matrix is not square";for(var a=0,b=0;b<this.rows;b++)a+=this[b][b];return a},inverse:function(){return this.solve(a.eye(this.rows))},solve:function(a){var b,c=this;return require(["./decompositions"],function(d){b=c.isSquare()?new d.LuDecomposition(c).solve(a):new d.QrDecomposition(c).solve(a)}),b},get size(){return this.rows*this.columns}},a.prototype.splice=Array.prototype.splice,a});
+define(function(){
+
+    function Matrix(newData) {
+        if(newData instanceof Matrix) return newData;
+        var rows, columns, i;
+
+        rows = newData.length;
+        columns = newData[0].length;
+        
+        if(columns===undefined)
+            throw "data must be a 2D array";
+        
+        for (i = 0; i < rows; i++) {
+            if (newData[i].length !== columns)
+                throw "Inconsistent array dimensions";
+        }
+
+        newData.rows = rows;
+        newData.columns = columns;
+        
+        newData.__proto__ = Matrix.prototype;
+        
+	return newData;
+    }
+
+    Matrix.from1DArray = function (newRows, newColumns, newData) {
+        var length, i, data;
+
+        length = newRows * newColumns;
+        if (length !== newData.length)
+            throw "Data length does not match dimensions";
+
+        data = new Array(newRows);
+        for (i = 0; i < newRows; i++) {
+            data[i] = newData.slice(i*newColumns,(i+1)*newColumns);
+        }
+        return new Matrix(data);
+    };
+    
+    Matrix.rowVector = function (array) {
+        return new Matrix([array]);
+    };
+    
+    Matrix.columnVector = function (array) {
+        var vector = new Array(array.length);
+        for(var i = 0, ii = array.length; i < ii; i++)
+            vector[i] = [array[i]];
+        return new Matrix(vector);
+    };
+
+    Matrix.empty = function (rows, columns) {
+        var array = new Array(rows);
+        for(var i=0; i<rows; i++) {
+            array[i] = new Array(columns);
+        }
+        return new Matrix(array);
+    };
+
+    Matrix.zeros = function (rows, columns) {
+        return Matrix.empty(rows,columns).fill(0);
+    };
+
+    Matrix.ones = function (rows, columns) {
+        return Matrix.empty(rows,columns).fill(1);
+    };
+
+    Matrix.rand = function (rows, columns) {
+        var array = new Array(rows*columns);
+        var matrix = Matrix.from1DArray(rows, columns, array);
+        return matrix.apply(function (mat, i, j) { mat[i][j] = Math.random(); });
+    };
+
+    Matrix.eye = function (n) {
+        var matrix = Matrix.zeros(n,n);
+        for(var i=0; i<matrix.rows; i++){
+            matrix[i][i] = 1;
+        }
+        return matrix;
+    };
+
+    Matrix.diag = function (array) {
+        var l = array.length;
+        var matrix = Matrix.zeros(l,l);
+        for(var i=0; i<l; i++){
+            matrix[i][i] = array[i];
+        }
+        return matrix;
+    };
+
+    Matrix.prototype = {
+        checkRowIndex : function(index) {
+            if(index < 0 || index > this.rows-1)
+                throw "Row index out of range.";
+        },
+        checkColumnIndex : function(index) {
+            if(index < 0 || index > this.columns-1)
+                throw "Column index out of range.";
+        },
+        checkDimensions : function(otherMatrix) {
+            if((this.rows !== otherMatrix.rows)||(this.columns !== otherMatrix.columns))
+                throw "Matrices dimensions must be equal.";
+        },
+        checkMultiply : function(otherMatrix) {
+            if(this.columns !== otherMatrix.rows)
+                throw "Number of columns of left matrix must be equal to number of rows of right matrix.";
+        },
+        apply: function (callback) {
+            var i, j;
+            for (i = 0; i < this.rows; i++) {
+                for (j = 0; j < this.columns; j++) {
+                    callback(this, i, j);
+                }
+            }
+            return this;
+        },
+        clone : function() {
+            var l=this.rows, copy=new Array(l);
+            for(var i=0; i<l; i++) {
+                copy[i] = this[i].slice();
+            }
+            return new Matrix(copy);
+        },
+        to1DArray : function() {
+            var array = [];
+            for(var i=0; i<this.rows; i++){
+                array = array.concat(this[i]);
+            }
+            return array;
+        },
+        to2DArray : function() {
+            return this;
+        },
+        isRowVector : function() {
+            return this.rows===1;
+        },
+        isColumnVector : function() {
+            return this.columns===1;
+        },
+        isVector : function() {
+            return (this.rows===1)||(this.columns===1);
+        },
+        isSquare : function() {
+            return this.rows===this.columns;
+        },
+        isSymmetric : function() {
+            if (this.isSquare) {
+                for (var i = 0; i < this.rows; i++) {
+                    for (var j = 0; j <= i; j++) {
+                        if (this[i][j] != this[j][i]) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            return false;
+        },
+        set : function(rowIndex, columnIndex, value) {
+            this[rowIndex][columnIndex] = value;
+            return this;
+        },
+        get : function(rowIndex, columnIndex) {
+            return this[rowIndex][columnIndex];
+        },
+        fill: function (value) {
+            return this.apply(function (mat, i, j) { mat[i][j] = value; });
+        },
+        neg : function () {
+            return this.mulS(-1);
+        },
+        add : function(value) {
+            if(typeof value === "number")
+                return this.addS(value);
+            if(value instanceof Matrix)
+                return this.addM(value);
+        },
+        addS : function(value) {
+            return this.apply(function (mat, i, j) { mat[i][j] += value; });
+        },
+        addM : function(value) {
+            this.checkDimensions(value);
+            return this.apply(function (mat, i, j) { mat[i][j] += value[i][j]; });
+        },
+        sub : function(value) {
+            if(typeof value === "number")
+                return this.subS(value);
+            if(value instanceof Matrix)
+                return this.subM(value);
+        },
+        subS : function(value) {
+            return this.apply(function (mat, i, j) { mat[i][j] -= value; });
+        },
+        subM : function(value) {
+            this.checkDimensions(value);
+            return this.apply(function (mat, i, j) { mat[i][j] += value[i][j]; });
+        },
+        mul : function(value) {
+            if(typeof value === "number")
+                return this.mulS(value);
+            if(value instanceof Matrix)
+                return this.mulM(value);
+        },
+        mulS : function(value) {
+            return this.apply(function (mat, i, j) { mat[i][j] *= value; });
+        },
+        mulM : function(value) {
+            this.checkDimensions(value);
+            return this.apply(function (mat, i, j) { mat[i][j] *= value[i][j]; });
+        },
+        div : function(value) {
+            if(typeof value === "number")
+                return this.divS(value);
+            if(value instanceof Matrix)
+                return this.divM(value);
+        },
+        divS : function(value) {
+            return this.apply(function (mat, i, j) { mat[i][j] /= value; });
+        },
+        divM : function(value) {
+            this.checkDimensions(value);
+            return this.apply(function (mat, i, j) { mat[i][j] /= value[i][j]; });
+        },
+        getRow : function(index) {
+            this.checkRowIndex(index);
+            return new Matrix([this[index]]);
+        },
+        setRow : function(index, array) {
+            this.checkRowIndex(index);
+            if(!(array instanceof Matrix)) array = Matrix.rowVector(array);
+            if(array.columns !== this.columns)
+                throw "Invalid row size";
+            this[index] = array[0];
+            return this;
+        },
+        removeRow : function(index) {
+            this.checkRowIndex(index);
+            if(this.rows===1)
+                throw "A matrix cannot have less than one row";
+            this.splice(index,1);
+            this.rows -= 1;
+            return this;
+        },
+        addRow : function(index, array) {
+            if(index < 0 || index > this.rows)
+                throw "Row index out of range.";
+            if(!(array instanceof Matrix)) array = Matrix.rowVector(array);
+            if(array.columns !== this.columns)
+                throw "Invalid row size";
+            this.splice(index, 0, array[0]);
+            this.rows += 1;
+            return this;
+        },
+        swapRows : function(row1, row2) {
+            this.checkRowIndex(row1);
+            this.checkRowIndex(row2);
+            var temp = this[row1];
+            this[row1]=this[row2];
+            this[row2]=temp;
+            return this;
+        },
+        getColumn : function(index) {
+            var column, i;
+            this.checkColumnIndex(index);
+            column = new Array(this.rows);
+            for(i = 0; i<this.rows; i++) {
+                column[i] = [this[i][index]];
+            }
+            return new Matrix(column);
+        },
+        setColumn : function(index, array) {
+            this.checkColumnIndex(index);
+            if(!(array instanceof Matrix)) array = Matrix.columnVector(array);
+            if(array.rows !== this.rows)
+                throw "Invalid column size";
+            for(var i=0; i<this.rows; i++) {
+                this[i][index] = array[i][0];
+            }
+            return this;
+        },
+        removeColumn : function(index) {
+            this.checkColumnIndex(index);
+            if(this.columns===1)
+                throw "A matrix cannot have less than one column";
+            for(var i = 0, ii = this.rows; i < ii; i++) {
+                this[i].splice(index,1);
+            }
+            this.columns -= 1;
+            return this;
+        },
+        addColumn : function(index, array) {
+            if(index < 0 || index > this.columns)
+                throw "Column index out of range.";
+            if(!(array instanceof Matrix)) array = Matrix.columnVector(array);
+            if(array.rows !== this.rows)
+                throw "Invalid column size";
+            for(var i=0; i<this.rows; i++) {
+                this[i].splice(index, 0, array[i][0]);
+            }
+            this.columns += 1;
+            return this;
+        },
+        swapColumns : function(column1, column2) {
+            this.checkRowIndex(column1);
+            this.checkRowIndex(column2);
+            var l=this.rows, temp, row;
+            for(var i=0; i<l; i++) {
+                row = this[i];
+                temp = row[column1];
+                row[column1]=row[column2];
+                row[column2]=temp;
+            }
+            return this;
+        },
+        checkRowVector : function(vector) {
+            if(vector instanceof Matrix && vector.isRowVector())
+                vector = vector.getRow(0);
+            if(vector.length !== this.columns)
+                throw "vector size must be the same as the number of columns";
+            return vector;
+        },
+        checkColumnVector : function(vector) {
+            if(vector instanceof Matrix && vector.isColumnVector())
+                vector = vector.getColumn(0);
+            if(vector.length !== this.rows)
+                throw "vector size must be the same as the number of rows";
+            return vector;
+        },
+        addRowVector : function(vector) {
+            vector = this.checkRowvector(vector);
+            return this.apply(function(mat, i, j){ mat[i][j] += vector[j] });
+        },
+        subRowVector : function(vector) {
+            vector = this.checkRowvector(vector);
+            return this.apply(function(mat, i, j){ mat[i][j] -= vector[j] });
+        },
+        mulRowVector : function(vector) {
+            vector = this.checkRowvector(vector);
+            return this.apply(function(mat, i, j){ mat[i][j] *= vector[j] });
+        },
+        divRowVector : function(vector) {
+            vector = this.checkRowvector(vector);
+            return this.apply(function(mat, i, j){ mat[i][j] /= vector[j] });
+        },
+        addColumnVector : function(vector) {
+            vector = this.checkColumnVector(vector);
+            return this.apply(function(mat, i, j){ mat[i][j] += vector[i] });
+        },
+        subColumnVector : function(vector) {
+            vector = this.checkColumnVector(vector);
+            return this.apply(function(mat, i, j){ mat[i][j] -= vector[i] });
+        },
+        mulColumnVector : function(vector) {
+            vector = this.checkColumnVector(vector);
+            return this.apply(function(mat, i, j){ mat[i][j] *= vector[i] });
+        },
+        divColumnVector : function(vector) {
+            vector = this.checkColumnVector(vector);
+            return this.apply(function(mat, i, j){ mat[i][j] /= vector[i] });
+        },
+        mulRow : function(index, value) {
+            checkRowIndex(index);
+            for(var i=0; i<this.columns; i++) {
+                this[index][i] *= value;
+            }
+        },
+        mulColumn : function(index, value) {
+            checkColumnIndex(index);
+            for(var i=0; i<this.rows; i++) {
+                this[i][index] *= value;
+            }
+        },
+        max : function() {
+            var v = -Infinity;
+            this.apply(function(mat,i,j){
+                if(mat[i][j] > v)
+                    v = mat[i][j];
+            });
+            return v;
+        },
+        maxIndex : function() {
+            var v = -Infinity;
+            var index = {};
+            this.apply(function(mat,i,j){
+                if(mat[i][j] > v) {
+                    v = mat[i][j];
+                    index.row=i;
+                    index.column=j;
+                }
+            });
+            return index;
+        },
+        min : function() {
+            var v = Infinity;
+            this.apply(function(mat,i,j){
+                if(mat[i][j] < v)
+                    v = mat[i][j];
+            });
+            return v;
+        },
+        minIndex : function() {
+            var v = Infinity;
+            var index = {};
+            this.apply(function(mat,i,j){
+                if(mat[i][j] < v) {
+                    v = mat[i][j];
+                    index.row=i;
+                    index.column=j;
+                }
+            });
+            return index;
+        },
+        rowMins : function() {
+            var mins = Matrix.empty(this.rows, 1);
+            for(var i=0; i<this.rows; i++) {
+                mins[i][0] = this.getRow(i).min();
+            }
+            return mins;
+        },
+        rowMinsIndex : function() {
+            var mins = new Array(this.rows);
+            for(var i=0; i<this.rows; i++) {
+                mins[i] = this.getRow(i).minIndex();
+            }
+            return mins;
+        },
+        rowMaxs : function() {
+            var maxs = Matrix.empty(this.rows, 1);
+            for(var i=0; i<this.rows; i++) {
+                maxs[i][0] = this.getRow(i).max();
+            }
+            return maxs;
+        },
+        rowMaxsIndex : function() {
+            var maxs = new Array(this.rows);
+            for(var i=0; i<this.rows; i++) {
+                maxs[i] = this.getRow(i).maxIndex();
+            }
+            return maxs;
+        },
+        columnMins : function() {
+            var mins = Matrix.empty(1, this.columns);
+            for(var i=0; i<this.columns; i++) {
+                mins[0][i] = this.getColumn(i).min();
+            }
+            return mins;
+        },
+        columnMinsIndex : function() {
+            var mins = new Array(this.columns);
+            for(var i=0; i<this.columns; i++) {
+                mins[i] = this.getColumn(i).minIndex();
+            }
+            return mins;
+        },
+        columnMaxs : function() {
+            var maxs = Matrix.empty(1, this.columns);
+            for(var i=0; i<this.columns; i++) {
+                maxs[0][i] = this.getColumn(i).max();
+            }
+            return maxs;
+        },
+        columnMaxsIndex : function() {
+            var maxs = new Array(this.columns);
+            for(var i=0; i<this.columns; i++) {
+                maxs[i] = this.getColumn(i).maxIndex();
+            }
+            return maxs;
+        },
+        diag : function() {
+            if(!this.isSquare())
+                throw "Only square matrices have a diagonal.";
+            var diag = new Array(this.rows);
+            for(var i=0; i<this.rows; i++) {
+                diag[i] = this[i][i];
+            }
+            return diag;
+        },
+        columnSums : function() {
+            if(this.rows === 1)
+                return this.clone();
+            var v = Matrix.zeros(1, this.columns);
+            this.apply(function(mat,i,j){ v[0][j]+=mat[i][j]; });
+            return v;
+        },
+        columnMeans : function() {
+            return this.columnSums().div(this.rows);
+        },
+        rowSums : function() {
+            if(this.columns === 1)
+                return this.clone();
+            var v = Matrix.zeros(this.rows, 1);
+            this.apply(function(mat,i,j){ v[i][0]+=mat[i][j]; });
+            return v;
+        },
+        rowMeans : function() {
+            return this.rowSums().div(this.columns);
+        },
+        cumulativeSum : function() {
+            var sum = 0;
+            return this.apply(function(mat, i, j){
+                sum+=mat[i][j];
+                mat[i][j]=sum;
+            });
+        },
+        dot : function(other) {
+            if(!this.isVector() || !other.isVector())
+                throw "Dot product only applicable to vectors";
+            var vector1 = this.to1DArray();
+            var vector2 = other.to1DArray();
+            if(vector1.length !== vector2.length)
+                throw "Vectors do not have the same size";
+            var dot = 0, l=vector1.length;
+            for(var i=0; i<l; i++) {
+                dot+= vector1[i]*vector2[i];
+            }
+            return dot;
+        },
+        sum : function() {
+            var v = 0;
+            this.apply(function(mat, i, j){ v+=mat[i][j]; });
+            return v;
+        },
+        mean : function() {
+            return this.sum()/(this.rows*this.columns);
+        },
+        mmul : function(other) {
+            this.checkMultiply(other);
+            var newMatrix = Matrix.empty(this.rows, other.columns);
+            var i, j, vector1, vector2;
+            for(i=0; i<newMatrix.rows; i++) {
+                vector1 = this.getRow(i);
+                for(j=0; j<newMatrix.columns; j++) {
+                    vector2 = other.getColumn(j);
+                    newMatrix[i][j] = vector1.dot(vector2);
+                }
+            }
+            return newMatrix;
+        },
+        prod : function() {
+            var prod = 1;
+            this.apply(function(mat, i, j){ prod *= mat[i][j]; });
+            return prod;
+        },
+        sortRows : function() {
+            for(var i=0; i<this.rows; i++) {
+                this[i].sort();
+            }
+            return this;
+        },
+        sortColumns : function() {
+            for(var i=0; i<this.columns; i++) {
+                this.setColumn(i, this.getColumn(i).to1DArray().sort());
+            }
+            return this;
+        },
+        transpose : function() {
+            var result = Matrix.empty(this.columns, this.rows);
+            this.apply(function(mat, i, j){ result[j][i] = mat[i][j]; });
+            return result;
+        },
+        subMatrix : function(startRow, endRow, startColumn, endColumn) {
+            if ((startRow > endRow) || (startColumn > endColumn) ||  (startRow < 0) || (startRow >= this.rows) ||  (endRow < 0) || (endRow >= this.rows) ||  (startColumn < 0) || (startColumn >= this.columns) ||  (endColumn < 0) || (endColumn >= this.columns)) {
+                throw "Argument out of range";
+            }
+            var newMatrix = Matrix.empty(endRow - startRow + 1, endColumn - startColumn + 1);
+            for (var i = startRow; i <= endRow; i++) {
+                for (var j = startColumn; j <= endColumn; j++) {
+                    newMatrix[i - startRow][j - startColumn] = this[i][j];
+                }
+            }
+            return newMatrix;
+        },
+        subMatrixRow : function(r, j0, j1) {
+            if ((j0 > j1) || (j0 < 0) || (j0 >= this.columns) || (j1 < 0) || (j1 >= this.columns))
+                throw "Argument out of range.";
+            var X = Matrix.empty(r.length, j1-j0+1);
+            for (var i = 0; i < r.length; i++) {
+                for (var j = j0; j <= j1; j++) {
+                    if ((r[i] < 0) || (r[i] >= this.rows))
+                        throw "Argument out of range."; 
+                    X[i][j - j0] = this[r[i]][j];
+                }
+            }
+            return X;
+        },
+        // Sum of the diagonal elements
+        trace : function() {
+            if(!this.isSquare)
+                throw "The matrix is not square";
+            var trace = 0;
+            for(var i=0; i<this.rows; i++) {
+                trace += this[i][i];
+            }
+            return trace;
+        },
+        inverse : function() {
+            return this.solve(Matrix.eye(this.rows));
+        },
+        solve : function(rightHandSide) {
+            var result, self = this;
+            require(["./decompositions"], function (DC) {
+                result = self.isSquare() ? new DC.LuDecomposition(self).solve(rightHandSide) : new DC.QrDecomposition(self).solve(rightHandSide);
+            });
+            return result;
+        },
+        get size() {
+            return this.rows * this.columns;
+        }
+    };
+    
+    Matrix.prototype.splice = Array.prototype.splice;
+    
+    return Matrix;
+
+});

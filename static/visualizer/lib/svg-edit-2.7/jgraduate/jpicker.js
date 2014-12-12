@@ -1,3 +1,2091 @@
-!function(a){Math.precision=function(a,b){return void 0===b&&(b=0),Math.round(a*Math.pow(10,b))/Math.pow(10,b)};var b=function(b,c){var d,e,f=this,g=b.find("img:first"),h=0,i=100,j=100,k=0,l=100,m=100,n=0,o=0,p=new Array,q=function(a){for(var b=0;b<p.length;b++)p[b].call(f,f,a)},r=function(c){var g=b.offset();d={l:0|g.left,t:0|g.top},clearTimeout(e),e=setTimeout(function(){u.call(f,c)},0),a(document).bind("mousemove",s).bind("mouseup",t),c.preventDefault()},s=function(a){return clearTimeout(e),e=setTimeout(function(){u.call(f,a)},0),a.stopPropagation(),a.preventDefault(),!1},t=function(b){return a(document).unbind("mouseup",t).unbind("mousemove",s),b.stopPropagation(),b.preventDefault(),!1},u=function(a){var c=a.pageX-d.l,e=a.pageY-d.t,g=b.w,i=b.h;0>c?c=0:c>g&&(c=g),0>e?e=0:e>i&&(e=i),w.call(f,"xy",{x:c/g*j+h,y:e/i*m+k})},v=function(){var a=0,c=0,d=b.w,e=b.h,f=g.w,h=g.h;setTimeout(function(){j>0&&(a=n==i?d:n/j*d|0),m>0&&(c=o==l?e:o/m*e|0),f>=d?a=(d>>1)-(f>>1):a-=f>>1,h>=e?c=(e>>1)-(h>>1):c-=h>>1,g.css({left:a+"px",top:c+"px"})},0)},w=function(a,b,c){var d=void 0!==b;if(!d)switch((void 0===a||null==a)&&(a="xy"),a.toLowerCase()){case"x":return n;case"y":return o;case"xy":default:return{x:n,y:o}}if(null==c||c!=f){var e,g,j=!1;switch(null==a&&(a="xy"),a.toLowerCase()){case"x":e=b&&(b.x&&0|b.x||0|b)||0;break;case"y":g=b&&(b.y&&0|b.y||0|b)||0;break;case"xy":default:e=b&&b.x&&0|b.x||0,g=b&&b.y&&0|b.y||0}null!=e&&(h>e?e=h:e>i&&(e=i),n!=e&&(n=e,j=!0)),null!=g&&(k>g?g=k:g>l&&(g=l),o!=g&&(o=g,j=!0)),j&&q.call(f,c||f)}},x=function(a,b){var c=void 0!==b;if(!c)switch((void 0===a||null==a)&&(a="all"),a.toLowerCase()){case"minx":return h;case"maxx":return i;case"rangex":return{minX:h,maxX:i,rangeX:j};case"miny":return k;case"maxy":return l;case"rangey":return{minY:k,maxY:l,rangeY:m};case"all":default:return{minX:h,maxX:i,rangeX:j,minY:k,maxY:l,rangeY:m}}var d,e,f,g;switch(null==a&&(a="all"),a.toLowerCase()){case"minx":d=b&&(b.minX&&0|b.minX||0|b)||0;break;case"maxx":e=b&&(b.maxX&&0|b.maxX||0|b)||0;break;case"rangex":d=b&&b.minX&&0|b.minX||0,e=b&&b.maxX&&0|b.maxX||0;break;case"miny":f=b&&(b.minY&&0|b.minY||0|b)||0;break;case"maxy":g=b&&(b.maxY&&0|b.maxY||0|b)||0;break;case"rangey":f=b&&b.minY&&0|b.minY||0,g=b&&b.maxY&&0|b.maxY||0;break;case"all":default:d=b&&b.minX&&0|b.minX||0,e=b&&b.maxX&&0|b.maxX||0,f=b&&b.minY&&0|b.minY||0,g=b&&b.maxY&&0|b.maxY||0}null!=d&&h!=d&&(h=d,j=i-h),null!=e&&i!=e&&(i=e,j=i-h),null!=f&&k!=f&&(k=f,m=l-k),null!=g&&l!=g&&(l=g,m=l-k)},y=function(b){a.isFunction(b)&&p.push(b)},z=function(b){if(a.isFunction(b))for(var c;-1!=(c=a.inArray(b,p));)p.splice(c,1)},A=function(){a(document).unbind("mouseup",t).unbind("mousemove",s),b.unbind("mousedown",r),b=null,g=null,p=null};a.extend(!0,f,{val:w,range:x,bind:y,unbind:z,destroy:A}),g.src=c.arrow&&c.arrow.image,g.w=c.arrow&&c.arrow.width||g.width(),g.h=c.arrow&&c.arrow.height||g.height(),b.w=c.map&&c.map.width||b.width(),b.h=c.map&&c.map.height||b.height(),b.bind("mousedown",r),y.call(f,v)},c=function(b,c,d,e){var f=this,g=b.find("td.Text input"),h=g.eq(3),i=g.eq(4),j=g.eq(5),k=g.length>7?g.eq(6):null,l=g.eq(0),m=g.eq(1),n=g.eq(2),o=g.eq(g.length>7?7:6),p=g.length>7?g.eq(8):null,q=function(a){if(""!=a.target.value||a.target==o.get(0)||(null==d||a.target==d.get(0))&&null!=d){if(!t(a))return a;switch(a.target){case h.get(0):switch(a.keyCode){case 38:return h.val(u.call(f,(h.val()<<0)+1,0,255)),c.val("r",h.val(),a.target),!1;case 40:return h.val(u.call(f,(h.val()<<0)-1,0,255)),c.val("r",h.val(),a.target),!1}break;case i.get(0):switch(a.keyCode){case 38:return i.val(u.call(f,(i.val()<<0)+1,0,255)),c.val("g",i.val(),a.target),!1;case 40:return i.val(u.call(f,(i.val()<<0)-1,0,255)),c.val("g",i.val(),a.target),!1}break;case j.get(0):switch(a.keyCode){case 38:return j.val(u.call(f,(j.val()<<0)+1,0,255)),c.val("b",j.val(),a.target),!1;case 40:return j.val(u.call(f,(j.val()<<0)-1,0,255)),c.val("b",j.val(),a.target),!1}break;case k&&k.get(0):switch(a.keyCode){case 38:return k.val(u.call(f,parseFloat(k.val())+1,0,100)),c.val("a",Math.precision(255*k.val()/100,e),a.target),!1;case 40:return k.val(u.call(f,parseFloat(k.val())-1,0,100)),c.val("a",Math.precision(255*k.val()/100,e),a.target),!1}break;case l.get(0):switch(a.keyCode){case 38:return l.val(u.call(f,(l.val()<<0)+1,0,360)),c.val("h",l.val(),a.target),!1;case 40:return l.val(u.call(f,(l.val()<<0)-1,0,360)),c.val("h",l.val(),a.target),!1}break;case m.get(0):switch(a.keyCode){case 38:return m.val(u.call(f,(m.val()<<0)+1,0,100)),c.val("s",m.val(),a.target),!1;case 40:return m.val(u.call(f,(m.val()<<0)-1,0,100)),c.val("s",m.val(),a.target),!1}break;case n.get(0):switch(a.keyCode){case 38:return n.val(u.call(f,(n.val()<<0)+1,0,100)),c.val("v",n.val(),a.target),!1;case 40:return n.val(u.call(f,(n.val()<<0)-1,0,100)),c.val("v",n.val(),a.target),!1}}}},r=function(a){if(""!=a.target.value||a.target==o.get(0)||(null==d||a.target==d.get(0))&&null!=d){if(!t(a))return a;switch(a.target){case h.get(0):h.val(u.call(f,h.val(),0,255)),c.val("r",h.val(),a.target);break;case i.get(0):i.val(u.call(f,i.val(),0,255)),c.val("g",i.val(),a.target);break;case j.get(0):j.val(u.call(f,j.val(),0,255)),c.val("b",j.val(),a.target);break;case k&&k.get(0):k.val(u.call(f,k.val(),0,100)),c.val("a",Math.precision(255*k.val()/100,e),a.target);break;case l.get(0):l.val(u.call(f,l.val(),0,360)),c.val("h",l.val(),a.target);break;case m.get(0):m.val(u.call(f,m.val(),0,100)),c.val("s",m.val(),a.target);break;case n.get(0):n.val(u.call(f,n.val(),0,100)),c.val("v",n.val(),a.target);break;case o.get(0):o.val(o.val().replace(/[^a-fA-F0-9]/g,"").toLowerCase().substring(0,6)),d&&d.val(o.val()),c.val("hex",""!=o.val()?o.val():null,a.target);break;case d&&d.get(0):d.val(d.val().replace(/[^a-fA-F0-9]/g,"").toLowerCase().substring(0,6)),o.val(d.val()),c.val("hex",""!=d.val()?d.val():null,a.target);break;case p&&p.get(0):p.val(p.val().replace(/[^a-fA-F0-9]/g,"").toLowerCase().substring(0,2)),c.val("a",null!=p.val()?parseInt(p.val(),16):null,a.target)}}},s=function(a){if(null!=c.val())switch(a.target){case h.get(0):h.val(c.val("r"));break;case i.get(0):i.val(c.val("g"));break;case j.get(0):j.val(c.val("b"));break;case k&&k.get(0):k.val(Math.precision(100*c.val("a")/255,e));break;case l.get(0):l.val(c.val("h"));break;case m.get(0):m.val(c.val("s"));break;case n.get(0):n.val(c.val("v"));break;case o.get(0):case d&&d.get(0):o.val(c.val("hex")),d&&d.val(c.val("hex"));break;case p&&p.get(0):p.val(c.val("ahex").substring(6))}},t=function(a){switch(a.keyCode){case 9:case 16:case 29:case 37:case 39:return!1;case"c".charCodeAt():case"v".charCodeAt():if(a.ctrlKey)return!1}return!0},u=function(a,b,c){return""==a||isNaN(a)?b:a>c?c:b>a?b:a},v=function(a,b){var c=a.val("all");b!=h.get(0)&&h.val(null!=c?c.r:""),b!=i.get(0)&&i.val(null!=c?c.g:""),b!=j.get(0)&&j.val(null!=c?c.b:""),k&&b!=k.get(0)&&k.val(null!=c?Math.precision(100*c.a/255,e):""),b!=l.get(0)&&l.val(null!=c?c.h:""),b!=m.get(0)&&m.val(null!=c?c.s:""),b!=n.get(0)&&n.val(null!=c?c.v:""),b!=o.get(0)&&(d&&b!=d.get(0)||!d)&&o.val(null!=c?c.hex:""),d&&b!=d.get(0)&&b!=o.get(0)&&d.val(null!=c?c.hex:""),p&&b!=p.get(0)&&p.val(null!=c?c.ahex.substring(6):"")},w=function(){h.add(i).add(j).add(k).add(l).add(m).add(n).add(o).add(d).add(p).unbind("keyup",r).unbind("blur",s),h.add(i).add(j).add(k).add(l).add(m).add(n).unbind("keydown",q),c.unbind(v),h=null,i=null,j=null,k=null,l=null,m=null,n=null,o=null,p=null};a.extend(!0,f,{destroy:w}),h.add(i).add(j).add(k).add(l).add(m).add(n).add(o).add(d).add(p).bind("keyup",r).bind("blur",s),h.add(i).add(j).add(k).add(l).add(m).add(n).bind("keydown",q),c.bind(v)};a.jPicker={List:[],Color:function(b){var c,d,e,g,h,i,j,k=this,l=new Array,m=function(a){for(var b=0;b<l.length;b++)l[b].call(k,k,a)},n=function(a,b,l){var o=Boolean(b);if(o&&""===b.ahex&&(b.ahex="00000000"),!o){if((void 0===a||null==a||""==a)&&(a="all"),null==c)return null;switch(a.toLowerCase()){case"ahex":return f.rgbaToHex({r:c,g:d,b:e,a:g});case"hex":return n("ahex").substring(0,6);case"all":return{r:c,g:d,b:e,a:g,h:h,s:i,v:j,hex:n.call(k,"hex"),ahex:n.call(k,"ahex")};default:for(var p={},q=0;q<a.length;q++)switch(a.charAt(q)){case"r":1==a.length?p=c:p.r=c;break;case"g":1==a.length?p=d:p.g=d;break;case"b":1==a.length?p=e:p.b=e;break;case"a":1==a.length?p=g:p.a=g;break;case"h":1==a.length?p=h:p.h=h;break;case"s":1==a.length?p=i:p.s=i;break;case"v":1==a.length?p=j:p.v=j}return p=={}?n.call(k,"all"):p}}if(null==l||l!=k){var r=!1;if(null==a&&(a=""),null==b)return null!=c&&(c=null,r=!0),null!=d&&(d=null,r=!0),null!=e&&(e=null,r=!0),null!=g&&(g=null,r=!0),null!=h&&(h=null,r=!0),null!=i&&(i=null,r=!0),null!=j&&(j=null,r=!0),void(r&&m.call(k,l||k));switch(a.toLowerCase()){case"ahex":case"hex":var p=f.hexToRgba(b&&(b.ahex||b.hex)||b||"none");n.call(k,"rgba",{r:p.r,g:p.g,b:p.b,a:"ahex"==a?p.a:null!=g?g:255},l);break;default:if(b&&(null!=b.ahex||null!=b.hex))return void n.call(k,"ahex",b.ahex||b.hex||"00000000",l);var s={},t=!1,u=!1;void 0!==b.r&&-1==!a.indexOf("r")&&(a+="r"),void 0!==b.g&&-1==!a.indexOf("g")&&(a+="g"),void 0!==b.b&&-1==!a.indexOf("b")&&(a+="b"),void 0!==b.a&&-1==!a.indexOf("a")&&(a+="a"),void 0!==b.h&&-1==!a.indexOf("h")&&(a+="h"),void 0!==b.s&&-1==!a.indexOf("s")&&(a+="s"),void 0!==b.v&&-1==!a.indexOf("v")&&(a+="v");for(var q=0;q<a.length;q++)switch(a.charAt(q)){case"r":if(u)continue;t=!0,s.r=b&&b.r&&0|b.r||b&&0|b||0,s.r<0?s.r=0:s.r>255&&(s.r=255),c!=s.r&&(c=s.r,r=!0);break;case"g":if(u)continue;t=!0,s.g=b&&b.g&&0|b.g||b&&0|b||0,s.g<0?s.g=0:s.g>255&&(s.g=255),d!=s.g&&(d=s.g,r=!0);break;case"b":if(u)continue;t=!0,s.b=b&&b.b&&0|b.b||b&&0|b||0,s.b<0?s.b=0:s.b>255&&(s.b=255),e!=s.b&&(e=s.b,r=!0);break;case"a":s.a=b&&null!=b.a?0|b.a:null!=b?0|b:255,s.a<0?s.a=0:s.a>255&&(s.a=255),g!=s.a&&(g=s.a,r=!0);break;case"h":if(t)continue;u=!0,s.h=b&&b.h&&0|b.h||b&&0|b||0,s.h<0?s.h=0:s.h>360&&(s.h=360),h!=s.h&&(h=s.h,r=!0);break;case"s":if(t)continue;u=!0,s.s=b&&null!=b.s?0|b.s:null!=b?0|b:100,s.s<0?s.s=0:s.s>100&&(s.s=100),i!=s.s&&(i=s.s,r=!0);break;case"v":if(t)continue;u=!0,s.v=b&&null!=b.v?0|b.v:null!=b?0|b:100,s.v<0?s.v=0:s.v>100&&(s.v=100),j!=s.v&&(j=s.v,r=!0)}if(r){if(t){c=c||0,d=d||0,e=e||0;var p=f.rgbToHsv({r:c,g:d,b:e});h=p.h,i=p.s,j=p.v}else if(u){h=h||0,i=null!=i?i:100,j=null!=j?j:100;var p=f.hsvToRgb({h:h,s:i,v:j});c=p.r,d=p.g,e=p.b}g=null!=g?g:255,m.call(k,l||k)}}}},o=function(b){a.isFunction(b)&&l.push(b)},p=function(b){if(a.isFunction(b))for(var c;-1!=(c=a.inArray(b,l));)l.splice(c,1)},q=function(){l=null};a.extend(!0,k,{val:n,bind:o,unbind:p,destroy:q}),b&&(null!=b.ahex?n("ahex",b):null!=b.hex?n((null!=b.a?"a":"")+"hex",null!=b.a?{ahex:b.hex+f.intToHex(b.a)}:b):null!=b.r&&null!=b.g&&null!=b.b?n("rgb"+(null!=b.a?"a":""),b):null!=b.h&&null!=b.s&&null!=b.v&&n("hsv"+(null!=b.a?"a":""),b))},ColorMethods:{hexToRgba:function(a){if(""===a||"none"===a)return{r:null,g:null,b:null,a:null};a=this.validateHex(a);var b="00",c="00",d="00",e="255";return 6==a.length&&(a+="ff"),a.length>6?(b=a.substring(0,2),c=a.substring(2,4),d=a.substring(4,6),e=a.substring(6,a.length)):(a.length>4&&(b=a.substring(4,a.length),a=a.substring(0,4)),a.length>2&&(c=a.substring(2,a.length),a=a.substring(0,2)),a.length>0&&(d=a.substring(0,a.length))),{r:this.hexToInt(b),g:this.hexToInt(c),b:this.hexToInt(d),a:this.hexToInt(e)}},validateHex:function(a){return a=a.toLowerCase().replace(/[^a-f0-9]/g,""),a.length>8&&(a=a.substring(0,8)),a},rgbaToHex:function(a){return this.intToHex(a.r)+this.intToHex(a.g)+this.intToHex(a.b)+this.intToHex(a.a)},intToHex:function(a){var b=(0|a).toString(16);return 1==b.length&&(b="0"+b),b.toLowerCase()},hexToInt:function(a){return parseInt(a,16)},rgbToHsv:function(a){var b,c=a.r/255,d=a.g/255,e=a.b/255,f={h:0,s:0,v:0},g=0,h=0;return c>=d&&c>=e?(h=c,g=d>e?e:d):d>=e&&d>=c?(h=d,g=c>e?e:c):(h=e,g=d>c?c:d),f.v=h,f.s=h?(h-g)/h:0,f.s?(b=h-g,f.h=c==h?(d-e)/b:d==h?2+(e-c)/b:4+(c-d)/b,f.h=parseInt(60*f.h),f.h<0&&(f.h+=360)):f.h=0,f.s=100*f.s|0,f.v=100*f.v|0,f},hsvToRgb:function(a){var b={r:0,g:0,b:0,a:100},c=a.h,d=a.s,e=a.v;if(0==d)b.r=b.g=b.b=0==e?0:255*e/100|0;else{360==c&&(c=0),c/=60,d/=100,e/=100;var f=0|c,g=c-f,h=e*(1-d),i=e*(1-d*g),j=e*(1-d*(1-g));switch(f){case 0:b.r=e,b.g=j,b.b=h;break;case 1:b.r=i,b.g=e,b.b=h;break;case 2:b.r=h,b.g=e,b.b=j;break;case 3:b.r=h,b.g=i,b.b=e;break;case 4:b.r=j,b.g=h,b.b=e;break;case 5:b.r=e,b.g=h,b.b=i}b.r=255*b.r|0,b.g=255*b.g|0,b.b=255*b.b|0}return b}}};var d=a.jPicker.Color,e=a.jPicker.List,f=a.jPicker.ColorMethods;a.fn.jPicker=function(g){var h=arguments;return this.each(function(){var j=this,k=a.extend(!0,{},a.fn.jPicker.defaults,g);"input"==a(j).get(0).nodeName.toLowerCase()&&(a.extend(!0,k,{window:{bindToInput:!0,expandable:!0,input:a(j)}}),""==a(j).val()?(k.color.active=new d({hex:null}),k.color.current=new d({hex:null})):f.validateHex(a(j).val())&&(k.color.active=new d({hex:a(j).val(),a:k.color.active.val("a")}),k.color.current=new d({hex:a(j).val(),a:k.color.active.val("a")}))),k.window.expandable?a(j).after('<span class="jPicker"><span class="Icon"><span class="Color">&nbsp;</span><span class="Alpha">&nbsp;</span><span class="Image" title="Click To Open Color Picker">&nbsp;</span><span class="Container">&nbsp;</span></span></span>'):k.window.liveUpdate=!1;var l=parseFloat(navigator.appVersion.split("MSIE")[1])<7&&document.body.filters,m=null,n=null,o=null,p=null,q=null,r=null,s=null,t=null,u=null,v=null,w=null,x=null,y=null,z=null,A=null,B=null,C=null,D=null,E=null,F=null,G=null,H=null,I=null,J=null,K=null,L=null,M=null,N=null,O=function(a){var b,c,d=ub.active,e=(sb.clientPath,d.val("hex"));switch(k.color.mode=a,a){case"h":if(setTimeout(function(){W.call(j,n,"transparent"),Y.call(j,p,0),Z.call(j,p,100),Y.call(j,q,260),Z.call(j,q,100),W.call(j,o,"transparent"),Y.call(j,s,0),Z.call(j,s,100),Y.call(j,t,260),Z.call(j,t,100),Y.call(j,u,260),Z.call(j,u,100),Y.call(j,v,260),Z.call(j,v,100),Y.call(j,x,260),Z.call(j,x,100)},0),y.range("all",{minX:0,maxX:100,minY:0,maxY:100}),z.range("rangeY",{minY:0,maxY:360}),null==d.val("ahex"))break;y.val("xy",{x:d.val("s"),y:100-d.val("v")},y),z.val("y",360-d.val("h"),z);break;case"s":if(setTimeout(function(){W.call(j,n,"transparent"),Y.call(j,p,-260),Y.call(j,q,-520),Y.call(j,s,-260),Y.call(j,t,-520),Y.call(j,x,260),Z.call(j,x,100)},0),y.range("all",{minX:0,maxX:360,minY:0,maxY:100}),z.range("rangeY",{minY:0,maxY:100}),null==d.val("ahex"))break;y.val("xy",{x:d.val("h"),y:100-d.val("v")},y),z.val("y",100-d.val("s"),z);break;case"v":if(setTimeout(function(){W.call(j,n,"000000"),Y.call(j,p,-780),Y.call(j,q,260),W.call(j,o,e),Y.call(j,s,-520),Y.call(j,t,260),Z.call(j,t,100),Y.call(j,x,260),Z.call(j,x,100)},0),y.range("all",{minX:0,maxX:360,minY:0,maxY:100}),z.range("rangeY",{minY:0,maxY:100}),null==d.val("ahex"))break;y.val("xy",{x:d.val("h"),y:100-d.val("s")},y),z.val("y",100-d.val("v"),z);break;case"r":if(b=-1040,c=-780,y.range("all",{minX:0,maxX:255,minY:0,maxY:255}),z.range("rangeY",{minY:0,maxY:255}),null==d.val("ahex"))break;y.val("xy",{x:d.val("b"),y:255-d.val("g")},y),z.val("y",255-d.val("r"),z);break;case"g":if(b=-1560,c=-1820,y.range("all",{minX:0,maxX:255,minY:0,maxY:255}),z.range("rangeY",{minY:0,maxY:255}),null==d.val("ahex"))break;y.val("xy",{x:d.val("b"),y:255-d.val("r")},y),z.val("y",255-d.val("g"),z);break;case"b":if(b=-2080,c=-2860,y.range("all",{minX:0,maxX:255,minY:0,maxY:255}),z.range("rangeY",{minY:0,maxY:255}),null==d.val("ahex"))break;y.val("xy",{x:d.val("r"),y:255-d.val("g")},y),z.val("y",255-d.val("b"),z);break;case"a":if(setTimeout(function(){W.call(j,n,"transparent"),Y.call(j,p,-260),Y.call(j,q,-520),Y.call(j,s,260),Y.call(j,t,260),Z.call(j,t,100),Y.call(j,x,0),Z.call(j,x,100)},0),y.range("all",{minX:0,maxX:360,minY:0,maxY:100}),z.range("rangeY",{minY:0,maxY:255}),null==d.val("ahex"))break;y.val("xy",{x:d.val("h"),y:100-d.val("v")},y),z.val("y",255-d.val("a"),z);break;default:throw"Invalid Mode"}switch(a){case"h":break;case"s":case"v":case"a":setTimeout(function(){Z.call(j,p,100),Z.call(j,s,100),Y.call(j,u,260),Z.call(j,u,100),Y.call(j,v,260),Z.call(j,v,100)},0);break;case"r":case"g":case"b":setTimeout(function(){W.call(j,n,"transparent"),W.call(j,o,"transparent"),Z.call(j,s,100),Z.call(j,p,100),Y.call(j,p,b),Y.call(j,q,b-260),Y.call(j,s,c-780),Y.call(j,t,c-520),Y.call(j,u,c),Y.call(j,v,c-260),Y.call(j,x,260),Z.call(j,x,100)},0)}null!=d.val("ahex")&&P.call(j,d)},P=function(a,b){(null==b||b!=z&&b!=y)&&S.call(j,a,b),setTimeout(function(){T.call(j,a),U.call(j,a),V.call(j,a)},0)},Q=function(a,b){var c=ub.active;if(b==y||null!=c.val()){var d=a.val("all");switch(k.color.mode){case"h":c.val("sv",{s:d.x,v:100-d.y},b);break;case"s":case"a":c.val("hv",{h:d.x,v:100-d.y},b);break;case"v":c.val("hs",{h:d.x,s:100-d.y},b);break;case"r":c.val("gb",{g:255-d.y,b:d.x},b);break;case"g":c.val("rb",{r:255-d.y,b:d.x},b);break;case"b":c.val("rg",{r:d.x,g:255-d.y},b)}}},R=function(a,b){var c=ub.active;if(b==z||null!=c.val())switch(k.color.mode){case"h":c.val("h",{h:360-a.val("y")},b);break;case"s":c.val("s",{s:100-a.val("y")},b);break;case"v":c.val("v",{v:100-a.val("y")},b);break;case"r":c.val("r",{r:255-a.val("y")},b);break;case"g":c.val("g",{g:255-a.val("y")},b);break;case"b":c.val("b",{b:255-a.val("y")},b);break;case"a":c.val("a",255-a.val("y"),b)}},S=function(a,b){if(b!=y)switch(k.color.mode){case"h":var c=a.val("sv");y.val("xy",{x:null!=c?c.s:100,y:100-(null!=c?c.v:100)},b);break;case"s":case"a":var d=a.val("hv");y.val("xy",{x:d&&d.h||0,y:100-(null!=d?d.v:100)},b);break;case"v":var e=a.val("hs");y.val("xy",{x:e&&e.h||0,y:100-(null!=e?e.s:100)},b);break;case"r":var f=a.val("bg");y.val("xy",{x:f&&f.b||0,y:255-(f&&f.g||0)},b);break;case"g":var g=a.val("br");y.val("xy",{x:g&&g.b||0,y:255-(g&&g.r||0)},b);break;case"b":var h=a.val("rg");y.val("xy",{x:h&&h.r||0,y:255-(h&&h.g||0)},b)}if(b!=z)switch(k.color.mode){case"h":z.val("y",360-(a.val("h")||0),b);break;case"s":var i=a.val("s");z.val("y",100-(null!=i?i:100),b);break;case"v":var j=a.val("v");z.val("y",100-(null!=j?j:100),b);break;case"r":z.val("y",255-(a.val("r")||0),b);break;case"g":z.val("y",255-(a.val("g")||0),b);break;case"b":z.val("y",255-(a.val("b")||0),b);break;case"a":var l=a.val("a");z.val("y",255-(null!=l?l:255),b)}},T=function(a){try{var b=a.val("all");F.css({backgroundColor:b&&"#"+b.hex||"transparent"}),Z.call(j,F,b&&Math.precision(100*b.a/255,4)||0)}catch(c){}},U=function(a){switch(k.color.mode){case"h":W.call(j,n,new d({h:a.val("h")||0,s:100,v:100}).val("hex"));break;case"s":case"a":var b=a.val("s");Z.call(j,q,100-(null!=b?b:100));break;case"v":var c=a.val("v");Z.call(j,p,null!=c?c:100);break;case"r":Z.call(j,q,Math.precision((a.val("r")||0)/255*100,4));break;case"g":Z.call(j,q,Math.precision((a.val("g")||0)/255*100,4));break;case"b":Z.call(j,q,Math.precision((a.val("b")||0)/255*100))}var e=a.val("a");Z.call(j,r,Math.precision(100*(255-(e||0))/255,4))},V=function(a){switch(k.color.mode){case"h":var b=a.val("a");Z.call(j,w,Math.precision(100*(255-(b||0))/255,4));break;case"s":var c=a.val("hva"),e=new d({h:c&&c.h||0,s:100,v:null!=c?c.v:100});W.call(j,o,e.val("hex")),Z.call(j,t,100-(null!=c?c.v:100)),Z.call(j,w,Math.precision(100*(255-(c&&c.a||0))/255,4));break;case"v":var f=a.val("hsa"),g=new d({h:f&&f.h||0,s:null!=f?f.s:100,v:100});W.call(j,o,g.val("hex")),Z.call(j,w,Math.precision(100*(255-(f&&f.a||0))/255,4));break;case"r":case"g":case"b":var h=0,i=0,l=a.val("rgba");"r"==k.color.mode?(h=l&&l.b||0,i=l&&l.g||0):"g"==k.color.mode?(h=l&&l.b||0,i=l&&l.r||0):"b"==k.color.mode&&(h=l&&l.r||0,i=l&&l.g||0);var m=i>h?h:i;Z.call(j,t,h>i?Math.precision((h-i)/(255-i)*100,4):0),Z.call(j,u,i>h?Math.precision((i-h)/(255-h)*100,4):0),Z.call(j,v,Math.precision(m/255*100,4)),Z.call(j,w,Math.precision(100*(255-(l&&l.a||0))/255,4));break;case"a":var b=a.val("a");W.call(j,o,a.val("hex")||"000000"),Z.call(j,w,null!=b?0:100),Z.call(j,x,null!=b?100:0)}},W=function(a,b){a.css({backgroundColor:b&&6==b.length&&"#"+b||"transparent"})},X=function(a,b){!l||-1==b.indexOf("AlphaBar.png")&&-1==b.indexOf("Bars.png")&&-1==b.indexOf("Maps.png")?a.css({backgroundImage:"url('"+b+"')"}):(a.attr("pngSrc",b),a.css({backgroundImage:"none",filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+b+"', sizingMethod='scale')"}))},Y=function(a,b){a.css({top:b+"px"})},Z=function(a,b){if(a.css({visibility:b>0?"visible":"hidden"}),b>0&&100>b)if(l){var c=a.attr("pngSrc");a.css(null==c||-1==c.indexOf("AlphaBar.png")&&-1==c.indexOf("Bars.png")&&-1==c.indexOf("Maps.png")?{opacity:Math.precision(b/100,4)}:{filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+c+"', sizingMethod='scale') progid:DXImageTransform.Microsoft.Alpha(opacity="+b+")"})}else a.css({opacity:Math.precision(b/100,4)});else if(0==b||100==b)if(l){var c=a.attr("pngSrc");a.css(null==c||-1==c.indexOf("AlphaBar.png")&&-1==c.indexOf("Bars.png")&&-1==c.indexOf("Maps.png")?{opacity:""}:{filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+c+"', sizingMethod='scale')"})}else a.css({opacity:""})},$=function(){ub.active.val("ahex",ub.current.val("ahex"))},_=function(){ub.current.val("ahex",ub.active.val("ahex"))},ab=function(b){a(this).parents("tbody:first").find('input:radio[value!="'+b.target.value+'"]').removeAttr("checked"),O.call(j,b.target.value)},bb=function(){$.call(j)},cb=function(){$.call(j),k.window.expandable&&pb.call(j),a.isFunction(nb)&&nb.call(j,ub.active,I)},db=function(){_.call(j),k.window.expandable&&pb.call(j),a.isFunction(lb)&&lb.call(j,ub.active,H)},eb=function(){ob.call(j)},fb=function(a){var b=a.val("hex");G.css({backgroundColor:b&&"#"+b||"transparent"}),Z.call(j,G,Math.precision(100*(a.val("a")||0)/255,4))},gb=function(a){var b=a.val("hex"),c=a.val("va");K.css({backgroundColor:b&&"#"+b||"transparent"}),Z.call(j,L,Math.precision(100*(255-(c&&c.a||0))/255,4)),k.window.bindToInput&&k.window.updateInputColor&&k.window.input.css({backgroundColor:b&&"#"+b||"transparent",color:null==c||c.v>75?"#000000":"#ffffff"})},hb=function(b){k.window.element,k.window.page;B=parseInt(m.css("left")),C=parseInt(m.css("top")),D=b.pageX,E=b.pageY,a(document).bind("mousemove",ib).bind("mouseup",jb),b.preventDefault()},ib=function(b){return m.css({left:B-(D-b.pageX)+"px",top:C-(E-b.pageY)+"px"}),k.window.expandable&&!a.support.boxModel&&m.prev().css({left:m.css("left"),top:m.css("top")}),b.stopPropagation(),b.preventDefault(),!1},jb=function(b){return a(document).unbind("mousemove",ib).unbind("mouseup",jb),b.stopPropagation(),b.preventDefault(),!1},kb=function(b){return b.preventDefault(),b.stopPropagation(),ub.active.val("ahex",a(this).attr("title")||null,b.target),!1},lb=a.isFunction(h[1])&&h[1]||null,mb=a.isFunction(h[2])&&h[2]||null,nb=a.isFunction(h[3])&&h[3]||null,ob=function(){ub.current.val("ahex",ub.active.val("ahex"));var b=function(){if(k.window.expandable&&!a.support.boxModel){var b=m.find("table:first");m.before("<iframe/>"),m.prev().css({width:b.width(),height:m.height(),opacity:0,position:"absolute",left:m.css("left"),top:m.css("top")})}};switch(k.window.expandable&&(a(document.body).children("div.jPicker.Container").css({zIndex:10}),m.css({zIndex:20})),k.window.effects.type){case"fade":m.fadeIn(k.window.effects.speed.show,b);break;case"slide":m.slideDown(k.window.effects.speed.show,b);break;case"show":default:m.show(k.window.effects.speed.show,b)}},pb=function(){var b=function(){k.window.expandable&&m.css({zIndex:10}),k.window.expandable&&!a.support.boxModel&&m.prev().remove()};switch(k.window.effects.type){case"fade":m.fadeOut(k.window.effects.speed.hide,b);break;case"slide":m.slideUp(k.window.effects.speed.hide,b);break;case"show":default:m.hide(k.window.effects.speed.hide,b)}},qb=function(){var e=k.window,f=e.expandable?a(j).next().find(".Container:first"):null;m=a(e.expandable?"<div/>":j),m.addClass("jPicker Container"),e.expandable&&m.hide(),m.get(0).onselectstart=function(a){return"input"!==a.target.nodeName.toLowerCase()?!1:void 0};var g=ub.active.val("all");e.alphaPrecision<0?e.alphaPrecision=0:e.alphaPrecision>2&&(e.alphaPrecision=2);var h='<table class="jPicker" cellpadding="0" cellspacing="0"><tbody>'+(e.expandable?'<tr><td class="Move" colspan="5">&nbsp;</td></tr>':"")+'<tr><td rowspan="9"><h2 class="Title">'+(e.title||tb.text.title)+'</h2><div class="Map"><span class="Map1">&nbsp;</span><span class="Map2">&nbsp;</span><span class="Map3">&nbsp;</span><img src="'+sb.clientPath+sb.colorMap.arrow.file+'" class="Arrow"/></div></td><td rowspan="9"><div class="Bar"><span class="Map1">&nbsp;</span><span class="Map2">&nbsp;</span><span class="Map3">&nbsp;</span><span class="Map4">&nbsp;</span><span class="Map5">&nbsp;</span><span class="Map6">&nbsp;</span><img src="'+sb.clientPath+sb.colorBar.arrow.file+'" class="Arrow"/></div></td><td colspan="2" class="Preview">'+tb.text.newColor+'<div><span class="Active" title="'+tb.tooltips.colors.newColor+'">&nbsp;</span><span class="Current" title="'+tb.tooltips.colors.currentColor+'">&nbsp;</span></div>'+tb.text.currentColor+'</td><td rowspan="9" class="Button"><input type="button" class="Ok" value="'+tb.text.ok+'" title="'+tb.tooltips.buttons.ok+'"/><input type="button" class="Cancel" value="'+tb.text.cancel+'" title="'+tb.tooltips.buttons.cancel+'"/><hr/><div class="Grid">&nbsp;</div></td></tr><tr class="Hue"><td class="Radio"><label title="'+tb.tooltips.hue.radio+'"><input type="radio" value="h"'+("h"==k.color.mode?' checked="checked"':"")+'/>H:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.h:"")+'" title="'+tb.tooltips.hue.textbox+'"/>&nbsp;&deg;</td></tr><tr class="Saturation"><td class="Radio"><label title="'+tb.tooltips.saturation.radio+'"><input type="radio" value="s"'+("s"==k.color.mode?' checked="checked"':"")+'/>S:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.s:"")+'" title="'+tb.tooltips.saturation.textbox+'"/>&nbsp;%</td></tr><tr class="Value"><td class="Radio"><label title="'+tb.tooltips.value.radio+'"><input type="radio" value="v"'+("v"==k.color.mode?' checked="checked"':"")+'/>V:</label><br/><br/></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.v:"")+'" title="'+tb.tooltips.value.textbox+'"/>&nbsp;%<br/><br/></td></tr><tr class="Red"><td class="Radio"><label title="'+tb.tooltips.red.radio+'"><input type="radio" value="r"'+("r"==k.color.mode?' checked="checked"':"")+'/>R:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.r:"")+'" title="'+tb.tooltips.red.textbox+'"/></td></tr><tr class="Green"><td class="Radio"><label title="'+tb.tooltips.green.radio+'"><input type="radio" value="g"'+("g"==k.color.mode?' checked="checked"':"")+'/>G:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.g:"")+'" title="'+tb.tooltips.green.textbox+'"/></td></tr><tr class="Blue"><td class="Radio"><label title="'+tb.tooltips.blue.radio+'"><input type="radio" value="b"'+("b"==k.color.mode?' checked="checked"':"")+'/>B:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.b:"")+'" title="'+tb.tooltips.blue.textbox+'"/></td></tr><tr class="Alpha"><td class="Radio">'+(e.alphaSupport?'<label title="'+tb.tooltips.alpha.radio+'"><input type="radio" value="a"'+("a"==k.color.mode?' checked="checked"':"")+"/>A:</label>":"&nbsp;")+'</td><td class="Text">'+(e.alphaSupport?'<input type="text" maxlength="'+(3+e.alphaPrecision)+'" value="'+(null!=g?Math.precision(100*g.a/255,e.alphaPrecision):"")+'" title="'+tb.tooltips.alpha.textbox+'"/>&nbsp;%':"&nbsp;")+'</td></tr><tr class="Hex"><td colspan="2" class="Text"><label title="'+tb.tooltips.hex.textbox+'">#:<input type="text" maxlength="6" class="Hex" value="'+(null!=g?g.hex:"")+'"/></label>'+(e.alphaSupport?'<input type="text" maxlength="2" class="AHex" value="'+(null!=g?g.ahex.substring(6):"")+'" title="'+tb.tooltips.hex.alpha+'"/></td>':"&nbsp;")+"</tr></tbody></table>";e.expandable?(m.html(h),0==a(document.body).children("div.jPicker.Container").length?a(document.body).prepend(m):a(document.body).children("div.jPicker.Container:last").after(m),m.mousedown(function(){a(document.body).children("div.jPicker.Container").css({zIndex:10}),m.css({zIndex:20})}),m.css({left:"left"==e.position.x?f.offset().left-530-("center"==e.position.y?25:0)+"px":"center"==e.position.x?f.offset().left-260+"px":"right"==e.position.x?f.offset().left-10+("center"==e.position.y?25:0)+"px":"screenCenter"==e.position.x?(a(document).width()>>1)-260+"px":f.offset().left+parseInt(e.position.x)+"px",position:"absolute",top:"top"==e.position.y?f.offset().top-312+"px":"center"==e.position.y?f.offset().top-156+"px":"bottom"==e.position.y?f.offset().top+25+"px":f.offset().top+parseInt(e.position.y)+"px"})):(m=a(j),m.html(h));var l=m.find("tbody:first");n=l.find("div.Map:first"),o=l.find("div.Bar:first");var B=n.find("span"),C=o.find("span");p=B.filter(".Map1:first"),q=B.filter(".Map2:first"),r=B.filter(".Map3:first"),s=C.filter(".Map1:first"),t=C.filter(".Map2:first"),u=C.filter(".Map3:first"),v=C.filter(".Map4:first"),w=C.filter(".Map5:first"),x=C.filter(".Map6:first"),y=new b(n,{map:{width:sb.colorMap.width,height:sb.colorMap.height},arrow:{image:sb.clientPath+sb.colorMap.arrow.file,width:sb.colorMap.arrow.width,height:sb.colorMap.arrow.height}}),y.bind(Q),z=new b(o,{map:{width:sb.colorBar.width,height:sb.colorBar.height},arrow:{image:sb.clientPath+sb.colorBar.arrow.file,width:sb.colorBar.arrow.width,height:sb.colorBar.arrow.height}}),z.bind(R),A=new c(l,ub.active,e.expandable&&e.bindToInput?e.input:null,e.alphaPrecision);var D=null!=g?g.hex:null,E=l.find(".Preview"),S=l.find(".Button");if(F=E.find(".Active:first").css({backgroundColor:D&&"#"+D||"transparent"}),G=E.find(".Current:first").css({backgroundColor:D&&"#"+D||"transparent"}).bind("click",bb),Z.call(j,G,Math.precision(100*ub.current.val("a"))/255,4),H=S.find(".Ok:first").bind("click",db),I=S.find(".Cancel:first").bind("click",cb),J=S.find(".Grid:first"),setTimeout(function(){X.call(j,p,sb.clientPath+"Maps.png"),X.call(j,q,sb.clientPath+"Maps.png"),X.call(j,r,sb.clientPath+"map-opacity.png"),X.call(j,s,sb.clientPath+"Bars.png"),X.call(j,t,sb.clientPath+"Bars.png"),X.call(j,u,sb.clientPath+"Bars.png"),X.call(j,v,sb.clientPath+"Bars.png"),X.call(j,w,sb.clientPath+"bar-opacity.png"),X.call(j,x,sb.clientPath+"AlphaBar.png"),X.call(j,E.find("div:first"),sb.clientPath+"preview-opacity.png")},0),l.find("td.Radio input").bind("click",ab),ub.quickList&&ub.quickList.length>0){var T="";for(i=0;i<ub.quickList.length;i++){"string"==(typeof ub.quickList[i]).toString().toLowerCase()&&(ub.quickList[i]=new d({hex:ub.quickList[i]}));var U=ub.quickList[i].val("a"),V=ub.quickList[i].val("ahex");!e.alphaSupport&&V&&(V=V.substring(0,6)+"ff");var W=ub.quickList[i].val("hex");V||(V="00000000"),T+='<span class="QuickColor"'+(V&&' title="#'+V+'"'||"none")+' style="background-color:'+(W&&"#"+W||"")+";"+(W?"":"background-image:url("+sb.clientPath+"NoColor.png)")+(e.alphaSupport&&U&&255>U?";opacity:"+Math.precision(U/255,4)+";filter:Alpha(opacity="+Math.precision(U/2.55,4)+")":"")+'">&nbsp;</span>'}X.call(j,J,sb.clientPath+"bar-opacity.png"),J.html(T),J.find(".QuickColor").click(kb)}O.call(j,k.color.mode),ub.active.bind(P),a.isFunction(mb)&&ub.active.bind(mb),ub.current.bind(fb),e.expandable?(j.icon=f.parents(".Icon:first"),K=j.icon.find(".Color:first").css({backgroundColor:D&&"#"+D||"transparent"}),L=j.icon.find(".Alpha:first"),X.call(j,L,sb.clientPath+"bar-opacity.png"),Z.call(j,L,Math.precision(100*(255-(null!=g?g.a:0))/255,4)),M=j.icon.find(".Image:first").css({backgroundImage:"url('"+sb.clientPath+sb.picker.file+"')"}).bind("click",eb),e.bindToInput&&e.updateInputColor&&e.input.css({backgroundColor:D&&"#"+D||"transparent",color:null==g||g.v>75?"#000000":"#ffffff"}),N=l.find(".Move:first").bind("mousedown",hb),ub.active.bind(gb)):ob.call(j)},rb=function(){for(m.find("td.Radio input").unbind("click",ab),G.unbind("click",bb),I.unbind("click",cb),H.unbind("click",db),k.window.expandable&&(M.unbind("click",eb),N.unbind("mousedown",hb),j.icon=null),m.find(".QuickColor").unbind("click",kb),n=null,o=null,p=null,q=null,r=null,s=null,t=null,u=null,v=null,w=null,x=null,y.destroy(),y=null,z.destroy(),z=null,A.destroy(),A=null,F=null,G=null,H=null,I=null,J=null,lb=null,nb=null,mb=null,m.html(""),i=0;i<e.length;i++)e[i]==j&&e.splice(i,1)
-},sb=k.images,tb=k.localization,ub={active:new d("string"==(typeof k.color.active).toString().toLowerCase()?{ahex:!k.window.alphaSupport&&k.color.active?k.color.active.substring(0,6)+"ff":k.color.active}:{ahex:!k.window.alphaSupport&&k.color.active.val("ahex")?k.color.active.val("ahex").substring(0,6)+"ff":k.color.active.val("ahex")}),current:new d("string"==(typeof k.color.active).toString().toLowerCase()?{ahex:!k.window.alphaSupport&&k.color.active?k.color.active.substring(0,6)+"ff":k.color.active}:{ahex:!k.window.alphaSupport&&k.color.active.val("ahex")?k.color.active.val("ahex").substring(0,6)+"ff":k.color.active.val("ahex")}),quickList:k.color.quickList};a.extend(!0,j,{commitCallback:lb,liveCallback:mb,cancelCallback:nb,color:ub,show:ob,hide:pb,destroy:rb}),e.push(j),setTimeout(function(){qb.call(j)},0)})},a.fn.jPicker.defaults={window:{title:null,effects:{type:"slide",speed:{show:"slow",hide:"fast"}},position:{x:"screenCenter",y:"top"},expandable:!1,liveUpdate:!0,alphaSupport:!1,alphaPrecision:0,updateInputColor:!0},color:{mode:"h",active:new d({ahex:"#ffcc00ff"}),quickList:[new d({h:360,s:33,v:100}),new d({h:360,s:66,v:100}),new d({h:360,s:100,v:100}),new d({h:360,s:100,v:75}),new d({h:360,s:100,v:50}),new d({h:180,s:0,v:100}),new d({h:30,s:33,v:100}),new d({h:30,s:66,v:100}),new d({h:30,s:100,v:100}),new d({h:30,s:100,v:75}),new d({h:30,s:100,v:50}),new d({h:180,s:0,v:90}),new d({h:60,s:33,v:100}),new d({h:60,s:66,v:100}),new d({h:60,s:100,v:100}),new d({h:60,s:100,v:75}),new d({h:60,s:100,v:50}),new d({h:180,s:0,v:80}),new d({h:90,s:33,v:100}),new d({h:90,s:66,v:100}),new d({h:90,s:100,v:100}),new d({h:90,s:100,v:75}),new d({h:90,s:100,v:50}),new d({h:180,s:0,v:70}),new d({h:120,s:33,v:100}),new d({h:120,s:66,v:100}),new d({h:120,s:100,v:100}),new d({h:120,s:100,v:75}),new d({h:120,s:100,v:50}),new d({h:180,s:0,v:60}),new d({h:150,s:33,v:100}),new d({h:150,s:66,v:100}),new d({h:150,s:100,v:100}),new d({h:150,s:100,v:75}),new d({h:150,s:100,v:50}),new d({h:180,s:0,v:50}),new d({h:180,s:33,v:100}),new d({h:180,s:66,v:100}),new d({h:180,s:100,v:100}),new d({h:180,s:100,v:75}),new d({h:180,s:100,v:50}),new d({h:180,s:0,v:40}),new d({h:210,s:33,v:100}),new d({h:210,s:66,v:100}),new d({h:210,s:100,v:100}),new d({h:210,s:100,v:75}),new d({h:210,s:100,v:50}),new d({h:180,s:0,v:30}),new d({h:240,s:33,v:100}),new d({h:240,s:66,v:100}),new d({h:240,s:100,v:100}),new d({h:240,s:100,v:75}),new d({h:240,s:100,v:50}),new d({h:180,s:0,v:20}),new d({h:270,s:33,v:100}),new d({h:270,s:66,v:100}),new d({h:270,s:100,v:100}),new d({h:270,s:100,v:75}),new d({h:270,s:100,v:50}),new d({h:180,s:0,v:10}),new d({h:300,s:33,v:100}),new d({h:300,s:66,v:100}),new d({h:300,s:100,v:100}),new d({h:300,s:100,v:75}),new d({h:300,s:100,v:50}),new d({h:180,s:0,v:0}),new d({h:330,s:33,v:100}),new d({h:330,s:66,v:100}),new d({h:330,s:100,v:100}),new d({h:330,s:100,v:75}),new d({h:330,s:100,v:50}),new d]},images:{clientPath:"/jPicker/images/",colorMap:{width:256,height:256,arrow:{file:"mappoint.gif",width:15,height:15}},colorBar:{width:20,height:256,arrow:{file:"rangearrows.gif",width:20,height:7}},picker:{file:"picker.gif",width:25,height:24}},localization:{text:{title:"Drag Markers To Pick A Color",newColor:"new",currentColor:"current",ok:"OK",cancel:"Cancel"},tooltips:{colors:{newColor:"New Color - Press &ldquo;OK&rdquo; To Commit",currentColor:"Click To Revert To Original Color"},buttons:{ok:"Commit To This Color Selection",cancel:"Cancel And Revert To Original Color"},hue:{radio:"Set To &ldquo;Hue&rdquo; Color Mode",textbox:"Enter A &ldquo;Hue&rdquo; Value (0-360&deg;)"},saturation:{radio:"Set To &ldquo;Saturation&rdquo; Color Mode",textbox:"Enter A &ldquo;Saturation&rdquo; Value (0-100%)"},value:{radio:"Set To &ldquo;Value&rdquo; Color Mode",textbox:"Enter A &ldquo;Value&rdquo; Value (0-100%)"},red:{radio:"Set To &ldquo;Red&rdquo; Color Mode",textbox:"Enter A &ldquo;Red&rdquo; Value (0-255)"},green:{radio:"Set To &ldquo;Green&rdquo; Color Mode",textbox:"Enter A &ldquo;Green&rdquo; Value (0-255)"},blue:{radio:"Set To &ldquo;Blue&rdquo; Color Mode",textbox:"Enter A &ldquo;Blue&rdquo; Value (0-255)"},alpha:{radio:"Set To &ldquo;Alpha&rdquo; Color Mode",textbox:"Enter A &ldquo;Alpha&rdquo; Value (0-100)"},hex:{textbox:"Enter A &ldquo;Hex&rdquo; Color Value (#000000-#ffffff)",alpha:"Enter A &ldquo;Alpha&rdquo; Value (#00-#ff)"}}}}}(jQuery,"1.1.6"),function(a){Math.precision=function(a,b){return void 0===b&&(b=0),Math.round(a*Math.pow(10,b))/Math.pow(10,b)};var b=function(b,c){var d,e,f=this,g=b.find("img:first"),h=0,i=100,j=100,k=0,l=100,m=100,n=0,o=0,p=new Array,q=function(a){for(var b=0;b<p.length;b++)p[b].call(f,f,a)},r=function(c){var g=b.offset();d={l:0|g.left,t:0|g.top},clearTimeout(e),e=setTimeout(function(){u.call(f,c)},0),a(document).bind("mousemove",s).bind("mouseup",t),c.preventDefault()},s=function(a){return clearTimeout(e),e=setTimeout(function(){u.call(f,a)},0),a.stopPropagation(),a.preventDefault(),!1},t=function(b){return a(document).unbind("mouseup",t).unbind("mousemove",s),b.stopPropagation(),b.preventDefault(),!1},u=function(a){var c=a.pageX-d.l,e=a.pageY-d.t,g=b.w,i=b.h;0>c?c=0:c>g&&(c=g),0>e?e=0:e>i&&(e=i),w.call(f,"xy",{x:c/g*j+h,y:e/i*m+k})},v=function(){var a=0,c=0,d=b.w,e=b.h,f=g.w,h=g.h;setTimeout(function(){j>0&&(a=n==i?d:n/j*d|0),m>0&&(c=o==l?e:o/m*e|0),f>=d?a=(d>>1)-(f>>1):a-=f>>1,h>=e?c=(e>>1)-(h>>1):c-=h>>1,g.css({left:a+"px",top:c+"px"})},0)},w=function(a,b,c){var d=void 0!==b;if(!d)switch((void 0===a||null==a)&&(a="xy"),a.toLowerCase()){case"x":return n;case"y":return o;case"xy":default:return{x:n,y:o}}if(null==c||c!=f){var e,g,j=!1;switch(null==a&&(a="xy"),a.toLowerCase()){case"x":e=b&&(b.x&&0|b.x||0|b)||0;break;case"y":g=b&&(b.y&&0|b.y||0|b)||0;break;case"xy":default:e=b&&b.x&&0|b.x||0,g=b&&b.y&&0|b.y||0}null!=e&&(h>e?e=h:e>i&&(e=i),n!=e&&(n=e,j=!0)),null!=g&&(k>g?g=k:g>l&&(g=l),o!=g&&(o=g,j=!0)),j&&q.call(f,c||f)}},x=function(a,b){var c=void 0!==b;if(!c)switch((void 0===a||null==a)&&(a="all"),a.toLowerCase()){case"minx":return h;case"maxx":return i;case"rangex":return{minX:h,maxX:i,rangeX:j};case"miny":return k;case"maxy":return l;case"rangey":return{minY:k,maxY:l,rangeY:m};case"all":default:return{minX:h,maxX:i,rangeX:j,minY:k,maxY:l,rangeY:m}}var d,e,f,g;switch(null==a&&(a="all"),a.toLowerCase()){case"minx":d=b&&(b.minX&&0|b.minX||0|b)||0;break;case"maxx":e=b&&(b.maxX&&0|b.maxX||0|b)||0;break;case"rangex":d=b&&b.minX&&0|b.minX||0,e=b&&b.maxX&&0|b.maxX||0;break;case"miny":f=b&&(b.minY&&0|b.minY||0|b)||0;break;case"maxy":g=b&&(b.maxY&&0|b.maxY||0|b)||0;break;case"rangey":f=b&&b.minY&&0|b.minY||0,g=b&&b.maxY&&0|b.maxY||0;break;case"all":default:d=b&&b.minX&&0|b.minX||0,e=b&&b.maxX&&0|b.maxX||0,f=b&&b.minY&&0|b.minY||0,g=b&&b.maxY&&0|b.maxY||0}null!=d&&h!=d&&(h=d,j=i-h),null!=e&&i!=e&&(i=e,j=i-h),null!=f&&k!=f&&(k=f,m=l-k),null!=g&&l!=g&&(l=g,m=l-k)},y=function(b){a.isFunction(b)&&p.push(b)},z=function(b){if(a.isFunction(b))for(var c;-1!=(c=a.inArray(b,p));)p.splice(c,1)},A=function(){a(document).unbind("mouseup",t).unbind("mousemove",s),b.unbind("mousedown",r),b=null,g=null,p=null};a.extend(!0,f,{val:w,range:x,bind:y,unbind:z,destroy:A}),g.src=c.arrow&&c.arrow.image,g.w=c.arrow&&c.arrow.width||g.width(),g.h=c.arrow&&c.arrow.height||g.height(),b.w=c.map&&c.map.width||b.width(),b.h=c.map&&c.map.height||b.height(),b.bind("mousedown",r),y.call(f,v)},c=function(b,c,d,e){var f=this,g=b.find("td.Text input"),h=g.eq(3),i=g.eq(4),j=g.eq(5),k=g.length>7?g.eq(6):null,l=g.eq(0),m=g.eq(1),n=g.eq(2),o=g.eq(g.length>7?7:6),p=g.length>7?g.eq(8):null,q=function(a){if(""!=a.target.value||a.target==o.get(0)||(null==d||a.target==d.get(0))&&null!=d){if(!s(a))return a;switch(a.target){case h.get(0):h.val(t.call(f,h.val(),0,255)),c.val("r",h.val(),a.target);break;case i.get(0):i.val(t.call(f,i.val(),0,255)),c.val("g",i.val(),a.target);break;case j.get(0):j.val(t.call(f,j.val(),0,255)),c.val("b",j.val(),a.target);break;case k&&k.get(0):k.val(t.call(f,k.val(),0,100)),c.val("a",Math.precision(255*k.val()/100,e),a.target);break;case l.get(0):l.val(t.call(f,l.val(),0,360)),c.val("h",l.val(),a.target);break;case m.get(0):m.val(t.call(f,m.val(),0,100)),c.val("s",m.val(),a.target);break;case n.get(0):n.val(t.call(f,n.val(),0,100)),c.val("v",n.val(),a.target);break;case o.get(0):o.val(o.val().replace(/[^a-fA-F0-9]/g,"").toLowerCase().substring(0,6)),d&&d.val(o.val()),c.val("hex",""!=o.val()?o.val():null,a.target);break;case d&&d.get(0):d.val(d.val().replace(/[^a-fA-F0-9]/g,"").toLowerCase().substring(0,6)),o.val(d.val()),c.val("hex",""!=d.val()?d.val():null,a.target);break;case p&&p.get(0):p.val(p.val().replace(/[^a-fA-F0-9]/g,"").toLowerCase().substring(0,2)),c.val("a",null!=p.val()?parseInt(p.val(),16):null,a.target)}}},r=function(a){if(null!=c.val())switch(a.target){case h.get(0):h.val(c.val("r"));break;case i.get(0):i.val(c.val("g"));break;case j.get(0):j.val(c.val("b"));break;case k&&k.get(0):k.val(Math.precision(100*c.val("a")/255,e));break;case l.get(0):l.val(c.val("h"));break;case m.get(0):m.val(c.val("s"));break;case n.get(0):n.val(c.val("v"));break;case o.get(0):case d&&d.get(0):o.val(c.val("hex")),d&&d.val(c.val("hex"));break;case p&&p.get(0):p.val(c.val("ahex").substring(6))}},s=function(a){switch(a.keyCode){case 9:case 16:case 29:case 37:case 38:case 40:return!1;case"c".charCodeAt():case"v".charCodeAt():if(a.ctrlKey)return!1}return!0},t=function(a,b,c){return""==a||isNaN(a)?b:a>c?c:b>a?b:a},u=function(a,b){var c=a.val("all");b!=h.get(0)&&h.val(null!=c?c.r:""),b!=i.get(0)&&i.val(null!=c?c.g:""),b!=j.get(0)&&j.val(null!=c?c.b:""),k&&b!=k.get(0)&&k.val(null!=c?Math.precision(100*c.a/255,e):""),b!=l.get(0)&&l.val(null!=c?c.h:""),b!=m.get(0)&&m.val(null!=c?c.s:""),b!=n.get(0)&&n.val(null!=c?c.v:""),b!=o.get(0)&&(d&&b!=d.get(0)||!d)&&o.val(null!=c?c.hex:""),d&&b!=d.get(0)&&b!=o.get(0)&&d.val(null!=c?c.hex:""),p&&b!=p.get(0)&&p.val(null!=c?c.ahex.substring(6):"")},v=function(){h.add(i).add(j).add(k).add(l).add(m).add(n).add(o).add(d).add(p).unbind("keyup",q).unbind("blur",r),c.unbind(u),h=null,i=null,j=null,k=null,l=null,m=null,n=null,o=null,p=null};a.extend(!0,f,{destroy:v}),h.add(i).add(j).add(k).add(l).add(m).add(n).add(o).add(d).add(p).bind("keyup",q).bind("blur",r),c.bind(u)};a.jPicker={List:[],Color:function(b){var c,d,e,g,h,i,j,k=this,l=new Array,m=function(a){for(var b=0;b<l.length;b++)l[b].call(k,k,a)},n=function(a,b,l){var o=void 0!==b;if(!o){if((void 0===a||null==a||""==a)&&(a="all"),null==c)return null;switch(a.toLowerCase()){case"ahex":return f.rgbaToHex({r:c,g:d,b:e,a:g});case"hex":return n("ahex").substring(0,6);case"all":return{r:c,g:d,b:e,a:g,h:h,s:i,v:j,hex:n.call(k,"hex"),ahex:n.call(k,"ahex")};default:for(var p={},q=0;q<a.length;q++)switch(a.charAt(q)){case"r":1==a.length?p=c:p.r=c;break;case"g":1==a.length?p=d:p.g=d;break;case"b":1==a.length?p=e:p.b=e;break;case"a":1==a.length?p=g:p.a=g;break;case"h":1==a.length?p=h:p.h=h;break;case"s":1==a.length?p=i:p.s=i;break;case"v":1==a.length?p=j:p.v=j}return p=={}?n.call(k,"all"):p}}if(null==l||l!=k){var r=!1;if(null==a&&(a=""),null==b)return null!=c&&(c=null,r=!0),null!=d&&(d=null,r=!0),null!=e&&(e=null,r=!0),null!=g&&(g=null,r=!0),null!=h&&(h=null,r=!0),null!=i&&(i=null,r=!0),null!=j&&(j=null,r=!0),void(r&&m.call(k,l||k));switch(a.toLowerCase()){case"ahex":case"hex":var p=f.hexToRgba(b&&(b.ahex||b.hex)||b||"00000000");n.call(k,"rgba",{r:p.r,g:p.g,b:p.b,a:"ahex"==a?p.a:null!=g?g:255},l);break;default:if(b&&(null!=b.ahex||null!=b.hex))return void n.call(k,"ahex",b.ahex||b.hex||"00000000",l);var s={},t=!1,u=!1;void 0!==b.r&&-1==!a.indexOf("r")&&(a+="r"),void 0!==b.g&&-1==!a.indexOf("g")&&(a+="g"),void 0!==b.b&&-1==!a.indexOf("b")&&(a+="b"),void 0!==b.a&&-1==!a.indexOf("a")&&(a+="a"),void 0!==b.h&&-1==!a.indexOf("h")&&(a+="h"),void 0!==b.s&&-1==!a.indexOf("s")&&(a+="s"),void 0!==b.v&&-1==!a.indexOf("v")&&(a+="v");for(var q=0;q<a.length;q++)switch(a.charAt(q)){case"r":if(u)continue;t=!0,s.r=b&&b.r&&0|b.r||b&&0|b||0,s.r<0?s.r=0:s.r>255&&(s.r=255),c!=s.r&&(c=s.r,r=!0);break;case"g":if(u)continue;t=!0,s.g=b&&b.g&&0|b.g||b&&0|b||0,s.g<0?s.g=0:s.g>255&&(s.g=255),d!=s.g&&(d=s.g,r=!0);break;case"b":if(u)continue;t=!0,s.b=b&&b.b&&0|b.b||b&&0|b||0,s.b<0?s.b=0:s.b>255&&(s.b=255),e!=s.b&&(e=s.b,r=!0);break;case"a":s.a=b&&null!=b.a?0|b.a:null!=b?0|b:255,s.a<0?s.a=0:s.a>255&&(s.a=255),g!=s.a&&(g=s.a,r=!0);break;case"h":if(t)continue;u=!0,s.h=b&&b.h&&0|b.h||b&&0|b||0,s.h<0?s.h=0:s.h>360&&(s.h=360),h!=s.h&&(h=s.h,r=!0);break;case"s":if(t)continue;u=!0,s.s=b&&null!=b.s?0|b.s:null!=b?0|b:100,s.s<0?s.s=0:s.s>100&&(s.s=100),i!=s.s&&(i=s.s,r=!0);break;case"v":if(t)continue;u=!0,s.v=b&&null!=b.v?0|b.v:null!=b?0|b:100,s.v<0?s.v=0:s.v>100&&(s.v=100),j!=s.v&&(j=s.v,r=!0)}if(r){if(t){c=c||0,d=d||0,e=e||0;var p=f.rgbToHsv({r:c,g:d,b:e});h=p.h,i=p.s,j=p.v}else if(u){h=h||0,i=null!=i?i:100,j=null!=j?j:100;var p=f.hsvToRgb({h:h,s:i,v:j});c=p.r,d=p.g,e=p.b}g=null!=g?g:255,m.call(k,l||k)}}}},o=function(b){a.isFunction(b)&&l.push(b)},p=function(b){if(a.isFunction(b))for(var c;-1!=(c=a.inArray(b,l));)l.splice(c,1)},q=function(){l=null};a.extend(!0,k,{val:n,bind:o,unbind:p,destroy:q}),b&&(null!=b.ahex?n("ahex",b):null!=b.hex?n((null!=b.a?"a":"")+"hex",null!=b.a?{ahex:b.hex+f.intToHex(b.a)}:b):null!=b.r&&null!=b.g&&null!=b.b?n("rgb"+(null!=b.a?"a":""),b):null!=b.h&&null!=b.s&&null!=b.v&&n("hsv"+(null!=b.a?"a":""),b))},ColorMethods:{hexToRgba:function(a){if(a=this.validateHex(a),""==a)return{r:null,g:null,b:null,a:null};var b="00",c="00",d="00",e="255";return 6==a.length&&(a+="ff"),a.length>6?(b=a.substring(0,2),c=a.substring(2,4),d=a.substring(4,6),e=a.substring(6,a.length)):(a.length>4&&(b=a.substring(4,a.length),a=a.substring(0,4)),a.length>2&&(c=a.substring(2,a.length),a=a.substring(0,2)),a.length>0&&(d=a.substring(0,a.length))),{r:this.hexToInt(b),g:this.hexToInt(c),b:this.hexToInt(d),a:this.hexToInt(e)}},validateHex:function(a){return a=a.toLowerCase().replace(/[^a-f0-9]/g,""),a.length>8&&(a=a.substring(0,8)),a},rgbaToHex:function(a){return this.intToHex(a.r)+this.intToHex(a.g)+this.intToHex(a.b)+this.intToHex(a.a)},intToHex:function(a){var b=(0|a).toString(16);return 1==b.length&&(b="0"+b),b.toLowerCase()},hexToInt:function(a){return parseInt(a,16)},rgbToHsv:function(a){var b,c=a.r/255,d=a.g/255,e=a.b/255,f={h:0,s:0,v:0},g=0,h=0;return c>=d&&c>=e?(h=c,g=d>e?e:d):d>=e&&d>=c?(h=d,g=c>e?e:c):(h=e,g=d>c?c:d),f.v=h,f.s=h?(h-g)/h:0,f.s?(b=h-g,f.h=c==h?(d-e)/b:d==h?2+(e-c)/b:4+(c-d)/b,f.h=parseInt(60*f.h),f.h<0&&(f.h+=360)):f.h=0,f.s=100*f.s|0,f.v=100*f.v|0,f},hsvToRgb:function(a){var b={r:0,g:0,b:0,a:100},c=a.h,d=a.s,e=a.v;if(0==d)b.r=b.g=b.b=0==e?0:255*e/100|0;else{360==c&&(c=0),c/=60,d/=100,e/=100;var f=0|c,g=c-f,h=e*(1-d),i=e*(1-d*g),j=e*(1-d*(1-g));switch(f){case 0:b.r=e,b.g=j,b.b=h;break;case 1:b.r=i,b.g=e,b.b=h;break;case 2:b.r=h,b.g=e,b.b=j;break;case 3:b.r=h,b.g=i,b.b=e;break;case 4:b.r=j,b.g=h,b.b=e;break;case 5:b.r=e,b.g=h,b.b=i}b.r=255*b.r|0,b.g=255*b.g|0,b.b=255*b.b|0}return b}}};var d=a.jPicker.Color,e=a.jPicker.List,f=a.jPicker.ColorMethods;a.fn.jPicker=function(g){var h=arguments;return this.each(function(){var j=this,k=a.extend(!0,{},a.fn.jPicker.defaults,g);"input"==a(j).get(0).nodeName.toLowerCase()&&(a.extend(!0,k,{window:{bindToInput:!0,expandable:!0,input:a(j)}}),""==a(j).val()?(k.color.active=new d({hex:null}),k.color.current=new d({hex:null})):f.validateHex(a(j).val())&&(k.color.active=new d({hex:a(j).val(),a:k.color.active.val("a")}),k.color.current=new d({hex:a(j).val(),a:k.color.active.val("a")}))),k.window.expandable?a(j).after('<span class="jPicker"><span class="Icon"><span class="Color">&nbsp;</span><span class="Alpha">&nbsp;</span><span class="Image" title="Click To Open Color Picker">&nbsp;</span><span class="Container">&nbsp;</span></span></span>'):k.window.liveUpdate=!1;var l=parseFloat(navigator.appVersion.split("MSIE")[1])<7&&document.body.filters,m=null,n=null,o=null,p=null,q=null,r=null,s=null,t=null,u=null,v=null,w=null,x=null,y=null,z=null,A=null,B=null,C=null,D=null,E=null,F=null,G=null,H=null,I=null,J=null,K=null,L=null,M=null,N=null,O=function(a){var b,c,d=ub.active,e=(sb.clientPath,d.val("hex"));switch(k.color.mode=a,a){case"h":if(setTimeout(function(){W.call(j,n,"transparent"),Y.call(j,p,0),Z.call(j,p,100),Y.call(j,q,260),Z.call(j,q,100),W.call(j,o,"transparent"),Y.call(j,s,0),Z.call(j,s,100),Y.call(j,t,260),Z.call(j,t,100),Y.call(j,u,260),Z.call(j,u,100),Y.call(j,v,260),Z.call(j,v,100),Y.call(j,x,260),Z.call(j,x,100)},0),y.range("all",{minX:0,maxX:100,minY:0,maxY:100}),z.range("rangeY",{minY:0,maxY:360}),null==d.val("ahex"))break;y.val("xy",{x:d.val("s"),y:100-d.val("v")},y),z.val("y",360-d.val("h"),z);break;case"s":if(setTimeout(function(){W.call(j,n,"transparent"),Y.call(j,p,-260),Y.call(j,q,-520),Y.call(j,s,-260),Y.call(j,t,-520),Y.call(j,x,260),Z.call(j,x,100)},0),y.range("all",{minX:0,maxX:360,minY:0,maxY:100}),z.range("rangeY",{minY:0,maxY:100}),null==d.val("ahex"))break;y.val("xy",{x:d.val("h"),y:100-d.val("v")},y),z.val("y",100-d.val("s"),z);break;case"v":if(setTimeout(function(){W.call(j,n,"000000"),Y.call(j,p,-780),Y.call(j,q,260),W.call(j,o,e),Y.call(j,s,-520),Y.call(j,t,260),Z.call(j,t,100),Y.call(j,x,260),Z.call(j,x,100)},0),y.range("all",{minX:0,maxX:360,minY:0,maxY:100}),z.range("rangeY",{minY:0,maxY:100}),null==d.val("ahex"))break;y.val("xy",{x:d.val("h"),y:100-d.val("s")},y),z.val("y",100-d.val("v"),z);break;case"r":if(b=-1040,c=-780,y.range("all",{minX:0,maxX:255,minY:0,maxY:255}),z.range("rangeY",{minY:0,maxY:255}),null==d.val("ahex"))break;y.val("xy",{x:d.val("b"),y:255-d.val("g")},y),z.val("y",255-d.val("r"),z);break;case"g":if(b=-1560,c=-1820,y.range("all",{minX:0,maxX:255,minY:0,maxY:255}),z.range("rangeY",{minY:0,maxY:255}),null==d.val("ahex"))break;y.val("xy",{x:d.val("b"),y:255-d.val("r")},y),z.val("y",255-d.val("g"),z);break;case"b":if(b=-2080,c=-2860,y.range("all",{minX:0,maxX:255,minY:0,maxY:255}),z.range("rangeY",{minY:0,maxY:255}),null==d.val("ahex"))break;y.val("xy",{x:d.val("r"),y:255-d.val("g")},y),z.val("y",255-d.val("b"),z);break;case"a":if(setTimeout(function(){W.call(j,n,"transparent"),Y.call(j,p,-260),Y.call(j,q,-520),Y.call(j,s,260),Y.call(j,t,260),Z.call(j,t,100),Y.call(j,x,0),Z.call(j,x,100)},0),y.range("all",{minX:0,maxX:360,minY:0,maxY:100}),z.range("rangeY",{minY:0,maxY:255}),null==d.val("ahex"))break;y.val("xy",{x:d.val("h"),y:100-d.val("v")},y),z.val("y",255-d.val("a"),z);break;default:throw"Invalid Mode"}switch(a){case"h":break;case"s":case"v":case"a":setTimeout(function(){Z.call(j,p,100),Z.call(j,s,100),Y.call(j,u,260),Z.call(j,u,100),Y.call(j,v,260),Z.call(j,v,100)},0);break;case"r":case"g":case"b":setTimeout(function(){W.call(j,n,"transparent"),W.call(j,o,"transparent"),Z.call(j,s,100),Z.call(j,p,100),Y.call(j,p,b),Y.call(j,q,b-260),Y.call(j,s,c-780),Y.call(j,t,c-520),Y.call(j,u,c),Y.call(j,v,c-260),Y.call(j,x,260),Z.call(j,x,100)},0)}null!=d.val("ahex")&&P.call(j,d)},P=function(a,b){(null==b||b!=z&&b!=y)&&S.call(j,a,b),setTimeout(function(){T.call(j,a),U.call(j,a),V.call(j,a)},0)},Q=function(a,b){var c=ub.active;if(b==y||null!=c.val()){var d=a.val("all");switch(k.color.mode){case"h":c.val("sv",{s:d.x,v:100-d.y},b);break;case"s":case"a":c.val("hv",{h:d.x,v:100-d.y},b);break;case"v":c.val("hs",{h:d.x,s:100-d.y},b);break;case"r":c.val("gb",{g:255-d.y,b:d.x},b);break;case"g":c.val("rb",{r:255-d.y,b:d.x},b);break;case"b":c.val("rg",{r:d.x,g:255-d.y},b)}}},R=function(a,b){var c=ub.active;if(b==z||null!=c.val())switch(k.color.mode){case"h":c.val("h",{h:360-a.val("y")},b);break;case"s":c.val("s",{s:100-a.val("y")},b);break;case"v":c.val("v",{v:100-a.val("y")},b);break;case"r":c.val("r",{r:255-a.val("y")},b);break;case"g":c.val("g",{g:255-a.val("y")},b);break;case"b":c.val("b",{b:255-a.val("y")},b);break;case"a":c.val("a",255-a.val("y"),b)}},S=function(a,b){if(b!=y)switch(k.color.mode){case"h":var c=a.val("sv");y.val("xy",{x:null!=c?c.s:100,y:100-(null!=c?c.v:100)},b);break;case"s":case"a":var d=a.val("hv");y.val("xy",{x:d&&d.h||0,y:100-(null!=d?d.v:100)},b);break;case"v":var e=a.val("hs");y.val("xy",{x:e&&e.h||0,y:100-(null!=e?e.s:100)},b);break;case"r":var f=a.val("bg");y.val("xy",{x:f&&f.b||0,y:255-(f&&f.g||0)},b);break;case"g":var g=a.val("br");y.val("xy",{x:g&&g.b||0,y:255-(g&&g.r||0)},b);break;case"b":var h=a.val("rg");y.val("xy",{x:h&&h.r||0,y:255-(h&&h.g||0)},b)}if(b!=z)switch(k.color.mode){case"h":z.val("y",360-(a.val("h")||0),b);break;case"s":var i=a.val("s");z.val("y",100-(null!=i?i:100),b);break;case"v":var j=a.val("v");z.val("y",100-(null!=j?j:100),b);break;case"r":z.val("y",255-(a.val("r")||0),b);break;case"g":z.val("y",255-(a.val("g")||0),b);break;case"b":z.val("y",255-(a.val("b")||0),b);break;case"a":var l=a.val("a");z.val("y",255-(null!=l?l:255),b)}},T=function(a){try{var b=a.val("all");F.css({backgroundColor:b&&"#"+b.hex||"transparent"}),Z.call(j,F,b&&Math.precision(100*b.a/255,4)||0)}catch(c){}},U=function(a){switch(k.color.mode){case"h":W.call(j,n,new d({h:a.val("h")||0,s:100,v:100}).val("hex"));break;case"s":case"a":var b=a.val("s");Z.call(j,q,100-(null!=b?b:100));break;case"v":var c=a.val("v");Z.call(j,p,null!=c?c:100);break;case"r":Z.call(j,q,Math.precision((a.val("r")||0)/255*100,4));break;case"g":Z.call(j,q,Math.precision((a.val("g")||0)/255*100,4));break;case"b":Z.call(j,q,Math.precision((a.val("b")||0)/255*100))}var e=a.val("a");Z.call(j,r,Math.precision(100*(255-(e||0))/255,4))},V=function(a){switch(k.color.mode){case"h":var b=a.val("a");Z.call(j,w,Math.precision(100*(255-(b||0))/255,4));break;case"s":var c=a.val("hva"),e=new d({h:c&&c.h||0,s:100,v:null!=c?c.v:100});W.call(j,o,e.val("hex")),Z.call(j,t,100-(null!=c?c.v:100)),Z.call(j,w,Math.precision(100*(255-(c&&c.a||0))/255,4));break;case"v":var f=a.val("hsa"),g=new d({h:f&&f.h||0,s:null!=f?f.s:100,v:100});W.call(j,o,g.val("hex")),Z.call(j,w,Math.precision(100*(255-(f&&f.a||0))/255,4));break;case"r":case"g":case"b":var h=0,i=0,l=a.val("rgba");"r"==k.color.mode?(h=l&&l.b||0,i=l&&l.g||0):"g"==k.color.mode?(h=l&&l.b||0,i=l&&l.r||0):"b"==k.color.mode&&(h=l&&l.r||0,i=l&&l.g||0);var m=i>h?h:i;Z.call(j,t,h>i?Math.precision((h-i)/(255-i)*100,4):0),Z.call(j,u,i>h?Math.precision((i-h)/(255-h)*100,4):0),Z.call(j,v,Math.precision(m/255*100,4)),Z.call(j,w,Math.precision(100*(255-(l&&l.a||0))/255,4));break;case"a":var b=a.val("a");W.call(j,o,a.val("hex")||"000000"),Z.call(j,w,null!=b?0:100),Z.call(j,x,null!=b?100:0)}},W=function(a,b){a.css({backgroundColor:b&&6==b.length&&"#"+b||"transparent"})},X=function(a,b){!l||-1==b.indexOf("AlphaBar.png")&&-1==b.indexOf("Bars.png")&&-1==b.indexOf("Maps.png")?a.css({backgroundImage:"url("+b+")"}):(a.attr("pngSrc",b),a.css({backgroundImage:"none",filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+b+"', sizingMethod='scale')"}))},Y=function(a,b){a.css({top:b+"px"})},Z=function(a,b){if(a.css({visibility:b>0?"visible":"hidden"}),b>0&&100>b)if(l){var c=a.attr("pngSrc");a.css(null==c||-1==c.indexOf("AlphaBar.png")&&-1==c.indexOf("Bars.png")&&-1==c.indexOf("Maps.png")?{opacity:Math.precision(b/100,4)}:{filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+c+"', sizingMethod='scale') progid:DXImageTransform.Microsoft.Alpha(opacity="+b+")"})}else a.css({opacity:Math.precision(b/100,4)});else if(0==b||100==b)if(l){var c=a.attr("pngSrc");a.css(null==c||-1==c.indexOf("AlphaBar.png")&&-1==c.indexOf("Bars.png")&&-1==c.indexOf("Maps.png")?{opacity:""}:{filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+c+"', sizingMethod='scale')"})}else a.css({opacity:""})},$=function(){ub.active.val("ahex",ub.current.val("ahex"))},_=function(){ub.current.val("ahex",ub.active.val("ahex"))},ab=function(b){a(this).parents("tbody:first").find('input:radio[value!="'+b.target.value+'"]').removeAttr("checked"),O.call(j,b.target.value)},bb=function(){$.call(j)},cb=function(){$.call(j),k.window.expandable&&pb.call(j),a.isFunction(nb)&&nb.call(j,ub.active,I)},db=function(){_.call(j),k.window.expandable&&pb.call(j),a.isFunction(lb)&&lb.call(j,ub.active,H)},eb=function(){ob.call(j)},fb=function(a){var b=a.val("hex");G.css({backgroundColor:b&&"#"+b||"transparent"}),Z.call(j,G,Math.precision(100*(a.val("a")||0)/255,4))},gb=function(a){var b=a.val("hex"),c=a.val("va");K.css({backgroundColor:b&&"#"+b||"transparent"}),Z.call(j,L,Math.precision(100*(255-(c&&c.a||0))/255,4)),k.window.bindToInput&&k.window.updateInputColor&&k.window.input.css({backgroundColor:b&&"#"+b||"transparent",color:null==c||c.v>75?"#000000":"#ffffff"})},hb=function(b){k.window.element,k.window.page;B=parseInt(m.css("left")),C=parseInt(m.css("top")),D=b.pageX,E=b.pageY,a(document).bind("mousemove",ib).bind("mouseup",jb),b.preventDefault()},ib=function(b){return m.css({left:B-(D-b.pageX)+"px",top:C-(E-b.pageY)+"px"}),k.window.expandable&&!a.support.boxModel&&m.prev().css({left:m.css("left"),top:m.css("top")}),b.stopPropagation(),b.preventDefault(),!1},jb=function(b){return a(document).unbind("mousemove",ib).unbind("mouseup",jb),b.stopPropagation(),b.preventDefault(),!1},kb=function(b){return b.preventDefault(),b.stopPropagation(),ub.active.val("ahex",a(this).attr("title")||null,b.target),!1},lb=a.isFunction(h[1])&&h[1]||null,mb=a.isFunction(h[2])&&h[2]||null,nb=a.isFunction(h[3])&&h[3]||null,ob=function(){ub.current.val("ahex",ub.active.val("ahex"));var b=function(){if(k.window.expandable&&!a.support.boxModel){var b=m.find("table:first");m.before("<iframe/>"),m.prev().css({width:b.width(),height:m.height(),opacity:0,position:"absolute",left:m.css("left"),top:m.css("top")})}};switch(k.window.expandable&&(a(document.body).children("div.jPicker.Container").css({zIndex:10}),m.css({zIndex:20})),k.window.effects.type){case"fade":m.fadeIn(k.window.effects.speed.show,b);break;case"slide":m.slideDown(k.window.effects.speed.show,b);break;case"show":default:m.show(k.window.effects.speed.show,b)}},pb=function(){var b=function(){k.window.expandable&&m.css({zIndex:10}),k.window.expandable&&!a.support.boxModel&&m.prev().remove()};switch(k.window.effects.type){case"fade":m.fadeOut(k.window.effects.speed.hide,b);break;case"slide":m.slideUp(k.window.effects.speed.hide,b);break;case"show":default:m.hide(k.window.effects.speed.hide,b)}},qb=function(){var e=k.window,f=e.expandable?a(j).next().find(".Container:first"):null;m=a(e.expandable?"<div/>":j),m.addClass("jPicker Container"),e.expandable&&m.hide(),m.get(0).onselectstart=function(){return!1};var g=ub.active.val("all");e.alphaPrecision<0?e.alphaPrecision=0:e.alphaPrecision>2&&(e.alphaPrecision=2);var h='<table class="jPicker" cellpadding="0" cellspacing="0"><tbody>'+(e.expandable?'<tr><td class="Move" colspan="5">&nbsp;</td></tr>':"")+'<tr><td rowspan="9"><h2 class="Title">'+(e.title||tb.text.title)+'</h2><div class="Map"><span class="Map1">&nbsp;</span><span class="Map2">&nbsp;</span><span class="Map3">&nbsp;</span><img src="'+sb.clientPath+sb.colorMap.arrow.file+'" class="Arrow"/></div></td><td rowspan="9"><div class="Bar"><span class="Map1">&nbsp;</span><span class="Map2">&nbsp;</span><span class="Map3">&nbsp;</span><span class="Map4">&nbsp;</span><span class="Map5">&nbsp;</span><span class="Map6">&nbsp;</span><img src="'+sb.clientPath+sb.colorBar.arrow.file+'" class="Arrow"/></div></td><td colspan="2" class="Preview">'+tb.text.newColor+'<div><span class="Active" title="'+tb.tooltips.colors.newColor+'">&nbsp;</span><span class="Current" title="'+tb.tooltips.colors.currentColor+'">&nbsp;</span></div>'+tb.text.currentColor+'</td><td rowspan="9" class="Button"><input type="button" class="Ok" value="'+tb.text.ok+'" title="'+tb.tooltips.buttons.ok+'"/><input type="button" class="Cancel" value="'+tb.text.cancel+'" title="'+tb.tooltips.buttons.cancel+'"/><hr/><div class="Grid">&nbsp;</div></td></tr><tr class="Hue"><td class="Radio"><label title="'+tb.tooltips.hue.radio+'"><input type="radio" value="h"'+("h"==k.color.mode?' checked="checked"':"")+'/>H:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.h:"")+'" title="'+tb.tooltips.hue.textbox+'"/>&nbsp;&deg;</td></tr><tr class="Saturation"><td class="Radio"><label title="'+tb.tooltips.saturation.radio+'"><input type="radio" value="s"'+("s"==k.color.mode?' checked="checked"':"")+'/>S:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.s:"")+'" title="'+tb.tooltips.saturation.textbox+'"/>&nbsp;%</td></tr><tr class="Value"><td class="Radio"><label title="'+tb.tooltips.value.radio+'"><input type="radio" value="v"'+("v"==k.color.mode?' checked="checked"':"")+'/>V:</label><br/><br/></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.v:"")+'" title="'+tb.tooltips.value.textbox+'"/>&nbsp;%<br/><br/></td></tr><tr class="Red"><td class="Radio"><label title="'+tb.tooltips.red.radio+'"><input type="radio" value="r"'+("r"==k.color.mode?' checked="checked"':"")+'/>R:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.r:"")+'" title="'+tb.tooltips.red.textbox+'"/></td></tr><tr class="Green"><td class="Radio"><label title="'+tb.tooltips.green.radio+'"><input type="radio" value="g"'+("g"==k.color.mode?' checked="checked"':"")+'/>G:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.g:"")+'" title="'+tb.tooltips.green.textbox+'"/></td></tr><tr class="Blue"><td class="Radio"><label title="'+tb.tooltips.blue.radio+'"><input type="radio" value="b"'+("b"==k.color.mode?' checked="checked"':"")+'/>B:</label></td><td class="Text"><input type="text" maxlength="3" value="'+(null!=g?g.b:"")+'" title="'+tb.tooltips.blue.textbox+'"/></td></tr><tr class="Alpha"><td class="Radio">'+(e.alphaSupport?'<label title="'+tb.tooltips.alpha.radio+'"><input type="radio" value="a"'+("a"==k.color.mode?' checked="checked"':"")+"/>A:</label>":"&nbsp;")+'</td><td class="Text">'+(e.alphaSupport?'<input type="text" maxlength="'+(3+e.alphaPrecision)+'" value="'+(null!=g?Math.precision(100*g.a/255,e.alphaPrecision):"")+'" title="'+tb.tooltips.alpha.textbox+'"/>&nbsp;%':"&nbsp;")+'</td></tr><tr class="Hex"><td colspan="2" class="Text"><label title="'+tb.tooltips.hex.textbox+'">#:<input type="text" maxlength="6" class="Hex" value="'+(null!=g?g.hex:"")+'"/></label>'+(e.alphaSupport?'<input type="text" maxlength="2" class="AHex" value="'+(null!=g?g.ahex.substring(6):"")+'" title="'+tb.tooltips.hex.alpha+'"/></td>':"&nbsp;")+"</tr></tbody></table>";e.expandable?(m.html(h),0==a(document.body).children("div.jPicker.Container").length?a(document.body).prepend(m):a(document.body).children("div.jPicker.Container:last").after(m),m.mousedown(function(){a(document.body).children("div.jPicker.Container").css({zIndex:10}),m.css({zIndex:20})}),m.css({left:"left"==e.position.x?f.offset().left-530-("center"==e.position.y?25:0)+"px":"center"==e.position.x?f.offset().left-260+"px":"right"==e.position.x?f.offset().left-10+("center"==e.position.y?25:0)+"px":"screenCenter"==e.position.x?(a(document).width()>>1)-260+"px":f.offset().left+parseInt(e.position.x)+"px",position:"absolute",top:"top"==e.position.y?f.offset().top-312+"px":"center"==e.position.y?f.offset().top-156+"px":"bottom"==e.position.y?f.offset().top+25+"px":f.offset().top+parseInt(e.position.y)+"px"})):(m=a(j),m.html(h));var l=m.find("tbody:first");n=l.find("div.Map:first"),o=l.find("div.Bar:first");var B=n.find("span"),C=o.find("span");p=B.filter(".Map1:first"),q=B.filter(".Map2:first"),r=B.filter(".Map3:first"),s=C.filter(".Map1:first"),t=C.filter(".Map2:first"),u=C.filter(".Map3:first"),v=C.filter(".Map4:first"),w=C.filter(".Map5:first"),x=C.filter(".Map6:first"),y=new b(n,{map:{width:sb.colorMap.width,height:sb.colorMap.height},arrow:{image:sb.clientPath+sb.colorMap.arrow.file,width:sb.colorMap.arrow.width,height:sb.colorMap.arrow.height}}),y.bind(Q),z=new b(o,{map:{width:sb.colorBar.width,height:sb.colorBar.height},arrow:{image:sb.clientPath+sb.colorBar.arrow.file,width:sb.colorBar.arrow.width,height:sb.colorBar.arrow.height}}),z.bind(R),A=new c(l,ub.active,e.expandable&&e.bindToInput?e.input:null,e.alphaPrecision);
-var D=null!=g?g.hex:null,E=l.find(".Preview"),S=l.find(".Button");if(F=E.find(".Active:first").css({backgroundColor:D&&"#"+D||"transparent"}),G=E.find(".Current:first").css({backgroundColor:D&&"#"+D||"transparent"}).bind("click",bb),Z.call(j,G,Math.precision(100*ub.current.val("a"))/255,4),H=S.find(".Ok:first").bind("click",db),I=S.find(".Cancel:first").bind("click",cb),J=S.find(".Grid:first"),setTimeout(function(){X.call(j,p,sb.clientPath+"Maps.png"),X.call(j,q,sb.clientPath+"Maps.png"),X.call(j,r,sb.clientPath+"map-opacity.png"),X.call(j,s,sb.clientPath+"Bars.png"),X.call(j,t,sb.clientPath+"Bars.png"),X.call(j,u,sb.clientPath+"Bars.png"),X.call(j,v,sb.clientPath+"Bars.png"),X.call(j,w,sb.clientPath+"bar-opacity.png"),X.call(j,x,sb.clientPath+"AlphaBar.png"),X.call(j,E.find("div:first"),sb.clientPath+"preview-opacity.png")},0),l.find("td.Radio input").bind("click",ab),ub.quickList&&ub.quickList.length>0){var T="";for(i=0;i<ub.quickList.length;i++){"string"==(typeof ub.quickList[i]).toString().toLowerCase()&&(ub.quickList[i]=new d({hex:ub.quickList[i]}));var U=ub.quickList[i].val("a"),V=ub.quickList[i].val("ahex");!e.alphaSupport&&V&&(V=V.substring(0,6)+"ff");var W=ub.quickList[i].val("hex");T+='<span class="QuickColor"'+(V&&' title="#'+V+'"'||"")+' style="background-color:'+(W&&"#"+W||"")+";"+(W?"":"background-image:url("+sb.clientPath+"NoColor.png)")+(e.alphaSupport&&U&&255>U?";opacity:"+Math.precision(U/255,4)+";filter:Alpha(opacity="+Math.precision(U/2.55,4)+")":"")+'">&nbsp;</span>'}X.call(j,J,sb.clientPath+"bar-opacity.png"),J.html(T),J.find(".QuickColor").click(kb)}O.call(j,k.color.mode),ub.active.bind(P),a.isFunction(mb)&&ub.active.bind(mb),ub.current.bind(fb),e.expandable?(j.icon=f.parents(".Icon:first"),K=j.icon.find(".Color:first").css({backgroundColor:D&&"#"+D||"transparent"}),L=j.icon.find(".Alpha:first"),X.call(j,L,sb.clientPath+"bar-opacity.png"),Z.call(j,L,Math.precision(100*(255-(null!=g?g.a:0))/255,4)),M=j.icon.find(".Image:first").css({backgroundImage:"url("+sb.clientPath+sb.picker.file+")"}).bind("click",eb),e.bindToInput&&e.updateInputColor&&e.input.css({backgroundColor:D&&"#"+D||"transparent",color:null==g||g.v>75?"#000000":"#ffffff"}),N=l.find(".Move:first").bind("mousedown",hb),ub.active.bind(gb)):ob.call(j)},rb=function(){for(m.find("td.Radio input").unbind("click",ab),G.unbind("click",bb),I.unbind("click",cb),H.unbind("click",db),k.window.expandable&&(M.unbind("click",eb),N.unbind("mousedown",hb),j.icon=null),m.find(".QuickColor").unbind("click",kb),n=null,o=null,p=null,q=null,r=null,s=null,t=null,u=null,v=null,w=null,x=null,y.destroy(),y=null,z.destroy(),z=null,A.destroy(),A=null,F=null,G=null,H=null,I=null,J=null,lb=null,nb=null,mb=null,m.html(""),i=0;i<e.length;i++)e[i]==j&&e.splice(i,1)},sb=k.images,tb=k.localization,ub={active:new d("string"==(typeof k.color.active).toString().toLowerCase()?{ahex:!k.window.alphaSupport&&k.color.active?k.color.active.substring(0,6)+"ff":k.color.active}:{ahex:!k.window.alphaSupport&&k.color.active.val("ahex")?k.color.active.val("ahex").substring(0,6)+"ff":k.color.active.val("ahex")}),current:new d("string"==(typeof k.color.active).toString().toLowerCase()?{ahex:!k.window.alphaSupport&&k.color.active?k.color.active.substring(0,6)+"ff":k.color.active}:{ahex:!k.window.alphaSupport&&k.color.active.val("ahex")?k.color.active.val("ahex").substring(0,6)+"ff":k.color.active.val("ahex")}),quickList:k.color.quickList};a.extend(!0,j,{commitCallback:lb,liveCallback:mb,cancelCallback:nb,color:ub,show:ob,hide:pb,destroy:rb}),e.push(j),setTimeout(function(){qb.call(j)},0)})},a.fn.jPicker.defaults={window:{title:null,effects:{type:"slide",speed:{show:"slow",hide:"fast"}},position:{x:"screenCenter",y:"top"},expandable:!1,liveUpdate:!0,alphaSupport:!1,alphaPrecision:0,updateInputColor:!0},color:{mode:"h",active:new d({ahex:"#ffcc00ff"}),quickList:[new d({h:360,s:33,v:100}),new d({h:360,s:66,v:100}),new d({h:360,s:100,v:100}),new d({h:360,s:100,v:75}),new d({h:360,s:100,v:50}),new d({h:180,s:0,v:100}),new d({h:30,s:33,v:100}),new d({h:30,s:66,v:100}),new d({h:30,s:100,v:100}),new d({h:30,s:100,v:75}),new d({h:30,s:100,v:50}),new d({h:180,s:0,v:90}),new d({h:60,s:33,v:100}),new d({h:60,s:66,v:100}),new d({h:60,s:100,v:100}),new d({h:60,s:100,v:75}),new d({h:60,s:100,v:50}),new d({h:180,s:0,v:80}),new d({h:90,s:33,v:100}),new d({h:90,s:66,v:100}),new d({h:90,s:100,v:100}),new d({h:90,s:100,v:75}),new d({h:90,s:100,v:50}),new d({h:180,s:0,v:70}),new d({h:120,s:33,v:100}),new d({h:120,s:66,v:100}),new d({h:120,s:100,v:100}),new d({h:120,s:100,v:75}),new d({h:120,s:100,v:50}),new d({h:180,s:0,v:60}),new d({h:150,s:33,v:100}),new d({h:150,s:66,v:100}),new d({h:150,s:100,v:100}),new d({h:150,s:100,v:75}),new d({h:150,s:100,v:50}),new d({h:180,s:0,v:50}),new d({h:180,s:33,v:100}),new d({h:180,s:66,v:100}),new d({h:180,s:100,v:100}),new d({h:180,s:100,v:75}),new d({h:180,s:100,v:50}),new d({h:180,s:0,v:40}),new d({h:210,s:33,v:100}),new d({h:210,s:66,v:100}),new d({h:210,s:100,v:100}),new d({h:210,s:100,v:75}),new d({h:210,s:100,v:50}),new d({h:180,s:0,v:30}),new d({h:240,s:33,v:100}),new d({h:240,s:66,v:100}),new d({h:240,s:100,v:100}),new d({h:240,s:100,v:75}),new d({h:240,s:100,v:50}),new d({h:180,s:0,v:20}),new d({h:270,s:33,v:100}),new d({h:270,s:66,v:100}),new d({h:270,s:100,v:100}),new d({h:270,s:100,v:75}),new d({h:270,s:100,v:50}),new d({h:180,s:0,v:10}),new d({h:300,s:33,v:100}),new d({h:300,s:66,v:100}),new d({h:300,s:100,v:100}),new d({h:300,s:100,v:75}),new d({h:300,s:100,v:50}),new d({h:180,s:0,v:0}),new d({h:330,s:33,v:100}),new d({h:330,s:66,v:100}),new d({h:330,s:100,v:100}),new d({h:330,s:100,v:75}),new d({h:330,s:100,v:50}),new d]},images:{clientPath:"/jPicker/images/",colorMap:{width:256,height:256,arrow:{file:"mappoint.gif",width:15,height:15}},colorBar:{width:20,height:256,arrow:{file:"rangearrows.gif",width:20,height:7}},picker:{file:"picker.gif",width:25,height:24}},localization:{text:{title:"Drag Markers To Pick A Color",newColor:"new",currentColor:"current",ok:"OK",cancel:"Cancel"},tooltips:{colors:{newColor:"New Color - Press &ldquo;OK&rdquo; To Commit",currentColor:"Click To Revert To Original Color"},buttons:{ok:"Commit To This Color Selection",cancel:"Cancel And Revert To Original Color"},hue:{radio:"Set To &ldquo;Hue&rdquo; Color Mode",textbox:"Enter A &ldquo;Hue&rdquo; Value (0-360&deg;)"},saturation:{radio:"Set To &ldquo;Saturation&rdquo; Color Mode",textbox:"Enter A &ldquo;Saturation&rdquo; Value (0-100%)"},value:{radio:"Set To &ldquo;Value&rdquo; Color Mode",textbox:"Enter A &ldquo;Value&rdquo; Value (0-100%)"},red:{radio:"Set To &ldquo;Red&rdquo; Color Mode",textbox:"Enter A &ldquo;Red&rdquo; Value (0-255)"},green:{radio:"Set To &ldquo;Green&rdquo; Color Mode",textbox:"Enter A &ldquo;Green&rdquo; Value (0-255)"},blue:{radio:"Set To &ldquo;Blue&rdquo; Color Mode",textbox:"Enter A &ldquo;Blue&rdquo; Value (0-255)"},alpha:{radio:"Set To &ldquo;Alpha&rdquo; Color Mode",textbox:"Enter A &ldquo;Alpha&rdquo; Value (0-100)"},hex:{textbox:"Enter A &ldquo;Hex&rdquo; Color Value (#000000-#ffffff)",alpha:"Enter A &ldquo;Alpha&rdquo; Value (#00-#ff)"}}}}}(jQuery,"1.1.5");
+/*
+ * jPicker 1.1.6
+ *
+ * jQuery Plugin for Photoshop style color picker
+ *
+ * Copyright (c) 2010 Christopher T. Tillman
+ * Digital Magic Productions, Inc. (http://www.digitalmagicpro.com/)
+ * MIT style license, FREE to use, alter, copy, sell, and especially ENHANCE
+ *
+ * Painstakingly ported from John Dyers' excellent work on his own color picker based on the Prototype framework.
+ *
+ * John Dyers' website: (http://johndyer.name)
+ * Color Picker page:   (http://johndyer.name/post/2007/09/PhotoShop-like-JavaScript-Color-Picker.aspx)
+ *
+ */
+(function($, version)
+{
+  Math.precision = function(value, precision)
+    {
+      if (precision === undefined) precision = 0;
+      return Math.round(value * Math.pow(10, precision)) / Math.pow(10, precision);
+    };
+  var Slider = // encapsulate slider functionality for the ColorMap and ColorBar - could be useful to use a jQuery UI draggable for this with certain extensions
+      function(bar, options)
+      {
+        var $this = this, // private properties, methods, and events - keep these variables and classes invisible to outside code
+          arrow = bar.find('img:first'), // the arrow image to drag
+          minX = 0,
+          maxX = 100,
+          rangeX = 100,
+          minY = 0,
+          maxY = 100,
+          rangeY = 100,
+          x = 0,
+          y = 0,
+          offset,
+          timeout,
+          changeEvents = new Array(),
+          fireChangeEvents =
+            function(context)
+            {
+              for (var i = 0; i < changeEvents.length; i++) changeEvents[i].call($this, $this, context);
+            },
+          mouseDown = // bind the mousedown to the bar not the arrow for quick snapping to the clicked location
+            function(e)
+            {
+              var off = bar.offset();
+              offset = { l: off.left | 0, t: off.top | 0 };
+              clearTimeout(timeout);
+              timeout = setTimeout( // using setTimeout for visual updates - once the style is updated the browser will re-render internally allowing the next Javascript to run
+                function()
+                {
+                  setValuesFromMousePosition.call($this, e);
+                }, 0);
+              // Bind mousemove and mouseup event to the document so it responds when dragged of of the bar - we will unbind these when on mouseup to save processing
+              $(document).bind('mousemove', mouseMove).bind('mouseup', mouseUp);
+              e.preventDefault(); // don't try to select anything or drag the image to the desktop
+            },
+          mouseMove = // set the values as the mouse moves
+            function(e)
+            {
+              clearTimeout(timeout);
+              timeout = setTimeout(
+                function()
+                {
+                  setValuesFromMousePosition.call($this, e);
+                }, 0);
+              e.stopPropagation();
+              e.preventDefault();
+              return false;
+            },
+          mouseUp = // unbind the document events - they aren't needed when not dragging
+            function(e)
+            {
+              $(document).unbind('mouseup', mouseUp).unbind('mousemove', mouseMove);
+              e.stopPropagation();
+              e.preventDefault();
+              return false;
+            },
+          setValuesFromMousePosition = // calculate mouse position and set value within the current range
+            function(e)
+            {
+              var locX = e.pageX - offset.l,
+                  locY = e.pageY - offset.t,
+                  barW = bar.w, // local copies for YUI compressor
+                  barH = bar.h;
+              // keep the arrow within the bounds of the bar
+              if (locX < 0) locX = 0;
+              else if (locX > barW) locX = barW;
+              if (locY < 0) locY = 0;
+              else if (locY > barH) locY = barH;
+              val.call($this, 'xy', { x: ((locX / barW) * rangeX) + minX, y: ((locY / barH) * rangeY) + minY });
+            },
+          draw =
+            function()
+            {
+              var arrowOffsetX = 0,
+                arrowOffsetY = 0,
+                barW = bar.w,
+                barH = bar.h,
+                arrowW = arrow.w,
+                arrowH = arrow.h;
+              setTimeout(
+                function()
+                {
+                  if (rangeX > 0) // range is greater than zero
+                  {
+                    // constrain to bounds
+                    if (x == maxX) arrowOffsetX = barW;
+                    else arrowOffsetX = ((x / rangeX) * barW) | 0;
+                  }
+                  if (rangeY > 0) // range is greater than zero
+                  {
+                    // constrain to bounds
+                    if (y == maxY) arrowOffsetY = barH;
+                    else arrowOffsetY = ((y / rangeY) * barH) | 0;
+                  }
+                  // if arrow width is greater than bar width, center arrow and prevent horizontal dragging
+                  if (arrowW >= barW) arrowOffsetX = (barW >> 1) - (arrowW >> 1); // number >> 1 - superfast bitwise divide by two and truncate (move bits over one bit discarding lowest)
+                  else arrowOffsetX -= arrowW >> 1;
+                  // if arrow height is greater than bar height, center arrow and prevent vertical dragging
+                  if (arrowH >= barH) arrowOffsetY = (barH >> 1) - (arrowH >> 1);
+                  else arrowOffsetY -= arrowH >> 1;
+                  // set the arrow position based on these offsets
+                  arrow.css({ left: arrowOffsetX + 'px', top: arrowOffsetY + 'px' });
+                }, 0);
+            },
+          val =
+            function(name, value, context)
+            {
+              var set = value !== undefined;
+              if (!set)
+              {
+                if (name === undefined || name == null) name = 'xy';
+                switch (name.toLowerCase())
+                {
+                  case 'x': return x;
+                  case 'y': return y;
+                  case 'xy':
+                  default: return { x: x, y: y };
+                }
+              }
+              if (context != null && context == $this) return;
+              var changed = false,
+                  newX,
+                  newY;
+              if (name == null) name = 'xy';
+              switch (name.toLowerCase())
+              {
+                case 'x':
+                  newX = value && (value.x && value.x | 0 || value | 0) || 0;
+                  break;
+                case 'y':
+                  newY = value && (value.y && value.y | 0 || value | 0) || 0;
+                  break;
+                case 'xy':
+                default:
+                  newX = value && value.x && value.x | 0 || 0;
+                  newY = value && value.y && value.y | 0 || 0;
+                  break;
+              }
+              if (newX != null)
+              {
+                if (newX < minX) newX = minX;
+                else if (newX > maxX) newX = maxX;
+                if (x != newX)
+                {
+                  x = newX;
+                  changed = true;
+                }
+              }
+              if (newY != null)
+              {
+                if (newY < minY) newY = minY;
+                else if (newY > maxY) newY = maxY;
+                if (y != newY)
+                {
+                  y = newY;
+                  changed = true;
+                }
+              }
+              changed && fireChangeEvents.call($this, context || $this);
+            },
+          range =
+            function (name, value)
+            {
+              var set = value !== undefined;
+              if (!set)
+              {
+                if (name === undefined || name == null) name = 'all';
+                switch (name.toLowerCase())
+                {
+                  case 'minx': return minX;
+                  case 'maxx': return maxX;
+                  case 'rangex': return { minX: minX, maxX: maxX, rangeX: rangeX };
+                  case 'miny': return minY;
+                  case 'maxy': return maxY;
+                  case 'rangey': return { minY: minY, maxY: maxY, rangeY: rangeY };
+                  case 'all':
+                  default: return { minX: minX, maxX: maxX, rangeX: rangeX, minY: minY, maxY: maxY, rangeY: rangeY };
+                }
+              }
+              var changed = false,
+                  newMinX,
+                  newMaxX,
+                  newMinY,
+                  newMaxY;
+              if (name == null) name = 'all';
+              switch (name.toLowerCase())
+              {
+                case 'minx':
+                  newMinX = value && (value.minX && value.minX | 0 || value | 0) || 0;
+                  break;
+                case 'maxx':
+                  newMaxX = value && (value.maxX && value.maxX | 0 || value | 0) || 0;
+                  break;
+                case 'rangex':
+                  newMinX = value && value.minX && value.minX | 0 || 0;
+                  newMaxX = value && value.maxX && value.maxX | 0 || 0;
+                  break;
+                case 'miny':
+                  newMinY = value && (value.minY && value.minY | 0 || value | 0) || 0;
+                  break;
+                case 'maxy':
+                  newMaxY = value && (value.maxY && value.maxY | 0 || value | 0) || 0;
+                  break;
+                case 'rangey':
+                  newMinY = value && value.minY && value.minY | 0 || 0;
+                  newMaxY = value && value.maxY && value.maxY | 0 || 0;
+                  break;
+                case 'all':
+                default:
+                  newMinX = value && value.minX && value.minX | 0 || 0;
+                  newMaxX = value && value.maxX && value.maxX | 0 || 0;
+                  newMinY = value && value.minY && value.minY | 0 || 0;
+                  newMaxY = value && value.maxY && value.maxY | 0 || 0;
+                  break;
+              }
+              if (newMinX != null && minX != newMinX)
+              {
+                minX = newMinX;
+                rangeX = maxX - minX;
+              }
+              if (newMaxX != null && maxX != newMaxX)
+              {
+                maxX = newMaxX;
+                rangeX = maxX - minX;
+              }
+              if (newMinY != null && minY != newMinY)
+              {
+                minY = newMinY;
+                rangeY = maxY - minY;
+              }
+              if (newMaxY != null && maxY != newMaxY)
+              {
+                maxY = newMaxY;
+                rangeY = maxY - minY;
+              }
+            },
+          bind =
+            function (callback)
+            {
+              if ($.isFunction(callback)) changeEvents.push(callback);
+            },
+          unbind =
+            function (callback)
+            {
+              if (!$.isFunction(callback)) return;
+              var i;
+              while ((i = $.inArray(callback, changeEvents)) != -1) changeEvents.splice(i, 1);
+            },
+          destroy =
+            function()
+            {
+              // unbind all possible events and null objects
+              $(document).unbind('mouseup', mouseUp).unbind('mousemove', mouseMove);
+              bar.unbind('mousedown', mouseDown);
+              bar = null;
+              arrow = null;
+              changeEvents = null;
+            };
+        $.extend(true, $this, // public properties, methods, and event bindings - these we need to access from other controls
+          {
+            val: val,
+            range: range,
+            bind: bind,
+            unbind: unbind,
+            destroy: destroy
+          });
+        // initialize this control
+        arrow.src = options.arrow && options.arrow.image;
+        arrow.w = options.arrow && options.arrow.width || arrow.width();
+        arrow.h = options.arrow && options.arrow.height || arrow.height();
+        bar.w = options.map && options.map.width || bar.width();
+        bar.h = options.map && options.map.height || bar.height();
+        // bind mousedown event
+        bar.bind('mousedown', mouseDown);
+        bind.call($this, draw);
+      },
+    ColorValuePicker = // controls for all the input elements for the typing in color values
+      function(picker, color, bindedHex, alphaPrecision)
+      {
+        var $this = this, // private properties and methods
+          inputs = picker.find('td.Text input'),
+          red = inputs.eq(3),
+          green = inputs.eq(4),
+          blue = inputs.eq(5),
+          alpha = inputs.length > 7 ? inputs.eq(6) : null,
+          hue = inputs.eq(0),
+          saturation = inputs.eq(1),
+          value = inputs.eq(2),
+          hex = inputs.eq(inputs.length > 7 ? 7 : 6),
+          ahex = inputs.length > 7 ? inputs.eq(8) : null,
+          keyDown = // input box key down - use arrows to alter color
+            function(e)
+            {
+              if (e.target.value == '' && e.target != hex.get(0) && (bindedHex != null && e.target != bindedHex.get(0) || bindedHex == null)) return;
+              if (!validateKey(e)) return e;
+              switch (e.target)
+              {
+                case red.get(0):
+                  switch (e.keyCode)
+                  {
+                    case 38:
+                      red.val(setValueInRange.call($this, (red.val() << 0) + 1, 0, 255));
+                      color.val('r', red.val(), e.target);
+                      return false;
+                    case 40:
+                      red.val(setValueInRange.call($this, (red.val() << 0) - 1, 0, 255));
+                      color.val('r', red.val(), e.target);
+                      return false;
+                  }
+                  break;
+                case green.get(0):
+                  switch (e.keyCode)
+                  {
+                    case 38:
+                      green.val(setValueInRange.call($this, (green.val() << 0) + 1, 0, 255));
+                      color.val('g', green.val(), e.target);
+                      return false;
+                    case 40:
+                      green.val(setValueInRange.call($this, (green.val() << 0) - 1, 0, 255));
+                      color.val('g', green.val(), e.target);
+                      return false;
+                  }
+                  break;
+                case blue.get(0):
+                  switch (e.keyCode)
+                  {
+                    case 38:
+                      blue.val(setValueInRange.call($this, (blue.val() << 0) + 1, 0, 255));
+                      color.val('b', blue.val(), e.target);
+                      return false;
+                    case 40:
+                      blue.val(setValueInRange.call($this, (blue.val() << 0) - 1, 0, 255));
+                      color.val('b', blue.val(), e.target);
+                      return false;
+                  }
+                  break;
+                case alpha && alpha.get(0):
+                  switch (e.keyCode)
+                  {
+                    case 38:
+                      alpha.val(setValueInRange.call($this, parseFloat(alpha.val()) + 1, 0, 100));
+                      color.val('a', Math.precision((alpha.val() * 255) / 100, alphaPrecision), e.target);
+                      return false;
+                    case 40:
+                      alpha.val(setValueInRange.call($this, parseFloat(alpha.val()) - 1, 0, 100));
+                      color.val('a', Math.precision((alpha.val() * 255) / 100, alphaPrecision), e.target);
+                      return false;
+                  }
+                  break;
+                case hue.get(0):
+                  switch (e.keyCode)
+                  {
+                    case 38:
+                      hue.val(setValueInRange.call($this, (hue.val() << 0) + 1, 0, 360));
+                      color.val('h', hue.val(), e.target);
+                      return false;
+                    case 40:
+                      hue.val(setValueInRange.call($this, (hue.val() << 0) - 1, 0, 360));
+                      color.val('h', hue.val(), e.target);
+                      return false;
+                  }
+                  break;
+                case saturation.get(0):
+                  switch (e.keyCode)
+                  {
+                    case 38:
+                      saturation.val(setValueInRange.call($this, (saturation.val() << 0) + 1, 0, 100));
+                      color.val('s', saturation.val(), e.target);
+                      return false;
+                    case 40:
+                      saturation.val(setValueInRange.call($this, (saturation.val() << 0) - 1, 0, 100));
+                      color.val('s', saturation.val(), e.target);
+                      return false;
+                  }
+                  break;
+                case value.get(0):
+                  switch (e.keyCode)
+                  {
+                    case 38:
+                      value.val(setValueInRange.call($this, (value.val() << 0) + 1, 0, 100));
+                      color.val('v', value.val(), e.target);
+                      return false;
+                    case 40:
+                      value.val(setValueInRange.call($this, (value.val() << 0) - 1, 0, 100));
+                      color.val('v', value.val(), e.target);
+                      return false;
+                  }
+                  break;
+              }
+            },
+          keyUp = // input box key up - validate value and set color
+            function(e)
+            {
+              if (e.target.value == '' && e.target != hex.get(0) && (bindedHex != null && e.target != bindedHex.get(0) || bindedHex == null)) return;
+              if (!validateKey(e)) return e;
+              switch (e.target)
+              {
+                case red.get(0):
+                  red.val(setValueInRange.call($this, red.val(), 0, 255));
+                  color.val('r', red.val(), e.target);
+                  break;
+                case green.get(0):
+                  green.val(setValueInRange.call($this, green.val(), 0, 255));
+                  color.val('g', green.val(), e.target);
+                  break;
+                case blue.get(0):
+                  blue.val(setValueInRange.call($this, blue.val(), 0, 255));
+                  color.val('b', blue.val(), e.target);
+                  break;
+                case alpha && alpha.get(0):
+                  alpha.val(setValueInRange.call($this, alpha.val(), 0, 100));
+                  color.val('a', Math.precision((alpha.val() * 255) / 100, alphaPrecision), e.target);
+                  break;
+                case hue.get(0):
+                  hue.val(setValueInRange.call($this, hue.val(), 0, 360));
+                  color.val('h', hue.val(), e.target);
+                  break;
+                case saturation.get(0):
+                  saturation.val(setValueInRange.call($this, saturation.val(), 0, 100));
+                  color.val('s', saturation.val(), e.target);
+                  break;
+                case value.get(0):
+                  value.val(setValueInRange.call($this, value.val(), 0, 100));
+                  color.val('v', value.val(), e.target);
+                  break;
+                case hex.get(0):
+                  hex.val(hex.val().replace(/[^a-fA-F0-9]/g, '').toLowerCase().substring(0, 6));
+                  bindedHex && bindedHex.val(hex.val());
+                  color.val('hex', hex.val() != '' ? hex.val() : null, e.target);
+                  break;
+                case bindedHex && bindedHex.get(0):
+                  bindedHex.val(bindedHex.val().replace(/[^a-fA-F0-9]/g, '').toLowerCase().substring(0, 6));
+                  hex.val(bindedHex.val());
+                  color.val('hex', bindedHex.val() != '' ? bindedHex.val() : null, e.target);
+                  break;
+                case ahex && ahex.get(0):
+                  ahex.val(ahex.val().replace(/[^a-fA-F0-9]/g, '').toLowerCase().substring(0, 2));
+                  color.val('a', ahex.val() != null ? parseInt(ahex.val(), 16) : null, e.target);
+                  break;
+              }
+            },
+          blur = // input box blur - reset to original if value empty
+            function(e)
+            {
+              if (color.val() != null)
+              {
+                switch (e.target)
+                {
+                  case red.get(0): red.val(color.val('r')); break;
+                  case green.get(0): green.val(color.val('g')); break;
+                  case blue.get(0): blue.val(color.val('b')); break;
+                  case alpha && alpha.get(0): alpha.val(Math.precision((color.val('a') * 100) / 255, alphaPrecision)); break;
+                  case hue.get(0): hue.val(color.val('h')); break;
+                  case saturation.get(0): saturation.val(color.val('s')); break;
+                  case value.get(0): value.val(color.val('v')); break;
+                  case hex.get(0):
+                  case bindedHex && bindedHex.get(0):
+                    hex.val(color.val('hex'));
+                    bindedHex && bindedHex.val(color.val('hex'));
+                    break;
+                  case ahex && ahex.get(0): ahex.val(color.val('ahex').substring(6)); break;
+                }
+              }
+            },
+          validateKey = // validate key
+            function(e)
+            {
+              switch(e.keyCode)
+              {
+                case 9:
+                case 16:
+                case 29:
+                case 37:
+                case 39:
+                  return false;
+                case 'c'.charCodeAt():
+                case 'v'.charCodeAt():
+                  if (e.ctrlKey) return false;
+              }
+              return true;
+            },
+          setValueInRange = // constrain value within range
+            function(value, min, max)
+            {
+              if (value == '' || isNaN(value)) return min;
+              if (value > max) return max;
+              if (value < min) return min;
+              return value;
+            },
+          colorChanged =
+            function(ui, context)
+            {
+              var all = ui.val('all');
+              if (context != red.get(0)) red.val(all != null ? all.r : '');
+              if (context != green.get(0)) green.val(all != null ? all.g : '');
+              if (context != blue.get(0)) blue.val(all != null ? all.b : '');
+              if (alpha && context != alpha.get(0)) alpha.val(all != null ? Math.precision((all.a * 100) / 255, alphaPrecision) : '');
+              if (context != hue.get(0)) hue.val(all != null ? all.h : '');
+              if (context != saturation.get(0)) saturation.val(all != null ? all.s : '');
+              if (context != value.get(0)) value.val(all != null ? all.v : '');
+              if (context != hex.get(0) && (bindedHex && context != bindedHex.get(0) || !bindedHex)) hex.val(all != null ? all.hex : '');
+              if (bindedHex && context != bindedHex.get(0) && context != hex.get(0)) bindedHex.val(all != null ? all.hex : '');
+              if (ahex && context != ahex.get(0)) ahex.val(all != null ? all.ahex.substring(6) : '');
+            },
+          destroy =
+            function()
+            {
+              // unbind all events and null objects
+              red.add(green).add(blue).add(alpha).add(hue).add(saturation).add(value).add(hex).add(bindedHex).add(ahex).unbind('keyup', keyUp).unbind('blur', blur);
+              red.add(green).add(blue).add(alpha).add(hue).add(saturation).add(value).unbind('keydown', keyDown);
+              color.unbind(colorChanged);
+              red = null;
+              green = null;
+              blue = null;
+              alpha = null;
+              hue = null;
+              saturation = null;
+              value = null;
+              hex = null;
+              ahex = null;
+            };
+        $.extend(true, $this, // public properties and methods
+          {
+            destroy: destroy
+          });
+        red.add(green).add(blue).add(alpha).add(hue).add(saturation).add(value).add(hex).add(bindedHex).add(ahex).bind('keyup', keyUp).bind('blur', blur);
+        red.add(green).add(blue).add(alpha).add(hue).add(saturation).add(value).bind('keydown', keyDown);
+        color.bind(colorChanged);
+      };
+  $.jPicker =
+    {
+      List: [], // array holding references to each active instance of the control
+      Color: // color object - we will be able to assign by any color space type or retrieve any color space info
+             // we want this public so we can optionally assign new color objects to initial values using inputs other than a string hex value (also supported)
+        function(init)
+        {
+          var $this = this,
+            r,
+            g,
+            b,
+            a,
+            h,
+            s,
+            v,
+            changeEvents = new Array(),
+            fireChangeEvents = 
+              function(context)
+              {
+                for (var i = 0; i < changeEvents.length; i++) changeEvents[i].call($this, $this, context);
+              },
+            val =
+              function(name, value, context)
+              {
+                // Kind of ugly
+                var set = Boolean(value);
+                if (set && value.ahex === "") value.ahex = "00000000";
+                if (!set)
+                {
+                  if (name === undefined || name == null || name == '') name = 'all';
+                  if (r == null) return null;
+                  switch (name.toLowerCase())
+                  {
+                    case 'ahex': return ColorMethods.rgbaToHex({ r: r, g: g, b: b, a: a });
+                    case 'hex': return val('ahex').substring(0, 6);
+                    case 'all': return { r: r, g: g, b: b, a: a, h: h, s: s, v: v, hex: val.call($this, 'hex'), ahex: val.call($this, 'ahex') };
+                    default:
+                      var ret={};
+                      for (var i = 0; i < name.length; i++)
+                      {
+                        switch (name.charAt(i))
+                        {
+                          case 'r':
+                            if (name.length == 1) ret = r;
+                            else ret.r = r;
+                            break;
+                          case 'g':
+                            if (name.length == 1) ret = g;
+                            else ret.g = g;
+                            break;
+                          case 'b':
+                            if (name.length == 1) ret = b;
+                            else ret.b = b;
+                            break;
+                          case 'a':
+                            if (name.length == 1) ret = a;
+                            else ret.a = a;
+                            break;
+                          case 'h':
+                            if (name.length == 1) ret = h;
+                            else ret.h = h;
+                            break;
+                          case 's':
+                            if (name.length == 1) ret = s;
+                            else ret.s = s;
+                            break;
+                          case 'v':
+                            if (name.length == 1) ret = v;
+                            else ret.v = v;
+                            break;
+                        }
+                      }
+                      return ret == {} ? val.call($this, 'all') : ret;
+                      break;
+                  }
+                }
+                if (context != null && context == $this) return;
+                var changed = false;
+                if (name == null) name = '';
+                if (value == null)
+                {
+                  if (r != null)
+                  {
+                    r = null;
+                    changed = true;
+                  }
+                  if (g != null)
+                  {
+                    g = null;
+                    changed = true;
+                  }
+                  if (b != null)
+                  {
+                    b = null;
+                    changed = true;
+                  }
+                  if (a != null)
+                  {
+                    a = null;
+                    changed = true;
+                  }
+                  if (h != null)
+                  {
+                    h = null;
+                    changed = true;
+                  }
+                  if (s != null)
+                  {
+                    s = null;
+                    changed = true;
+                  }
+                  if (v != null)
+                  {
+                    v = null;
+                    changed = true;
+                  }
+                  changed && fireChangeEvents.call($this, context || $this);
+                  return;
+                }
+                switch (name.toLowerCase())
+                {
+                  case 'ahex':
+                  case 'hex':
+                    var ret = ColorMethods.hexToRgba(value && (value.ahex || value.hex) || value || 'none');
+
+                    val.call($this, 'rgba', { r: ret.r, g: ret.g, b: ret.b, a: name == 'ahex' ? ret.a : a != null ? a : 255 }, context);
+                    break;
+                  default:
+                    if (value && (value.ahex != null || value.hex != null))
+                    {
+                      val.call($this, 'ahex', value.ahex || value.hex || '00000000', context);
+                      return;
+                    }
+                    var newV = {}, rgb = false, hsv = false;
+                    if (value.r !== undefined && !name.indexOf('r') == -1) name += 'r';
+                    if (value.g !== undefined && !name.indexOf('g') == -1) name += 'g';
+                    if (value.b !== undefined && !name.indexOf('b') == -1) name += 'b';
+                    if (value.a !== undefined && !name.indexOf('a') == -1) name += 'a';
+                    if (value.h !== undefined && !name.indexOf('h') == -1) name += 'h';
+                    if (value.s !== undefined && !name.indexOf('s') == -1) name += 's';
+                    if (value.v !== undefined && !name.indexOf('v') == -1) name += 'v';
+                    for (var i = 0; i < name.length; i++)
+                    {
+                      switch (name.charAt(i))
+                      {
+                        case 'r':
+                          if (hsv) continue;
+                          rgb = true;
+                          newV.r = value && value.r && value.r | 0 || value && value | 0 || 0;
+                          if (newV.r < 0) newV.r = 0;
+                          else if (newV.r > 255) newV.r = 255;
+                          if (r != newV.r)
+                          {
+                            r = newV.r;
+                            changed = true;
+                          }
+                          break;
+                        case 'g':
+                          if (hsv) continue;
+                          rgb = true;
+                          newV.g = value && value.g && value.g | 0 || value && value | 0 || 0;
+                          if (newV.g < 0) newV.g = 0;
+                          else if (newV.g > 255) newV.g = 255;
+                          if (g != newV.g)
+                          {
+                            g = newV.g;
+                            changed = true;
+                          }
+                          break;
+                        case 'b':
+                          if (hsv) continue;
+                          rgb = true;
+                          newV.b = value && value.b && value.b | 0 || value && value | 0 || 0;
+                          if (newV.b < 0) newV.b = 0;
+                          else if (newV.b > 255) newV.b = 255;
+                          if (b != newV.b)
+                          {
+                            b = newV.b;
+                            changed = true;
+                          }
+                          break;
+                        case 'a':
+                          newV.a = value && value.a != null ? value.a | 0 : value != null ? value | 0 : 255;
+                          if (newV.a < 0) newV.a = 0;
+                          else if (newV.a > 255) newV.a = 255;
+                          if (a != newV.a)
+                          {
+                            a = newV.a;
+                            changed = true;
+                          }
+                          break;
+                        case 'h':
+                          if (rgb) continue;
+                          hsv = true;
+                          newV.h = value && value.h && value.h | 0 || value && value | 0 || 0;
+                          if (newV.h < 0) newV.h = 0;
+                          else if (newV.h > 360) newV.h = 360;
+                          if (h != newV.h)
+                          {
+                            h = newV.h;
+                            changed = true;
+                          }
+                          break;
+                        case 's':
+                          if (rgb) continue;
+                          hsv = true;
+                          newV.s = value && value.s != null ? value.s | 0 : value != null ? value | 0 : 100;
+                          if (newV.s < 0) newV.s = 0;
+                          else if (newV.s > 100) newV.s = 100;
+                          if (s != newV.s)
+                          {
+                            s = newV.s;
+                            changed = true;
+                          }
+                          break;
+                        case 'v':
+                          if (rgb) continue;
+                          hsv = true;
+                          newV.v = value && value.v != null ? value.v | 0 : value != null ? value | 0 : 100;
+                          if (newV.v < 0) newV.v = 0;
+                          else if (newV.v > 100) newV.v = 100;
+                          if (v != newV.v)
+                          {
+                            v = newV.v;
+                            changed = true;
+                          }
+                          break;
+                      }
+                    }
+                    if (changed)
+                    {
+                      if (rgb)
+                      {
+                        r = r || 0;
+                        g = g || 0;
+                        b = b || 0;
+                        var ret = ColorMethods.rgbToHsv({ r: r, g: g, b: b });
+                        h = ret.h;
+                        s = ret.s;
+                        v = ret.v;
+                      }
+                      else if (hsv)
+                      {
+                        h = h || 0;
+                        s = s != null ? s : 100;
+                        v = v != null ? v : 100;
+                        var ret = ColorMethods.hsvToRgb({ h: h, s: s, v: v });
+                        r = ret.r;
+                        g = ret.g;
+                        b = ret.b;
+                      }
+                      a = a != null ? a : 255;
+                      fireChangeEvents.call($this, context || $this);
+                    }
+                    break;
+                }
+              },
+            bind =
+              function(callback)
+              {
+                if ($.isFunction(callback)) changeEvents.push(callback);
+              },
+            unbind =
+              function(callback)
+              {
+                if (!$.isFunction(callback)) return;
+                var i;
+                while ((i = $.inArray(callback, changeEvents)) != -1) changeEvents.splice(i, 1);
+              },
+            destroy =
+              function()
+              {
+                changeEvents = null;
+              }
+          $.extend(true, $this, // public properties and methods
+            {
+              val: val,
+              bind: bind,
+              unbind: unbind,
+              destroy: destroy
+            });
+          if (init)
+          {
+            if (init.ahex != null) val('ahex', init);
+            else if (init.hex != null) val((init.a != null ? 'a' : '') + 'hex', init.a != null ? { ahex: init.hex + ColorMethods.intToHex(init.a) } : init);
+            else if (init.r != null && init.g != null && init.b != null) val('rgb' + (init.a != null ? 'a' : ''), init);
+            else if (init.h != null && init.s != null && init.v != null) val('hsv' + (init.a != null ? 'a' : ''), init);
+          }
+        },
+      ColorMethods: // color conversion methods  - make public to give use to external scripts
+        {
+          hexToRgba:
+            function(hex)
+            {
+              if (hex === '' || hex === 'none') return { r: null, g: null, b: null, a: null };
+              hex = this.validateHex(hex);
+              var r = '00', g = '00', b = '00', a = '255';
+              if (hex.length == 6) hex += 'ff';
+              if (hex.length > 6)
+              {
+                r = hex.substring(0, 2);
+                g = hex.substring(2, 4);
+                b = hex.substring(4, 6);
+                a = hex.substring(6, hex.length);
+              }
+              else
+              {
+                if (hex.length > 4)
+                {
+                  r = hex.substring(4, hex.length);
+                  hex = hex.substring(0, 4);
+                }
+                if (hex.length > 2)
+                {
+                  g = hex.substring(2, hex.length);
+                  hex = hex.substring(0, 2);
+                }
+                if (hex.length > 0) b = hex.substring(0, hex.length);
+              }
+              return { r: this.hexToInt(r), g: this.hexToInt(g), b: this.hexToInt(b), a: this.hexToInt(a) };
+            },
+          validateHex:
+            function(hex)
+            {
+              //if (typeof hex === "object") return "";
+              hex = hex.toLowerCase().replace(/[^a-f0-9]/g, '');
+              if (hex.length > 8) hex = hex.substring(0, 8);
+              return hex;
+            },
+          rgbaToHex:
+            function(rgba)
+            {
+              return this.intToHex(rgba.r) + this.intToHex(rgba.g) + this.intToHex(rgba.b) + this.intToHex(rgba.a);
+            },
+          intToHex:
+            function(dec)
+            {
+              var result = (dec | 0).toString(16);
+              if (result.length == 1) result = ('0' + result);
+              return result.toLowerCase();
+            },
+          hexToInt:
+            function(hex)
+            {
+              return parseInt(hex, 16);
+            },
+          rgbToHsv:
+            function(rgb)
+            {
+              var r = rgb.r / 255, g = rgb.g / 255, b = rgb.b / 255, hsv = { h: 0, s: 0, v: 0 }, min = 0, max = 0, delta;
+              if (r >= g && r >= b)
+              {
+                max = r;
+                min = g > b ? b : g;
+              }
+              else if (g >= b && g >= r)
+              {
+                max = g;
+                min = r > b ? b : r;
+              }
+              else
+              {
+                max = b;
+                min = g > r ? r : g;
+              }
+              hsv.v = max;
+              hsv.s = max ? (max - min) / max : 0;
+              if (!hsv.s) hsv.h = 0;
+              else
+              {
+                delta = max - min;
+                if (r == max) hsv.h = (g - b) / delta;
+                else if (g == max) hsv.h = 2 + (b - r) / delta;
+                else hsv.h = 4 + (r - g) / delta;
+                hsv.h = parseInt(hsv.h * 60);
+                if (hsv.h < 0) hsv.h += 360;
+              }
+              hsv.s = (hsv.s * 100) | 0;
+              hsv.v = (hsv.v * 100) | 0;
+              return hsv;
+            },
+          hsvToRgb:
+            function(hsv)
+            {
+              var rgb = { r: 0, g: 0, b: 0, a: 100 }, h = hsv.h, s = hsv.s, v = hsv.v;
+              if (s == 0)
+              {
+                if (v == 0) rgb.r = rgb.g = rgb.b = 0;
+                else rgb.r = rgb.g = rgb.b = (v * 255 / 100) | 0;
+              }
+              else
+              {
+                if (h == 360) h = 0;
+                h /= 60;
+                s = s / 100;
+                v = v / 100;
+                var i = h | 0,
+                    f = h - i,
+                    p = v * (1 - s),
+                    q = v * (1 - (s * f)),
+                    t = v * (1 - (s * (1 - f)));
+                switch (i)
+                {
+                  case 0:
+                    rgb.r = v;
+                    rgb.g = t;
+                    rgb.b = p;
+                    break;
+                  case 1:
+                    rgb.r = q;
+                    rgb.g = v;
+                    rgb.b = p;
+                    break;
+                  case 2:
+                    rgb.r = p;
+                    rgb.g = v;
+                    rgb.b = t;
+                    break;
+                  case 3:
+                    rgb.r = p;
+                    rgb.g = q;
+                    rgb.b = v;
+                    break;
+                  case 4:
+                    rgb.r = t;
+                    rgb.g = p;
+                    rgb.b = v;
+                    break;
+                  case 5:
+                    rgb.r = v;
+                    rgb.g = p;
+                    rgb.b = q;
+                    break;
+                }
+                rgb.r = (rgb.r * 255) | 0;
+                rgb.g = (rgb.g * 255) | 0;
+                rgb.b = (rgb.b * 255) | 0;
+              }
+              return rgb;
+            }
+        }
+    };
+  var Color = $.jPicker.Color, List = $.jPicker.List, ColorMethods = $.jPicker.ColorMethods; // local copies for YUI compressor
+  $.fn.jPicker =
+    function(options)
+    {
+      var $arguments = arguments;
+      return this.each(
+        function()
+        {
+          var $this = this, settings = $.extend(true, {}, $.fn.jPicker.defaults, options); // local copies for YUI compressor
+          if ($($this).get(0).nodeName.toLowerCase() == 'input') // Add color picker icon if binding to an input element and bind the events to the input
+          {
+            $.extend(true, settings,
+              {
+                window:
+                {
+                  bindToInput: true,
+                  expandable: true,
+                  input: $($this)
+                }
+              });
+            if($($this).val()=='')
+            {
+              settings.color.active = new Color({ hex: null });
+              settings.color.current = new Color({ hex: null });
+            }
+            else if (ColorMethods.validateHex($($this).val()))
+            {
+              settings.color.active = new Color({ hex: $($this).val(), a: settings.color.active.val('a') });
+              settings.color.current = new Color({ hex: $($this).val(), a: settings.color.active.val('a') });
+            }
+          }
+          if (settings.window.expandable)
+            $($this).after('<span class="jPicker"><span class="Icon"><span class="Color">&nbsp;</span><span class="Alpha">&nbsp;</span><span class="Image" title="Click To Open Color Picker">&nbsp;</span><span class="Container">&nbsp;</span></span></span>');
+          else settings.window.liveUpdate = false; // Basic control binding for inline use - You will need to override the liveCallback or commitCallback function to retrieve results
+          var isLessThanIE7 = parseFloat(navigator.appVersion.split('MSIE')[1]) < 7 && document.body.filters, // needed to run the AlphaImageLoader function for IE6
+            container = null,
+            colorMapDiv = null,
+            colorBarDiv = null,
+            colorMapL1 = null, // different layers of colorMap and colorBar
+            colorMapL2 = null,
+            colorMapL3 = null,
+            colorBarL1 = null,
+            colorBarL2 = null,
+            colorBarL3 = null,
+            colorBarL4 = null,
+            colorBarL5 = null,
+            colorBarL6 = null,
+            colorMap = null, // color maps
+            colorBar = null,
+            colorPicker = null,
+            elementStartX = null, // Used to record the starting css positions for dragging the control
+            elementStartY = null,
+            pageStartX = null, // Used to record the mousedown coordinates for dragging the control
+            pageStartY = null,
+            activePreview = null, // color boxes above the radio buttons
+            currentPreview = null,
+            okButton = null,
+            cancelButton = null,
+            grid = null, // preset colors grid
+            iconColor = null, // iconColor for popup icon
+            iconAlpha = null, // iconAlpha for popup icon
+            iconImage = null, // iconImage popup icon
+            moveBar = null, // drag bar
+            setColorMode = // set color mode and update visuals for the new color mode
+              function(colorMode)
+              {
+                var active = color.active, // local copies for YUI compressor
+                  clientPath = images.clientPath,
+                  hex = active.val('hex'),
+                  rgbMap,
+                  rgbBar;
+                settings.color.mode = colorMode;
+                switch (colorMode)
+                {
+                  case 'h':
+                    setTimeout(
+                      function()
+                      {
+                        setBG.call($this, colorMapDiv, 'transparent');
+                        setImgLoc.call($this, colorMapL1, 0);
+                        setAlpha.call($this, colorMapL1, 100);
+                        setImgLoc.call($this, colorMapL2, 260);
+                        setAlpha.call($this, colorMapL2, 100);
+                        setBG.call($this, colorBarDiv, 'transparent');
+                        setImgLoc.call($this, colorBarL1, 0);
+                        setAlpha.call($this, colorBarL1, 100);
+                        setImgLoc.call($this, colorBarL2, 260);
+                        setAlpha.call($this, colorBarL2, 100);
+                        setImgLoc.call($this, colorBarL3, 260);
+                        setAlpha.call($this, colorBarL3, 100);
+                        setImgLoc.call($this, colorBarL4, 260);
+                        setAlpha.call($this, colorBarL4, 100);
+                        setImgLoc.call($this, colorBarL6, 260);
+                        setAlpha.call($this, colorBarL6, 100);
+                      }, 0);
+                    colorMap.range('all', { minX: 0, maxX: 100, minY: 0, maxY: 100 });
+                    colorBar.range('rangeY', { minY: 0, maxY: 360 });
+                    if (active.val('ahex') == null) break;
+                    colorMap.val('xy', { x: active.val('s'), y: 100 - active.val('v') }, colorMap);
+                    colorBar.val('y', 360 - active.val('h'), colorBar);
+                    break;
+                  case 's':
+                    setTimeout(
+                      function()
+                      {
+                        setBG.call($this, colorMapDiv, 'transparent');
+                        setImgLoc.call($this, colorMapL1, -260);
+                        setImgLoc.call($this, colorMapL2, -520);
+                        setImgLoc.call($this, colorBarL1, -260);
+                        setImgLoc.call($this, colorBarL2, -520);
+                        setImgLoc.call($this, colorBarL6, 260);
+                        setAlpha.call($this, colorBarL6, 100);
+                      }, 0);
+                    colorMap.range('all', { minX: 0, maxX: 360, minY: 0, maxY: 100 });
+                    colorBar.range('rangeY', { minY: 0, maxY: 100 });
+                    if (active.val('ahex') == null) break;
+                    colorMap.val('xy', { x: active.val('h'), y: 100 - active.val('v') }, colorMap);
+                    colorBar.val('y', 100 - active.val('s'), colorBar);
+                    break;
+                  case 'v':
+                    setTimeout(
+                      function()
+                      {
+                        setBG.call($this, colorMapDiv, '000000');
+                        setImgLoc.call($this, colorMapL1, -780);
+                        setImgLoc.call($this, colorMapL2, 260);
+                        setBG.call($this, colorBarDiv, hex);
+                        setImgLoc.call($this, colorBarL1, -520);
+                        setImgLoc.call($this, colorBarL2, 260);
+                        setAlpha.call($this, colorBarL2, 100);
+                        setImgLoc.call($this, colorBarL6, 260);
+                        setAlpha.call($this, colorBarL6, 100);
+                      }, 0);
+                    colorMap.range('all', { minX: 0, maxX: 360, minY: 0, maxY: 100 });
+                    colorBar.range('rangeY', { minY: 0, maxY: 100 });
+                    if (active.val('ahex') == null) break;
+                    colorMap.val('xy', { x: active.val('h'), y: 100 - active.val('s') }, colorMap);
+                    colorBar.val('y', 100 - active.val('v'), colorBar);
+                    break;
+                  case 'r':
+                    rgbMap = -1040;
+                    rgbBar = -780;
+                    colorMap.range('all', { minX: 0, maxX: 255, minY: 0, maxY: 255 });
+                    colorBar.range('rangeY', { minY: 0, maxY: 255 });
+                    if (active.val('ahex') == null) break;
+                    colorMap.val('xy', { x: active.val('b'), y: 255 - active.val('g') }, colorMap);
+                    colorBar.val('y', 255 - active.val('r'), colorBar);
+                    break;
+                  case 'g':
+                    rgbMap = -1560;
+                    rgbBar = -1820;
+                    colorMap.range('all', { minX: 0, maxX: 255, minY: 0, maxY: 255 });
+                    colorBar.range('rangeY', { minY: 0, maxY: 255 });
+                    if (active.val('ahex') == null) break;
+                    colorMap.val('xy', { x: active.val('b'), y: 255 - active.val('r') }, colorMap);
+                    colorBar.val('y', 255 - active.val('g'), colorBar);
+                    break;
+                  case 'b':
+                    rgbMap = -2080;
+                    rgbBar = -2860;
+                    colorMap.range('all', { minX: 0, maxX: 255, minY: 0, maxY: 255 });
+                    colorBar.range('rangeY', { minY: 0, maxY: 255 });
+                    if (active.val('ahex') == null) break;
+                    colorMap.val('xy', { x: active.val('r'), y: 255 - active.val('g') }, colorMap);
+                    colorBar.val('y', 255 - active.val('b'), colorBar);
+                    break;
+                  case 'a':
+                    setTimeout(
+                      function()
+                      {
+                        setBG.call($this, colorMapDiv, 'transparent');
+                        setImgLoc.call($this, colorMapL1, -260);
+                        setImgLoc.call($this, colorMapL2, -520);
+                        setImgLoc.call($this, colorBarL1, 260);
+                        setImgLoc.call($this, colorBarL2, 260);
+                        setAlpha.call($this, colorBarL2, 100);
+                        setImgLoc.call($this, colorBarL6, 0);
+                        setAlpha.call($this, colorBarL6, 100);
+                      }, 0);
+                    colorMap.range('all', { minX: 0, maxX: 360, minY: 0, maxY: 100 });
+                    colorBar.range('rangeY', { minY: 0, maxY: 255 });
+                    if (active.val('ahex') == null) break;
+                    colorMap.val('xy', { x: active.val('h'), y: 100 - active.val('v') }, colorMap);
+                    colorBar.val('y', 255 - active.val('a'), colorBar);
+                    break;
+                  default:
+                    throw ('Invalid Mode');
+                    break;
+                }
+                switch (colorMode)
+                {
+                  case 'h':
+                    break;
+                  case 's':
+                  case 'v':
+                  case 'a':
+                    setTimeout(
+                      function()
+                      {
+                        setAlpha.call($this, colorMapL1, 100);
+                        setAlpha.call($this, colorBarL1, 100);
+                        setImgLoc.call($this, colorBarL3, 260);
+                        setAlpha.call($this, colorBarL3, 100);
+                        setImgLoc.call($this, colorBarL4, 260);
+                        setAlpha.call($this, colorBarL4, 100);
+                      }, 0);
+                    break;
+                  case 'r':
+                  case 'g':
+                  case 'b':
+                    setTimeout(
+                      function()
+                      {
+                        setBG.call($this, colorMapDiv, 'transparent');
+                        setBG.call($this, colorBarDiv, 'transparent');
+                        setAlpha.call($this, colorBarL1, 100);
+                        setAlpha.call($this, colorMapL1, 100);
+                        setImgLoc.call($this, colorMapL1, rgbMap);
+                        setImgLoc.call($this, colorMapL2, rgbMap - 260);
+                        setImgLoc.call($this, colorBarL1, rgbBar - 780);
+                        setImgLoc.call($this, colorBarL2, rgbBar - 520);
+                        setImgLoc.call($this, colorBarL3, rgbBar);
+                        setImgLoc.call($this, colorBarL4, rgbBar - 260);
+                        setImgLoc.call($this, colorBarL6, 260);
+                        setAlpha.call($this, colorBarL6, 100);
+                      }, 0);
+                    break;
+                }
+                if (active.val('ahex') == null) return;
+                activeColorChanged.call($this, active);
+              },
+            activeColorChanged = // Update color when user changes text values
+              function(ui, context)
+              {
+                if (context == null || (context != colorBar && context != colorMap)) positionMapAndBarArrows.call($this, ui, context);
+                setTimeout(
+                  function()
+                  {
+                    updatePreview.call($this, ui);
+                    updateMapVisuals.call($this, ui);
+                    updateBarVisuals.call($this, ui);
+                  }, 0);
+              },
+            mapValueChanged = // user has dragged the ColorMap pointer
+              function(ui, context)
+              {
+                var active = color.active;
+                if (context != colorMap && active.val() == null) return;
+                var xy = ui.val('all');
+                switch (settings.color.mode)
+                {
+                  case 'h':
+                    active.val('sv', { s: xy.x, v: 100 - xy.y }, context);
+                    break;
+                  case 's':
+                  case 'a':
+                    active.val('hv', { h: xy.x, v: 100 - xy.y }, context);
+                    break;
+                  case 'v':
+                    active.val('hs', { h: xy.x, s: 100 - xy.y }, context);
+                    break;
+                  case 'r':
+                    active.val('gb', { g: 255 - xy.y, b: xy.x }, context);
+                    break;
+                  case 'g':
+                    active.val('rb', { r: 255 - xy.y, b: xy.x }, context);
+                    break;
+                  case 'b':
+                    active.val('rg', { r: xy.x, g: 255 - xy.y }, context);
+                    break;
+                }
+              },
+            colorBarValueChanged = // user has dragged the ColorBar slider
+              function(ui, context)
+              {
+                var active = color.active;
+                if (context != colorBar && active.val() == null) return;
+                switch (settings.color.mode)
+                {
+                  case 'h':
+                    active.val('h', { h: 360 - ui.val('y') }, context);
+                    break;
+                  case 's':
+                    active.val('s', { s: 100 - ui.val('y') }, context);
+                    break;
+                  case 'v':
+                    active.val('v', { v: 100 - ui.val('y') }, context);
+                    break;
+                  case 'r':
+                    active.val('r', { r: 255 - ui.val('y') }, context);
+                    break;
+                  case 'g':
+                    active.val('g', { g: 255 - ui.val('y') }, context);
+                    break;
+                  case 'b':
+                    active.val('b', { b: 255 - ui.val('y') }, context);
+                    break;
+                  case 'a':
+                    active.val('a', 255 - ui.val('y'), context);
+                    break;
+                }
+              },
+            positionMapAndBarArrows = // position map and bar arrows to match current color
+              function(ui, context)
+              {
+                if (context != colorMap)
+                {
+                  switch (settings.color.mode)
+                  {
+                    case 'h':
+                      var sv = ui.val('sv');
+                      colorMap.val('xy', { x: sv != null ? sv.s : 100, y: 100 - (sv != null ? sv.v : 100) }, context);
+                      break;
+                    case 's':
+                    case 'a':
+                      var hv = ui.val('hv');
+                      colorMap.val('xy', { x: hv && hv.h || 0, y: 100 - (hv != null ? hv.v : 100) }, context);
+                      break;
+                    case 'v':
+                      var hs = ui.val('hs');
+                      colorMap.val('xy', { x: hs && hs.h || 0, y: 100 - (hs != null ? hs.s : 100) }, context);
+                      break;
+                    case 'r':
+                      var bg = ui.val('bg');
+                      colorMap.val('xy', { x: bg && bg.b || 0, y: 255 - (bg && bg.g || 0) }, context);
+                      break;
+                    case 'g':
+                      var br = ui.val('br');
+                      colorMap.val('xy', { x: br && br.b || 0, y: 255 - (br && br.r || 0) }, context);
+                      break;
+                    case 'b':
+                      var rg = ui.val('rg');
+                      colorMap.val('xy', { x: rg && rg.r || 0, y: 255 - (rg && rg.g || 0) }, context);
+                      break;
+                  }
+                }
+                if (context != colorBar)
+                {
+                  switch (settings.color.mode)
+                  {
+                    case 'h':
+                      colorBar.val('y', 360 - (ui.val('h') || 0), context);
+                      break;
+                    case 's':
+                      var s = ui.val('s');
+                      colorBar.val('y', 100 - (s != null ? s : 100), context);
+                      break;
+                    case 'v':
+                      var v = ui.val('v');
+                      colorBar.val('y', 100 - (v != null ? v : 100), context);
+                      break;
+                    case 'r':
+                      colorBar.val('y', 255 - (ui.val('r') || 0), context);
+                      break;
+                    case 'g':
+                      colorBar.val('y', 255 - (ui.val('g') || 0), context);
+                      break;
+                    case 'b':
+                      colorBar.val('y', 255 - (ui.val('b') || 0), context);
+                      break;
+                    case 'a':
+                      var a = ui.val('a');
+                      colorBar.val('y', 255 - (a != null ? a : 255), context);
+                      break;
+                  }
+                }
+              },
+            updatePreview =
+              function(ui)
+              {
+                try
+                {
+                  var all = ui.val('all');
+                  activePreview.css({ backgroundColor: all && '#' + all.hex || 'transparent' });
+                  setAlpha.call($this, activePreview, all && Math.precision((all.a * 100) / 255, 4) || 0);
+                }
+                catch (e) { }
+              },
+            updateMapVisuals =
+              function(ui)
+              {
+                switch (settings.color.mode)
+                {
+                  case 'h':
+                    setBG.call($this, colorMapDiv, new Color({ h: ui.val('h') || 0, s: 100, v: 100 }).val('hex'));
+                    break;
+                  case 's':
+                  case 'a':
+                    var s = ui.val('s');
+                    setAlpha.call($this, colorMapL2, 100 - (s != null ? s : 100));
+                    break;
+                  case 'v':
+                    var v = ui.val('v');
+                    setAlpha.call($this, colorMapL1, v != null ? v : 100);
+                    break;
+                  case 'r':
+                    setAlpha.call($this, colorMapL2, Math.precision((ui.val('r') || 0) / 255 * 100, 4));
+                    break;
+                  case 'g':
+                    setAlpha.call($this, colorMapL2, Math.precision((ui.val('g') || 0) / 255 * 100, 4));
+                    break;
+                  case 'b':
+                    setAlpha.call($this, colorMapL2, Math.precision((ui.val('b') || 0) / 255 * 100));
+                    break;
+                }
+                var a = ui.val('a');
+                setAlpha.call($this, colorMapL3, Math.precision(((255 - (a || 0)) * 100) / 255, 4));
+              },
+            updateBarVisuals =
+              function(ui)
+              {
+                switch (settings.color.mode)
+                {
+                  case 'h':
+                    var a = ui.val('a');
+                    setAlpha.call($this, colorBarL5, Math.precision(((255 - (a || 0)) * 100) / 255, 4));
+                    break;
+                  case 's':
+                    var hva = ui.val('hva'),
+                        saturatedColor = new Color({ h: hva && hva.h || 0, s: 100, v: hva != null ? hva.v : 100 });
+                    setBG.call($this, colorBarDiv, saturatedColor.val('hex'));
+                    setAlpha.call($this, colorBarL2, 100 - (hva != null ? hva.v : 100));
+                    setAlpha.call($this, colorBarL5, Math.precision(((255 - (hva && hva.a || 0)) * 100) / 255, 4));
+                    break;
+                  case 'v':
+                    var hsa = ui.val('hsa'),
+                        valueColor = new Color({ h: hsa && hsa.h || 0, s: hsa != null ? hsa.s : 100, v: 100 });
+                    setBG.call($this, colorBarDiv, valueColor.val('hex'));
+                    setAlpha.call($this, colorBarL5, Math.precision(((255 - (hsa && hsa.a || 0)) * 100) / 255, 4));
+                    break;
+                  case 'r':
+                  case 'g':
+                  case 'b':
+                    var hValue = 0, vValue = 0, rgba = ui.val('rgba');
+                    if (settings.color.mode == 'r')
+                    {
+                      hValue = rgba && rgba.b || 0;
+                      vValue = rgba && rgba.g || 0;
+                    }
+                    else if (settings.color.mode == 'g')
+                    {
+                      hValue = rgba && rgba.b || 0;
+                      vValue = rgba && rgba.r || 0;
+                    }
+                    else if (settings.color.mode == 'b')
+                    {
+                      hValue = rgba && rgba.r || 0;
+                      vValue = rgba && rgba.g || 0;
+                    }
+                    var middle = vValue > hValue ? hValue : vValue;
+                    setAlpha.call($this, colorBarL2, hValue > vValue ? Math.precision(((hValue - vValue) / (255 - vValue)) * 100, 4) : 0);
+                    setAlpha.call($this, colorBarL3, vValue > hValue ? Math.precision(((vValue - hValue) / (255 - hValue)) * 100, 4) : 0);
+                    setAlpha.call($this, colorBarL4, Math.precision((middle / 255) * 100, 4));
+                    setAlpha.call($this, colorBarL5, Math.precision(((255 - (rgba && rgba.a || 0)) * 100) / 255, 4));
+                    break;
+                  case 'a':
+                    var a = ui.val('a');
+                    setBG.call($this, colorBarDiv, ui.val('hex') || '000000');
+                    setAlpha.call($this, colorBarL5, a != null ? 0 : 100);
+                    setAlpha.call($this, colorBarL6, a != null ? 100 : 0);
+                    break;
+                }
+              },
+            setBG =
+              function(el, c)
+              {
+                el.css({ backgroundColor: c && c.length == 6 && '#' + c || 'transparent' });
+              },
+            setImg =
+              function(img, src)
+              {
+                if (isLessThanIE7 && (src.indexOf('AlphaBar.png') != -1 || src.indexOf('Bars.png') != -1 || src.indexOf('Maps.png') != -1))
+                {
+                  img.attr('pngSrc', src);
+                  img.css({ backgroundImage: 'none', filter: 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'' + src + '\', sizingMethod=\'scale\')' });
+                }
+                else img.css({ backgroundImage: 'url(\'' + src + '\')' });
+              },
+            setImgLoc =
+              function(img, y)
+              {
+                img.css({ top: y + 'px' });
+              },
+            setAlpha =
+              function(obj, alpha)
+              {
+                obj.css({ visibility: alpha > 0 ? 'visible' : 'hidden' });
+                if (alpha > 0 && alpha < 100)
+                {
+                  if (isLessThanIE7)
+                  {
+                    var src = obj.attr('pngSrc');
+                    if (src != null && (src.indexOf('AlphaBar.png') != -1 || src.indexOf('Bars.png') != -1 || src.indexOf('Maps.png') != -1))
+                      obj.css({ filter: 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'' + src + '\', sizingMethod=\'scale\') progid:DXImageTransform.Microsoft.Alpha(opacity=' + alpha + ')' });
+                    else obj.css({ opacity: Math.precision(alpha / 100, 4) });
+                  }
+                  else obj.css({ opacity: Math.precision(alpha / 100, 4) });
+                }
+                else if (alpha == 0 || alpha == 100)
+                {
+                  if (isLessThanIE7)
+                  {
+                    var src = obj.attr('pngSrc');
+                    if (src != null && (src.indexOf('AlphaBar.png') != -1 || src.indexOf('Bars.png') != -1 || src.indexOf('Maps.png') != -1))
+                      obj.css({ filter: 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'' + src + '\', sizingMethod=\'scale\')' });
+                    else obj.css({ opacity: '' });
+                  }
+                  else obj.css({ opacity: '' });
+                }
+              },
+            revertColor = // revert color to original color when opened
+              function()
+              {
+                color.active.val('ahex', color.current.val('ahex'));
+              },
+            commitColor = // commit the color changes
+              function()
+              {
+                color.current.val('ahex', color.active.val('ahex'));
+              },
+            radioClicked =
+              function(e)
+              {
+                $(this).parents('tbody:first').find('input:radio[value!="'+e.target.value+'"]').removeAttr('checked');
+                setColorMode.call($this, e.target.value);
+              },
+            currentClicked =
+              function()
+              {
+                revertColor.call($this);
+              },
+            cancelClicked =
+              function()
+              {
+                revertColor.call($this);
+                settings.window.expandable && hide.call($this);
+                $.isFunction(cancelCallback) && cancelCallback.call($this, color.active, cancelButton);
+              },
+            okClicked =
+              function()
+              {
+                commitColor.call($this);
+                settings.window.expandable && hide.call($this);
+                $.isFunction(commitCallback) && commitCallback.call($this, color.active, okButton);
+              },
+            iconImageClicked =
+              function()
+              {
+                show.call($this);
+              },
+            currentColorChanged =
+              function(ui, context)
+              {
+                var hex = ui.val('hex');
+                currentPreview.css({ backgroundColor: hex && '#' + hex || 'transparent' });
+                setAlpha.call($this, currentPreview, Math.precision(((ui.val('a') || 0) * 100) / 255, 4));
+              },
+            expandableColorChanged =
+              function(ui, context)
+              {
+                var hex = ui.val('hex');
+                var va = ui.val('va');
+                iconColor.css({ backgroundColor: hex && '#' + hex || 'transparent' });
+                setAlpha.call($this, iconAlpha, Math.precision(((255 - (va && va.a || 0)) * 100) / 255, 4));
+                if (settings.window.bindToInput&&settings.window.updateInputColor)
+                  settings.window.input.css(
+                    {
+                      backgroundColor: hex && '#' + hex || 'transparent',
+                      color: va == null || va.v > 75 ? '#000000' : '#ffffff'
+                    });
+              },
+            moveBarMouseDown =
+              function(e)
+              {
+                var element = settings.window.element, // local copies for YUI compressor
+                  page = settings.window.page;
+                elementStartX = parseInt(container.css('left'));
+                elementStartY = parseInt(container.css('top'));
+                pageStartX = e.pageX;
+                pageStartY = e.pageY;
+                // bind events to document to move window - we will unbind these on mouseup
+                $(document).bind('mousemove', documentMouseMove).bind('mouseup', documentMouseUp);
+                e.preventDefault(); // prevent attempted dragging of the column
+              },
+            documentMouseMove =
+              function(e)
+              {
+                container.css({ left: elementStartX - (pageStartX - e.pageX) + 'px', top: elementStartY - (pageStartY - e.pageY) + 'px' });
+                if (settings.window.expandable && !$.support.boxModel) container.prev().css({ left: container.css("left"), top: container.css("top") });
+                e.stopPropagation();
+                e.preventDefault();
+                return false;
+              },
+            documentMouseUp =
+              function(e)
+              {
+                $(document).unbind('mousemove', documentMouseMove).unbind('mouseup', documentMouseUp);
+                e.stopPropagation();
+                e.preventDefault();
+                return false;
+              },
+            quickPickClicked =
+              function(e)
+              {
+                e.preventDefault();
+                e.stopPropagation();
+                color.active.val('ahex', $(this).attr('title') || null, e.target);
+                return false;
+              },
+            commitCallback = $.isFunction($arguments[1]) && $arguments[1] || null,
+            liveCallback = $.isFunction($arguments[2]) && $arguments[2] || null,
+            cancelCallback = $.isFunction($arguments[3]) && $arguments[3] || null,
+            show =
+              function()
+              {
+                color.current.val('ahex', color.active.val('ahex'));
+                var attachIFrame = function()
+                  {
+                    if (!settings.window.expandable || $.support.boxModel) return;
+                    var table = container.find('table:first');
+                    container.before('<iframe/>');
+                    container.prev().css({ width: table.width(), height: container.height(), opacity: 0, position: 'absolute', left: container.css("left"), top: container.css("top") });
+                  };
+                if (settings.window.expandable)
+                {
+                  $(document.body).children('div.jPicker.Container').css({zIndex:10});
+                  container.css({zIndex:20});
+                }
+                switch (settings.window.effects.type)
+                {
+                  case 'fade':
+                    container.fadeIn(settings.window.effects.speed.show, attachIFrame);
+                    break;
+                  case 'slide':
+                    container.slideDown(settings.window.effects.speed.show, attachIFrame);
+                    break;
+                  case 'show':
+                  default:
+                    container.show(settings.window.effects.speed.show, attachIFrame);
+                    break;
+                }
+              },
+            hide =
+              function()
+              {
+                var removeIFrame = function()
+                  {
+                    if (settings.window.expandable) container.css({ zIndex: 10 });
+                    if (!settings.window.expandable || $.support.boxModel) return;
+                    container.prev().remove();
+                  };
+                switch (settings.window.effects.type)
+                {
+                  case 'fade':
+                    container.fadeOut(settings.window.effects.speed.hide, removeIFrame);
+                    break;
+                  case 'slide':
+                    container.slideUp(settings.window.effects.speed.hide, removeIFrame);
+                    break;
+                  case 'show':
+                  default:
+                    container.hide(settings.window.effects.speed.hide, removeIFrame);
+                    break;
+                }
+              },
+            initialize =
+              function()
+              {
+                var win = settings.window,
+                    popup = win.expandable ? $($this).next().find('.Container:first') : null;
+                container = win.expandable ? $('<div/>') : $($this);
+                container.addClass('jPicker Container');
+                if (win.expandable) container.hide();
+                container.get(0).onselectstart = function(event){ if (event.target.nodeName.toLowerCase() !== 'input') return false; };
+                // inject html source code - we are using a single table for this control - I know tables are considered bad, but it takes care of equal height columns and
+                // this control really is tabular data, so I believe it is the right move
+                var all = color.active.val('all');
+                if (win.alphaPrecision < 0) win.alphaPrecision = 0;
+                else if (win.alphaPrecision > 2) win.alphaPrecision = 2;
+                var controlHtml='<table class="jPicker" cellpadding="0" cellspacing="0"><tbody>' + (win.expandable ? '<tr><td class="Move" colspan="5">&nbsp;</td></tr>' : '') + '<tr><td rowspan="9"><h2 class="Title">' + (win.title || localization.text.title) + '</h2><div class="Map"><span class="Map1">&nbsp;</span><span class="Map2">&nbsp;</span><span class="Map3">&nbsp;</span><img src="' + images.clientPath + images.colorMap.arrow.file + '" class="Arrow"/></div></td><td rowspan="9"><div class="Bar"><span class="Map1">&nbsp;</span><span class="Map2">&nbsp;</span><span class="Map3">&nbsp;</span><span class="Map4">&nbsp;</span><span class="Map5">&nbsp;</span><span class="Map6">&nbsp;</span><img src="' + images.clientPath + images.colorBar.arrow.file + '" class="Arrow"/></div></td><td colspan="2" class="Preview">' + localization.text.newColor + '<div><span class="Active" title="' + localization.tooltips.colors.newColor + '">&nbsp;</span><span class="Current" title="' + localization.tooltips.colors.currentColor + '">&nbsp;</span></div>' + localization.text.currentColor + '</td><td rowspan="9" class="Button"><input type="button" class="Ok" value="' + localization.text.ok + '" title="' + localization.tooltips.buttons.ok + '"/><input type="button" class="Cancel" value="' + localization.text.cancel + '" title="' + localization.tooltips.buttons.cancel + '"/><hr/><div class="Grid">&nbsp;</div></td></tr><tr class="Hue"><td class="Radio"><label title="' + localization.tooltips.hue.radio + '"><input type="radio" value="h"' + (settings.color.mode == 'h' ? ' checked="checked"' : '') + '/>H:</label></td><td class="Text"><input type="text" maxlength="3" value="' + (all != null ? all.h : '') + '" title="' + localization.tooltips.hue.textbox + '"/>&nbsp;&deg;</td></tr><tr class="Saturation"><td class="Radio"><label title="' + localization.tooltips.saturation.radio + '"><input type="radio" value="s"' + (settings.color.mode == 's' ? ' checked="checked"' : '') + '/>S:</label></td><td class="Text"><input type="text" maxlength="3" value="' + (all != null ? all.s : '') + '" title="' + localization.tooltips.saturation.textbox + '"/>&nbsp;%</td></tr><tr class="Value"><td class="Radio"><label title="' + localization.tooltips.value.radio + '"><input type="radio" value="v"' + (settings.color.mode == 'v' ? ' checked="checked"' : '') + '/>V:</label><br/><br/></td><td class="Text"><input type="text" maxlength="3" value="' + (all != null ? all.v : '') + '" title="' + localization.tooltips.value.textbox + '"/>&nbsp;%<br/><br/></td></tr><tr class="Red"><td class="Radio"><label title="' + localization.tooltips.red.radio + '"><input type="radio" value="r"' + (settings.color.mode == 'r' ? ' checked="checked"' : '') + '/>R:</label></td><td class="Text"><input type="text" maxlength="3" value="' + (all != null ? all.r : '') + '" title="' + localization.tooltips.red.textbox + '"/></td></tr><tr class="Green"><td class="Radio"><label title="' + localization.tooltips.green.radio + '"><input type="radio" value="g"' + (settings.color.mode == 'g' ? ' checked="checked"' : '') + '/>G:</label></td><td class="Text"><input type="text" maxlength="3" value="' + (all != null ? all.g : '') + '" title="' + localization.tooltips.green.textbox + '"/></td></tr><tr class="Blue"><td class="Radio"><label title="' + localization.tooltips.blue.radio + '"><input type="radio" value="b"' + (settings.color.mode == 'b' ? ' checked="checked"' : '') + '/>B:</label></td><td class="Text"><input type="text" maxlength="3" value="' + (all != null ? all.b : '') + '" title="' + localization.tooltips.blue.textbox + '"/></td></tr><tr class="Alpha"><td class="Radio">' + (win.alphaSupport ? '<label title="' + localization.tooltips.alpha.radio + '"><input type="radio" value="a"' + (settings.color.mode == 'a' ? ' checked="checked"' : '') + '/>A:</label>' : '&nbsp;') + '</td><td class="Text">' + (win.alphaSupport ? '<input type="text" maxlength="' + (3 + win.alphaPrecision) + '" value="' + (all != null ? Math.precision((all.a * 100) / 255, win.alphaPrecision) : '') + '" title="' + localization.tooltips.alpha.textbox + '"/>&nbsp;%' : '&nbsp;') + '</td></tr><tr class="Hex"><td colspan="2" class="Text"><label title="' + localization.tooltips.hex.textbox + '">#:<input type="text" maxlength="6" class="Hex" value="' + (all != null ? all.hex : '') + '"/></label>' + (win.alphaSupport ? '<input type="text" maxlength="2" class="AHex" value="' + (all != null ? all.ahex.substring(6) : '') + '" title="' + localization.tooltips.hex.alpha + '"/></td>' : '&nbsp;') + '</tr></tbody></table>';
+                if (win.expandable)
+                {
+                  container.html(controlHtml);
+                  if($(document.body).children('div.jPicker.Container').length==0)$(document.body).prepend(container);
+                  else $(document.body).children('div.jPicker.Container:last').after(container);
+                  container.mousedown(
+                    function()
+                    {
+                      $(document.body).children('div.jPicker.Container').css({zIndex:10});
+                      container.css({zIndex:20});
+                    });
+                  container.css( // positions must be set and display set to absolute before source code injection or IE will size the container to fit the window
+                    {
+                      left:
+                        win.position.x == 'left' ? (popup.offset().left - 530 - (win.position.y == 'center' ? 25 : 0)) + 'px' :
+                        win.position.x == 'center' ? (popup.offset().left - 260) + 'px' :
+                        win.position.x == 'right' ? (popup.offset().left - 10 + (win.position.y == 'center' ? 25 : 0)) + 'px' :
+                        win.position.x == 'screenCenter' ? (($(document).width() >> 1) - 260) + 'px' : (popup.offset().left + parseInt(win.position.x)) + 'px',
+                      position: 'absolute',
+                      top: win.position.y == 'top' ? (popup.offset().top - 312) + 'px' :
+                           win.position.y == 'center' ? (popup.offset().top - 156) + 'px' :
+                           win.position.y == 'bottom' ? (popup.offset().top + 25) + 'px' : (popup.offset().top + parseInt(win.position.y)) + 'px'
+                    });
+                }
+                else
+                {
+                  container = $($this);
+                  container.html(controlHtml);
+                }
+                // initialize the objects to the source code just injected
+                var tbody = container.find('tbody:first');
+                colorMapDiv = tbody.find('div.Map:first');
+                colorBarDiv = tbody.find('div.Bar:first');
+                var MapMaps = colorMapDiv.find('span'),
+                    BarMaps = colorBarDiv.find('span');
+                colorMapL1 = MapMaps.filter('.Map1:first');
+                colorMapL2 = MapMaps.filter('.Map2:first');
+                colorMapL3 = MapMaps.filter('.Map3:first');
+                colorBarL1 = BarMaps.filter('.Map1:first');
+                colorBarL2 = BarMaps.filter('.Map2:first');
+                colorBarL3 = BarMaps.filter('.Map3:first');
+                colorBarL4 = BarMaps.filter('.Map4:first');
+                colorBarL5 = BarMaps.filter('.Map5:first');
+                colorBarL6 = BarMaps.filter('.Map6:first');
+                // create color pickers and maps
+                colorMap = new Slider(colorMapDiv,
+                  {
+                    map:
+                    {
+                      width: images.colorMap.width,
+                      height: images.colorMap.height
+                    },
+                    arrow:
+                    {
+                      image: images.clientPath + images.colorMap.arrow.file,
+                      width: images.colorMap.arrow.width,
+                      height: images.colorMap.arrow.height
+                    }
+                  });
+                colorMap.bind(mapValueChanged);
+                colorBar = new Slider(colorBarDiv,
+                  {
+                    map:
+                    {
+                      width: images.colorBar.width,
+                      height: images.colorBar.height
+                    },
+                    arrow:
+                    {
+                      image: images.clientPath + images.colorBar.arrow.file,
+                      width: images.colorBar.arrow.width,
+                      height: images.colorBar.arrow.height
+                    }
+                  });
+                colorBar.bind(colorBarValueChanged);
+                colorPicker = new ColorValuePicker(tbody, color.active, win.expandable && win.bindToInput ? win.input : null, win.alphaPrecision);
+                var hex = all != null ? all.hex : null,
+                    preview = tbody.find('.Preview'),
+                    button = tbody.find('.Button');
+                activePreview = preview.find('.Active:first').css({ backgroundColor: hex && '#' + hex || 'transparent' });
+                currentPreview = preview.find('.Current:first').css({ backgroundColor: hex && '#' + hex || 'transparent' }).bind('click', currentClicked);
+                setAlpha.call($this, currentPreview, Math.precision(color.current.val('a') * 100) / 255, 4);
+                okButton = button.find('.Ok:first').bind('click', okClicked);
+                cancelButton = button.find('.Cancel:first').bind('click', cancelClicked);
+                grid = button.find('.Grid:first');
+                setTimeout(
+                  function()
+                  {
+                    setImg.call($this, colorMapL1, images.clientPath + 'Maps.png');
+                    setImg.call($this, colorMapL2, images.clientPath + 'Maps.png');
+                    setImg.call($this, colorMapL3, images.clientPath + 'map-opacity.png');
+                    setImg.call($this, colorBarL1, images.clientPath + 'Bars.png');
+                    setImg.call($this, colorBarL2, images.clientPath + 'Bars.png');
+                    setImg.call($this, colorBarL3, images.clientPath + 'Bars.png');
+                    setImg.call($this, colorBarL4, images.clientPath + 'Bars.png');
+                    setImg.call($this, colorBarL5, images.clientPath + 'bar-opacity.png');
+                    setImg.call($this, colorBarL6, images.clientPath + 'AlphaBar.png');
+                    setImg.call($this, preview.find('div:first'), images.clientPath + 'preview-opacity.png');
+                  }, 0);
+                tbody.find('td.Radio input').bind('click', radioClicked);
+                // initialize quick list
+                if (color.quickList && color.quickList.length > 0)
+                {
+                  var html = '';
+                  for (i = 0; i < color.quickList.length; i++)
+                  {
+                    /* if default colors are hex strings, change them to color objects */
+                    if ((typeof (color.quickList[i])).toString().toLowerCase() == 'string') color.quickList[i] = new Color({ hex: color.quickList[i] });
+                    var alpha = color.quickList[i].val('a');
+                    var ahex = color.quickList[i].val('ahex');
+                    if (!win.alphaSupport && ahex) ahex = ahex.substring(0, 6) + 'ff';
+                    var quickHex = color.quickList[i].val('hex');
+                    if(!ahex) ahex = "00000000";
+                    html+='<span class="QuickColor"' + (ahex && ' title="#' + ahex + '"' || 'none') + ' style="background-color:' + (quickHex && '#' + quickHex || '') + ';' + (quickHex ? '' : 'background-image:url(' + images.clientPath + 'NoColor.png)') + (win.alphaSupport && alpha && alpha < 255 ? ';opacity:' + Math.precision(alpha / 255, 4) + ';filter:Alpha(opacity=' + Math.precision(alpha / 2.55, 4) + ')' : '') + '">&nbsp;</span>';
+                  }
+                  setImg.call($this, grid, images.clientPath + 'bar-opacity.png');
+                  grid.html(html);
+                  grid.find('.QuickColor').click(quickPickClicked);
+                }
+                setColorMode.call($this, settings.color.mode);
+                color.active.bind(activeColorChanged);
+                $.isFunction(liveCallback) && color.active.bind(liveCallback);
+                color.current.bind(currentColorChanged);
+                // bind to input
+                if (win.expandable)
+                {
+                  $this.icon = popup.parents('.Icon:first');
+                  iconColor = $this.icon.find('.Color:first').css({ backgroundColor: hex && '#' + hex || 'transparent' });
+                  iconAlpha = $this.icon.find('.Alpha:first');
+                  setImg.call($this, iconAlpha, images.clientPath + 'bar-opacity.png');
+                  setAlpha.call($this, iconAlpha, Math.precision(((255 - (all != null ? all.a : 0)) * 100) / 255, 4));
+                  iconImage = $this.icon.find('.Image:first').css(
+                    {
+                      backgroundImage: 'url(\'' + images.clientPath + images.picker.file + '\')'
+                    }).bind('click', iconImageClicked);
+                  if (win.bindToInput&&win.updateInputColor)
+                    win.input.css(
+                      {
+                        backgroundColor: hex && '#' + hex || 'transparent',
+                        color: all == null || all.v > 75 ? '#000000' : '#ffffff'
+                      });
+                  moveBar = tbody.find('.Move:first').bind('mousedown', moveBarMouseDown);
+                  color.active.bind(expandableColorChanged);
+                }
+                else show.call($this);
+              },
+            destroy =
+              function()
+              {
+                container.find('td.Radio input').unbind('click', radioClicked);
+                currentPreview.unbind('click', currentClicked);
+                cancelButton.unbind('click', cancelClicked);
+                okButton.unbind('click', okClicked);
+                if (settings.window.expandable)
+                {
+                  iconImage.unbind('click', iconImageClicked);
+                  moveBar.unbind('mousedown', moveBarMouseDown);
+                  $this.icon = null;
+                }
+                container.find('.QuickColor').unbind('click', quickPickClicked);
+                colorMapDiv = null;
+                colorBarDiv = null;
+                colorMapL1 = null;
+                colorMapL2 = null;
+                colorMapL3 = null;
+                colorBarL1 = null;
+                colorBarL2 = null;
+                colorBarL3 = null;
+                colorBarL4 = null;
+                colorBarL5 = null;
+                colorBarL6 = null;
+                colorMap.destroy();
+                colorMap = null;
+                colorBar.destroy();
+                colorBar = null;
+                colorPicker.destroy();
+                colorPicker = null;
+                activePreview = null;
+                currentPreview = null;
+                okButton = null;
+                cancelButton = null;
+                grid = null;
+                commitCallback = null;
+                cancelCallback = null;
+                liveCallback = null;
+                container.html('');
+                for (i = 0; i < List.length; i++) if (List[i] == $this) List.splice(i, 1);
+              },
+            images = settings.images, // local copies for YUI compressor
+            localization = settings.localization,
+            color =
+              {
+                active: (typeof(settings.color.active)).toString().toLowerCase() == 'string' ? new Color({ ahex: !settings.window.alphaSupport && settings.color.active ? settings.color.active.substring(0, 6) + 'ff' : settings.color.active }) : new Color({ ahex: !settings.window.alphaSupport && settings.color.active.val('ahex') ? settings.color.active.val('ahex').substring(0, 6) + 'ff' : settings.color.active.val('ahex') }),
+                current: (typeof(settings.color.active)).toString().toLowerCase() == 'string' ? new Color({ ahex: !settings.window.alphaSupport && settings.color.active ? settings.color.active.substring(0, 6) + 'ff' : settings.color.active }) : new Color({ ahex: !settings.window.alphaSupport && settings.color.active.val('ahex') ? settings.color.active.val('ahex').substring(0, 6) + 'ff' : settings.color.active.val('ahex') }),
+                quickList: settings.color.quickList
+              };
+          $.extend(true, $this, // public properties, methods, and callbacks
+            {
+              commitCallback: commitCallback, // commitCallback function can be overridden to return the selected color to a method you specify when the user clicks "OK"
+              liveCallback: liveCallback, // liveCallback function can be overridden to return the selected color to a method you specify in live mode (continuous update)
+              cancelCallback: cancelCallback, // cancelCallback function can be overridden to a method you specify when the user clicks "Cancel"
+              color: color,
+              show: show,
+              hide: hide,
+              destroy: destroy // destroys this control entirely, removing all events and objects, and removing itself from the List
+            });
+          List.push($this);
+          setTimeout(
+            function()
+            {
+              initialize.call($this);
+            }, 0);
+        });
+    };
+  $.fn.jPicker.defaults = /* jPicker defaults - you can change anything in this section (such as the clientPath to your images) without fear of breaking the program */
+      {
+      window:
+        {
+          title: null, /* any title for the jPicker window itself - displays "Drag Markers To Pick A Color" if left null */
+          effects:
+          {
+            type: 'slide', /* effect used to show/hide an expandable picker. Acceptable values "slide", "show", "fade" */
+            speed:
+            {
+              show: 'slow', /* duration of "show" effect. Acceptable values are "fast", "slow", or time in ms */
+              hide: 'fast' /* duration of "hide" effect. Acceptable values are "fast", "slow", or time in ms */
+            }
+          },
+          position:
+          {
+            x: 'screenCenter', /* acceptable values "left", "center", "right", "screenCenter", or relative px value */
+            y: 'top' /* acceptable values "top", "bottom", "center", or relative px value */
+          },
+          expandable: false, /* default to large static picker - set to true to make an expandable picker (small icon with popup) - set automatically when binded to input element */
+          liveUpdate: true, /* set false if you want the user to have to click "OK" before the binded input box updates values (always "true" for expandable picker) */
+          alphaSupport: false, /* set to true to enable alpha picking */
+          alphaPrecision: 0, /* set decimal precision for alpha percentage display - hex codes do not map directly to percentage integers - range 0-2 */
+          updateInputColor: true /* set to false to prevent binded input colors from changing */
+        },
+      color:
+        {
+          mode: 'h', /* acceptabled values "h" (hue), "s" (saturation), "v" (value), "r" (red), "g" (green), "b" (blue), "a" (alpha) */
+          active: new Color({ ahex: '#ffcc00ff' }), /* acceptable values are any declared $.jPicker.Color object or string HEX value (e.g. #ffc000) WITH OR WITHOUT the "#" prefix */
+          quickList: /* the quick pick color list */
+            [
+              new Color({ h: 360, s: 33, v: 100 }), /* acceptable values are any declared $.jPicker.Color object or string HEX value (e.g. #ffc000) WITH OR WITHOUT the "#" prefix */
+              new Color({ h: 360, s: 66, v: 100 }),
+              new Color({ h: 360, s: 100, v: 100 }),
+              new Color({ h: 360, s: 100, v: 75 }),
+              new Color({ h: 360, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 100 }),
+              new Color({ h: 30, s: 33, v: 100 }),
+              new Color({ h: 30, s: 66, v: 100 }),
+              new Color({ h: 30, s: 100, v: 100 }),
+              new Color({ h: 30, s: 100, v: 75 }),
+              new Color({ h: 30, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 90 }),
+              new Color({ h: 60, s: 33, v: 100 }),
+              new Color({ h: 60, s: 66, v: 100 }),
+              new Color({ h: 60, s: 100, v: 100 }),
+              new Color({ h: 60, s: 100, v: 75 }),
+              new Color({ h: 60, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 80 }),
+              new Color({ h: 90, s: 33, v: 100 }),
+              new Color({ h: 90, s: 66, v: 100 }),
+              new Color({ h: 90, s: 100, v: 100 }),
+              new Color({ h: 90, s: 100, v: 75 }),
+              new Color({ h: 90, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 70 }),
+              new Color({ h: 120, s: 33, v: 100 }),
+              new Color({ h: 120, s: 66, v: 100 }),
+              new Color({ h: 120, s: 100, v: 100 }),
+              new Color({ h: 120, s: 100, v: 75 }),
+              new Color({ h: 120, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 60 }),
+              new Color({ h: 150, s: 33, v: 100 }),
+              new Color({ h: 150, s: 66, v: 100 }),
+              new Color({ h: 150, s: 100, v: 100 }),
+              new Color({ h: 150, s: 100, v: 75 }),
+              new Color({ h: 150, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 50 }),
+              new Color({ h: 180, s: 33, v: 100 }),
+              new Color({ h: 180, s: 66, v: 100 }),
+              new Color({ h: 180, s: 100, v: 100 }),
+              new Color({ h: 180, s: 100, v: 75 }),
+              new Color({ h: 180, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 40 }),
+              new Color({ h: 210, s: 33, v: 100 }),
+              new Color({ h: 210, s: 66, v: 100 }),
+              new Color({ h: 210, s: 100, v: 100 }),
+              new Color({ h: 210, s: 100, v: 75 }),
+              new Color({ h: 210, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 30 }),
+              new Color({ h: 240, s: 33, v: 100 }),
+              new Color({ h: 240, s: 66, v: 100 }),
+              new Color({ h: 240, s: 100, v: 100 }),
+              new Color({ h: 240, s: 100, v: 75 }),
+              new Color({ h: 240, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 20 }),
+              new Color({ h: 270, s: 33, v: 100 }),
+              new Color({ h: 270, s: 66, v: 100 }),
+              new Color({ h: 270, s: 100, v: 100 }),
+              new Color({ h: 270, s: 100, v: 75 }),
+              new Color({ h: 270, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 10 }),
+              new Color({ h: 300, s: 33, v: 100 }),
+              new Color({ h: 300, s: 66, v: 100 }),
+              new Color({ h: 300, s: 100, v: 100 }),
+              new Color({ h: 300, s: 100, v: 75 }),
+              new Color({ h: 300, s: 100, v: 50 }),
+              new Color({ h: 180, s: 0, v: 0 }),
+              new Color({ h: 330, s: 33, v: 100 }),
+              new Color({ h: 330, s: 66, v: 100 }),
+              new Color({ h: 330, s: 100, v: 100 }),
+              new Color({ h: 330, s: 100, v: 75 }),
+              new Color({ h: 330, s: 100, v: 50 }),
+              new Color()
+            ]
+        },
+      images:
+        {
+          clientPath: '/jPicker/images/', /* Path to image files */
+          colorMap:
+          {
+            width: 256,
+            height: 256,
+            arrow:
+            {
+              file: 'mappoint.gif', /* ColorMap arrow icon */
+              width: 15,
+              height: 15
+            }
+          },
+          colorBar:
+          {
+            width: 20,
+            height: 256,
+            arrow:
+            {
+              file: 'rangearrows.gif', /* ColorBar arrow icon */
+              width: 20,
+              height: 7
+            }
+          },
+          picker:
+          {
+            file: 'picker.gif', /* Color Picker icon */
+            width: 25,
+            height: 24
+          }
+        },
+      localization: /* alter these to change the text presented by the picker (e.g. different language) */
+        {
+          text:
+          {
+            title: 'Drag Markers To Pick A Color',
+            newColor: 'new',
+            currentColor: 'current',
+            ok: 'OK',
+            cancel: 'Cancel'
+          },
+          tooltips:
+          {
+            colors:
+            {
+              newColor: 'New Color - Press &ldquo;OK&rdquo; To Commit',
+              currentColor: 'Click To Revert To Original Color'
+            },
+            buttons:
+            {
+              ok: 'Commit To This Color Selection',
+              cancel: 'Cancel And Revert To Original Color'
+            },
+            hue:
+            {
+              radio: 'Set To &ldquo;Hue&rdquo; Color Mode',
+              textbox: 'Enter A &ldquo;Hue&rdquo; Value (0-360&deg;)'
+            },
+            saturation:
+            {
+              radio: 'Set To &ldquo;Saturation&rdquo; Color Mode',
+              textbox: 'Enter A &ldquo;Saturation&rdquo; Value (0-100%)'
+            },
+            value:
+            {
+              radio: 'Set To &ldquo;Value&rdquo; Color Mode',
+              textbox: 'Enter A &ldquo;Value&rdquo; Value (0-100%)'
+            },
+            red:
+            {
+              radio: 'Set To &ldquo;Red&rdquo; Color Mode',
+              textbox: 'Enter A &ldquo;Red&rdquo; Value (0-255)'
+            },
+            green:
+            {
+              radio: 'Set To &ldquo;Green&rdquo; Color Mode',
+              textbox: 'Enter A &ldquo;Green&rdquo; Value (0-255)'
+            },
+            blue:
+            {
+              radio: 'Set To &ldquo;Blue&rdquo; Color Mode',
+              textbox: 'Enter A &ldquo;Blue&rdquo; Value (0-255)'
+            },
+            alpha:
+            {
+              radio: 'Set To &ldquo;Alpha&rdquo; Color Mode',
+              textbox: 'Enter A &ldquo;Alpha&rdquo; Value (0-100)'
+            },
+            hex:
+            {
+              textbox: 'Enter A &ldquo;Hex&rdquo; Color Value (#000000-#ffffff)',
+              alpha: 'Enter A &ldquo;Alpha&rdquo; Value (#00-#ff)'
+            }
+          }
+        }
+    };
+})(jQuery, '1.1.6');

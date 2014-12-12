@@ -1,1 +1,77 @@
-Pixastic.Actions.blurfast={process:function(a){var b=parseFloat(a.options.amount)||0,c=!(!a.options.clear||"false"==a.options.clear);if(b=Math.max(0,Math.min(5,b)),Pixastic.Client.hasCanvas()){var d=a.options.rect,e=a.canvas.getContext("2d");e.save(),e.beginPath(),e.rect(d.left,d.top,d.width,d.height),e.clip();var f=2,g=Math.round(a.width/f),h=Math.round(a.height/f),i=document.createElement("canvas");i.width=g,i.height=h;for(var c=!1,j=Math.round(20*b),k=i.getContext("2d"),l=0;j>l;l++){var m=Math.max(1,Math.round(g-l)),n=Math.max(1,Math.round(h-l));k.clearRect(0,0,g,h),k.drawImage(a.canvas,0,0,a.width,a.height,0,0,m,n),c&&e.clearRect(d.left,d.top,d.width,d.height),e.drawImage(i,0,0,m,n,0,0,a.width,a.height)}return e.restore(),a.useData=!1,!0}if(Pixastic.Client.isIE()){var o=10*b;return a.image.style.filter+=" progid:DXImageTransform.Microsoft.Blur(pixelradius="+o+")",a.image.style.marginLeft=(parseInt(a.image.style.marginLeft,10)||0)-Math.round(o)+"px",a.image.style.marginTop=(parseInt(a.image.style.marginTop,10)||0)-Math.round(o)+"px",!0}},checkSupport:function(){return Pixastic.Client.hasCanvas()||Pixastic.Client.isIE()}};
+/*
+ * Pixastic Lib - Blur Fast - v0.1.1
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.blurfast = {
+	process : function(params) {
+
+		var amount = parseFloat(params.options.amount)||0;
+		var clear = !!(params.options.clear && params.options.clear != "false");
+
+		amount = Math.max(0,Math.min(5,amount));
+
+		if (Pixastic.Client.hasCanvas()) {
+			var rect = params.options.rect;
+
+			var ctx = params.canvas.getContext("2d");
+			ctx.save();
+			ctx.beginPath();
+			ctx.rect(rect.left, rect.top, rect.width, rect.height);
+			ctx.clip();
+
+			var scale = 2;
+			var smallWidth = Math.round(params.width / scale);
+			var smallHeight = Math.round(params.height / scale);
+
+			var copy = document.createElement("canvas");
+			copy.width = smallWidth;
+			copy.height = smallHeight;
+
+			var clear = false;
+			var steps = Math.round(amount * 20);
+
+			var copyCtx = copy.getContext("2d");
+			for (var i=0;i<steps;i++) {
+				var scaledWidth = Math.max(1,Math.round(smallWidth - i));
+				var scaledHeight = Math.max(1,Math.round(smallHeight - i));
+	
+				copyCtx.clearRect(0,0,smallWidth,smallHeight);
+	
+				copyCtx.drawImage(
+					params.canvas,
+					0,0,params.width,params.height,
+					0,0,scaledWidth,scaledHeight
+				);
+	
+				if (clear)
+					ctx.clearRect(rect.left,rect.top,rect.width,rect.height);
+	
+				ctx.drawImage(
+					copy,
+					0,0,scaledWidth,scaledHeight,
+					0,0,params.width,params.height
+				);
+			}
+
+			ctx.restore();
+
+			params.useData = false;
+			return true;
+		} else if (Pixastic.Client.isIE()) {
+			var radius = 10 * amount;
+			params.image.style.filter += " progid:DXImageTransform.Microsoft.Blur(pixelradius=" + radius + ")";
+
+			if (params.options.fixMargin || 1) {
+				params.image.style.marginLeft = (parseInt(params.image.style.marginLeft,10)||0) - Math.round(radius) + "px";
+				params.image.style.marginTop = (parseInt(params.image.style.marginTop,10)||0) - Math.round(radius) + "px";
+			}
+
+			return true;
+		}
+	},
+	checkSupport : function() {
+		return (Pixastic.Client.hasCanvas() || Pixastic.Client.isIE());
+	}
+}

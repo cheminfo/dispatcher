@@ -1,1 +1,61 @@
-Pixastic.Actions.lighten={process:function(a){var b=parseFloat(a.options.amount)||0;if(b=Math.max(-1,Math.min(1,b)),Pixastic.Client.hasCanvasImageData()){for(var c=Pixastic.prepareData(a),d=a.options.rect,e=d.width*d.height,f=4*e,g=f+1,h=f+2,i=b+1;e--;)(c[f-=4]=c[f]*i)>255&&(c[f]=255),(c[g-=4]=c[g]*i)>255&&(c[g]=255),(c[h-=4]=c[h]*i)>255&&(c[h]=255);return!0}if(Pixastic.Client.isIE()){var j=a.image;return 0>b?(j.style.filter+=" light()",j.filters[j.filters.length-1].addAmbient(255,255,255,100*-b)):b>0&&(j.style.filter+=" light()",j.filters[j.filters.length-1].addAmbient(255,255,255,100),j.filters[j.filters.length-1].addAmbient(255,255,255,100*b)),!0}},checkSupport:function(){return Pixastic.Client.hasCanvasImageData()||Pixastic.Client.isIE()}};
+/*
+ * Pixastic Lib - Lighten filter - v0.1.1
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.lighten = {
+
+	process : function(params) {
+		var amount = parseFloat(params.options.amount) || 0;
+		amount = Math.max(-1, Math.min(1, amount));
+
+		if (Pixastic.Client.hasCanvasImageData()) {
+			var data = Pixastic.prepareData(params);
+			var rect = params.options.rect;
+
+			var p = rect.width * rect.height;
+
+			var pix = p*4, pix1 = pix + 1, pix2 = pix + 2;
+			var mul = amount + 1;
+
+			while (p--) {
+				if ((data[pix-=4] = data[pix] * mul) > 255)
+					data[pix] = 255;
+
+				if ((data[pix1-=4] = data[pix1] * mul) > 255)
+					data[pix1] = 255;
+
+				if ((data[pix2-=4] = data[pix2] * mul) > 255)
+					data[pix2] = 255;
+
+			}
+
+			return true;
+
+		} else if (Pixastic.Client.isIE()) {
+			var img = params.image;
+			if (amount < 0) {
+				img.style.filter += " light()";
+				img.filters[img.filters.length-1].addAmbient(
+					255,255,255,
+					100 * -amount
+				);
+			} else if (amount > 0) {
+				img.style.filter += " light()";
+				img.filters[img.filters.length-1].addAmbient(
+					255,255,255,
+					100
+				);
+				img.filters[img.filters.length-1].addAmbient(
+					255,255,255,
+					100 * amount
+				);
+			}
+			return true;
+		}
+	},
+	checkSupport : function() {
+		return (Pixastic.Client.hasCanvasImageData() || Pixastic.Client.isIE());
+	}
+}

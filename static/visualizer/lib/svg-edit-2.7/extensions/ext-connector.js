@@ -1,1 +1,593 @@
-svgEditor.addExtension("Connector",function(a){function b(a,b,c,d){d&&(d-=0,c=$.extend({},c),c.width+=d,c.height+=d,c.x-=d/2,c.y-=d/2);var e,f=c.x+c.width/2,g=c.y+c.height/2,h=a-f,i=b-g,j=Math.abs(i/h);return e=j<c.height/c.width?c.width/2/Math.abs(h):c.height/2/Math.abs(i),{x:f+h*e,y:g+i*e}}function c(a,b){var c=!!b.getAttribute("marker-"+a),d=5*b.getAttribute("stroke-width");return c?d:0}function d(a){var b=$("#connector_rules");b.length||(b=$('<style id="connector_rules"></style>').appendTo("head")),b.text(a?"#tool_clone, #tool_topath, #tool_angle, #xy_panel { display: none !important; }":""),$("#connector_panel").toggle(a)}function e(a,b,c,d,f){var g,h=a.points,i=q.createSVGPoint();i.x=c,i.y=d,"end"===b&&(b=h.numberOfItems-1);try{h.replaceItem(i,b)}catch(j){var k=a.getAttribute("points").split(" ");for(g=0;g<k.length;g++)g===b&&(k[g]=c+","+d);a.setAttribute("points",k.join(" "))}if(f){var l=h.getItem(0),m=h.getItem(h.numberOfItems-1);e(a,1,(m.x+l.x)/2,(m.y+l.y)/2)}}function f(a,d){for(var f=x.length;f--;){var g=x[f],h=g.connector,i=(g.elem,g.is_start?"start":"end"),j=A(h,i+"_bb");j.x=g.start_x+a,j.y=g.start_y+d,A(h,i+"_bb",j);var k=g.is_start?"end":"start",l=A(h,k+"_bb"),m=l.x+l.width/2,n=l.y+l.height/2,o=b(m,n,j,c(i,h));e(h,g.is_start?0:"end",o.x,o.y,!0);var p=b(o.x,o.y,A(h,k+"_bb"),c(k,h));e(h,g.is_start?"end":0,p.x,p.y,!0)}}function g(a){var b;a||(a=z);var c=$(p).find(y);x=[],c.each(function(){function c(){-1!==$.inArray(this,a)&&(d=!0)}var d,e=A(this,"c_start"),f=A(this,"c_end"),g=[s(e),s(f)];for(b=0;2>b;b++){var h=g[b];if(d=!1,$(h).parents().each(c),h&&h.parentNode){if(-1!==$.inArray(h,a)||d){var i=svgCanvas.getStrokedBBox([h]);x.push({elem:h,connector:this,is_start:0===b,start_x:i.x,start_y:i.y})}}else $(this).remove()}})}function h(a){var d,f;if(g(a),x.length)for(d=x.length;d--;){var h=x[d],i=h.connector,j=h.elem,k=(5*i.getAttribute("stroke-width"),h.is_start?"start":"end"),l=svgCanvas.getStrokedBBox([j]);l.x=h.start_x,l.y=h.start_y,A(i,k+"_bb",l);var m=(A(i,k+"_off"),h.is_start?"end":"start"),n=A(i,m+"_bb"),o=n.x+n.width/2,p=n.y+n.height/2,q=b(o,p,l,c(k,i));e(i,h.is_start?0:"end",q.x,q.y,!0);var r=b(q.x,q.y,A(i,m+"_bb"),c(m,i));if(e(i,h.is_start?"end":0,r.x,r.y,!0),-1!==navigator.userAgent.indexOf("AppleWebKit")){var s=i.points,t=s.numberOfItems,u=[];for(f=0;t>f;f++)q=s.getItem(f),u[f]=q.x+","+q.y;i.setAttribute("points",u.join(" "))}}}function i(){$(p).find("*").each(function(){var a=this.getAttributeNS(o,"connector");if(a){this.setAttribute("class",y.substr(1));var b=a.split(" "),c=svgCanvas.getStrokedBBox([s(b[0])]),d=svgCanvas.getStrokedBBox([s(b[1])]);$(this).data("c_start",b[0]).data("c_end",b[1]).data("start_bb",c).data("end_bb",d),svgCanvas.getEditorNS(!0)}})}var j,k,l,m,n,o,p=a.svgcontent,q=a.svgroot,r=a.getNextId,s=a.getElem,t=a.addSvgElementFromJson,u=a.selectorManager,v=svgEditor.curConfig,w=!1,x=[],y=".se_connector",z=[],A=$.data,B={en:[{id:"mode_connect",title:"Connect two objects"}],fr:[{id:"mode_connect",title:"Connecter deux objets"}]};return function(){var a=svgCanvas.groupSelectedElements;svgCanvas.groupSelectedElements=function(){return svgCanvas.removeFromSelection($(y).toArray()),a.apply(this,arguments)};var b=svgCanvas.moveSelectedElements;svgCanvas.moveSelectedElements=function(){svgCanvas.removeFromSelection($(y).toArray());var a=b.apply(this,arguments);return h(),a},o=svgCanvas.getEditorNS()}(),{name:"Connector",svgicons:svgEditor.curConfig.imgPath+"conn.svg",buttons:[{id:"mode_connect",type:"mode",icon:svgEditor.curConfig.imgPath+"cut.png",title:"Connect two objects",includeWith:{button:"#tool_line",isDefault:!1,position:1},events:{click:function(){svgCanvas.setMode("connector")}}}],addLangData:function(a){return{data:B[a]}},mouseDown:function(a){var b=a.event;j=a.start_x,k=a.start_y;var c=svgCanvas.getMode();if("connector"==c){if(w)return;var d=b.target,e=$(d).parents();if(-1!==$.inArray(p,e)){var f=$(d).closest("foreignObject");m=f.length?f[0]:d;var h=svgCanvas.getStrokedBBox([m]),i=h.x+h.width/2,n=h.y+h.height/2;w=!0,l=t({element:"polyline",attr:{id:r(),points:i+","+n+" "+i+","+n+" "+j+","+k,stroke:"#"+v.initStroke.color,"stroke-width":m.stroke_width&&0!=m.stroke_width?m.stroke_width:v.initStroke.width,fill:"none",opacity:v.initStroke.opacity,style:"pointer-events:none"}}),A(l,"start_bb",h)}return{started:!0}}"select"==c&&g()},mouseMove:function(a){var d=svgCanvas.getZoom(),g=(a.event,a.mouse_x/d),h=a.mouse_y/d,i=g-j,m=h-k,n=svgCanvas.getMode();if("connector"==n&&w){var o=(3*l.getAttribute("stroke-width"),b(g,h,A(l,"start_bb"),c("start",l)));j=o.x,k=o.y,e(l,0,o.x,o.y,!0),e(l,"end",g,h,!0)}else if("select"==n){for(var p=z.length;p--;){var q=z[p];q&&A(q,"c_start")&&(svgCanvas.removeFromSelection([q]),svgCanvas.getTransformList(q).clear())}x.length&&f(i,m)}},mouseUp:function(a){var d=svgCanvas.getZoom(),f=a.event,g=(a.mouse_x/d,a.mouse_y/d,f.target);if("connector"==svgCanvas.getMode()){var h=$(g).closest("foreignObject");h.length&&(g=h[0]);var i=$(g).parents();if(g==m)return w=!0,{keep:!0,element:null,started:w};if(-1===$.inArray(p,i))return $(l).remove(),w=!1,{keep:!1,element:null,started:w};n=g;var q=m.id,r=n.id,s=q+" "+r,t=r+" "+q,v=$(p).find(y).filter(function(){var a=this.getAttributeNS(o,"connector");return a==s||a==t?!0:void 0});if(v.length)return $(l).remove(),{keep:!1,element:null,started:!1};var x=svgCanvas.getStrokedBBox([n]),z=b(j,k,x,c("start",l));return e(l,"end",z.x,z.y,!0),$(l).data("c_start",q).data("c_end",r).data("end_bb",x),o=svgCanvas.getEditorNS(!0),l.setAttributeNS(o,"se:connector",s),l.setAttribute("class",y.substr(1)),l.setAttribute("opacity",1),svgCanvas.addToSelection([l]),svgCanvas.moveToBottomSelectedElement(),u.requestSelector(l).showGrips(!1),w=!1,{keep:!0,element:l,started:w}}},selectedChanged:function(a){if($(p).find(y).length){"connector"==svgCanvas.getMode()&&svgCanvas.setMode("select"),z=a.elems;for(var b=z.length;b--;){var c=z[b];c&&A(c,"c_start")?(u.requestSelector(c).showGrips(!1),d(a.selectedElement&&!a.multiselected?!0:!1)):d(!1)}h()}},elementChanged:function(a){var b=a.elems[0];b&&"svg"===b.tagName&&"svgcontent"===b.id&&(p=b,i());var c;if(b&&(b.getAttribute("marker-start")||b.getAttribute("marker-mid")||b.getAttribute("marker-end"))){c=b.getAttribute("marker-start");var d=b.getAttribute("marker-mid"),e=b.getAttribute("marker-end");if(l=b,$(b).data("start_off",!!c).data("end_off",!!e),"line"===b.tagName&&d){var f=Number(b.getAttribute("x1")),g=Number(b.getAttribute("x2")),j=Number(b.getAttribute("y1")),k=Number(b.getAttribute("y2")),m=b.id,n=" "+(f+g)/2+","+(j+k)/2+" ",o=t({element:"polyline",attr:{points:f+","+j+n+g+","+k,stroke:b.getAttribute("stroke"),"stroke-width":b.getAttribute("stroke-width"),"marker-mid":d,fill:"none",opacity:b.getAttribute("opacity")||1}});$(b).after(o).remove(),svgCanvas.clearSelection(),o.id=m,svgCanvas.addToSelection([o]),b=o}}b.getAttribute("class")==y.substr(1)?(c=s(A(b,"c_start")),h([c])):h()},toolButtonStateUpdate:function(a){a.nostroke&&$("#mode_connect").hasClass("tool_button_current")&&svgEditor.clickSelect(),$("#mode_connect").toggleClass("disabled",a.nostroke)}}});
+/*globals svgEditor, svgCanvas, $*/
+/*jslint vars: true, continue: true, eqeq: true, todo: true*/
+/*
+ * ext-connector.js
+ *
+ * Licensed under the MIT License
+ *
+ * Copyright(c) 2010 Alexis Deveria
+ *
+ */
+ 
+svgEditor.addExtension("Connector", function(S) {
+	var svgcontent = S.svgcontent,
+		svgroot = S.svgroot,
+		getNextId = S.getNextId,
+		getElem = S.getElem,
+		addElem = S.addSvgElementFromJson,
+		selManager = S.selectorManager,
+		curConfig = svgEditor.curConfig,
+		started = false,
+		start_x,
+		start_y,
+		cur_line,
+		start_elem,
+		end_elem,
+		connections = [],
+		conn_sel = ".se_connector",
+		se_ns,
+//		connect_str = "-SE_CONNECT-",
+		selElems = [],
+		elData = $.data;
+		
+	var lang_list = {
+		"en":[
+			{"id": "mode_connect", "title": "Connect two objects" }
+		],
+		"fr":[
+			{"id": "mode_connect", "title": "Connecter deux objets"}
+		]
+	};
+
+	function getBBintersect(x, y, bb, offset) {
+		if(offset) {
+			offset -= 0;
+			bb = $.extend({}, bb);
+			bb.width += offset;
+			bb.height += offset;
+			bb.x -= offset/2;
+			bb.y -= offset/2;
+		}
+	
+		var mid_x = bb.x + bb.width/2;
+		var mid_y = bb.y + bb.height/2;
+		var len_x = x - mid_x;
+		var len_y = y - mid_y;
+		
+		var slope = Math.abs(len_y/len_x);
+		
+		var ratio;
+		
+		if(slope < bb.height/bb.width) {
+			ratio = (bb.width/2) / Math.abs(len_x);
+		} else {
+			ratio = (bb.height/2) / Math.abs(len_y);
+		}
+		
+		
+		return {
+			x: mid_x + len_x * ratio,
+			y: mid_y + len_y * ratio
+		};
+	}
+
+	function getOffset(side, line) {
+		var give_offset = !!line.getAttribute('marker-' + side);
+//		var give_offset = $(line).data(side+'_off');
+
+		// TODO: Make this number (5) be based on marker width/height
+		var size = line.getAttribute('stroke-width') * 5;
+		return give_offset ? size : 0;
+	}
+	
+	function showPanel(on) {
+		var conn_rules = $('#connector_rules');
+		if(!conn_rules.length) {
+			conn_rules = $('<style id="connector_rules"><\/style>').appendTo('head');
+		} 
+		conn_rules.text(!on?"":"#tool_clone, #tool_topath, #tool_angle, #xy_panel { display: none !important; }");
+		$('#connector_panel').toggle(on);
+	}
+	
+	function setPoint(elem, pos, x, y, setMid) {
+		var i, pts = elem.points;
+		var pt = svgroot.createSVGPoint();
+		pt.x = x;
+		pt.y = y;
+		if (pos === 'end') {pos = pts.numberOfItems - 1;}
+		// TODO: Test for this on init, then use alt only if needed
+		try {
+			pts.replaceItem(pt, pos);
+		} catch(err) {
+			// Should only occur in FF which formats points attr as "n,n n,n", so just split
+			var pt_arr = elem.getAttribute("points").split(" ");
+			for (i = 0; i < pt_arr.length; i++) {
+				if (i === pos) {
+					pt_arr[i] = x + ',' + y;
+				}
+			}
+			elem.setAttribute("points",pt_arr.join(" ")); 
+		}
+		
+		if(setMid) {
+			// Add center point
+			var pt_start = pts.getItem(0);
+			var pt_end = pts.getItem(pts.numberOfItems-1);
+			setPoint(elem, 1, (pt_end.x + pt_start.x)/2, (pt_end.y + pt_start.y)/2);
+		}
+	}
+	
+	function updateLine(diff_x, diff_y) {
+		// Update line with element
+		var i = connections.length;
+		while(i--) {
+			var conn = connections[i];
+			var line = conn.connector;
+			var elem = conn.elem;
+			
+			var pre = conn.is_start?'start':'end';
+//						var sw = line.getAttribute('stroke-width') * 5;
+			
+			// Update bbox for this element
+			var bb = elData(line, pre+'_bb');
+			bb.x = conn.start_x + diff_x;
+			bb.y = conn.start_y + diff_y;
+			elData(line, pre+'_bb', bb);
+			
+			var alt_pre = conn.is_start?'end':'start';
+			
+			// Get center pt of connected element
+			var bb2 = elData(line, alt_pre+'_bb');
+			var src_x = bb2.x + bb2.width/2;
+			var src_y = bb2.y + bb2.height/2;
+			
+			// Set point of element being moved
+			var pt = getBBintersect(src_x, src_y, bb, getOffset(pre, line)); // $(line).data(pre+'_off')?sw:0
+			setPoint(line, conn.is_start ? 0 : 'end', pt.x, pt.y, true);
+			
+			// Set point of connected element
+			var pt2 = getBBintersect(pt.x, pt.y, elData(line, alt_pre + '_bb'), getOffset(alt_pre, line));
+			setPoint(line, conn.is_start ? 'end' : 0, pt2.x, pt2.y, true);
+
+		}
+	}
+	
+	function findConnectors(elems) {
+		var i;
+		if (!elems) {elems = selElems;}
+		var connectors = $(svgcontent).find(conn_sel);
+		connections = [];
+
+		// Loop through connectors to see if one is connected to the element
+		connectors.each(function() {
+			var add_this;
+			function add () {
+				if ($.inArray(this, elems) !== -1) {
+					// Pretend this element is selected
+					add_this = true;
+				}
+			}
+			var start = elData(this, "c_start");
+			var end = elData(this, "c_end");
+			
+			var parts = [getElem(start), getElem(end)];
+			for (i = 0; i < 2; i++) {
+				var c_elem = parts[i];
+				add_this = false;
+				// The connected element might be part of a selected group
+				$(c_elem).parents().each(add);
+				
+				if(!c_elem || !c_elem.parentNode) {
+					$(this).remove();
+					continue;
+				}
+				if($.inArray(c_elem, elems) !== -1 || add_this) {
+					var bb = svgCanvas.getStrokedBBox([c_elem]);
+					connections.push({
+						elem: c_elem,
+						connector: this,
+						is_start: (i === 0),
+						start_x: bb.x,
+						start_y: bb.y
+					});	
+				}
+			}
+		});
+	}
+	
+	function updateConnectors(elems) {
+		// Updates connector lines based on selected elements
+		// Is not used on mousemove, as it runs getStrokedBBox every time,
+		// which isn't necessary there.
+		var i, j;
+		findConnectors(elems);
+		if (connections.length) {
+			// Update line with element
+			i = connections.length;
+			while (i--) {
+				var conn = connections[i];
+				var line = conn.connector;
+				var elem = conn.elem;
+
+				var sw = line.getAttribute('stroke-width') * 5;
+				var pre = conn.is_start?'start':'end';
+				
+				// Update bbox for this element
+				var bb = svgCanvas.getStrokedBBox([elem]);
+				bb.x = conn.start_x;
+				bb.y = conn.start_y;
+				elData(line, pre+'_bb', bb);
+				var add_offset = elData(line, pre+'_off');
+			
+				var alt_pre = conn.is_start?'end':'start';
+				
+				// Get center pt of connected element
+				var bb2 = elData(line, alt_pre+'_bb');
+				var src_x = bb2.x + bb2.width/2;
+				var src_y = bb2.y + bb2.height/2;
+				
+				// Set point of element being moved
+				var pt = getBBintersect(src_x, src_y, bb, getOffset(pre, line));
+				setPoint(line, conn.is_start ? 0 : 'end', pt.x, pt.y, true);
+				
+				// Set point of connected element
+				var pt2 = getBBintersect(pt.x, pt.y, elData(line, alt_pre + '_bb'), getOffset(alt_pre, line));
+				setPoint(line, conn.is_start ? 'end' : 0, pt2.x, pt2.y, true);
+				
+				// Update points attribute manually for webkit
+				if (navigator.userAgent.indexOf('AppleWebKit') !== -1) {
+					var pts = line.points;
+					var len = pts.numberOfItems;
+					var pt_arr = [];
+					for (j = 0; j < len; j++) {
+						pt = pts.getItem(j);
+						pt_arr[j] = pt.x + ',' + pt.y;
+					}
+					line.setAttribute('points', pt_arr.join(' ')); 
+				}
+			}
+		}
+	}
+	
+	// Do once
+	(function() {
+		var gse = svgCanvas.groupSelectedElements;
+		
+		svgCanvas.groupSelectedElements = function() {
+			svgCanvas.removeFromSelection($(conn_sel).toArray());
+			return gse.apply(this, arguments);
+		};
+		
+		var mse = svgCanvas.moveSelectedElements;
+		
+		svgCanvas.moveSelectedElements = function() {
+			svgCanvas.removeFromSelection($(conn_sel).toArray());
+			var cmd = mse.apply(this, arguments);
+			updateConnectors();
+			return cmd;
+		};
+		
+		se_ns = svgCanvas.getEditorNS();
+	}());
+	
+	// Do on reset
+	function init() {
+		// Make sure all connectors have data set
+		$(svgcontent).find('*').each(function() { 
+			var conn = this.getAttributeNS(se_ns, "connector");
+			if(conn) {
+				this.setAttribute('class', conn_sel.substr(1));
+				var conn_data = conn.split(' ');
+				var sbb = svgCanvas.getStrokedBBox([getElem(conn_data[0])]);
+				var ebb = svgCanvas.getStrokedBBox([getElem(conn_data[1])]);
+				$(this).data('c_start',conn_data[0])
+					.data('c_end',conn_data[1])
+					.data('start_bb', sbb)
+					.data('end_bb', ebb);
+				svgCanvas.getEditorNS(true);
+			}
+		});
+//		updateConnectors();
+	}
+
+//		$(svgroot).parent().mousemove(function(e) {
+// //			if(started 
+// //				|| svgCanvas.getMode() != "connector"
+// //				|| e.target.parentNode.parentNode != svgcontent) return;
+//
+//			console.log('y')
+// //			if(e.target.parentNode.parentNode === svgcontent) {
+// //					
+// //			}
+//		});
+
+	return {
+		name: "Connector",
+		svgicons: svgEditor.curConfig.imgPath + "conn.svg",
+		buttons: [{
+			id: "mode_connect",
+			type: "mode",
+			icon: svgEditor.curConfig.imgPath + "cut.png",
+			title: "Connect two objects",
+			includeWith: {
+				button: '#tool_line',
+				isDefault: false,
+				position: 1
+			},
+			events: {
+				'click': function() {
+					svgCanvas.setMode("connector");
+				}
+			}
+		}],
+		addLangData: function(lang) {
+			return {
+				data: lang_list[lang]
+			};
+		},
+		mouseDown: function(opts) {
+			var e = opts.event;
+			start_x = opts.start_x;
+			start_y = opts.start_y;
+			var mode = svgCanvas.getMode();
+			
+			if (mode == "connector") {
+				
+				if (started) {return;}
+
+				var mouse_target = e.target;
+				
+				var parents = $(mouse_target).parents();
+				
+				if($.inArray(svgcontent, parents) !== -1) {
+					// Connectable element
+					
+					// If child of foreignObject, use parent
+					var fo = $(mouse_target).closest("foreignObject");
+					start_elem = fo.length ? fo[0] : mouse_target;
+					
+					// Get center of source element
+					var bb = svgCanvas.getStrokedBBox([start_elem]);
+					var x = bb.x + bb.width/2;
+					var y = bb.y + bb.height/2;
+					
+					started = true;
+					cur_line = addElem({
+						"element": "polyline",
+						"attr": {
+							"id": getNextId(),
+							"points": (x+','+y+' '+x+','+y+' '+start_x+','+start_y),
+							"stroke": '#' + curConfig.initStroke.color,
+							"stroke-width": (!start_elem.stroke_width || start_elem.stroke_width == 0) ? curConfig.initStroke.width : start_elem.stroke_width,
+							"fill": "none",
+							"opacity": curConfig.initStroke.opacity,
+							"style": "pointer-events:none"
+						}
+					});
+					elData(cur_line, 'start_bb', bb);
+				}
+				return {
+					started: true
+				};
+			}
+			if (mode == "select") {
+				findConnectors();
+			}
+		},
+		mouseMove: function(opts) {
+			var zoom = svgCanvas.getZoom();
+			var e = opts.event;
+			var x = opts.mouse_x/zoom;
+			var y = opts.mouse_y/zoom;
+			
+			var	diff_x = x - start_x,
+				diff_y = y - start_y;
+								
+			var mode = svgCanvas.getMode();
+			
+			if (mode == "connector" && started) {
+				
+				var sw = cur_line.getAttribute('stroke-width') * 3;
+				// Set start point (adjusts based on bb)
+				var pt = getBBintersect(x, y, elData(cur_line, 'start_bb'), getOffset('start', cur_line));
+				start_x = pt.x;
+				start_y = pt.y;
+				
+				setPoint(cur_line, 0, pt.x, pt.y, true);
+				
+				// Set end point
+				setPoint(cur_line, 'end', x, y, true);
+			} else if (mode == "select") {
+				var slen = selElems.length;
+				
+				while(slen--) {
+					var elem = selElems[slen];
+					// Look for selected connector elements
+					if(elem && elData(elem, 'c_start')) {
+						// Remove the "translate" transform given to move
+						svgCanvas.removeFromSelection([elem]);
+						svgCanvas.getTransformList(elem).clear();
+
+					}
+				}
+				if(connections.length) {
+					updateLine(diff_x, diff_y);
+
+					
+				}
+			} 
+		},
+		mouseUp: function(opts) {
+			var zoom = svgCanvas.getZoom();
+			var e = opts.event,
+				x = opts.mouse_x/zoom,
+				y = opts.mouse_y/zoom,
+				mouse_target = e.target;
+			
+			if(svgCanvas.getMode() == "connector") {
+				var fo = $(mouse_target).closest("foreignObject");
+				if (fo.length) {mouse_target = fo[0];}
+				
+				var parents = $(mouse_target).parents();
+
+				if (mouse_target == start_elem) {
+					// Start line through click
+					started = true;
+					return {
+						keep: true,
+						element: null,
+						started: started
+					};
+				}
+				if ($.inArray(svgcontent, parents) === -1) {
+					// Not a valid target element, so remove line
+					$(cur_line).remove();
+					started = false;
+					return {
+						keep: false,
+						element: null,
+						started: started
+					};
+				}
+				// Valid end element
+				end_elem = mouse_target;
+					
+				var start_id = start_elem.id, end_id = end_elem.id;
+				var conn_str = start_id + " " + end_id;
+				var alt_str = end_id + " " + start_id;
+				// Don't create connector if one already exists
+				var dupe = $(svgcontent).find(conn_sel).filter(function() {
+					var conn = this.getAttributeNS(se_ns, "connector");
+					if (conn == conn_str || conn == alt_str) {return true;}
+				});
+				if(dupe.length) {
+					$(cur_line).remove();
+					return {
+						keep: false,
+						element: null,
+						started: false
+					};
+				}
+				
+				var bb = svgCanvas.getStrokedBBox([end_elem]);
+				
+				var pt = getBBintersect(start_x, start_y, bb, getOffset('start', cur_line));
+				setPoint(cur_line, 'end', pt.x, pt.y, true);
+				$(cur_line)
+					.data("c_start", start_id)
+					.data("c_end", end_id)
+					.data("end_bb", bb);
+				se_ns = svgCanvas.getEditorNS(true);
+				cur_line.setAttributeNS(se_ns, "se:connector", conn_str);
+				cur_line.setAttribute('class', conn_sel.substr(1));
+				cur_line.setAttribute('opacity', 1);
+				svgCanvas.addToSelection([cur_line]);
+				svgCanvas.moveToBottomSelectedElement();
+				selManager.requestSelector(cur_line).showGrips(false);
+				started = false;
+				return {
+					keep: true,
+					element: cur_line,
+					started: started
+				};
+			}
+		},
+		selectedChanged: function(opts) {
+			// TODO: Find better way to skip operations if no connectors are in use
+			if(!$(svgcontent).find(conn_sel).length) {return;}
+			
+			if(svgCanvas.getMode() == 'connector') {
+				svgCanvas.setMode('select');
+			}
+			
+			// Use this to update the current selected elements
+			selElems = opts.elems;
+			
+			var i = selElems.length;
+			
+			while(i--) {
+				var elem = selElems[i];
+				if(elem && elData(elem, 'c_start')) {
+					selManager.requestSelector(elem).showGrips(false);
+					if(opts.selectedElement && !opts.multiselected) {
+						// TODO: Set up context tools and hide most regular line tools
+						showPanel(true);
+					} else {
+						showPanel(false);
+					}
+				} else {
+					showPanel(false);
+				}
+			}
+			updateConnectors();
+		},
+		elementChanged: function(opts) {
+			var elem = opts.elems[0];
+			if (elem && elem.tagName === 'svg' && elem.id === 'svgcontent') {
+				// Update svgcontent (can change on import)
+				svgcontent = elem;
+				init();
+			}
+			
+			// Has marker, so change offset
+			var start;
+			if (elem && (
+				elem.getAttribute("marker-start") ||
+				elem.getAttribute("marker-mid") ||
+				elem.getAttribute("marker-end")
+			)) {
+				start = elem.getAttribute("marker-start");
+				var mid = elem.getAttribute("marker-mid");
+				var end = elem.getAttribute("marker-end");
+				cur_line = elem;
+				$(elem)
+					.data("start_off", !!start)
+					.data("end_off", !!end);
+				
+				if (elem.tagName === 'line' && mid) {
+					// Convert to polyline to accept mid-arrow
+					
+					var x1 = Number(elem.getAttribute('x1'));
+					var x2 = Number(elem.getAttribute('x2'));
+					var y1 = Number(elem.getAttribute('y1'));
+					var y2 = Number(elem.getAttribute('y2'));
+					var id = elem.id;
+					
+					var mid_pt = (' '+((x1+x2)/2)+','+((y1+y2)/2) + ' ');
+					var pline = addElem({
+						"element": "polyline",
+						"attr": {
+							"points": (x1+','+y1+ mid_pt +x2+','+y2),
+							"stroke": elem.getAttribute('stroke'),
+							"stroke-width": elem.getAttribute('stroke-width'),
+							"marker-mid": mid,
+							"fill": "none",
+							"opacity": elem.getAttribute('opacity') || 1
+						}
+					});
+					$(elem).after(pline).remove();
+					svgCanvas.clearSelection();
+					pline.id = id;
+					svgCanvas.addToSelection([pline]);
+					elem = pline;
+				}
+			}
+			// Update line if it's a connector
+			if (elem.getAttribute('class') == conn_sel.substr(1)) {
+				start = getElem(elData(elem, 'c_start'));
+				updateConnectors([start]);
+			} else {
+				updateConnectors();
+			}
+		},
+		toolButtonStateUpdate: function(opts) {
+			if (opts.nostroke) {
+				if ($('#mode_connect').hasClass('tool_button_current')) {
+					svgEditor.clickSelect();
+				}
+			}
+			$('#mode_connect')
+				.toggleClass('disabled',opts.nostroke);
+		}
+	};
+});

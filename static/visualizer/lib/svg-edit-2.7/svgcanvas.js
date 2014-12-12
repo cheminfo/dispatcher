@@ -1,3 +1,7760 @@
-!function(){window.console||(window.console={},window.console.log=function(){},window.console.dir=function(){}),window.opera&&(window.console.log=function(a){opera.postError(a)},window.console.dir=function(){})}(),$.SvgCanvas=function(a,b){function c(a,b){var c,d=svgedit.utilities.getBBox(a);for(c=0;2>c;c++){var e=0===c?"fill":"stroke",f=a.getAttribute(e);if(f&&0===f.indexOf("url(")){var g=svgedit.utilities.getRefElem(f);if("linearGradient"===g.tagName){var h=g.getAttribute("x1")||0,i=g.getAttribute("y1")||0,j=g.getAttribute("x2")||1,k=g.getAttribute("y2")||0;h=d.width*h+d.x,i=d.height*i+d.y,j=d.width*j+d.x,k=d.height*k+d.y;var l=svgedit.math.transformPoint(h,i,b),m=svgedit.math.transformPoint(j,k,b),n={};n.x1=(l.x-d.x)/d.width,n.y1=(l.y-d.y)/d.height,n.x2=(m.x-d.x)/d.width,n.y2=(m.y-d.y)/d.height;var o=g.cloneNode(!0);$(o).attr(n),o.id=tb(),svgedit.utilities.findDefs().appendChild(o),a.setAttribute(e,"url(#"+o.id+")")}}}}var d=svgedit.NS,e={show_outside_canvas:!0,selectNew:!0,dimensions:[640,480]};b&&$.extend(e,b);var f=e.dimensions,g=this,h=a.ownerDocument,i=h.importNode(svgedit.utilities.text2xml('<svg id="svgroot" xmlns="'+d.SVG+'" xlinkns="'+d.XLINK+'" width="'+f[0]+'" height="'+f[1]+'" x="'+f[0]+'" y="'+f[1]+'" overflow="visible"><defs><filter id="canvashadow" filterUnits="objectBoundingBox"><feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/><feOffset in="blur" dx="5" dy="5" result="offsetBlur"/><feMerge><feMergeNode in="offsetBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>').documentElement,!0);a.appendChild(i);var j=h.createElementNS(d.SVG,"svg"),k=g.clearSvgContentElement=function(){for(;j.firstChild;)j.removeChild(j.firstChild);$(j).attr({id:"svgcontent",width:f[0],height:f[1],x:f[0],y:f[1],overflow:e.show_outside_canvas?"visible":"hidden",xmlns:d.SVG,"xmlns:se":d.SE,"xmlns:xlink":d.XLINK}).appendTo(i);var a=h.createComment(" Created with SVG-edit - http://svg-edit.googlecode.com/ ");j.appendChild(a)};k();var m="svg_";g.setIdPrefix=function(a){m=a},g.current_drawing_=new svgedit.draw.Drawing(j,m);var n=g.getCurrentDrawing=function(){return g.current_drawing_},o=1,p=null,q={shape:{fill:("none"==e.initFill.color?"":"#")+e.initFill.color,fill_paint:null,fill_opacity:e.initFill.opacity,stroke:"#"+e.initStroke.color,stroke_paint:null,stroke_opacity:e.initStroke.opacity,stroke_width:e.initStroke.width,stroke_dasharray:"none",stroke_linejoin:"miter",stroke_linecap:"butt",opacity:e.initOpacity}};q.text=$.extend(!0,{},q.shape),$.extend(q.text,{fill:"#000000",stroke_width:0,font_size:24,font_family:"serif"});{var r=q.shape,s=new Array(1),t=this.addSvgElementFromJson=function(a){var b=svgedit.utilities.getElem(a.attr.id),c=n().getCurrentLayer();return b&&a.element!=b.tagName&&(c.removeChild(b),b=null),b||(b=h.createElementNS(d.SVG,a.element),c&&(p||c).appendChild(b)),a.curStyles&&svgedit.utilities.assignAttributes(b,{fill:r.fill,stroke:r.stroke,"stroke-width":r.stroke_width,"stroke-dasharray":r.stroke_dasharray,"stroke-linejoin":r.stroke_linejoin,"stroke-linecap":r.stroke_linecap,"stroke-opacity":r.stroke_opacity,"fill-opacity":r.fill_opacity,opacity:r.opacity/2,style:"pointer-events:inherit"},100),svgedit.utilities.assignAttributes(b,a.attr,100),svgedit.utilities.cleanupElement(b),b},u=(g.getTransformList=svgedit.transformlist.getTransformList,svgedit.math.transformPoint),v=g.matrixMultiply=svgedit.math.matrixMultiply,w=g.hasMatrixTransform=svgedit.math.hasMatrixTransform,z=g.transformListToTransform=svgedit.math.transformListToTransform;svgedit.math.snapToAngle,svgedit.math.getMatrix}svgedit.units.init({getBaseUnit:function(){return e.baseUnit},getElement:svgedit.utilities.getElem,getHeight:function(){return j.getAttribute("height")/o},getWidth:function(){return j.getAttribute("width")/o},getRoundDigits:function(){return bb.round_digits}});g.convertToNum=svgedit.units.convertToNum;svgedit.utilities.init({getDOMDocument:function(){return h},getDOMContainer:function(){return a},getSVGRoot:function(){return i},getSelectedElements:function(){return s},getSVGContent:function(){return j},getBaseUnit:function(){return e.baseUnit},getStepSize:function(){return e.stepSize}});var A=g.findDefs=svgedit.utilities.findDefs,B=g.getUrlFromAttr=svgedit.utilities.getUrlFromAttr,C=g.getHref=svgedit.utilities.getHref,D=g.setHref=svgedit.utilities.setHref,E=svgedit.utilities.getPathBBox,F=(g.getBBox=svgedit.utilities.getBBox,g.getRotationAngle=svgedit.utilities.getRotationAngle,g.getElem=svgedit.utilities.getElem),G=(g.getRefElem=svgedit.utilities.getRefElem,g.assignAttributes=svgedit.utilities.assignAttributes),H=this.cleanupElement=svgedit.utilities.cleanupElement;svgedit.coords.init({getDrawing:function(){return n()},getGridSnapping:function(){return e.gridSnapping}});var I=this.remapElement=svgedit.coords.remapElement;svgedit.recalculate.init({getSVGRoot:function(){return i},getStartTransform:function(){return db},setStartTransform:function(a){db=a}});var J=this.recalculateDimensions=svgedit.recalculate.recalculateDimensions,K=svgedit.getReverseNS(),L=g.sanitizeSvg=svgedit.sanitize.sanitizeSvg,M=svgedit.history.MoveElementCommand,N=svgedit.history.InsertElementCommand,O=svgedit.history.RemoveElementCommand,P=svgedit.history.ChangeElementCommand,Q=svgedit.history.BatchCommand;g.undoMgr=new svgedit.history.UndoManager({handleHistoryEvent:function(a,b){var c=svgedit.history.HistoryEventTypes;if(a==c.BEFORE_UNAPPLY||a==c.BEFORE_APPLY)g.clearSelection();else if(a==c.AFTER_APPLY||a==c.AFTER_UNAPPLY){var d=b.elements();g.pathActions.clear(),ub("changed",d);var e=b.type(),f=a==c.AFTER_APPLY;if(e==M.type()){var h=f?b.newParent:b.oldParent;h==j&&g.identifyLayers()}else if(e==N.type()||e==O.type())b.parent==j&&g.identifyLayers(),e==N.type()?f&&Y(b.elem):f||Y(b.elem),"use"===b.elem.tagName&&Nb(b.elem);else if(e==P.type()){"title"==b.elem.tagName&&b.elem.parentNode.parentNode==j&&g.identifyLayers();var i=f?b.newValues:b.oldValues;i.stdDeviation&&g.setBlurOffsets(b.elem.parentNode,i.stdDeviation)}}}});var R=function(a){g.undoMgr.addCommandToHistory(a)};svgedit.select.init(e,{createSVGElement:function(a){return g.addSvgElementFromJson(a)},svgRoot:function(){return i},svgContent:function(){return j},currentZoom:function(){return o},getStrokedBBox:function(a){return g.getStrokedBBox([a])}});var S=this.selectorManager=svgedit.select.getSelectorManager();svgedit.path.init({getCurrentZoom:function(){return o},getSVGRoot:function(){return i}});var T={exportNoBlur:"Blurred elements will appear as un-blurred",exportNoforeignObject:"foreignObject elements will not appear",exportNoDashArray:"Strokes will appear filled",exportNoText:"Text may not appear as expected"},U="a,circle,ellipse,foreignObject,g,image,line,path,polygon,polyline,rect,svg,text,tspan,use",V=["clip-path","fill","filter","marker-end","marker-mid","marker-start","mask","stroke"],W=$.data,X=document.createElementNS(d.SVG,"animate");$(X).attr({attributeName:"opacity",begin:"indefinite",dur:1,fill:"freeze"}).appendTo(i);var Y=function(a){var b,c,d=$(a).attr(V);for(b in d){var e=d[b];if(e&&0===e.indexOf("url(")){var f=svgedit.utilities.getUrlFromAttr(e).substr(1),g=F(f);g||(svgedit.utilities.findDefs().appendChild(ob[f]),delete ob[f])}}var h=a.getElementsByTagName("*");if(h.length)for(c=0,l=h.length;l>c;c++)Y(h[c])},Z={},_=e.imgPath+"logo.png",ab=[],bb={round_digits:5},cb=!1,db=null,eb="select",fb="none",gb={},hb=q.text,ib=r,jb=null,kb=null,lb=[],mb={},nb=null,ob={};g.clipBoard=[];var pb=this.runExtensions=function(a,b,c){var d=c?[]:!1;return $.each(mb,function(e,f){f&&a in f&&(c?d.push(f[a](b)):d=f[a](b))}),d};this.addExtension=function(a,b){var c;a in mb?console.log('Cannot add extension "'+a+'", an extension by that name already exists"'):(c=$.isFunction(b)?b($.extend(g.getPrivateMethods(),{svgroot:i,svgcontent:j,nonce:n().getNonce(),selectorManager:S})):b,mb[a]=c,ub("extension_added",c))};var qb=this.round=function(a){return parseInt(a*o,10)/o},rb=this.getIntersectionList=function(a){if(null==kb)return null;var b=p||n().getCurrentLayer();lb.length||(lb=yb(b));var c=null;try{c=b.getIntersectionList(a,null)}catch(d){}if(null==c||"function"!=typeof c.item){c=[];var e;if(a)e=a;else{e=kb.getBBox();var f,g={};for(f in e)g[f]=e[f]/o;e=g}for(var h=lb.length;h--;)e.width&&svgedit.math.rectsIntersect(e,lb[h].bbox)&&c.push(lb[h].elem)}return c};getStrokedBBox=this.getStrokedBBox=function(a){if(a||(a=xb()),!a.length)return!1;var b,c=function(a){try{var b=svgedit.utilities.getBBox(a),c=svgedit.utilities.getRotationAngle(a);if(c&&c%90||svgedit.math.hasMatrixTransform(svgedit.transformlist.getTransformList(a))){var e=!1,f=["ellipse","path","line","polyline","polygon"];if(f.indexOf(a.tagName)>=0)b=e=g.convertToPath(a,!0);else if("rect"==a.tagName){var h=a.getAttribute("rx"),i=a.getAttribute("ry");(h||i)&&(b=e=g.convertToPath(a,!0))}if(!e){var j=a.cloneNode(!0),k=document.createElementNS(d.SVG,"g"),l=a.parentNode;l.appendChild(k),k.appendChild(j),b=svgedit.utilities.bboxToObj(k.getBBox()),l.removeChild(k)}}return b}catch(m){return console.log(a,m),null}};if($.each(a,function(){b||this.parentNode&&(b=c(this))}),null==b)return null;var e=b.x+b.width,f=b.y+b.height,h=b.x,i=b.y,j=function(a){var b=a.getAttribute("stroke-width"),c=0;return"none"==a.getAttribute("stroke")||isNaN(b)||(c+=b/2),c},k=[];return $.each(a,function(a,b){var d=c(b);if(d){var e=j(b);h=Math.min(h,d.x-e),i=Math.min(i,d.y-e),k.push(d)}}),b.x=h,b.y=i,$.each(a,function(a,b){var c=k[a];if(c&&1==b.nodeType){var d=j(b);e=Math.max(e,c.x+c.width+d),f=Math.max(f,c.y+c.height+d)}}),b.width=e-h,b.height=f-i,b};var sb,tb,ub,vb,wb,xb=this.getVisibleElements=function(a){a||(a=$(j).children());var b=[];return $(a).children().each(function(a,c){try{c.getBBox()&&b.push(c)}catch(d){}}),b.reverse()},yb=this.getVisibleElementsAndBBoxes=function(a){a||(a=$(j).children());var b=[];return $(a).children().each(function(a,c){try{c.getBBox()&&b.push({elem:c,bbox:getStrokedBBox([c])})}catch(d){}}),b.reverse()},zb=this.groupSvgElem=function(a){var b=document.createElementNS(d.SVG,"g");a.parentNode.replaceChild(b,a),$(b).append(a).data("gsvg",a)[0].id=tb()},Ab=function(a){var b=document.createElementNS(a.namespaceURI,a.nodeName);if($.each(a.attributes,function(a,c){"-moz-math-font-style"!=c.localName&&b.setAttributeNS(c.namespaceURI,c.nodeName,c.nodeValue)}),b.removeAttribute("id"),b.id=tb(),svgedit.browser.isWebkit()&&"path"==a.nodeName){var c=wb.convertPath(a);b.setAttribute("d",c)}if($.each(a.childNodes,function(a,c){switch(c.nodeType){case 1:b.appendChild(Ab(c));break;case 3:b.textContent=c.nodeValue}}),$(a).data("gsvg"))$(b).data("gsvg",b.firstChild);else if($(a).data("symbol")){var d=$(a).data("symbol");$(b).data("ref",d).data("symbol",d)}else"image"==b.tagName&&Kb(b);return b};!function(a){var b={};sb=a.getId=function(){return n().getId()},tb=a.getNextId=function(){return n().getNextId()},ub=a.call=function(a,c){return b[a]?b[a](this,c):void 0},a.bind=function(a,c){var d=b[a];return b[a]=c,d}}(g),this.prepareSvg=function(a){svgedit.options.sanitize&&this.sanitizeSvg(a.documentElement);var b,c,e,f=a.getElementsByTagNameNS(d.SVG,"path");for(b=0,e=f.length;e>b;++b)c=f[b],c.setAttribute("d",wb.convertPath(c)),wb.fixEnd(c)};var Bb=function(a){if(!svgedit.browser.isGecko())return a;var b=a.cloneNode(!0);return a.parentNode.insertBefore(b,a),a.parentNode.removeChild(a),S.releaseSelector(a),s[0]=b,S.requestSelector(b).showGrips(!0),b};this.setRotationAngle=function(a,b){a=parseFloat(a);var c=s[0],d=c.getAttribute("transform"),e=svgedit.utilities.getBBox(c),f=e.x+e.width/2,g=e.y+e.height/2,h=svgedit.transformlist.getTransformList(c);if(h.numberOfItems>0){var j=h.getItem(0);4==j.type&&h.removeItem(0)}if(0!=a){var k=svgedit.math.transformPoint(f,g,svgedit.math.transformListToTransform(h).matrix),l=i.createSVGTransform();l.setRotate(a,k.x,k.y),h.numberOfItems?h.insertItemBefore(l,0):h.appendItem(l)}else 0==h.numberOfItems&&c.removeAttribute("transform");if(!b){var m=c.getAttribute("transform");c.setAttribute("transform",d),Xb("transform",m,s),ub("changed",s)}var n=(svgedit.utilities.getElem("pathpointgrip_container"),S.requestSelector(s[0]));n.resize(),n.updateGripCursors(a)};{var Cb=this.recalculateAllSelectedDimensions=function(){for(var a="none"==fb?"position":"size",b=new svgedit.history.BatchCommand(a),c=s.length;c--;){var d=s[c],e=svgedit.recalculate.recalculateDimensions(d);e&&b.addSubCommand(e)}b.isEmpty()||(R(b),ub("changed",s))},Db=[0,"z","M","m","L","l","C","c","Q","q","A","a","H","h","V","v","S","s","T","t"],Eb=function(a){console.log([a.a,a.b,a.c,a.d,a.e,a.f])},Fb=null,Gb=this.clearSelection=function(a){if(null!=s[0]){var b,c,d=s.length;for(b=0;d>b&&(c=s[b],null!=c);++b)S.releaseSelector(c),s[b]=null}a||ub("selected",s)},Hb=this.addToSelection=function(a,b){if(0!=a.length){for(var c=0;c<s.length&&null!=s[c];)++c;for(var d=a.length;d--;){var e=a[d];if(e&&svgedit.utilities.getBBox(e)&&("a"===e.tagName&&1===e.childNodes.length&&(e=e.firstChild),-1==s.indexOf(e))){s[c]=e,c++;var f=S.requestSelector(e);s.length>1&&f.showGrips(!1)}}for(ub("selected",s),S.requestSelector(s[0]).showGrips(b||1==s.length?!0:!1),s.sort(function(a,b){return a&&b&&a.compareDocumentPosition?3-(6&b.compareDocumentPosition(a)):null==a?1:void 0});null==s[0];)s.shift(0)}},Ib=this.selectOnly=function(a,b){Gb(!0),Hb(a,b)};this.removeFromSelection=function(a){if(null!=s[0]&&0!=a.length){var b,c=0,d=new Array(s.length),e=s.length;for(b=0;e>b;++b){var f=s[b];f&&(-1==a.indexOf(f)?(d[c]=f,c++):S.releaseSelector(f))}s=d}}}this.selectAllInCurrentLayer=function(){var a=n().getCurrentLayer();a&&(eb="select",Ib($(p||a).children()))};var Jb=this.getMouseTarget=function(b){if(null==b)return null;var c=b.target;if(c.correspondingUseElement&&(c=c.correspondingUseElement),[d.MATH,d.HTML].indexOf(c.namespaceURI)>=0&&"svgcanvas"!=c.id)for(;"foreignObject"!=c.nodeName;)if(c=c.parentNode,!c)return i;var e=n().getCurrentLayer();if([i,a,j,e].indexOf(c)>=0)return i;var f=$(c);if(f.closest("#selectorParentGroup").length)return S.selectorParentGroup;for(;c.parentNode!==(p||e);)c=c.parentNode;return c};!function(){var b,c,d=null,f=null,h=null,j=null,k=null,l={},m={minx:null,miny:null,maxx:null,maxy:null},q=0,u={x:0,y:0},v={x:0,y:0},w={x:0,y:0},z={x:0,y:0},A={x:0,y:0},B={x:0,y:0},C=.8,E=10,F=function(a){var b={x:0,y:0},c=u,d=v,e=w,f=z,g=1/6,h=a*a,i=h*a,j=[[-1,3,-3,1],[3,-6,3,0],[-3,0,3,0],[1,4,1,0]];return b.x=g*((c.x*j[0][0]+d.x*j[0][1]+e.x*j[0][2]+f.x*j[0][3])*i+(c.x*j[1][0]+d.x*j[1][1]+e.x*j[1][2]+f.x*j[1][3])*h+(c.x*j[2][0]+d.x*j[2][1]+e.x*j[2][2]+f.x*j[2][3])*a+(c.x*j[3][0]+d.x*j[3][1]+e.x*j[3][2]+f.x*j[3][3])),b.y=g*((c.y*j[0][0]+d.y*j[0][1]+e.y*j[0][2]+f.y*j[0][3])*i+(c.y*j[1][0]+d.y*j[1][1]+e.y*j[1][2]+f.y*j[1][3])*h+(c.y*j[2][0]+d.y*j[2][1]+e.y*j[2][2]+f.y*j[2][3])*a+(c.y*j[3][0]+d.y*j[3][1]+e.y*j[3][2]+f.y*j[3][3])),{x:b.x,y:b.y}},G=function(a){if(!g.spaceKey&&1!==a.button){var b=2===a.button;a.altKey&&svgCanvas.cloneSelectedElements(0,0),Fb=$("#svgcontent g")[0].getScreenCTM().inverse();var c=svgedit.math.transformPoint(a.pageX,a.pageY,Fb),n=c.x*o,p=c.y*o;a.preventDefault(),b&&(eb="select",nb=c);var q=n/o,u=p/o,v=Jb(a);"a"===v.tagName&&1===v.childNodes.length&&(v=v.firstChild);var x=q;j=f=q;var y=u;if(k=h=u,e.gridSnapping&&(q=svgedit.utilities.snapToGrid(q),u=svgedit.utilities.snapToGrid(u),f=svgedit.utilities.snapToGrid(f),h=svgedit.utilities.snapToGrid(h)),v==S.selectorParentGroup&&null!=s[0]){var z=a.target,A=W(z,"type");"rotate"==A?eb="rotate":"resize"==A&&(eb="resize",fb=W(z,"dir")),v=s[0]}db=v.getAttribute("transform");var B,C,E=svgedit.transformlist.getTransformList(v);switch(eb){case"select":if(cb=!0,fb="none",b&&(cb=!1),v!=i){if(-1==s.indexOf(v)&&(a.shiftKey||Gb(!0),Hb([v]),jb=v,wb.clear()),!b)for(B=0;B<s.length;++B)if(null!=s[B]){var F=svgedit.transformlist.getTransformList(s[B]);F.numberOfItems?F.insertItemBefore(i.createSVGTransform(),0):F.appendItem(i.createSVGTransform())}}else b||(Gb(),eb="multiselect",null==kb&&(kb=S.getRubberBandBox()),j*=o,k*=o,svgedit.utilities.assignAttributes(kb,{x:j,y:k,width:0,height:0,display:"inline"},100));break;case"zoom":cb=!0,null==kb&&(kb=S.getRubberBandBox()),svgedit.utilities.assignAttributes(kb,{x:x*o,y:x*o,width:0,height:0,display:"inline"},100);break;case"resize":cb=!0,f=q,h=u,l=svgedit.utilities.getBBox($("#selectedBox0")[0]);var G={};$.each(l,function(a,b){G[a]=b/o}),l=G;var H=svgedit.utilities.getRotationAngle(v)?1:0;if(svgedit.math.hasMatrixTransform(E))E.insertItemBefore(i.createSVGTransform(),H),E.insertItemBefore(i.createSVGTransform(),H),E.insertItemBefore(i.createSVGTransform(),H);else if(E.appendItem(i.createSVGTransform()),E.appendItem(i.createSVGTransform()),E.appendItem(i.createSVGTransform()),svgedit.browser.supportsNonScalingStroke()){var I=svgedit.browser.isWebkit();if(I)var J=function(a){var b=a.getAttributeNS(null,"stroke");a.removeAttributeNS(null,"stroke"),setTimeout(function(){a.setAttributeNS(null,"stroke",b)},0)};v.style.vectorEffect="non-scaling-stroke",I&&J(v);var K=v.getElementsByTagName("*"),L=K.length;for(B=0;L>B;B++)K[B].style.vectorEffect="non-scaling-stroke",I&&J(K[B])}break;case"fhellipse":case"fhrect":case"fhpath":w.x=x,w.y=y,cb=!0,d=x+","+y+" ",C=0==r.stroke_width?1:r.stroke_width,t({element:"polyline",curStyles:!0,attr:{points:d,id:tb(),fill:"none",opacity:r.opacity/2,"stroke-linecap":"round",style:"pointer-events:none"}}),m.minx=x,m.maxx=x,m.miny=y,m.maxy=y;break;case"image":cb=!0;var M=t({element:"image",attr:{x:q,y:u,width:0,height:0,id:tb(),opacity:r.opacity/2,style:"pointer-events:inherit"}});D(M,_),Kb(M);break;case"square":case"rect":cb=!0,f=q,h=u,t({element:"rect",curStyles:!0,attr:{x:q,y:u,width:0,height:0,id:tb(),opacity:r.opacity/2}});break;case"line":cb=!0,C=0==r.stroke_width?1:r.stroke_width,t({element:"line",curStyles:!0,attr:{x1:q,y1:u,x2:q,y2:u,id:tb(),stroke:r.stroke,"stroke-width":C,"stroke-dasharray":r.stroke_dasharray,"stroke-linejoin":r.stroke_linejoin,"stroke-linecap":r.stroke_linecap,"stroke-opacity":r.stroke_opacity,fill:"none",opacity:r.opacity/2,style:"pointer-events:none"}});break;case"circle":cb=!0,t({element:"circle",curStyles:!0,attr:{cx:q,cy:u,r:0,id:tb(),opacity:r.opacity/2}});break;case"ellipse":cb=!0,t({element:"ellipse",curStyles:!0,attr:{cx:q,cy:u,rx:0,ry:0,id:tb(),opacity:r.opacity/2}});break;case"text":cb=!0;{t({element:"text",curStyles:!0,attr:{x:q,y:u,id:tb(),fill:hb.fill,"stroke-width":hb.stroke_width,"font-size":hb.font_size,"font-family":hb.font_family,"text-anchor":"middle","xml:space":"preserve",opacity:r.opacity}})}break;case"path":case"pathedit":f*=o,h*=o,wb.mouseDown(a,v,f,h),cb=!0;break;case"textedit":f*=o,h*=o,vb.mouseDown(a,v,f,h),cb=!0;break;case"rotate":cb=!0,g.undoMgr.beginUndoableChange("transform",s)}var N=pb("mouseDown",{event:a,start_x:f,start_y:h,selectedElements:s},!0);$.each(N,function(a,b){b&&b.started&&(cb=!0)})}},I=function(a){if(cb&&1!==a.button&&!g.spaceKey){var n,p,r,t,D,G,H,I,J,K,L=s[0],M=svgedit.math.transformPoint(a.pageX,a.pageY,Fb),N=M.x*o,O=M.y*o,P=svgedit.utilities.getElem(sb()),Q=N/o;x=Q;var R=O/o;y=R,e.gridSnapping&&(x=svgedit.utilities.snapToGrid(x),y=svgedit.utilities.snapToGrid(y)),a.preventDefault();var T;switch(eb){case"select":if(null!==s[0]&&(G=x-f,H=y-h,e.gridSnapping&&(G=svgedit.utilities.snapToGrid(G),H=svgedit.utilities.snapToGrid(H)),a.shiftKey&&(p=svgedit.math.snapToAngle(f,h,x,y),x=p.x,y=p.y),0!=G||0!=H)){for(I=s.length,n=0;I>n&&(L=s[n],null!=L);++n){var U=i.createSVGTransform();T=svgedit.transformlist.getTransformList(L),U.setTranslate(G,H),T.numberOfItems?T.replaceItem(U,0):T.appendItem(U),S.requestSelector(L).resize()}ub("transition",s)}break;case"multiselect":Q*=o,R*=o,svgedit.utilities.assignAttributes(kb,{x:Math.min(j,Q),y:Math.min(k,R),width:Math.abs(Q-j),height:Math.abs(R-k)},100);var V=[],W=[],X=rb();for(I=s.length,n=0;I>n;++n){var Y=X.indexOf(s[n]);-1==Y?V.push(s[n]):X[Y]=null}for(I=X.length,n=0;I>n;++n)X[n]&&W.push(X[n]);V.length>0&&g.removeFromSelection(V),W.length>0&&Hb(W);break;case"resize":T=svgedit.transformlist.getTransformList(L);var Z=svgedit.math.hasMatrixTransform(T);K=Z?l:svgedit.utilities.getBBox(L);var _=K.x,ab=K.y,bb=K.width,db=K.height;if(G=x-f,H=y-h,e.gridSnapping&&(G=svgedit.utilities.snapToGrid(G),H=svgedit.utilities.snapToGrid(H),db=svgedit.utilities.snapToGrid(db),bb=svgedit.utilities.snapToGrid(bb)),J=svgedit.utilities.getRotationAngle(L)){var gb=Math.sqrt(G*G+H*H),hb=Math.atan2(H,G)-J*Math.PI/180;G=gb*Math.cos(hb),H=gb*Math.sin(hb)}-1==fb.indexOf("n")&&-1==fb.indexOf("s")&&(H=0),-1==fb.indexOf("e")&&-1==fb.indexOf("w")&&(G=0);var ib=0,jb=0,lb=db?(db+H)/db:1,mb=bb?(bb+G)/bb:1;fb.indexOf("n")>=0&&(lb=db?(db-H)/db:1,jb=db),fb.indexOf("w")>=0&&(mb=bb?(bb-G)/bb:1,ib=bb);var nb=i.createSVGTransform(),ob=i.createSVGTransform(),qb=i.createSVGTransform();if(e.gridSnapping&&(_=svgedit.utilities.snapToGrid(_),ib=svgedit.utilities.snapToGrid(ib),ab=svgedit.utilities.snapToGrid(ab),jb=svgedit.utilities.snapToGrid(jb)),nb.setTranslate(-(_+ib),-(ab+jb)),a.shiftKey&&(1==mb?mb=lb:lb=mb),ob.setScale(mb,lb),qb.setTranslate(_+ib,ab+jb),Z){var tb=J?1:0;T.replaceItem(nb,2+tb),T.replaceItem(ob,1+tb),T.replaceItem(qb,Number(tb))}else{var xb=T.numberOfItems;T.replaceItem(qb,xb-3),T.replaceItem(ob,xb-2),T.replaceItem(nb,xb-1)}S.requestSelector(L).resize(),ub("transition",s);break;case"zoom":Q*=o,R*=o,svgedit.utilities.assignAttributes(kb,{x:Math.min(j*o,Q),y:Math.min(k*o,R),width:Math.abs(Q-j*o),height:Math.abs(R-k*o)},100);break;case"text":svgedit.utilities.assignAttributes(P,{x:x,y:y},1e3);break;case"line":var yb=null;window.opera||i.suspendRedraw(1e3),e.gridSnapping&&(x=svgedit.utilities.snapToGrid(x),y=svgedit.utilities.snapToGrid(y));var zb=x,Ab=y;a.shiftKey&&(p=svgedit.math.snapToAngle(f,h,zb,Ab),zb=p.x,Ab=p.y),P.setAttributeNS(null,"x2",zb),P.setAttributeNS(null,"y2",Ab),window.opera||i.unsuspendRedraw(yb);break;case"foreignObject":case"square":case"rect":case"image":var Bb,Cb,Db="square"==eb||a.shiftKey,Eb=Math.abs(x-f),Gb=Math.abs(y-h);Db?(Eb=Gb=Math.max(Eb,Gb),Bb=x>f?f:f-Eb,Cb=y>h?h:h-Gb):(Bb=Math.min(f,x),Cb=Math.min(h,y)),e.gridSnapping&&(Eb=svgedit.utilities.snapToGrid(Eb),Gb=svgedit.utilities.snapToGrid(Gb),Bb=svgedit.utilities.snapToGrid(Bb),Cb=svgedit.utilities.snapToGrid(Cb)),svgedit.utilities.assignAttributes(P,{width:Eb,height:Gb,x:Bb,y:Cb},1e3);break;case"circle":r=$(P).attr(["cx","cy"]),t=r.cx,D=r.cy;var Ib=Math.sqrt((x-t)*(x-t)+(y-D)*(y-D));e.gridSnapping&&(Ib=svgedit.utilities.snapToGrid(Ib)),P.setAttributeNS(null,"r",Ib);break;case"ellipse":r=$(P).attr(["cx","cy"]),t=r.cx,D=r.cy,yb=null,window.opera||i.suspendRedraw(1e3),e.gridSnapping&&(x=svgedit.utilities.snapToGrid(x),t=svgedit.utilities.snapToGrid(t),y=svgedit.utilities.snapToGrid(y),D=svgedit.utilities.snapToGrid(D)),P.setAttributeNS(null,"rx",Math.abs(x-t));var Jb=Math.abs(a.shiftKey?x-t:y-D);P.setAttributeNS(null,"ry",Jb),window.opera||i.unsuspendRedraw(yb);break;case"fhellipse":case"fhrect":m.minx=Math.min(Q,m.minx),m.maxx=Math.max(Q,m.maxx),m.miny=Math.min(R,m.miny),m.maxy=Math.max(R,m.maxy);case"fhpath":if(z.x=Q,z.y=R,u.x&&u.y)for(n=0;E-1>n;n++)b=n/E,c=(n+1)/E,A=F(c),B=A,A=F(b),q+=Math.sqrt((B.x-A.x)*(B.x-A.x)+(B.y-A.y)*(B.y-A.y)),q>C&&(d+=+A.x+","+A.y+" ",P.setAttributeNS(null,"points",d),q-=C);u={x:v.x,y:v.y},v={x:w.x,y:w.y},w={x:z.x,y:z.y};break;case"path":case"pathedit":if(x*=o,y*=o,e.gridSnapping&&(x=svgedit.utilities.snapToGrid(x),y=svgedit.utilities.snapToGrid(y),f=svgedit.utilities.snapToGrid(f),h=svgedit.utilities.snapToGrid(h)),a.shiftKey){var Kb,Lb,Mb=svgedit.path.path;Mb?(Kb=Mb.dragging?Mb.dragging[0]:f,Lb=Mb.dragging?Mb.dragging[1]:h):(Kb=f,Lb=h),p=svgedit.math.snapToAngle(Kb,Lb,x,y),x=p.x,y=p.y}kb&&"none"!==kb.getAttribute("display")&&(Q*=o,R*=o,svgedit.utilities.assignAttributes(kb,{x:Math.min(j*o,Q),y:Math.min(k*o,R),width:Math.abs(Q-j*o),height:Math.abs(R-k*o)},100)),wb.mouseMove(x,y);break;case"textedit":x*=o,y*=o,vb.mouseMove(N,O);break;case"rotate":K=svgedit.utilities.getBBox(L),t=K.x+K.width/2,D=K.y+K.height/2;var Nb=svgedit.math.getMatrix(L),Ob=svgedit.math.transformPoint(t,D,Nb);if(t=Ob.x,D=Ob.y,J=(Math.atan2(D-y,t-x)*(180/Math.PI)-90)%360,e.gridSnapping&&(J=svgedit.utilities.snapToGrid(J)),a.shiftKey){var Pb=45;J=Math.round(J/Pb)*Pb}g.setRotationAngle(-180>J?360+J:J,!0),ub("transition",s)}pb("mouseMove",{event:a,mouse_x:N,mouse_y:O,selected:L})}},J=function(a){if(2!==a.button){var b=jb;if(jb=null,cb){var c=svgedit.math.transformPoint(a.pageX,a.pageY,Fb),d=c.x*o,f=c.y*o,h=d/o,i=f/o,l=svgedit.utilities.getElem(sb()),p=!1,x=h,y=i,A=!1;cb=!1;var B,C;switch(eb){case"resize":case"multiselect":null!=kb&&(kb.setAttribute("display","none"),lb=[]),eb="select";case"select":if(null!=s[0]){if(null==s[1]){var D=s[0];switch(D.tagName){case"g":case"use":case"image":case"foreignObject":break;default:ib.fill=D.getAttribute("fill"),ib.fill_opacity=D.getAttribute("fill-opacity"),ib.stroke=D.getAttribute("stroke"),ib.stroke_opacity=D.getAttribute("stroke-opacity"),ib.stroke_width=D.getAttribute("stroke-width"),ib.stroke_dasharray=D.getAttribute("stroke-dasharray"),ib.stroke_linejoin=D.getAttribute("stroke-linejoin"),ib.stroke_linecap=D.getAttribute("stroke-linecap")}"text"==D.tagName&&(hb.font_size=D.getAttribute("font-size"),hb.font_family=D.getAttribute("font-family")),S.requestSelector(D).showGrips(!0)}if(Cb(),x!=j||y!=k){var E,F=s.length;for(E=0;F>E&&null!=s[E];++E)s[E].firstChild||S.requestSelector(s[E]).resize()}else C=a.target,"path"===s[0].nodeName&&null==s[1]?wb.select(s[0]):a.shiftKey&&b!=C&&g.removeFromSelection([C]);if(svgedit.browser.supportsNonScalingStroke()){var G=s[0];G&&(G.removeAttribute("style"),svgedit.utilities.walkTree(G,function(a){a.removeAttribute("style")}))}}return;case"zoom":null!=kb&&kb.setAttribute("display","none");var I=a.shiftKey?.5:2;return void ub("zoomed",{x:Math.min(j,x),y:Math.min(k,y),width:Math.abs(x-j),height:Math.abs(y-k),factor:I});case"fhpath":q=0,u={x:0,y:0},v={x:0,y:0},w={x:0,y:0},z={x:0,y:0};var J=l.getAttribute("points"),K=J.indexOf(",");p=K>=0?J.indexOf(",",K+1)>=0:J.indexOf(" ",J.indexOf(" ")+1)>=0,p&&(l=wb.smoothPolylineIntoPath(l));break;case"line":B=$(l).attr(["x1","x2","y1","y2"]),p=B.x1!=B.x2||B.y1!=B.y2;break;case"foreignObject":case"square":case"rect":case"image":B=$(l).attr(["width","height"]),p=0!=B.width||0!=B.height||"image"===eb;break;case"circle":p=0!=l.getAttribute("r");break;case"ellipse":B=$(l).attr(["rx","ry"]),p=null!=B.rx||null!=B.ry;break;case"fhellipse":m.maxx-m.minx>0&&m.maxy-m.miny>0&&(l=t({element:"ellipse",curStyles:!0,attr:{cx:(m.minx+m.maxx)/2,cy:(m.miny+m.maxy)/2,rx:(m.maxx-m.minx)/2,ry:(m.maxy-m.miny)/2,id:sb()}}),ub("changed",[l]),p=!0);break;case"fhrect":m.maxx-m.minx>0&&m.maxy-m.miny>0&&(l=t({element:"rect",curStyles:!0,attr:{x:m.minx,y:m.miny,width:m.maxx-m.minx,height:m.maxy-m.miny,id:sb()}}),ub("changed",[l]),p=!0);break;case"text":p=!0,Ib([l]),vb.start(l);break;case"path":l=null,cb=!0;var L=wb.mouseUp(a,l,d,f);l=L.element,p=L.keep;break;case"pathedit":p=!0,l=null,wb.mouseUp(a);break;case"textedit":p=!1,l=null,vb.mouseUp(a,d,f);break;case"rotate":p=!0,l=null,eb="select";var M=g.undoMgr.finishUndoableChange();M.isEmpty()||R(M),Cb(),ub("changed",s)}var N=pb("mouseUp",{event:a,mouse_x:d,mouse_y:f},!0);if($.each(N,function(a,b){b&&(p=b.keep||p,l=b.element,cb=b.started||cb)}),p||null==l){if(null!=l){g.addedNew=!0,A&&svgedit.units.convertAttrs(l);var O,P=.2;if(X.beginElement&&l.getAttribute("opacity")!=r.opacity){O=$(X).clone().attr({to:r.opacity,dur:P}).appendTo(l);try{O[0].beginElement()}catch(Q){}}else P=0;setTimeout(function(){O&&O.remove(),l.setAttribute("opacity",r.opacity),l.setAttribute("style","pointer-events:inherit"),H(l),"path"===eb?wb.toEditMode(l):e.selectNew&&Ib([l],!0),R(new svgedit.history.InsertElementCommand(l)),ub("changed",[l])},1e3*P)}}else{for(n().releaseId(sb()),l.parentNode.removeChild(l),l=null,C=a.target;"g"==C.parentNode.parentNode.tagName;)C=C.parentNode;"path"==eb&&drawn_path||"selectorParentGroup"==C.parentNode.id||"svgcanvas"==C.id||"svgroot"==C.id||(g.setMode("select"),Ib([C],!0))}db=null}}},K=function(a){var b=a.target,c=b.parentNode;if(c!==p){var d=Jb(a),e=d.tagName;if("text"===e&&"textedit"!==eb){var f=svgedit.math.transformPoint(a.pageX,a.pageY,Fb);vb.select(d,f.x,f.y)}"g"!==e&&"a"!==e||!svgedit.utilities.getRotationAngle(d)||(Yb(d),d=s[0],Gb(!0)),p&&Rb(),"g"!==c.tagName&&"a"!==c.tagName||c===n().getCurrentLayer()||d===S.selectorParentGroup||Sb(d)}},L=function(a){return a.preventDefault(),!1};$(a).mousedown(G).mousemove(I).click(L).dblclick(K).mouseup(J),$(a).bind("mousewheel DOMMouseScroll",function(a){a.preventDefault();var b=a.originalEvent;Fb=$("#svgcontent g")[0].getScreenCTM().inverse();var c=svgedit.math.transformPoint(b.pageX,b.pageY,Fb),d={x:c.x,y:c.y,width:0,height:0},e=b.wheelDelta?b.wheelDelta:b.detail?-b.detail:0;e&&(d.factor=Math.max(.75,Math.min(4/3,e)),ub("zoomed",d))})}();var Kb=function(a){$(a).click(function(a){a.preventDefault()})};vb=g.textActions=function(){function a(a){var b=""===n.value;if($(n).focus(),!arguments.length)if(b)a=0;else{if(n.selectionEnd!==n.selectionStart)return;a=n.selectionEnd}var c;c=y[a],b||n.setSelectionRange(a,a),p=svgedit.utilities.getElem("text_cursor"),p||(p=document.createElementNS(d.SVG,"line"),svgedit.utilities.assignAttributes(p,{id:"text_cursor",stroke:"#333","stroke-width":1}),p=svgedit.utilities.getElem("selectorParentGroup").appendChild(p)),r||(r=setInterval(function(){var a="none"===p.getAttribute("display");p.setAttribute("display",a?"inline":"none")},600));var e=j(c.x,t.y),f=j(c.x,t.y+t.height);svgedit.utilities.assignAttributes(p,{x1:e.x,y1:e.y,x2:f.x,y2:f.y,visibility:"visible",display:"inline"}),q&&q.setAttribute("d","")}function b(b,c,e){if(b===c)return void a(c);e||n.setSelectionRange(b,c),q=svgedit.utilities.getElem("text_selectblock"),q||(q=document.createElementNS(d.SVG,"path"),svgedit.utilities.assignAttributes(q,{id:"text_selectblock",fill:"green",opacity:.5,style:"pointer-events:none"}),svgedit.utilities.getElem("selectorParentGroup").appendChild(q));var f=y[b],g=y[c];p.setAttribute("visibility","hidden");var h=j(f.x,t.y),i=j(f.x+(g.x-f.x),t.y),k=j(f.x,t.y+t.height),l=j(f.x+(g.x-f.x),t.y+t.height),m="M"+h.x+","+h.y+" L"+i.x+","+i.y+" "+l.x+","+l.y+" "+k.x+","+k.y+"z";svgedit.utilities.assignAttributes(q,{d:m,display:"inline"})}function c(a,b){var c=i.createSVGPoint();if(c.x=a,c.y=b,1==y.length)return 0;var d=m.getCharNumAtPosition(c);0>d?(d=y.length-2,a<=y[0].x&&(d=0)):d>=y.length-2&&(d=y.length-2);var e=y[d],f=e.x+e.width/2;return a>f&&d++,d}function e(b,d){a(c(b,d))}function f(a,d,e){var f=n.selectionStart,g=c(a,d),h=Math.min(f,g),i=Math.max(f,g);b(h,i,!e)}function h(a,b){var c={x:a,y:b};if(c.x/=o,c.y/=o,u){var d=svgedit.math.transformPoint(c.x,c.y,u.inverse());c.x=d.x,c.y=d.y}return c}function j(a,b){var c={x:a,y:b};if(u){var d=svgedit.math.transformPoint(c.x,c.y,u);c.x=d.x,c.y=d.y}return c.x*=o,c.y*=o,c}function k(a){b(0,m.textContent.length),$(this).unbind(a)}function l(a){if(x&&m){var d=svgedit.math.transformPoint(a.pageX,a.pageY,Fb),e=d.x*o,f=d.y*o,g=h(e,f),i=c(g.x,g.y),j=m.textContent,l=j.substr(0,i).replace(/[a-z0-9]+$/i,"").length,n=j.substr(i).match(/^[a-z0-9]+/i),p=(n?n[0].length:0)+i;b(l,p),$(a.target).click(k),setTimeout(function(){$(a.target).unbind("click",k)},300)}}var m,n,p,q,r,t,u,v,w,x,y=[];return{select:function(a,b,c){m=a,vb.toEditMode(b,c)},start:function(a){m=a,vb.toEditMode()},mouseDown:function(a,b,c,d){var f=h(c,d);n.focus(),e(f.x,f.y),v=c,w=d},mouseMove:function(a,b){var c=h(a,b);f(c.x,c.y)},mouseUp:function(a,b,c){var d=h(b,c);f(d.x,d.y,!0),a.target!==m&&v+2>b&&b>v-2&&w+2>c&&c>w-2&&vb.toSelectMode(!0)},setCursor:a,toEditMode:function(b,c){x=!1,eb="textedit",S.requestSelector(m).showGrips(!1);S.requestSelector(m).selectorRect;if(vb.init(),$(m).css("cursor","text"),arguments.length){var d=h(b,c);e(d.x,d.y)}else a();setTimeout(function(){x=!0},300)},toSelectMode:function(a){eb="select",clearInterval(r),r=null,q&&$(q).attr("display","none"),p&&$(p).attr("visibility","hidden"),$(m).css("cursor","move"),a&&(Gb(),$(m).css("cursor","move"),ub("selected",[m]),Hb([m],!0)),m&&!m.textContent.length&&g.deleteSelectedElements(),$(n).blur(),m=!1
-},setInputElem:function(a){n=a},clear:function(){"textedit"==eb&&vb.toSelectMode()},init:function(){if(m){var a,c;m.parentNode||(m=s[0],S.requestSelector(m).showGrips(!1));var d=m.textContent,e=d.length,f=m.getAttribute("transform");for(t=svgedit.utilities.getBBox(m),u=f?svgedit.math.getMatrix(m):null,y=new Array(e),n.focus(),$(m).unbind("dblclick",l).dblclick(l),e||(c={x:t.x+t.width/2,width:0}),a=0;e>a;a++){var h=m.getStartPositionOfChar(a);if(c=m.getEndPositionOfChar(a),!svgedit.browser.supportsGoodTextCharPos()){var i=g.contentW*o;h.x-=i,c.x-=i,h.x/=o,c.x/=o}y[a]={x:h.x,y:t.y,width:c.x-h.x,height:t.height}}y.push({x:c.x,width:0}),b(n.selectionStart,n.selectionEnd,!0)}}}}(),wb=g.pathActions=function(){function b(a){a.setAttribute("d",wb.convertPath(a))}var f,h,i,j=!1;svgedit.path.Path.prototype.endChanges=function(a){svgedit.browser.isWebkit()&&b(this.elem);var c=new svgedit.history.ChangeElementCommand(this.elem,{d:this.last_d},a);R(c),ub("changed",[this.elem])},svgedit.path.Path.prototype.addPtsToSelection=function(a){var b,c;for($.isArray(a)||(a=[a]),b=0;b<a.length;b++){var d=a[b];c=this.segs[d],c.ptgrip&&-1==this.selected_pts.indexOf(d)&&d>=0&&this.selected_pts.push(d)}this.selected_pts.sort(),b=this.selected_pts.length;for(var e=new Array(b);b--;){var f=this.selected_pts[b];c=this.segs[f],c.select(!0),e[b]=c.ptgrip}wb.canDeleteNodes=!0,wb.closed_subpath=this.subpathIsClosed(this.selected_pts[0]),ub("selected",e)},f=null;var k=null,l=!1,m=function(a){var b,c=a.points,d=c.numberOfItems;if(d>=4){var e=c.getItem(0),f=null,g=[];for(g.push(["M",e.x,",",e.y," C"].join("")),b=1;d-4>=b;b+=3){var h=c.getItem(b),i=c.getItem(b+1),j=c.getItem(b+2);if(f){var k=svgedit.path.smoothControlPoints(f,h,e);if(k&&2==k.length){var l=g[g.length-1].split(",");l[2]=k[0].x,l[3]=k[0].y,g[g.length-1]=l.join(","),h=k[1]}}g.push([h.x,h.y,i.x,i.y,j.x,j.y].join(",")),e=j,f=i}for(g.push("L");d>b;){var m=c.getItem(b);g.push([m.x,m.y].join(",")),b++}g=g.join(" "),a=t({element:"path",curStyles:!0,attr:{id:sb(),d:g,fill:"none"}})}return a};return{mouseDown:function(b,c,f,g){var i;if("path"!==eb){if(svgedit.path.path){svgedit.path.path.storeD(),i=b.target.id;var l;if("pathpointgrip_"==i.substr(0,14)){l=svgedit.path.path.cur_pt=parseInt(i.substr(14)),svgedit.path.path.dragging=[f,g];var m=svgedit.path.path.segs[l];b.shiftKey?m.selected?svgedit.path.path.removePtFromSelection(l):svgedit.path.path.addPtsToSelection(l):((svgedit.path.path.selected_pts.length<=1||!m.selected)&&svgedit.path.path.clearSelection(),svgedit.path.path.addPtsToSelection(l))}else if(0==i.indexOf("ctrlpointgrip_")){svgedit.path.path.dragging=[f,g];var n=i.split("_")[1].split("c");l=Number(n[0]);var p=Number(n[1]);svgedit.path.path.selectPt(l,p)}svgedit.path.path.dragging||(null==kb&&(kb=S.getRubberBandBox()),svgedit.utilities.assignAttributes(kb,{x:f*o,y:g*o,width:0,height:0,display:"inline"},100))}}else{mouse_x=f,mouse_y=g;var q=mouse_x/o,s=mouse_y/o,u=svgedit.utilities.getElem("path_stretch_line");h=[q,s],e.gridSnapping&&(q=svgedit.utilities.snapToGrid(q),s=svgedit.utilities.snapToGrid(s),mouse_x=svgedit.utilities.snapToGrid(mouse_x),mouse_y=svgedit.utilities.snapToGrid(mouse_y)),u||(u=document.createElementNS(d.SVG,"path"),svgedit.utilities.assignAttributes(u,{id:"path_stretch_line",stroke:"#22C","stroke-width":"0.5",fill:"none"}),u=svgedit.utilities.getElem("selectorParentGroup").appendChild(u)),u.setAttribute("display","inline");var v,w=null;if(k){for(var x=k.pathSegList,y=x.numberOfItems,z=6/o,A=!1;y;){y--;var B=x.getItem(y),C=B.x,D=B.y;if(q>=C-z&&C+z>=q&&s>=D-z&&D+z>=s){A=!0;break}}i=sb(),svgedit.path.removePath_(i);var E,F,G=svgedit.utilities.getElem(i),H=x.numberOfItems;if(A){if(1>=y&&H>=2){var I=x.getItem(0).x,J=x.getItem(0).y;F=u.pathSegList.getItem(1),E=4===F.pathSegType?k.createSVGPathSegLinetoAbs(I,J):k.createSVGPathSegCurvetoCubicAbs(I,J,F.x1/o,F.y1/o,I,J);var K=k.createSVGPathSegClosePath();x.appendItem(E),x.appendItem(K)}else if(3>H)return w=!1;if($(u).remove(),element=G,k=null,cb=!1,j){svgedit.path.path.matrix&&svgedit.coords.remapElement(G,{},svgedit.path.path.matrix.inverse());var L=G.getAttribute("d"),M=$(svgedit.path.path.elem).attr("d");return $(svgedit.path.path.elem).attr("d",M+L),$(G).remove(),svgedit.path.path.matrix&&svgedit.path.recalcRotatedPath(),svgedit.path.path.init(),wb.toEditMode(svgedit.path.path.elem),svgedit.path.path.selectPt(),!1}}else{if(!$.contains(a,Jb(b)))return console.log("Clicked outside canvas"),!1;var N=k.pathSegList.numberOfItems,O=k.pathSegList.getItem(N-1),P=O.x,Q=O.y;if(b.shiftKey){var R=svgedit.math.snapToAngle(P,Q,q,s);q=R.x,s=R.y}F=u.pathSegList.getItem(1),E=4===F.pathSegType?k.createSVGPathSegLinetoAbs(qb(q),qb(s)):k.createSVGPathSegCurvetoCubicAbs(qb(q),qb(s),F.x1/o,F.y1/o,F.x2/o,F.y2/o),k.pathSegList.appendItem(E),q*=o,s*=o,u.setAttribute("d",["M",q,s,q,s].join(" ")),v=N,j&&(v+=svgedit.path.path.segs.length),svgedit.path.addPointGrip(v,q,s)}}else d_attr="M"+q+","+s+" ",k=t({element:"path",curStyles:!0,attr:{d:d_attr,id:tb(),opacity:r.opacity/2}}),u.setAttribute("d",["M",mouse_x,mouse_y,mouse_x,mouse_y].join(" ")),v=j?svgedit.path.path.segs.length:0,svgedit.path.addPointGrip(v,mouse_x,mouse_y)}},mouseMove:function(a,b){if(l=!0,"path"!==eb)if(svgedit.path.path.dragging){var c=svgedit.path.getPointFromGrip({x:svgedit.path.path.dragging[0],y:svgedit.path.path.dragging[1]},svgedit.path.path),d=svgedit.path.getPointFromGrip({x:a,y:b},svgedit.path.path),e=d.x-c.x,f=d.y-c.y;svgedit.path.path.dragging=[a,b],svgedit.path.path.dragctrl?svgedit.path.path.moveCtrl(e,f):svgedit.path.path.movePts(e,f)}else svgedit.path.path.selected_pts=[],svgedit.path.path.eachSeg(function(){var a=this;if(a.next||a.prev){var b=(a.item,kb.getBBox()),c=svgedit.path.getGripPt(a),d={x:c.x,y:c.y,width:0,height:0},e=svgedit.math.rectsIntersect(b,d);this.select(e),e&&svgedit.path.path.selected_pts.push(a.index)}});else{if(!k)return;var g=k.pathSegList,j=g.numberOfItems-1;if(h){var m=svgedit.path.addCtrlGrip("1c1"),n=svgedit.path.addCtrlGrip("0c2");m.setAttribute("cx",a),m.setAttribute("cy",b),m.setAttribute("display","inline");var p=h[0],q=h[1],r=(g.getItem(j),a/o),s=b/o,t=p+(p-r),u=q+(q-s);n.setAttribute("cx",t*o),n.setAttribute("cy",u*o),n.setAttribute("display","inline");var v=svgedit.path.getCtrlLine(1);if(svgedit.utilities.assignAttributes(v,{x1:a,y1:b,x2:t*o,y2:u*o,display:"inline"}),0===j)i=[a,b];else{var w=g.getItem(j-1),x=w.x,y=w.y;6===w.pathSegType?(x+=x-w.x2,y+=y-w.y2):i&&(x=i[0]/o,y=i[1]/o),svgedit.path.replacePathSeg(6,j,[p,q,x,y,t,u],k)}}else{var z=svgedit.utilities.getElem("path_stretch_line");if(z){var A=g.getItem(j);if(6===A.pathSegType){var B=A.x+(A.x-A.x2),C=A.y+(A.y-A.y2);svgedit.path.replacePathSeg(6,1,[a,b,B*o,C*o,a,b],z)}else i?svgedit.path.replacePathSeg(6,1,[a,b,i[0],i[1],a,b],z):svgedit.path.replacePathSeg(4,1,[a,b],z)}}}},mouseUp:function(a,b){if("path"===eb)return h=null,k||(b=svgedit.utilities.getElem(sb()),cb=!1,i=null),{keep:!0,element:b};if(svgedit.path.path.dragging){var c=svgedit.path.path.cur_pt;svgedit.path.path.dragging=!1,svgedit.path.path.dragctrl=!1,svgedit.path.path.update(),l&&svgedit.path.path.endChanges("Move path point(s)"),a.shiftKey||l||svgedit.path.path.selectPt(c)}else kb&&"none"!=kb.getAttribute("display")?(kb.setAttribute("display","none"),kb.getAttribute("width")<=2&&kb.getAttribute("height")<=2&&wb.toSelectMode(a.target)):wb.toSelectMode(a.target);l=!1},toEditMode:function(a){svgedit.path.path=svgedit.path.getPath_(a),eb="pathedit",Gb(),svgedit.path.path.show(!0).update(),svgedit.path.path.oldbbox=svgedit.utilities.getBBox(svgedit.path.path.elem),j=!1},toSelectMode:function(a){var b=a==svgedit.path.path.elem;eb="select",svgedit.path.path.show(!1),f=!1,Gb(),svgedit.path.path.matrix&&svgedit.path.recalcRotatedPath(),b&&(ub("selected",[a]),Hb([a],!0))},addSubPath:function(a){a?(eb="path",j=!0):(wb.clear(!0),wb.toEditMode(svgedit.path.path.elem))},select:function(a){f===a?(wb.toEditMode(a),eb="pathedit"):f=a},reorient:function(){var a=s[0];if(a){var b=svgedit.utilities.getRotationAngle(a);if(0!=b){var c=new svgedit.history.BatchCommand("Reorient path"),d={d:a.getAttribute("d"),transform:a.getAttribute("transform")};c.addSubCommand(new svgedit.history.ChangeElementCommand(a,d)),Gb(),this.resetOrientation(a),R(c),svgedit.path.getPath_(a).show(!1).matrix=null,this.clear(),Hb([a],!0),ub("changed",s)}}},clear:function(){if(f=null,k){var a=svgedit.utilities.getElem(sb());$(svgedit.utilities.getElem("path_stretch_line")).remove(),$(a).remove(),$(svgedit.utilities.getElem("pathpointgrip_container")).find("*").attr("display","none"),k=i=null,cb=!1}else"pathedit"==eb&&this.toSelectMode();svgedit.path.path&&svgedit.path.path.init().show(!1)},resetOrientation:function(a){if(null==a||"path"!=a.nodeName)return!1;var b=svgedit.transformlist.getTransformList(a),d=svgedit.math.transformListToTransform(b).matrix;b.clear(),a.removeAttribute("transform");var e,f=a.pathSegList,g=f.numberOfItems;for(e=0;g>e;++e){var h=f.getItem(e),i=h.pathSegType;if(1!=i){var j=[];$.each(["",1,2],function(a,b){var c=h["x"+b],e=h["y"+b];if(void 0!==c&&void 0!==e){var f=svgedit.math.transformPoint(c,e,d);j.splice(j.length,0,f.x,f.y)}}),svgedit.path.replacePathSeg(i,e,j,a)}}c(a,d)},zoomChange:function(){"pathedit"==eb&&svgedit.path.path.update()},getNodePoint:function(){var a=svgedit.path.path.selected_pts.length?svgedit.path.path.selected_pts[0]:1,b=svgedit.path.path.segs[a];return{x:b.item.x,y:b.item.y,type:b.type}},linkControlPoints:function(a){svgedit.path.setLinkControlPoints(a)},clonePathNode:function(){svgedit.path.path.storeD();for(var a=svgedit.path.path.selected_pts,b=(svgedit.path.path.segs,a.length),c=[];b--;){var d=a[b];svgedit.path.path.addSeg(d),c.push(d+b),c.push(d+b+1)}svgedit.path.path.init().addPtsToSelection(c),svgedit.path.path.endChanges("Clone path node(s)")},opencloseSubPath:function(){var a=svgedit.path.path.selected_pts;if(1===a.length){var b=svgedit.path.path.elem,c=b.pathSegList,d=(c.numberOfItems,a[0]),e=null,f=null;if(svgedit.path.path.eachSeg(function(a){return 2===this.type&&d>=a&&(f=this.item),d>=a?!0:2===this.type?(e=a,!1):1===this.type?(e=!1,!1):void 0}),null==e&&(e=svgedit.path.path.segs.length-1),e!==!1){var g=b.createSVGPathSegLinetoAbs(f.x,f.y),h=b.createSVGPathSegClosePath();return e==svgedit.path.path.segs.length-1?(c.appendItem(g),c.appendItem(h)):(svgedit.path.insertItemBefore(b,h,e),svgedit.path.insertItemBefore(b,g,e)),void svgedit.path.path.init().selectPt(e+1)}var i=svgedit.path.path.segs[d];if(i.mate)return c.removeItem(d),c.removeItem(d),void svgedit.path.path.init().selectPt(d-1);var j,k,l;for(j=0;j<c.numberOfItems;j++){var m=c.getItem(j);if(2===m.pathSegType)k=j;else if(j===d)c.removeItem(k);else if(1===m.pathSegType&&j>d){l=j-1,c.removeItem(j);break}}for(var n=d-k-1;n--;)svgedit.path.insertItemBefore(b,c.getItem(k),l);var o=c.getItem(k);svgedit.path.replacePathSeg(2,k,[o.x,o.y]),j=d,svgedit.path.path.init().selectPt(0)}},deletePathNode:function(){if(wb.canDeleteNodes){svgedit.path.path.storeD();for(var a=svgedit.path.path.selected_pts,b=a.length;b--;){var c=a[b];svgedit.path.path.deleteSeg(c)}var d=function(){var a=svgedit.path.path.elem.pathSegList,b=a.numberOfItems,c=function(b,c){for(;c--;)a.removeItem(b)};if(1>=b)return!0;for(;b--;){var e=a.getItem(b);if(1===e.pathSegType){var f=a.getItem(b-1),g=a.getItem(b-2);if(2===f.pathSegType){c(b-1,2),d();break}if(2===g.pathSegType){c(b-2,3),d();break}}else if(2===e.pathSegType&&b>0){var h=a.getItem(b-1).pathSegType;if(2===h){c(b-1,1),d();break}if(1===h&&a.numberOfItems-1===b){c(b,1),d();break}}}return!1};if(d(),svgedit.path.path.elem.pathSegList.numberOfItems<=1)return wb.toSelectMode(svgedit.path.path.elem),void g.deleteSelectedElements();if(svgedit.path.path.init(),svgedit.path.path.clearSelection(),window.opera){var e=$(svgedit.path.path.elem);e.attr("d",e.attr("d"))}svgedit.path.path.endChanges("Delete path node(s)")}},smoothPolylineIntoPath:m,setSegType:function(a){svgedit.path.path.setSegType(a)},moveNode:function(a,b){var c=svgedit.path.path.selected_pts;if(c.length){svgedit.path.path.storeD();var d=svgedit.path.path.segs[c[0]],e={x:0,y:0};e[a]=b-d.item[a],d.move(e.x,e.y),svgedit.path.path.endChanges("Move path point")}},fixEnd:function(a){var c,d,e=a.pathSegList,f=e.numberOfItems;for(c=0;f>c;++c){var g=e.getItem(c);if(2===g.pathSegType&&(d=g),1===g.pathSegType){var h=e.getItem(c-1);if(h.x!=d.x||h.y!=d.y){var i=a.createSVGPathSegLinetoAbs(d.x,d.y);svgedit.path.insertItemBefore(a,i,c),wb.fixEnd(a);break}}}svgedit.browser.isWebkit()&&b(a)},convertPath:function(a,b){var c,d=a.pathSegList,e=d.numberOfItems,f=0,g=0,h="",i=null;for(c=0;e>c;++c){var j=d.getItem(c),k=j.x||0,l=j.y||0,m=j.x1||0,n=j.y1||0,o=j.x2||0,p=j.y2||0,q=j.pathSegType,r=Db[q]["to"+(b?"Lower":"Upper")+"Case"](),s=function(a,b,c){b=b?" "+b.join(" "):"",c=c?" "+svgedit.units.shortFloat(c):"",$.each(a,function(b,c){a[b]=svgedit.units.shortFloat(c)}),h+=r+a.join(" ")+b+c};switch(q){case 1:h+="z";break;case 12:k-=f;case 13:b?(f+=k,r="l"):(k+=f,f=k,r="L"),s([[k,g]]);break;case 14:l-=g;case 15:b?(g+=l,r="l"):(l+=g,g=l,r="L"),s([[f,l]]);break;case 2:case 4:case 18:k-=f,l-=g;case 5:case 3:i&&1===d.getItem(c-1).pathSegType&&!b&&(f=i[0],g=i[1]);case 19:b?(f+=k,g+=l):(k+=f,l+=g,f=k,g=l),3===q&&(i=[f,g]),s([[k,l]]);break;case 6:k-=f,m-=f,o-=f,l-=g,n-=g,p-=g;case 7:b?(f+=k,g+=l):(k+=f,m+=f,o+=f,l+=g,n+=g,p+=g,f=k,g=l),s([[m,n],[o,p],[k,l]]);break;case 8:k-=f,m-=f,l-=g,n-=g;case 9:b?(f+=k,g+=l):(k+=f,m+=f,l+=g,n+=g,f=k,g=l),s([[m,n],[k,l]]);break;case 10:k-=f,l-=g;case 11:b?(f+=k,g+=l):(k+=f,l+=g,f=k,g=l),s([[j.r1,j.r2]],[j.angle,j.largeArcFlag?1:0,j.sweepFlag?1:0],[k,l]);break;case 16:k-=f,o-=f,l-=g,p-=g;case 17:b?(f+=k,g+=l):(k+=f,o+=f,l+=g,p+=g,f=k,g=l),s([[o,p],[k,l]])}}return h}}}();var Lb=this.removeUnusedDefElems=function(){var a=j.getElementsByTagNameNS(d.SVG,"defs");if(!a||!a.length)return 0;var b,c,e=[],f=0,g=["fill","stroke","filter","marker-start","marker-mid","marker-end"],h=g.length,i=j.getElementsByTagNameNS(d.SVG,"*"),k=i.length;for(b=0;k>b;b++){var l=i[b];for(c=0;h>c;c++){var m=svgedit.utilities.getUrlFromAttr(l.getAttribute(g[c]));m&&e.push(m.substr(1))}var n=C(l);n&&0===n.indexOf("#")&&e.push(n.substr(1))}var o=$(a).find("linearGradient, radialGradient, filter, marker, svg, symbol");for(b=o.length;b--;){var p=o[b],q=p.id;e.indexOf(q)<0&&(ob[q]=p,p.parentNode.removeChild(p),f++)}return f};this.svgCanvasToString=function(){for(;Lb()>0;);wb.clear(!0),$.each(j.childNodes,function(a,b){a&&8===b.nodeType&&b.data.indexOf("Created with")>=0&&j.insertBefore(b,j.firstChild)}),p&&(Rb(),Ib([p]));var a=[];$(j).find("g:data(gsvg)").each(function(){var b,c=this.attributes,d=c.length;for(b=0;d>b;b++)("id"==c[b].nodeName||"style"==c[b].nodeName)&&d--;if(0>=d){var e=this.firstChild;a.push(e),$(this).replaceWith(e)}});var b=this.svgToString(j,0);return a.length&&$(a).each(function(){zb(this)}),b},this.svgToString=function(a,b){var c=[],f=svgedit.utilities.toXml,g=e.baseUnit,h=new RegExp("^-?[\\d\\.]+"+g+"$");if(a){H(a);var i,j,k=a.attributes,l=a.childNodes;for(j=0;b>j;j++)c.push(" ");if(c.push("<"),c.push(a.nodeName),"svgcontent"===a.id){var m=Tb(),n="";"px"!==g&&(m.w=svgedit.units.convertUnit(m.w,g)+g,m.h=svgedit.units.convertUnit(m.h,g)+g),c.push(' width="'+m.w+'" height="'+m.h+'"'+n+' xmlns="'+d.SVG+'"');var o={};$(a).find("*").andSelf().each(function(){var a=this.namespaceURI;a&&!o[a]&&K[a]&&"xmlns"!==K[a]&&"xml"!==K[a]&&(o[a]=!0,c.push(" xmlns:"+K[a]+'="'+a+'"')),$.each(this.attributes,function(a,b){var d=b.namespaceURI;d&&!o[d]&&"xmlns"!==K[d]&&"xml"!==K[d]&&(o[d]=!0,c.push(" xmlns:"+K[d]+'="'+d+'"'))})}),j=k.length;for(var p=["width","height","xmlns","x","y","viewBox","id","overflow"];j--;){i=k.item(j);var q=f(i.nodeValue);0!==i.nodeName.indexOf("xmlns:")&&""!=q&&-1==p.indexOf(i.localName)&&(!i.namespaceURI||K[i.namespaceURI])&&(c.push(" "),c.push(i.nodeName),c.push('="'),c.push(q),c.push('"'))}}else{if("defs"===a.nodeName&&!a.firstChild)return;var r=["-moz-math-font-style","_moz-math-font-style"];for(j=k.length-1;j>=0;j--){i=k.item(j);var q=f(i.nodeValue);if(!(r.indexOf(i.localName)>=0)&&""!=q){if(0===q.indexOf("pointer-events"))continue;if("class"===i.localName&&0===q.indexOf("se_"))continue;if(c.push(" "),"d"===i.localName&&(q=wb.convertPath(a,!0)),isNaN(q)?h.test(q)&&(q=svgedit.units.shortFloat(q)+g):q=svgedit.units.shortFloat(q),bb.apply&&"image"===a.nodeName&&"href"===i.localName&&bb.images&&"embed"===bb.images){var s=Z[q];s&&(q=s)}(!i.namespaceURI||i.namespaceURI==d.SVG||K[i.namespaceURI])&&(c.push(i.nodeName),c.push('="'),c.push(q),c.push('"'))}}}if(a.hasChildNodes()){c.push(">"),b++;var t=!1;for(j=0;j<l.length;j++){var u=l.item(j);switch(u.nodeType){case 1:c.push("\n"),c.push(this.svgToString(l.item(j),b));break;case 3:var v=u.nodeValue.replace(/^\s+|\s+$/g,"");""!=v&&(t=!0,c.push(String(f(v))));break;case 4:c.push("\n"),c.push(new Array(b+1).join(" ")),c.push("<![CDATA["),c.push(u.nodeValue),c.push("]]>");break;case 8:c.push("\n"),c.push(new Array(b+1).join(" ")),c.push("<!--"),c.push(u.data),c.push("-->")}}if(b--,!t)for(c.push("\n"),j=0;b>j;j++)c.push(" ");c.push("</"),c.push(a.nodeName),c.push(">")}else c.push("/>")}return c.join("")},this.embedImage=function(a,b){$(new Image).load(function(){var c=document.createElement("canvas");c.width=this.width,c.height=this.height,c.getContext("2d").drawImage(this,0,0);try{var d=";svgedit_url="+encodeURIComponent(a);d=c.toDataURL().replace(";base64",d+";base64"),Z[a]=d}catch(e){Z[a]=!1}_=a,b&&b(Z[a])}).attr("src",a)},this.setGoodImage=function(a){_=a},this.open=function(){},this.save=function(a){Gb(),a&&$.extend(bb,a),bb.apply=!0;var b=this.svgCanvasToString();ub("saved",b)},this.rasterExport=function(a,b){var c="image/"+a.toLowerCase();Gb();var d=[],e={feGaussianBlur:T.exportNoBlur,foreignObject:T.exportNoforeignObject,"[stroke-dasharray]":T.exportNoDashArray},f=$(j);"font"in $("<canvas>")[0].getContext("2d")||(e.text=T.exportNoText),$.each(e,function(a,b){f.find(a).length&&d.push(b)});var g=this.svgCanvasToString();ub("exported",{svg:g,issues:d,type:a,mimeType:c,quality:b})},this.getSvgString=function(){return bb.apply=!1,this.svgCanvasToString()},this.randomizeIds=function(a){arguments.length>0&&0==a?svgedit.draw.randomizeIds(!1,n()):svgedit.draw.randomizeIds(!0,n())};var Mb=this.uniquifyElems=function(a){var b={},c=["filter","linearGradient","pattern","radialGradient","symbol","textPath","use"];svgedit.utilities.walkTree(a,function(a){if(1==a.nodeType){a.id&&(a.id in b||(b[a.id]={elem:null,attrs:[],hrefs:[]}),b[a.id].elem=a),$.each(V,function(c,d){var e=a.getAttributeNode(d);if(e){var f=svgedit.utilities.getUrlFromAttr(e.value),g=f?f.substr(1):null;g&&(g in b||(b[g]={elem:null,attrs:[],hrefs:[]}),b[g].attrs.push(e))}});var d=svgedit.utilities.getHref(a);if(d&&c.indexOf(a.nodeName)>=0){var e=d.substr(1);e&&(e in b||(b[e]={elem:null,attrs:[],hrefs:[]}),b[e].hrefs.push(a))}}});var d;for(d in b)if(d){var e=b[d].elem;if(e){var f=tb();e.id=f;for(var g=b[d].attrs,h=g.length;h--;){var i=g[h];i.ownerElement.setAttribute(i.name,"url(#"+f+")")}for(var j=b[d].hrefs,k=j.length;k--;){var l=j[k];svgedit.utilities.setHref(l,"#"+f)}}}},Nb=this.setUseData=function(a){var b=$(a);"use"!==a.tagName&&(b=b.find("use")),b.each(function(){var a=C(this).substr(1),b=svgedit.utilities.getElem(a);b&&($(this).data("ref",b),("symbol"==b.tagName||"svg"==b.tagName)&&$(this).data("symbol",b).data("ref",b))})},Ob=this.convertGradients=function(a){var b=$(a).find("linearGradient, radialGradient");!b.length&&svgedit.browser.isWebkit()&&(b=$(a).find("*").filter(function(){return this.tagName.indexOf("Gradient")>=0})),b.each(function(){var a=this;if("userSpaceOnUse"===$(a).attr("gradientUnits")){var b=$(j).find('[fill="url(#'+a.id+')"],[stroke="url(#'+a.id+')"]');if(!b.length)return;var c=svgedit.utilities.getBBox(b[0]);if(!c)return;if("linearGradient"===a.tagName){var d=$(a).attr(["x1","y1","x2","y2"]),e=a.gradientTransform.baseVal;if(e&&e.numberOfItems>0){var f=svgedit.math.transformListToTransform(e).matrix,g=svgedit.math.transformPoint(d.x1,d.y1,f),h=svgedit.math.transformPoint(d.x2,d.y2,f);d.x1=g.x,d.y1=g.y,d.x2=h.x,d.y2=h.y,a.removeAttribute("gradientTransform")}$(a).attr({x1:(d.x1-c.x)/c.width,y1:(d.y1-c.y)/c.height,x2:(d.x2-c.x)/c.width,y2:(d.y2-c.y)/c.height}),a.removeAttribute("gradientUnits")}}})},Pb=this.convertToGroup=function(a){a||(a=s[0]);var b,c=$(a),e=new svgedit.history.BatchCommand;if(c.data("gsvg")){var f=a.firstChild,g=$(f).attr(["x","y"]);$(a.firstChild.firstChild).unwrap(),$(a).removeData("gsvg");var k=svgedit.transformlist.getTransformList(a),l=i.createSVGTransform();l.setTranslate(g.x,g.y),k.appendItem(l),svgedit.recalculate.recalculateDimensions(a),ub("selected",[a])}else if(c.data("symbol")){a=c.data("symbol"),b=c.attr("transform");var m=c.attr(["x","y"]),n=a.getAttribute("viewBox");if(n){var o=n.split(" ");m.x-=+o[0],m.y-=+o[1]}b+=" translate("+(m.x||0)+","+(m.y||0)+")";var p=c.prev();e.addSubCommand(new svgedit.history.RemoveElementCommand(c[0],c[0].nextSibling,c[0].parentNode)),c.remove();var q,r=$(j).find("use:data(symbol)").length,t=h.createElementNS(d.SVG,"g"),u=a.childNodes;for(q=0;q<u.length;q++)t.appendChild(u[q].cloneNode(!0));if(svgedit.browser.isGecko()){var v=$(svgedit.utilities.findDefs()).children("linearGradient,radialGradient,pattern").clone();$(t).append(v)}b&&t.setAttribute("transform",b);var w=a.parentNode;if(Mb(t),svgedit.browser.isGecko()&&$(A()).append($(t).find("linearGradient,radialGradient,pattern")),t.id=tb(),p.after(t),w){if(!r){var x=a.nextSibling;w.removeChild(a),e.addSubCommand(new svgedit.history.RemoveElementCommand(a,x,w))}e.addSubCommand(new svgedit.history.InsertElementCommand(t))}Nb(t),Ob(svgedit.browser.isGecko()?svgedit.utilities.findDefs():t),svgedit.utilities.walkTreePost(t,function(a){try{svgedit.recalculate.recalculateDimensions(a)}catch(b){console.log(b)}}),$(t).find(U).each(function(){this.id||(this.id=tb())}),Ib([t]);var y=Yb(t,!0);y&&e.addSubCommand(y),R(e)}else console.log("Unexpected element to ungroup:",a)};this.setSvgString=function(a){try{var b=svgedit.utilities.text2xml(a);this.prepareSvg(b);var c=new svgedit.history.BatchCommand("Change Source"),f=j.nextSibling,k=i.removeChild(j);c.addSubCommand(new svgedit.history.RemoveElementCommand(k,f,i)),j=h.adoptNode?h.adoptNode(b.documentElement):h.importNode(b.documentElement,!0),i.appendChild(j);var l=$(j);g.current_drawing_=new svgedit.draw.Drawing(j,m);var p=n().getNonce();p?ub("setnonce",p):ub("unsetnonce"),l.find("image").each(function(){var a=this;Kb(a);var b=C(this);if(b){if(0===b.indexOf("data:")){var c=b.match(/svgedit_url=(.*?);/);if(c){var e=decodeURIComponent(c[1]);$(new Image).load(function(){a.setAttributeNS(d.XLINK,"xlink:href",e)}).attr("src",e)}}g.embedImage(b)}}),l.find("svg").each(function(){if(!$(this).closest("defs").length){Mb(this);var a=this.parentNode;1===a.childNodes.length&&"g"===a.nodeName?($(a).data("gsvg",this),a.id=a.id||tb()):zb(this)}}),svgedit.browser.isGecko()&&l.find("linearGradient, radialGradient, pattern").appendTo(svgedit.utilities.findDefs()),Nb(l),Ob(l[0]),svgedit.utilities.walkTreePost(j,function(a){try{svgedit.recalculate.recalculateDimensions(a)}catch(b){console.log(b)}});var q={id:"svgcontent",overflow:e.show_outside_canvas?"visible":"hidden"},r=!1;if(l.attr("viewBox")){var s=l.attr("viewBox").split(" ");q.width=s[2],q.height=s[3]}else $.each(["width","height"],function(a,b){var c=l.attr(b);c||(c="100%"),"%"===String(c).substr(-1)?r=!0:q[b]=svgedit.units.convertToNum(b,c)});if(Qb(),l.children().find(U).each(function(){this.id||(this.id=tb())}),r){var t=getStrokedBBox();q.width=t.width+t.x,q.height=t.height+t.y}q.width<=0&&(q.width=100),q.height<=0&&(q.height=100),l.attr(q),this.contentW=q.width,this.contentH=q.height,c.addSubCommand(new svgedit.history.InsertElementCommand(j));var u=l.attr(["width","height"]);c.addSubCommand(new svgedit.history.ChangeElementCommand(i,u)),o=1,svgedit.transformlist.resetListMap(),Gb(),svgedit.path.clearData(),i.appendChild(S.selectorParentGroup),R(c),ub("changed",[j])}catch(v){return console.log(v),!1}return!0},this.importSvgString=function(a){var b,c;try{var e=svgedit.utilities.encode64(a.length+a).substr(0,32),f=!1;gb[e]&&$(gb[e].symbol).parents("#svgroot").length&&(f=!0);var g,i=new svgedit.history.BatchCommand("Import SVG");if(f)g=gb[e].symbol,c=gb[e].xform;else{var k=svgedit.utilities.text2xml(a);this.prepareSvg(k);var l;l=h.adoptNode?h.adoptNode(k.documentElement):h.importNode(k.documentElement,!0),Mb(l);var m=svgedit.units.convertToNum("width",l.getAttribute("width")),o=svgedit.units.convertToNum("height",l.getAttribute("height")),q=l.getAttribute("viewBox"),r=q?q.split(" "):[0,0,m,o];for(b=0;4>b;++b)r[b]=+r[b];var s=(+j.getAttribute("width"),+j.getAttribute("height"));c=o>m?"scale("+s/3/r[3]+")":"scale("+s/3/r[2]+")",c="translate(0) "+c+" translate(0)",g=h.createElementNS(d.SVG,"symbol");var t=svgedit.utilities.findDefs();for(svgedit.browser.isGecko()&&$(l).find("linearGradient, radialGradient, pattern").appendTo(t);l.firstChild;){var u=l.firstChild;g.appendChild(u)}var v,w=l.attributes;for(v=0;v<w.length;v++){var x=w[v];g.setAttribute(x.nodeName,x.nodeValue)}g.id=tb(),gb[e]={symbol:g,xform:c},svgedit.utilities.findDefs().appendChild(g),i.addSubCommand(new svgedit.history.InsertElementCommand(g))}var y=h.createElementNS(d.SVG,"use");y.id=tb(),D(y,"#"+g.id),(p||n().getCurrentLayer()).appendChild(y),i.addSubCommand(new svgedit.history.InsertElementCommand(y)),Gb(),y.setAttribute("transform",c),svgedit.recalculate.recalculateDimensions(y),$(y).data("symbol",g).data("ref",g),Hb([y]),R(i),ub("changed",[j])}catch(z){return console.log(z),!1}return!0};var Qb=g.identifyLayers=function(){Rb(),n().identifyLayers()};this.createLayer=function(a){var b=new svgedit.history.BatchCommand("Create Layer"),c=n().createLayer(a);b.addSubCommand(new svgedit.history.InsertElementCommand(c)),R(b),Gb(),ub("changed",[c])},this.cloneLayer=function(a){var b=new svgedit.history.BatchCommand("Duplicate Layer"),c=h.createElementNS(d.SVG,"g"),e=h.createElementNS(d.SVG,"title");e.textContent=a,c.appendChild(e);var f=n().getCurrentLayer();$(f).after(c);var i,j=f.childNodes;for(i=0;i<j.length;i++){var k=j[i];"title"!=k.localName&&c.appendChild(Ab(k))}Gb(),Qb(),b.addSubCommand(new svgedit.history.InsertElementCommand(c)),R(b),g.setCurrentLayer(a),ub("changed",[c])},this.deleteCurrentLayer=function(){var a=n().getCurrentLayer(),b=a.nextSibling,c=a.parentNode;if(a=n().deleteCurrentLayer()){var d=new svgedit.history.BatchCommand("Delete Layer");return d.addSubCommand(new svgedit.history.RemoveElementCommand(a,b,c)),R(d),Gb(),ub("changed",[c]),!0}return!1},this.setCurrentLayer=function(a){var b=n().setCurrentLayer(svgedit.utilities.toXml(a));return b&&Gb(),b},this.renameCurrentLayer=function(a){var b,c=n();if(c.current_layer){var d=c.current_layer;if(!g.setCurrentLayer(a)){var e=new svgedit.history.BatchCommand("Rename Layer");for(b=0;b<c.getNumLayers()&&c.all_layers[b][1]!=d;++b);var f=c.getLayerName(b);c.all_layers[b][0]=svgedit.utilities.toXml(a);var h=d.childNodes.length;for(b=0;h>b;++b){var i=d.childNodes.item(b);if(i&&"title"==i.tagName){for(;i.firstChild;)i.removeChild(i.firstChild);return i.textContent=a,e.addSubCommand(new svgedit.history.ChangeElementCommand(i,{"#text":f})),R(e),ub("changed",[d]),!0}}}c.current_layer=d}return!1},this.setCurrentLayerPosition=function(a){var b,c=n();if(c.current_layer&&a>=0&&a<c.getNumLayers()){for(b=0;b<c.getNumLayers()&&c.all_layers[b][1]!=c.current_layer;++b);if(b==c.getNumLayers())return!1;if(b!=a){var d=null,e=c.current_layer.nextSibling;return a>b?a<c.getNumLayers()-1&&(d=c.all_layers[a+1][1]):d=c.all_layers[a][1],j.insertBefore(c.current_layer,d),R(new svgedit.history.MoveElementCommand(c.current_layer,e,j)),Qb(),g.setCurrentLayer(c.getLayerName(a)),!0}}return!1},this.setLayerVisibility=function(a,b){var c=n(),d=c.getLayerVisibility(a),e=c.setLayerVisibility(a,b);if(!e)return!1;var f=d?"inline":"none";return R(new svgedit.history.ChangeElementCommand(e,{display:f},"Layer Visibility")),e==c.getCurrentLayer()&&(Gb(),wb.clear()),!0},this.moveSelectedToLayer=function(a){var b,c=null,d=n();for(b=0;b<d.getNumLayers();++b)if(d.getLayerName(b)==a){c=d.all_layers[b][1];break}if(!c)return!1;var e=new svgedit.history.BatchCommand("Move Elements to Layer"),f=s;for(b=f.length;b--;){var g=f[b];if(g){var h=g.nextSibling,i=g.parentNode;c.appendChild(g),e.addSubCommand(new svgedit.history.MoveElementCommand(g,h,i))}}return R(e),!0},this.mergeLayer=function(a){var b=new svgedit.history.BatchCommand("Merge Layer"),c=n(),d=$(c.current_layer).prev()[0];if(d){var e=c.current_layer.childNodes,f=(e.length,c.current_layer.nextSibling);for(b.addSubCommand(new svgedit.history.RemoveElementCommand(c.current_layer,f,j));c.current_layer.firstChild;){var g=c.current_layer.firstChild;if("title"!=g.localName){var h=g.nextSibling;d.appendChild(g),b.addSubCommand(new svgedit.history.MoveElementCommand(g,h,c.current_layer))}else{var i=g.nextSibling;b.addSubCommand(new svgedit.history.RemoveElementCommand(g,i,c.current_layer)),c.current_layer.removeChild(g)}}return j.removeChild(c.current_layer),a||(Gb(),Qb(),ub("changed",[j]),R(b)),c.current_layer=d,b}},this.mergeAllLayers=function(){var a=new svgedit.history.BatchCommand("Merge all Layers"),b=n();for(b.current_layer=b.all_layers[b.getNumLayers()-1][1];$(j).children("g").length>1;)a.addSubCommand(g.mergeLayer(!0));Gb(),Qb(),ub("changed",[j]),R(a)};var Rb=this.leaveContext=function(){var a,b=ab.length;if(b){for(a=0;b>a;a++){var c=ab[a],d=W(c,"orig_opac");1!==d?c.setAttribute("opacity",d):c.removeAttribute("opacity"),c.setAttribute("style","pointer-events: inherit")}ab=[],Gb(!0),ub("contextset",null)}p=null},Sb=this.setContext=function(a){Rb(),"string"==typeof a&&(a=svgedit.utilities.getElem(a)),p=a,$(a).parentsUntil("#svgcontent").andSelf().siblings().each(function(){var a=this.getAttribute("opacity")||1;W(this,"orig_opac",a),this.setAttribute("opacity",.33*a),this.setAttribute("style","pointer-events: none"),ab.push(this)}),Gb(),ub("contextset",p)};this.clear=function(){wb.clear(),Gb(),g.clearSvgContentElement(),g.current_drawing_=new svgedit.draw.Drawing(j),g.createLayer("Layer 1"),g.undoMgr.resetUndoStack(),S.initGroup(),kb=S.getRubberBandBox(),ub("cleared")},this.linkControlPoints=wb.linkControlPoints,this.getContentElem=function(){return j},this.getRootElem=function(){return i},this.getSelectedElems=function(){return s};var Tb=this.getResolution=function(){var a=j.getAttribute("width")/o,b=j.getAttribute("height")/o;return{w:a,h:b,zoom:o}};this.getZoom=function(){return o},this.getVersion=function(){return"svgcanvas.js ($Rev: 2705 $)"},this.setUiStrings=function(a){$.extend(T,a.notification)},this.setConfig=function(a){$.extend(e,a)},this.getTitle=function(a){var b;if(a=a||s[0]){a=$(a).data("gsvg")||$(a).data("symbol")||a;var c=a.childNodes;for(b=0;b<c.length;b++)if("title"==c[b].nodeName)return c[b].textContent;return""}},this.setGroupTitle=function(a){var b=s[0];b=$(b).data("gsvg")||b;var c=$(b).children("title"),e=new svgedit.history.BatchCommand("Set Label");if(a.length)if(c.length){var f=c[0];e.addSubCommand(new svgedit.history.ChangeElementCommand(f,{"#text":f.textContent})),f.textContent=a}else f=h.createElementNS(d.SVG,"title"),f.textContent=a,$(b).prepend(f),e.addSubCommand(new svgedit.history.InsertElementCommand(f));else{var g=c.nextSibling;e.addSubCommand(new svgedit.history.RemoveElementCommand(c[0],g,b)),c.remove()}R(e)},this.getDocumentTitle=function(){return g.getTitle(j)},this.setDocumentTitle=function(a){var b,c=j.childNodes,e=!1,f="",g=new svgedit.history.BatchCommand("Change Image Title");for(b=0;b<c.length;b++)if("title"==c[b].nodeName){e=c[b],f=e.textContent;break}e||(e=h.createElementNS(d.SVG,"title"),j.insertBefore(e,j.firstChild)),a.length?e.textContent=a:e.parentNode.removeChild(e),g.addSubCommand(new svgedit.history.ChangeElementCommand(e,{"#text":f})),R(g)},this.getEditorNS=function(a){return a&&j.setAttribute("xmlns:se",d.SE),d.SE
-},this.setResolution=function(a,b){var c,d=Tb(),e=d.w,f=d.h;if("fit"==a){var h=getStrokedBBox();if(!h)return!1;c=new svgedit.history.BatchCommand("Fit Canvas to Content");var k=xb();Hb(k);var l=[],m=[];$.each(k,function(){l.push(-1*h.x),m.push(-1*h.y)});var n=g.moveSelectedElements(l,m,!0);c.addSubCommand(n),Gb(),a=Math.round(h.width),b=Math.round(h.height)}if(a!=e||b!=f){var p=i.suspendRedraw(1e3);c||(c=new svgedit.history.BatchCommand("Change Image Dimensions")),a=svgedit.units.convertToNum("width",a),b=svgedit.units.convertToNum("height",b),j.setAttribute("width",a),j.setAttribute("height",b),this.contentW=a,this.contentH=b,c.addSubCommand(new svgedit.history.ChangeElementCommand(j,{width:e,height:f})),j.setAttribute("viewBox",[0,0,a/o,b/o].join(" ")),c.addSubCommand(new svgedit.history.ChangeElementCommand(j,{viewBox:["0 0",e,f].join(" ")})),R(c),i.unsuspendRedraw(p),ub("changed",[j])}return!0},this.getOffset=function(){return $(j).attr(["x","y"])},this.setBBoxZoom=function(a,b,c){var d,e=.85,f=function(a){if(!a)return!1;var d=Math.round(b/a.width*100*e)/100,f=Math.round(c/a.height*100*e)/100,h=Math.min(d,f);return g.setZoom(h),{zoom:h,bbox:a}};if("object"==typeof a){if(d=a,0==d.width||0==d.height){var h=d.zoom?d.zoom:o*d.factor;return g.setZoom(h),{zoom:o,bbox:d}}return f(d)}switch(a){case"selection":if(!s[0])return;var i=$.map(s,function(a){return a?a:void 0});d=getStrokedBBox(i);break;case"canvas":var j=Tb();e=.95,d={width:j.w,height:j.h,x:0,y:0};break;case"content":d=getStrokedBBox();break;case"layer":d=getStrokedBBox(xb(n().getCurrentLayer()));break;default:return}return f(d)},this.setZoom=function(a){var b=Tb();j.setAttribute("viewBox","0 0 "+b.w/a+" "+b.h/a),o=a,$.each(s,function(a,b){b&&S.requestSelector(b).resize()}),wb.zoomChange(),pb("zoomChanged",a)},this.getMode=function(){return eb},this.setMode=function(a){wb.clear(!0),vb.clear(),ib=s[0]&&"text"==s[0].nodeName?hb:r,eb=a},this.getColor=function(a){return ib[a]},this.setColor=function(a,b,c){function d(a){"g"!=a.nodeName&&e.push(a)}r[a]=b,ib[a+"_paint"]={type:"solidColor"};for(var e=[],f=s.length;f--;){var g=s[f];g&&("g"==g.tagName?svgedit.utilities.walkTree(g,d):"fill"==a?"polyline"!=g.tagName&&"line"!=g.tagName&&e.push(g):e.push(g))}e.length>0&&(c?Wb(a,b,e):(Xb(a,b,e),ub("changed",e)))};var Ub=this.setGradient=function(a){if(ib[a+"_paint"]&&"solidColor"!=ib[a+"_paint"].type){var b=g[a+"Grad"],c=Vb(b),d=svgedit.utilities.findDefs();if(c)b=c;else{b=d.appendChild(h.importNode(b,!0)),b.id=tb()}g.setColor(a,"url(#"+b.id+")")}},Vb=function(a){for(var b=svgedit.utilities.findDefs(),c=$(b).find("linearGradient, radialGradient"),e=c.length,f=["r","cx","cy","fx","fy"];e--;){var g=c[e];if("linearGradient"==a.tagName){if(a.getAttribute("x1")!=g.getAttribute("x1")||a.getAttribute("y1")!=g.getAttribute("y1")||a.getAttribute("x2")!=g.getAttribute("x2")||a.getAttribute("y2")!=g.getAttribute("y2"))continue}else{var h=$(a).attr(f),i=$(g).attr(f),j=!1;if($.each(f,function(a,b){h[b]!=i[b]&&(j=!0)}),j)continue}var k=a.getElementsByTagNameNS(d.SVG,"stop"),l=g.getElementsByTagNameNS(d.SVG,"stop");if(k.length==l.length){for(var m=k.length;m--;){var n=k[m],o=l[m];if(n.getAttribute("offset")!=o.getAttribute("offset")||n.getAttribute("stop-opacity")!=o.getAttribute("stop-opacity")||n.getAttribute("stop-color")!=o.getAttribute("stop-color"))break}if(-1==m)return g}}return null};this.setPaint=function(a,b){var c=new $.jGraduate.Paint(b);switch(this.setPaintOpacity(a,c.alpha/100,!0),ib[a+"_paint"]=c,c.type){case"solidColor":this.setColor(a,"none"!=c.solidColor?"#"+c.solidColor:"none");break;case"linearGradient":case"radialGradient":g[a+"Grad"]=c[c.type],Ub(a)}},this.setStrokePaint=function(a){this.setPaint("stroke",a)},this.setFillPaint=function(a){this.setPaint("fill",a)},this.getStrokeWidth=function(){return ib.stroke_width},this.setStrokeWidth=function(a){function b(a){"g"!=a.nodeName&&c.push(a)}if(0==a&&["line","path"].indexOf(eb)>=0)return void g.setStrokeWidth(1);ib.stroke_width=a;for(var c=[],d=s.length;d--;){var e=s[d];e&&("g"==e.tagName?svgedit.utilities.walkTree(e,b):c.push(e))}c.length>0&&(Xb("stroke-width",a,c),ub("changed",s))},this.setStrokeAttr=function(a,b){r[a.replace("-","_")]=b;for(var c=[],d=s.length;d--;){var e=s[d];e&&("g"==e.tagName?svgedit.utilities.walkTree(e,function(a){"g"!=a.nodeName&&c.push(a)}):c.push(e))}c.length>0&&(Xb(a,b,c),ub("changed",s))},this.getStyle=function(){return r},this.getOpacity=function(){return r.opacity},this.setOpacity=function(a){r.opacity=a,Xb("opacity",a)},this.getFillOpacity=function(){return r.fill_opacity},this.getStrokeOpacity=function(){return r.stroke_opacity},this.setPaintOpacity=function(a,b,c){r[a+"_opacity"]=b,c?Wb(a+"-opacity",b):Xb(a+"-opacity",b)},this.getPaintOpacity=function(a){return"fill"===a?this.getFillOpacity():this.getStrokeOpacity()},this.getBlur=function(a){var b=0;if(a){var c=a.getAttribute("filter");if(c){var d=svgedit.utilities.getElem(a.id+"_blur");d&&(b=d.firstChild.getAttribute("stdDeviation"))}}return b},function(){function a(){var a=g.undoMgr.finishUndoableChange();b.addSubCommand(a),R(b),b=null,c=null}var b=null,c=null,d=!1;g.setBlurNoUndo=function(a){if(!c)return void g.setBlur(a);if(0===a)Wb("filter",""),d=!0;else{var b=s[0];d&&Wb("filter","url(#"+b.id+"_blur)"),svgedit.browser.isWebkit()&&(console.log("e",b),b.removeAttribute("filter"),b.setAttribute("filter","url(#"+b.id+"_blur)")),Wb("stdDeviation",a,[c.firstChild]),g.setBlurOffsets(c,a)}},g.setBlurOffsets=function(a,b){b>3?svgedit.utilities.assignAttributes(a,{x:"-50%",y:"-50%",width:"200%",height:"200%"},100):svgedit.browser.isWebkit()||(a.removeAttribute("x"),a.removeAttribute("y"),a.removeAttribute("width"),a.removeAttribute("height"))},g.setBlur=function(d,e){if(b)return void a();var f=s[0],h=f.id;c=svgedit.utilities.getElem(h+"_blur"),d-=0;var i=new svgedit.history.BatchCommand;if(c)0===d&&(c=null);else{var j=t({element:"feGaussianBlur",attr:{"in":"SourceGraphic",stdDeviation:d}});c=t({element:"filter",attr:{id:h+"_blur"}}),c.appendChild(j),svgedit.utilities.findDefs().appendChild(c),i.addSubCommand(new svgedit.history.InsertElementCommand(c))}var k={filter:f.getAttribute("filter")};return 0===d?(f.removeAttribute("filter"),void i.addSubCommand(new svgedit.history.ChangeElementCommand(f,k))):(Xb("filter","url(#"+h+"_blur)"),i.addSubCommand(new svgedit.history.ChangeElementCommand(f,k)),g.setBlurOffsets(c,d),b=i,g.undoMgr.beginUndoableChange("stdDeviation",[c?c.firstChild:null]),void(e&&(g.setBlurNoUndo(d),a())))}}(),this.getBold=function(){var a=s[0];return null!=a&&"text"==a.tagName&&null==s[1]?"bold"==a.getAttribute("font-weight"):!1},this.setBold=function(a){var b=s[0];null!=b&&"text"==b.tagName&&null==s[1]&&Xb("font-weight",a?"bold":"normal"),s[0].textContent||vb.setCursor()},this.getItalic=function(){var a=s[0];return null!=a&&"text"==a.tagName&&null==s[1]?"italic"==a.getAttribute("font-style"):!1},this.setItalic=function(a){var b=s[0];null!=b&&"text"==b.tagName&&null==s[1]&&Xb("font-style",a?"italic":"normal"),s[0].textContent||vb.setCursor()},this.getFontFamily=function(){return hb.font_family},this.setFontFamily=function(a){hb.font_family=a,Xb("font-family",a),s[0]&&!s[0].textContent&&vb.setCursor()},this.setFontColor=function(a){hb.fill=a,Xb("fill",a)},this.getFontColor=function(){return hb.fill},this.getFontSize=function(){return hb.font_size},this.setFontSize=function(a){hb.font_size=a,Xb("font-size",a),s[0].textContent||vb.setCursor()},this.getText=function(){var a=s[0];return null==a?"":a.textContent},this.setTextContent=function(a){Xb("#text",a),vb.init(a),vb.setCursor()},this.setImageURL=function(a){var b=s[0];if(b){var c=$(b).attr(["width","height"]),d=!c.width||!c.height,e=C(b);if(e!==a)d=!0;else if(!d)return;var f=new svgedit.history.BatchCommand("Change Image URL");D(b,a),f.addSubCommand(new svgedit.history.ChangeElementCommand(b,{"#href":e})),d?$(new Image).load(function(){var a=$(b).attr(["width","height"]);$(b).attr({width:this.width,height:this.height}),S.requestSelector(b).resize(),f.addSubCommand(new svgedit.history.ChangeElementCommand(b,a)),R(f),ub("changed",[b])}).attr("src",a):R(f)}},this.setLinkURL=function(a){var b=s[0];if(b){if("a"!==b.tagName){var c=$(b).parents("a");if(!c.length)return;b=c[0]}var d=C(b);if(d!==a){var e=new svgedit.history.BatchCommand("Change Link URL");D(b,a),e.addSubCommand(new svgedit.history.ChangeElementCommand(b,{"#href":d})),R(e)}}},this.setRectRadius=function(a){var b=s[0];if(null!=b&&"rect"==b.tagName){var c=b.getAttribute("rx");c!=a&&(b.setAttribute("rx",a),b.setAttribute("ry",a),R(new svgedit.history.ChangeElementCommand(b,{rx:c,ry:c},"Radius")),ub("changed",[b]))}},this.makeHyperlink=function(a){g.groupSelectedElements("a",a)},this.removeHyperlink=function(){g.ungroupSelectedElement()},this.setSegType=function(a){wb.setSegType(a)},this.convertToPath=function(a,b){if(null==a){return void $.each(s,function(a,b){b&&g.convertToPath(b)})}if(!b)var c=new svgedit.history.BatchCommand("Convert element to Path");var d=b?{}:{fill:r.fill,"fill-opacity":r.fill_opacity,stroke:r.stroke,"stroke-width":r.stroke_width,"stroke-dasharray":r.stroke_dasharray,"stroke-linejoin":r.stroke_linejoin,"stroke-linecap":r.stroke_linecap,"stroke-opacity":r.stroke_opacity,opacity:r.opacity,visibility:"hidden"};$.each(["marker-start","marker-end","marker-mid","filter","clip-path"],function(){a.getAttribute(this)&&(d[this]=a.getAttribute(this))});var e=t({element:"path",attr:d}),f=a.getAttribute("transform");f&&e.setAttribute("transform",f);var h=a.id,i=a.parentNode;a.nextSibling?i.insertBefore(e,a):i.appendChild(e);var j,k,l="",m=function(a){$.each(a,function(a,b){var c,d=b[0],e=b[1];for(l+=d,c=0;c<e.length;c+=2)l+=e[c]+","+e[c+1]+" "})},n=1.81;switch(a.tagName){case"ellipse":case"circle":j=$(a).attr(["rx","ry","cx","cy"]);var o=j.cx,p=j.cy;k=j.rx,ry=j.ry,"circle"==a.tagName&&(k=ry=$(a).attr("r")),m([["M",[o-k,p]],["C",[o-k,p-ry/n,o-k/n,p-ry,o,p-ry]],["C",[o+k/n,p-ry,o+k,p-ry/n,o+k,p]],["C",[o+k,p+ry/n,o+k/n,p+ry,o,p+ry]],["C",[o-k/n,p+ry,o-k,p+ry/n,o-k,p]],["Z",[]]]);break;case"path":l=a.getAttribute("d");break;case"line":j=$(a).attr(["x1","y1","x2","y2"]),l="M"+j.x1+","+j.y1+"L"+j.x2+","+j.y2;break;case"polyline":case"polygon":l="M"+a.getAttribute("points");break;case"rect":var q=$(a).attr(["rx","ry"]);k=q.rx,ry=q.ry;var u=a.getBBox(),v=u.x,w=u.y,x=u.width,y=u.height;n=4-n,m(k||ry?[["M",[v,w+ry]],["C",[v,w+ry/n,v+k/n,w,v+k,w]],["L",[v+x-k,w]],["C",[v+x-k/n,w,v+x,w+ry/n,v+x,w+ry]],["L",[v+x,w+y-ry]],["C",[v+x,w+y-ry/n,v+x-k/n,w+y,v+x-k,w+y]],["L",[v+k,w+y]],["C",[v+k/n,w+y,v,w+y-ry/n,v,w+y-ry]],["L",[v,w+ry]],["Z",[]]]:[["M",[v,w]],["L",[v+x,w]],["L",[v+x,w+y]],["L",[v,w+y]],["L",[v,w]],["Z",[]]]);break;default:e.parentNode.removeChild(e)}if(l&&e.setAttribute("d",l),b){wb.resetOrientation(e);var z=!1;try{z=e.getBBox()}catch(A){}return e.parentNode.removeChild(e),z}if(f){var B=svgedit.transformlist.getTransformList(e);svgedit.math.hasMatrixTransform(B)&&wb.resetOrientation(e)}var C=a.nextSibling;c.addSubCommand(new svgedit.history.RemoveElementCommand(a,C,i)),c.addSubCommand(new svgedit.history.InsertElementCommand(e)),Gb(),a.parentNode.removeChild(a),e.setAttribute("id",h),e.removeAttribute("visibility"),Hb([e],!0),R(c)};var Wb=function(a,b,c){var d=i.suspendRedraw(1e3);"pathedit"==eb&&wb.moveNode(a,b),c=c||s;for(var e=c.length,f=["g","polyline","path"],h=["transform","opacity","filter"];e--;){var j=c[e];if(null!=j)if(("x"===a||"y"===a)&&f.indexOf(j.tagName)>=0){var k=getStrokedBBox([j]),l="x"===a?b-k.x:0,m="y"===a?b-k.y:0;g.moveSelectedElements(l*o,m*o,!0)}else{"g"===j.tagName&&h.indexOf(a)>=0;var n="#text"===a?j.textContent:j.getAttribute(a);if(null==n&&(n=""),n!==String(b)){if("#text"==a){{svgedit.utilities.getBBox(j).width}j.textContent=b,/rotate/.test(j.getAttribute("transform"))&&(j=Bb(j))}else"#href"==a?D(j,b):j.setAttribute(a,b);"textedit"===eb&&"#text"!==a&&j.textContent.length&&vb.toSelectMode(j),svgedit.browser.isGecko()&&"text"===j.nodeName&&/rotate/.test(j.getAttribute("transform"))&&(0===String(b).indexOf("url")||["font-size","font-family","x","y"].indexOf(a)>=0&&j.textContent)&&(j=Bb(j)),s.indexOf(j)>=0&&setTimeout(function(){j.parentNode&&S.requestSelector(j).resize()},0);var p=svgedit.utilities.getRotationAngle(j);if(0!=p&&"transform"!=a)for(var q=svgedit.transformlist.getTransformList(j),r=q.numberOfItems;r--;){var t=q.getItem(r);if(4==t.type){q.removeItem(r);var u=svgedit.utilities.getBBox(j),v=svgedit.math.transformPoint(u.x+u.width/2,u.y+u.height/2,svgedit.math.transformListToTransform(q).matrix),w=v.x,x=v.y,y=i.createSVGTransform();y.setRotate(p,w,x),q.insertItemBefore(y,r);break}}}}}i.unsuspendRedraw(d)},Xb=this.changeSelectedAttribute=function(a,b,c){c=c||s,g.undoMgr.beginUndoableChange(a,c);c.length;Wb(a,b,c);var d=g.undoMgr.finishUndoableChange();d.isEmpty()||R(d)};this.deleteSelectedElements=function(){var a,b=new svgedit.history.BatchCommand("Delete Elements"),c=s.length,d=[];for(a=0;c>a;++a){var e=s[a];if(null==e)break;var f=e.parentNode,g=e;S.releaseSelector(g),svgedit.path.removePath_(g.id),"a"===f.tagName&&1===f.childNodes.length&&(g=f,f=f.parentNode);var h=g.nextSibling,i=f.removeChild(g);d.push(e),s[a]=null,b.addSubCommand(new O(i,h,f))}b.isEmpty()||R(b),ub("changed",d),Gb()},this.cutSelectedElements=function(){var a,b=new svgedit.history.BatchCommand("Cut Elements"),c=s.length,d=[];for(a=0;c>a;++a){var e=s[a];if(null==e)break;var f=e.parentNode,h=e;S.releaseSelector(h),svgedit.path.removePath_(h.id);var i=h.nextSibling,j=f.removeChild(h);d.push(e),s[a]=null,b.addSubCommand(new O(j,i,f))}b.isEmpty()||R(b),ub("changed",d),Gb(),g.clipBoard=d},this.copySelectedElements=function(){g.clipBoard=$.merge([],s)},this.pasteElements=function(a,b,c){var d=g.clipBoard,e=d.length;if(e){for(var f=[],h=new svgedit.history.BatchCommand("Paste elements");e--;){var i=d[e];if(i){var j=Ab(i);svgedit.utilities.getElem(i.id)||(j.id=i.id),f.push(j),(p||n().getCurrentLayer()).appendChild(j),h.addSubCommand(new svgedit.history.InsertElementCommand(j))}}if(Ib(f),"in_place"!==a){var k,l;a?"point"===a&&(k=b,l=c):(k=nb.x,l=nb.y);var m=getStrokedBBox(f),o=k-(m.x+m.width/2),q=l-(m.y+m.height/2),r=[],s=[];$.each(f,function(){r.push(o),s.push(q)});var t=g.moveSelectedElements(r,s,!1);h.addSubCommand(t)}R(h),ub("changed",f)}},this.groupSelectedElements=function(a,b){a||(a="g");var c="";switch(a){case"a":c="Make hyperlink";var d="";arguments.length>1&&(d=b);break;default:a="g",c="Group Elements"}var e=new svgedit.history.BatchCommand(c),f=t({element:a,attr:{id:tb()}});"a"===a&&D(f,d),e.addSubCommand(new svgedit.history.InsertElementCommand(f));for(var g=s.length;g--;){var h=s[g];if(null!=h){"a"===h.parentNode.tagName&&1===h.parentNode.childNodes.length&&(h=h.parentNode);var i=h.nextSibling,j=h.parentNode;f.appendChild(h),e.addSubCommand(new svgedit.history.MoveElementCommand(h,i,j))}}e.isEmpty()||R(e),Ib([f],!0)};var Yb=this.pushGroupProperties=function(a,b){var c,d,e,f=a.childNodes,h=f.length,j=a.getAttribute("transform"),k=svgedit.transformlist.getTransformList(a),l=svgedit.math.transformListToTransform(k).matrix,m=new svgedit.history.BatchCommand("Push group properties"),n=0,o=svgedit.utilities.getRotationAngle(a),p=$(a).attr(["filter","opacity"]);for(n=0;h>n;n++){var q=f[n];if(1===q.nodeType){if(null!==p.opacity&&1!==p.opacity){var r=(q.getAttribute("opacity")||1,Math.round((q.getAttribute("opacity")||1)*p.opacity*100)/100);Xb("opacity",r,[q])}if(p.filter){var s=this.getBlur(q),t=s;d||(d=this.getBlur(a)),s?s=Number(d)+Number(s):0===s&&(s=d),t?c=svgedit.utilities.getRefElem(q.getAttribute("filter")):c?(c=Ab(c),svgedit.utilities.findDefs().appendChild(c)):c=svgedit.utilities.getRefElem(p.filter);var u="feGaussianBlur"===c.firstChild.tagName?"blur":"filter";c.id=q.id+"_"+u,Xb("filter","url(#"+c.id+")",[q]),s&&(Xb("stdDeviation",s,[c.firstChild]),g.setBlurOffsets(c,s))}var v=svgedit.transformlist.getTransformList(q);if(~q.tagName.indexOf("Gradient")&&(v=null),v&&"defs"!==q.tagName&&k.numberOfItems){if(o&&1==k.numberOfItems){var w=k.getItem(0).matrix,x=i.createSVGMatrix(),y=svgedit.utilities.getRotationAngle(q);y&&(x=v.getItem(0).matrix);var z=svgedit.utilities.getBBox(q),A=svgedit.math.transformListToTransform(v).matrix,B=svgedit.math.transformPoint(z.x+z.width/2,z.y+z.height/2,A),C=o+y,D=i.createSVGTransform();D.setRotate(C,B.x,B.y);var E=svgedit.math.matrixMultiply(w,x,D.matrix.inverse());if(y&&v.removeItem(0),C&&(v.numberOfItems?v.insertItemBefore(D,0):v.appendItem(D)),E.e||E.f){var F=i.createSVGTransform();F.setTranslate(E.e,E.f),v.numberOfItems?v.insertItemBefore(F,0):v.appendItem(F)}}else{var G=q.getAttribute("transform");e={},e.transform=G||"";var H=i.createSVGTransform(),I=svgedit.math.transformListToTransform(v).matrix,J=I.inverse(),K=svgedit.math.matrixMultiply(J,l,I);H.setMatrix(K),v.appendItem(H)}var L=svgedit.recalculate.recalculateDimensions(q);L&&m.addSubCommand(L)}}}return j&&(e={},e.transform=j,a.setAttribute("transform",""),a.removeAttribute("transform"),m.addSubCommand(new svgedit.history.ChangeElementCommand(a,e))),b&&!m.isEmpty()?m:void 0};this.ungroupSelectedElement=function(){var a=s[0];if($(a).data("gsvg")||$(a).data("symbol"))return void Pb(a);if("use"===a.tagName){var b=svgedit.utilities.getElem(C(a).substr(1));return $(a).data("symbol",b).data("ref",b),void Pb(a)}var c=$(a).parents("a");if(c.length&&(a=c[0]),"g"===a.tagName||"a"===a.tagName){var d=new svgedit.history.BatchCommand("Ungroup Elements"),e=Yb(a,!0);e&&d.addSubCommand(e);for(var f=a.parentNode,g=a.nextSibling,h=new Array(a.childNodes.length),i=0;a.firstChild;){var j=a.firstChild,k=j.nextSibling,l=j.parentNode;if("title"!==j.tagName)h[i++]=j=f.insertBefore(j,g),d.addSubCommand(new svgedit.history.MoveElementCommand(j,k,l));else{var m=j.nextSibling;d.addSubCommand(new svgedit.history.RemoveElementCommand(j,m,l)),l.removeChild(j)}}Gb();var n=a.nextSibling;a=f.removeChild(a),d.addSubCommand(new svgedit.history.RemoveElementCommand(a,n,f)),d.isEmpty()||R(d),Hb(h)}},this.moveToTopSelectedElement=function(){var a=s[0];if(null!=a){var b=a,c=b.parentNode,d=b.nextSibling;b=b.parentNode.appendChild(b),d!=b.nextSibling&&(R(new svgedit.history.MoveElementCommand(b,d,c,"top")),ub("changed",[b]))}},this.moveToBottomSelectedElement=function(){var a=s[0];if(null!=a){var b=a,c=b.parentNode,d=b.nextSibling,e=b.parentNode.firstChild;"title"==e.tagName&&(e=e.nextSibling),"defs"==e.tagName&&(e=e.nextSibling),b=b.parentNode.insertBefore(b,e),d!=b.nextSibling&&(R(new svgedit.history.MoveElementCommand(b,d,c,"bottom")),ub("changed",[b]))}},this.moveUpDownSelected=function(a){var b=s[0];if(b){lb=[];var c,d,e=$(rb(getStrokedBBox([b]))).toArray();if("Down"==a&&e.reverse(),$.each(e,function(){return d?(c=this,!1):void(this==b&&(d=!0))}),c){var f=b,g=f.parentNode,h=f.nextSibling;$(c)["Down"==a?"before":"after"](f),h!=f.nextSibling&&(R(new svgedit.history.MoveElementCommand(f,h,g,"Move "+a)),ub("changed",[f]))}}},this.moveSelectedElements=function(a,b,c){a.constructor!=Array&&(a/=o,b/=o),c=c||!0;for(var d=new svgedit.history.BatchCommand("position"),e=s.length;e--;){var f=s[e];if(null!=f){var g=i.createSVGTransform(),h=svgedit.transformlist.getTransformList(f);a.constructor==Array?g.setTranslate(a[e],b[e]):g.setTranslate(a,b),h.numberOfItems?h.insertItemBefore(g,0):h.appendItem(g);var j=svgedit.recalculate.recalculateDimensions(f);j&&d.addSubCommand(j),S.requestSelector(f).resize()}}return d.isEmpty()?void 0:(c&&R(d),ub("changed",s),d)},this.cloneSelectedElements=function(a,b){function c(a,b){return $(b).index()-$(a).index()}var d,e,f=new svgedit.history.BatchCommand("Clone Elements"),g=s.length;for(s.sort(c),d=0;g>d&&(e=s[d],null!=e);++d);var h=s.slice(0,d);for(this.clearSelection(!0),d=h.length;d--;)e=h[d]=Ab(h[d]),(p||n().getCurrentLayer()).appendChild(e),f.addSubCommand(new svgedit.history.InsertElementCommand(e));f.isEmpty()||(Hb(h.reverse()),this.moveSelectedElements(a,b,!1),R(f))},this.alignSelectedElements=function(a,b){var c,d,e=[],f=Number.MAX_VALUE,h=Number.MIN_VALUE,i=Number.MAX_VALUE,j=Number.MIN_VALUE,k=Number.MIN_VALUE,l=Number.MIN_VALUE,m=s.length;if(m){for(c=0;m>c&&null!=s[c];++c)switch(d=s[c],e[c]=getStrokedBBox([d]),b){case"smallest":(("l"==a||"c"==a||"r"==a)&&(k==Number.MIN_VALUE||k>e[c].width)||("t"==a||"m"==a||"b"==a)&&(l==Number.MIN_VALUE||l>e[c].height))&&(f=e[c].x,i=e[c].y,h=e[c].x+e[c].width,j=e[c].y+e[c].height,k=e[c].width,l=e[c].height);break;case"largest":(("l"==a||"c"==a||"r"==a)&&(k==Number.MIN_VALUE||k<e[c].width)||("t"==a||"m"==a||"b"==a)&&(l==Number.MIN_VALUE||l<e[c].height))&&(f=e[c].x,i=e[c].y,h=e[c].x+e[c].width,j=e[c].y+e[c].height,k=e[c].width,l=e[c].height);break;default:e[c].x<f&&(f=e[c].x),e[c].y<i&&(i=e[c].y),e[c].x+e[c].width>h&&(h=e[c].x+e[c].width),e[c].y+e[c].height>j&&(j=e[c].y+e[c].height)}"page"==b&&(f=0,i=0,h=g.contentW,j=g.contentH);var n=new Array(m),o=new Array(m);for(c=0;m>c&&null!=s[c];++c){d=s[c];var p=e[c];switch(n[c]=0,o[c]=0,a){case"l":n[c]=f-p.x;break;case"c":n[c]=(f+h)/2-(p.x+p.width/2);break;case"r":n[c]=h-(p.x+p.width);break;case"t":o[c]=i-p.y;break;case"m":o[c]=(i+j)/2-(p.y+p.height/2);break;case"b":o[c]=j-(p.y+p.height)}}this.moveSelectedElements(n,o)}},this.contentW=Tb().w,this.contentH=Tb().h,this.updateCanvas=function(a,b){i.setAttribute("width",a),i.setAttribute("height",b);var c=$("#canvasBackground")[0],d=j.getAttribute("x"),e=j.getAttribute("y"),f=a/2-this.contentW*o/2,g=b/2-this.contentH*o/2;svgedit.utilities.assignAttributes(j,{width:this.contentW*o,height:this.contentH*o,x:f,y:g,viewBox:"0 0 "+this.contentW+" "+this.contentH}),svgedit.utilities.assignAttributes(c,{width:j.getAttribute("width"),height:j.getAttribute("height"),x:f,y:g});var h=svgedit.utilities.getElem("background_image");return h&&svgedit.utilities.assignAttributes(h,{width:"100%",height:"100%"}),S.selectorParentGroup.setAttribute("transform","translate("+f+","+g+")"),pb("canvasUpdated",{new_x:f,new_y:g,old_x:d,old_y:e,d_x:f-d,d_y:g-e}),{x:f,y:g,old_x:d,old_y:e,d_x:f-d,d_y:g-e}},this.setBackground=function(a,b){var c=svgedit.utilities.getElem("canvasBackground"),e=$(c).find("rect")[0],f=svgedit.utilities.getElem("background_image");e.setAttribute("fill",a),b?(f||(f=h.createElementNS(d.SVG,"image"),svgedit.utilities.assignAttributes(f,{id:"background_image",width:"100%",height:"100%",preserveAspectRatio:"xMinYMin",style:"pointer-events:none"})),D(f,b),c.appendChild(f)):f&&f.parentNode.removeChild(f)},this.cycleElement=function(a){var b,c=s[0],d=!1,e=xb(p||n().getCurrentLayer());if(e.length){if(null==c)b=a?e.length-1:0,d=e[b];else for(var f=e.length;f--;)if(e[f]==c){b=a?f-1:f+1,b>=e.length?b=0:0>b&&(b=e.length-1),d=e[b];break}Ib([d],!0),ub("selected",s)}},this.clear(),this.getPrivateMethods=function(){var a={addCommandToHistory:R,setGradient:Ub,addSvgElementFromJson:t,assignAttributes:G,BatchCommand:Q,call:ub,ChangeElementCommand:P,copyElem:Ab,ffClone:Bb,findDefs:A,findDuplicateGradient:Vb,getElem:F,getId:sb,getIntersectionList:rb,getMouseTarget:Jb,getNextId:tb,getPathBBox:E,getUrlFromAttr:B,hasMatrixTransform:w,identifyLayers:Qb,InsertElementCommand:N,isIdentity:svgedit.math.isIdentity,logMatrix:Eb,matrixMultiply:v,MoveElementCommand:M,preventClickDefault:Kb,recalculateAllSelectedDimensions:Cb,recalculateDimensions:J,remapElement:I,RemoveElementCommand:O,removeUnusedDefElems:Lb,round:qb,runExtensions:pb,sanitizeSvg:L,SVGEditTransformList:svgedit.transformlist.SVGTransformList,toString:toString,transformBox:svgedit.math.transformBox,transformListToTransform:z,transformPoint:u,walkTree:svgedit.utilities.walkTree};return a}};
+/*globals $, svgedit, svgCanvas*/
+/*jslint vars: true, eqeq: true, todo: true, bitwise: true, continue: true, forin: true */
+/*
+ * svgcanvas.js
+ *
+ * Licensed under the MIT License
+ *
+ * Copyright(c) 2010 Alexis Deveria
+ * Copyright(c) 2010 Pavol Rusnak
+ * Copyright(c) 2010 Jeff Schiller
+ *
+ */
+
+// Dependencies:
+// 1) jQuery
+// 2) browser.js
+// 3) svgtransformlist.js
+// 4) math.js
+// 5) units.js
+// 6) svgutils.js
+// 7) sanitize.js
+// 8) history.js
+// 9) select.js
+// 10) draw.js
+// 11) path.js
+// 12) coords.js
+// 13) recalculate.js
+
+(function () {
+
+if (!window.console) {
+	window.console = {};
+	window.console.log = function(str) {};
+	window.console.dir = function(str) {};
+}
+
+if (window.opera) {
+	window.console.log = function(str) { opera.postError(str); };
+	window.console.dir = function(str) {};
+}
+
+}());
+
+// Class: SvgCanvas
+// The main SvgCanvas class that manages all SVG-related functions
+//
+// Parameters:
+// container - The container HTML element that should hold the SVG root element
+// config - An object that contains configuration data
+$.SvgCanvas = function(container, config) {
+// Alias Namespace constants
+var NS = svgedit.NS;
+
+// Default configuration options
+var curConfig = {
+	show_outside_canvas: true,
+	selectNew: true,
+	dimensions: [640, 480]
+};
+
+// Update config with new one if given
+if (config) {
+	$.extend(curConfig, config);
+}
+
+// Array with width/height of canvas
+var dimensions = curConfig.dimensions;
+
+var canvas = this;
+
+// "document" element associated with the container (same as window.document using default svg-editor.js)
+// NOTE: This is not actually a SVG document, but a HTML document.
+var svgdoc = container.ownerDocument;
+
+// This is a container for the document being edited, not the document itself.
+var svgroot = svgdoc.importNode(svgedit.utilities.text2xml(
+		'<svg id="svgroot" xmlns="' + NS.SVG + '" xlinkns="' + NS.XLINK + '" ' +
+			'width="' + dimensions[0] + '" height="' + dimensions[1] + '" x="' + dimensions[0] + '" y="' + dimensions[1] + '" overflow="visible">' +
+			'<defs>' +
+				'<filter id="canvashadow" filterUnits="objectBoundingBox">' +
+					'<feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>'+
+					'<feOffset in="blur" dx="5" dy="5" result="offsetBlur"/>'+
+					'<feMerge>'+
+						'<feMergeNode in="offsetBlur"/>'+
+						'<feMergeNode in="SourceGraphic"/>'+
+					'</feMerge>'+
+				'</filter>'+
+			'</defs>'+
+		'</svg>').documentElement, true);
+container.appendChild(svgroot);
+
+// The actual element that represents the final output SVG element
+var svgcontent = svgdoc.createElementNS(NS.SVG, "svg");
+
+// This function resets the svgcontent element while keeping it in the DOM.
+var clearSvgContentElement = canvas.clearSvgContentElement = function() {
+	while (svgcontent.firstChild) { svgcontent.removeChild(svgcontent.firstChild); }
+
+	// TODO: Clear out all other attributes first?
+	$(svgcontent).attr({
+		id: 'svgcontent',
+		width: dimensions[0],
+		height: dimensions[1],
+		x: dimensions[0],
+		y: dimensions[1],
+		overflow: curConfig.show_outside_canvas ? 'visible' : 'hidden',
+		xmlns: NS.SVG,
+		"xmlns:se": NS.SE,
+		"xmlns:xlink": NS.XLINK
+	}).appendTo(svgroot);
+
+	// TODO: make this string optional and set by the client
+	var comment = svgdoc.createComment(" Created with SVG-edit - http://svg-edit.googlecode.com/ ");
+	svgcontent.appendChild(comment);
+};
+clearSvgContentElement();
+
+// Prefix string for element IDs
+var idprefix = "svg_";
+
+// Function: setIdPrefix
+// Changes the ID prefix to the given value
+//
+// Parameters: 
+// p - String with the new prefix 
+canvas.setIdPrefix = function(p) {
+	idprefix = p;
+};
+
+// Current svgedit.draw.Drawing object
+// @type {svgedit.draw.Drawing}
+canvas.current_drawing_ = new svgedit.draw.Drawing(svgcontent, idprefix);
+
+// Function: getCurrentDrawing
+// Returns the current Drawing.
+// @return {svgedit.draw.Drawing}
+var getCurrentDrawing = canvas.getCurrentDrawing = function() {
+	return canvas.current_drawing_;
+};
+
+// Float displaying the current zoom level (1 = 100%, .5 = 50%, etc)
+var current_zoom = 1;
+
+// pointer to current group (for in-group editing)
+var current_group = null;
+
+// Object containing data for the currently selected styles
+var all_properties = {
+	shape: {
+		fill: (curConfig.initFill.color == 'none' ? '' : '#') + curConfig.initFill.color,
+		fill_paint: null,
+		fill_opacity: curConfig.initFill.opacity,
+		stroke: "#" + curConfig.initStroke.color,
+		stroke_paint: null,
+		stroke_opacity: curConfig.initStroke.opacity,
+		stroke_width: curConfig.initStroke.width,
+		stroke_dasharray: 'none',
+		stroke_linejoin: 'miter',
+		stroke_linecap: 'butt',
+		opacity: curConfig.initOpacity
+	}
+};
+
+all_properties.text = $.extend(true, {}, all_properties.shape);
+$.extend(all_properties.text, {
+	fill: "#000000",
+	stroke_width: 0,
+	font_size: 24,
+	font_family: 'serif'
+});
+
+// Current shape style properties
+var cur_shape = all_properties.shape;
+
+// Array with all the currently selected elements
+// default size of 1 until it needs to grow bigger
+var selectedElements = new Array(1);
+
+// Function: addSvgElementFromJson
+// Create a new SVG element based on the given object keys/values and add it to the current layer
+// The element will be ran through cleanupElement before being returned 
+//
+// Parameters:
+// data - Object with the following keys/values:
+// * element - tag name of the SVG element to create
+// * attr - Object with attributes key-values to assign to the new element
+// * curStyles - Boolean indicating that current style attributes should be applied first
+//
+// Returns: The new element
+var addSvgElementFromJson = this.addSvgElementFromJson = function(data) {
+	var shape = svgedit.utilities.getElem(data.attr.id);
+	// if shape is a path but we need to create a rect/ellipse, then remove the path
+	var current_layer = getCurrentDrawing().getCurrentLayer();
+	if (shape && data.element != shape.tagName) {
+		current_layer.removeChild(shape);
+		shape = null;
+	}
+	if (!shape) {
+		shape = svgdoc.createElementNS(NS.SVG, data.element);
+		if (current_layer) {
+			(current_group || current_layer).appendChild(shape);
+		}
+	}
+	if (data.curStyles) {
+		svgedit.utilities.assignAttributes(shape, {
+			"fill": cur_shape.fill,
+			"stroke": cur_shape.stroke,
+			"stroke-width": cur_shape.stroke_width,
+			"stroke-dasharray": cur_shape.stroke_dasharray,
+			"stroke-linejoin": cur_shape.stroke_linejoin,
+			"stroke-linecap": cur_shape.stroke_linecap,
+			"stroke-opacity": cur_shape.stroke_opacity,
+			"fill-opacity": cur_shape.fill_opacity,
+			"opacity": cur_shape.opacity / 2,
+			"style": "pointer-events:inherit"
+		}, 100);
+	}
+	svgedit.utilities.assignAttributes(shape, data.attr, 100);
+	svgedit.utilities.cleanupElement(shape);
+	return shape;
+};
+
+// import svgtransformlist.js
+var getTransformList = canvas.getTransformList = svgedit.transformlist.getTransformList;
+
+// import from math.js.
+var transformPoint = svgedit.math.transformPoint;
+var matrixMultiply = canvas.matrixMultiply = svgedit.math.matrixMultiply;
+var hasMatrixTransform = canvas.hasMatrixTransform = svgedit.math.hasMatrixTransform;
+var transformListToTransform = canvas.transformListToTransform = svgedit.math.transformListToTransform;
+var snapToAngle = svgedit.math.snapToAngle;
+var getMatrix = svgedit.math.getMatrix;
+
+// initialize from units.js
+// send in an object implementing the ElementContainer interface (see units.js)
+svgedit.units.init({
+	getBaseUnit: function() { return curConfig.baseUnit; },
+	getElement: svgedit.utilities.getElem,
+	getHeight: function() { return svgcontent.getAttribute("height")/current_zoom; },
+	getWidth: function() { return svgcontent.getAttribute("width")/current_zoom; },
+	getRoundDigits: function() { return save_options.round_digits; }
+});
+// import from units.js
+var convertToNum = canvas.convertToNum = svgedit.units.convertToNum;
+
+// import from svgutils.js
+svgedit.utilities.init({
+	getDOMDocument: function() { return svgdoc; },
+	getDOMContainer: function() { return container; },
+	getSVGRoot: function() { return svgroot; },
+	// TODO: replace this mostly with a way to get the current drawing.
+	getSelectedElements: function() { return selectedElements; },
+	getSVGContent: function() { return svgcontent; },
+	getBaseUnit: function() { return curConfig.baseUnit; },
+	getStepSize: function() { return curConfig.stepSize; }
+});
+var findDefs = canvas.findDefs = svgedit.utilities.findDefs;
+var getUrlFromAttr = canvas.getUrlFromAttr = svgedit.utilities.getUrlFromAttr;
+var getHref = canvas.getHref = svgedit.utilities.getHref;
+var setHref = canvas.setHref = svgedit.utilities.setHref;
+var getPathBBox = svgedit.utilities.getPathBBox;
+var getBBox = canvas.getBBox = svgedit.utilities.getBBox;
+var getRotationAngle = canvas.getRotationAngle = svgedit.utilities.getRotationAngle;
+var getElem = canvas.getElem = svgedit.utilities.getElem;
+var getRefElem = canvas.getRefElem = svgedit.utilities.getRefElem;
+var assignAttributes = canvas.assignAttributes = svgedit.utilities.assignAttributes;
+var cleanupElement = this.cleanupElement = svgedit.utilities.cleanupElement;
+
+// import from coords.js
+svgedit.coords.init({
+	getDrawing: function() { return getCurrentDrawing(); },
+	getGridSnapping: function() { return curConfig.gridSnapping; }
+});
+var remapElement = this.remapElement = svgedit.coords.remapElement;
+
+// import from recalculate.js
+svgedit.recalculate.init({
+	getSVGRoot: function() { return svgroot; },
+	getStartTransform: function() { return startTransform; },
+	setStartTransform: function(transform) { startTransform = transform; }
+});
+var recalculateDimensions = this.recalculateDimensions = svgedit.recalculate.recalculateDimensions;
+
+// import from sanitize.js
+var nsMap = svgedit.getReverseNS();
+var sanitizeSvg = canvas.sanitizeSvg = svgedit.sanitize.sanitizeSvg;
+
+// import from history.js
+var MoveElementCommand = svgedit.history.MoveElementCommand;
+var InsertElementCommand = svgedit.history.InsertElementCommand;
+var RemoveElementCommand = svgedit.history.RemoveElementCommand;
+var ChangeElementCommand = svgedit.history.ChangeElementCommand;
+var BatchCommand = svgedit.history.BatchCommand;
+// Implement the svgedit.history.HistoryEventHandler interface.
+canvas.undoMgr = new svgedit.history.UndoManager({
+	handleHistoryEvent: function(eventType, cmd) {
+		var EventTypes = svgedit.history.HistoryEventTypes;
+		// TODO: handle setBlurOffsets.
+		if (eventType == EventTypes.BEFORE_UNAPPLY || eventType == EventTypes.BEFORE_APPLY) {
+			canvas.clearSelection();
+		} else if (eventType == EventTypes.AFTER_APPLY || eventType == EventTypes.AFTER_UNAPPLY) {
+			var elems = cmd.elements();
+			canvas.pathActions.clear();
+			call("changed", elems);
+			var cmdType = cmd.type();
+			var isApply = (eventType == EventTypes.AFTER_APPLY);
+			if (cmdType == MoveElementCommand.type()) {
+				var parent = isApply ? cmd.newParent : cmd.oldParent;
+				if (parent == svgcontent) {
+					canvas.identifyLayers();
+				}
+			} else if (cmdType == InsertElementCommand.type() ||
+					cmdType == RemoveElementCommand.type()) {
+				if (cmd.parent == svgcontent) {
+					canvas.identifyLayers();
+				}
+				if (cmdType == InsertElementCommand.type()) {
+					if (isApply) {restoreRefElems(cmd.elem);}
+				} else {
+					if (!isApply) {restoreRefElems(cmd.elem);}
+				}
+				if (cmd.elem.tagName === 'use') {
+					setUseData(cmd.elem);
+				}
+			} else if (cmdType == ChangeElementCommand.type()) {
+				// if we are changing layer names, re-identify all layers
+				if (cmd.elem.tagName == "title" && cmd.elem.parentNode.parentNode == svgcontent) {
+					canvas.identifyLayers();
+				}
+				var values = isApply ? cmd.newValues : cmd.oldValues;
+				// If stdDeviation was changed, update the blur.
+				if (values.stdDeviation) {
+					canvas.setBlurOffsets(cmd.elem.parentNode, values.stdDeviation);
+				}
+				// This is resolved in later versions of webkit, perhaps we should
+				// have a featured detection for correct 'use' behavior?
+				// ——————————
+				// Remove & Re-add hack for Webkit (issue 775) 
+				//if (cmd.elem.tagName === 'use' && svgedit.browser.isWebkit()) {
+				//	var elem = cmd.elem;
+				//	if (!elem.getAttribute('x') && !elem.getAttribute('y')) {
+				//		var parent = elem.parentNode;
+				//		var sib = elem.nextSibling;
+				//		parent.removeChild(elem);
+				//		parent.insertBefore(elem, sib);
+				//	}
+				//}
+			}
+		}
+	}
+});
+var addCommandToHistory = function(cmd) {
+	canvas.undoMgr.addCommandToHistory(cmd);
+};
+
+// import from select.js
+svgedit.select.init(curConfig, {
+	createSVGElement: function(jsonMap) { return canvas.addSvgElementFromJson(jsonMap); },
+	svgRoot: function() { return svgroot; },
+	svgContent: function() { return svgcontent; },
+	currentZoom: function() { return current_zoom; },
+	// TODO(codedread): Remove when getStrokedBBox() has been put into svgutils.js.
+	getStrokedBBox: function(elems) { return canvas.getStrokedBBox([elems]); }
+});
+// this object manages selectors for us
+var selectorManager = this.selectorManager = svgedit.select.getSelectorManager();
+
+// Import from path.js
+svgedit.path.init({
+	getCurrentZoom: function() { return current_zoom; },
+	getSVGRoot: function() { return svgroot; }
+});
+
+// Interface strings, usually for title elements
+var uiStrings = {
+	"exportNoBlur": "Blurred elements will appear as un-blurred",
+	"exportNoforeignObject": "foreignObject elements will not appear",
+	"exportNoDashArray": "Strokes will appear filled",
+	"exportNoText": "Text may not appear as expected"
+};
+
+var visElems = 'a,circle,ellipse,foreignObject,g,image,line,path,polygon,polyline,rect,svg,text,tspan,use';
+var ref_attrs = ["clip-path", "fill", "filter", "marker-end", "marker-mid", "marker-start", "mask", "stroke"];
+
+var elData = $.data;
+
+// Animation element to change the opacity of any newly created element
+var opac_ani = document.createElementNS(NS.SVG, 'animate');
+$(opac_ani).attr({
+	attributeName: 'opacity',
+	begin: 'indefinite',
+	dur: 1,
+	fill: 'freeze'
+}).appendTo(svgroot);
+
+var restoreRefElems = function(elem) {
+	// Look for missing reference elements, restore any found
+	var o, i,
+		attrs = $(elem).attr(ref_attrs);
+	for (o in attrs) {
+		var val = attrs[o];
+		if (val && val.indexOf('url(') === 0) {
+			var id = svgedit.utilities.getUrlFromAttr(val).substr(1);
+			var ref = getElem(id);
+			if (!ref) {
+				svgedit.utilities.findDefs().appendChild(removedElements[id]);
+				delete removedElements[id];
+			}
+		}
+	}
+	
+	var childs = elem.getElementsByTagName('*');
+	
+	if (childs.length) {
+		for (i = 0, l = childs.length; i < l; i++) {
+			restoreRefElems(childs[i]);
+		}
+	}
+};
+
+(function() {
+	// TODO For Issue 208: this is a start on a thumbnail
+	//	var svgthumb = svgdoc.createElementNS(NS.SVG, "use");
+	//	svgthumb.setAttribute('width', '100');
+	//	svgthumb.setAttribute('height', '100');
+	//	svgedit.utilities.setHref(svgthumb, '#svgcontent');
+	//	svgroot.appendChild(svgthumb);
+
+}());
+
+// Object to contain image data for raster images that were found encodable
+var encodableImages = {},
+	
+	// String with image URL of last loadable image
+	last_good_img_url = curConfig.imgPath + 'logo.png',
+	
+	// Array with current disabled elements (for in-group editing)
+	disabled_elems = [],
+	
+	// Object with save options
+	save_options = {round_digits: 5},
+	
+	// Boolean indicating whether or not a draw action has been started
+	started = false,
+	
+	// String with an element's initial transform attribute value
+	startTransform = null,
+	
+	// String indicating the current editor mode
+	current_mode = "select",
+	
+	// String with the current direction in which an element is being resized
+	current_resize_mode = "none",
+	
+	// Object with IDs for imported files, to see if one was already added
+	import_ids = {},
+
+	// Current text style properties
+	cur_text = all_properties.text,
+	
+	// Current general properties
+	cur_properties = cur_shape,
+	
+	// Array with selected elements' Bounding box object
+//	selectedBBoxes = new Array(1),
+	
+	// The DOM element that was just selected
+	justSelected = null,
+	
+	// DOM element for selection rectangle drawn by the user
+	rubberBox = null,
+	
+	// Array of current BBoxes (still needed?)
+	curBBoxes = [],
+	
+	// Object to contain all included extensions
+	extensions = {},
+	
+	// Canvas point for the most recent right click
+	lastClickPoint = null,
+	
+	// Map of deleted reference elements
+	removedElements = {};
+
+// Clipboard for cut, copy&pasted elements
+canvas.clipBoard = [];
+
+// Should this return an array by default, so extension results aren't overwritten?
+var runExtensions = this.runExtensions = function(action, vars, returnArray) {
+	var result = returnArray ? [] : false;
+	$.each(extensions, function(name, opts) {
+		if (opts && action in opts) {
+			if (returnArray) {
+				result.push(opts[action](vars));
+			} else {
+				result = opts[action](vars);
+			}
+		}
+	});
+	return result;
+};
+
+// Function: addExtension
+// Add an extension to the editor
+// 
+// Parameters:
+// name - String with the ID of the extension
+// ext_func - Function supplied by the extension with its data
+this.addExtension = function(name, ext_func) {
+	var ext;
+	if (!(name in extensions)) {
+		// Provide private vars/funcs here. Is there a better way to do this?
+		if ($.isFunction(ext_func)) {
+			ext = ext_func($.extend(canvas.getPrivateMethods(), {
+				svgroot: svgroot,
+				svgcontent: svgcontent,
+				nonce: getCurrentDrawing().getNonce(),
+				selectorManager: selectorManager
+			}));
+		} else {
+			ext = ext_func;
+		}
+		extensions[name] = ext;
+		call("extension_added", ext);
+	} else {
+		console.log('Cannot add extension "' + name + '", an extension by that name already exists"');
+	}
+};
+	
+// This method rounds the incoming value to the nearest value based on the current_zoom
+var round = this.round = function(val) {
+	return parseInt(val*current_zoom, 10)/current_zoom;
+};
+
+// This method sends back an array or a NodeList full of elements that
+// intersect the multi-select rubber-band-box on the current_layer only.
+// 
+// Since the only browser that supports the SVG DOM getIntersectionList is Opera, 
+// we need to provide an implementation here. We brute-force it for now.
+// 
+// Reference:
+// Firefox does not implement getIntersectionList(), see https://bugzilla.mozilla.org/show_bug.cgi?id=501421
+// Webkit does not implement getIntersectionList(), see https://bugs.webkit.org/show_bug.cgi?id=11274
+var getIntersectionList = this.getIntersectionList = function(rect) {
+	if (rubberBox == null) { return null; }
+
+	var parent = current_group || getCurrentDrawing().getCurrentLayer();
+	
+	if (!curBBoxes.length) {
+		// Cache all bboxes
+		curBBoxes = getVisibleElementsAndBBoxes(parent);
+	}
+	
+	var resultList = null;
+	try {
+		resultList = parent.getIntersectionList(rect, null);
+	} catch(e) { }
+
+	if (resultList == null || typeof(resultList.item) != "function") {
+		resultList = [];
+		var rubberBBox;
+		if (!rect) {
+			rubberBBox = rubberBox.getBBox();
+			var o,
+				bb = {};
+			
+			for (o in rubberBBox) {
+				bb[o] = rubberBBox[o] / current_zoom;
+			}
+			rubberBBox = bb;
+			
+		} else {
+			rubberBBox = rect;
+		}
+		var i = curBBoxes.length;
+		while (i--) {
+			if (!rubberBBox.width) {continue;}
+			if (svgedit.math.rectsIntersect(rubberBBox, curBBoxes[i].bbox)) {
+				resultList.push(curBBoxes[i].elem);
+			}
+		}
+	}
+	// addToSelection expects an array, but it's ok to pass a NodeList 
+	// because using square-bracket notation is allowed: 
+	// http://www.w3.org/TR/DOM-Level-2-Core/ecma-script-binding.html
+	return resultList;
+};
+
+// TODO(codedread): Migrate this into svgutils.js
+// Function: getStrokedBBox
+// Get the bounding box for one or more stroked and/or transformed elements
+// 
+// Parameters:
+// elems - Array with DOM elements to check
+// 
+// Returns:
+// A single bounding box object
+getStrokedBBox = this.getStrokedBBox = function(elems) {
+	if (!elems) {elems = getVisibleElements();}
+	if (!elems.length) {return false;}
+	// Make sure the expected BBox is returned if the element is a group
+	var getCheckedBBox = function(elem) {
+
+		try {
+			// TODO: Fix issue with rotated groups. Currently they work
+			// fine in FF, but not in other browsers (same problem mentioned
+			// in Issue 339 comment #2).
+
+			var bb = svgedit.utilities.getBBox(elem);
+			var angle = svgedit.utilities.getRotationAngle(elem);
+
+			if ((angle && angle % 90) ||
+				svgedit.math.hasMatrixTransform(svgedit.transformlist.getTransformList(elem))) {
+				// Accurate way to get BBox of rotated element in Firefox:
+				// Put element in group and get its BBox
+				var good_bb = false;
+				// Get the BBox from the raw path for these elements
+				var elemNames = ['ellipse', 'path', 'line', 'polyline', 'polygon'];
+				if (elemNames.indexOf(elem.tagName) >= 0) {
+					bb = good_bb = canvas.convertToPath(elem, true);
+				} else if (elem.tagName == 'rect') {
+					// Look for radius
+					var rx = elem.getAttribute('rx');
+					var ry = elem.getAttribute('ry');
+					if (rx || ry) {
+						bb = good_bb = canvas.convertToPath(elem, true);
+					}
+				}
+
+				if (!good_bb) {
+					// Must use clone else FF freaks out
+					var clone = elem.cloneNode(true);
+					var g = document.createElementNS(NS.SVG, "g");
+					var parent = elem.parentNode;
+					parent.appendChild(g);
+					g.appendChild(clone);
+					bb = svgedit.utilities.bboxToObj(g.getBBox());
+					parent.removeChild(g);
+				}
+
+				// Old method: Works by giving the rotated BBox,
+				// this is (unfortunately) what Opera and Safari do
+				// natively when getting the BBox of the parent group
+//						var angle = angle * Math.PI / 180.0;
+//						var rminx = Number.MAX_VALUE, rminy = Number.MAX_VALUE, 
+//							rmaxx = Number.MIN_VALUE, rmaxy = Number.MIN_VALUE;
+//						var cx = round(bb.x + bb.width/2),
+//							cy = round(bb.y + bb.height/2);
+//						var pts = [ [bb.x - cx, bb.y - cy], 
+//									[bb.x + bb.width - cx, bb.y - cy],
+//									[bb.x + bb.width - cx, bb.y + bb.height - cy],
+//									[bb.x - cx, bb.y + bb.height - cy] ];
+//						var j = 4;
+//						while (j--) {
+//							var x = pts[j][0],
+//								y = pts[j][1],
+//								r = Math.sqrt( x*x + y*y );
+//							var theta = Math.atan2(y,x) + angle;
+//							x = round(r * Math.cos(theta) + cx);
+//							y = round(r * Math.sin(theta) + cy);
+//		
+//							// now set the bbox for the shape after it's been rotated
+//							if (x < rminx) rminx = x;
+//							if (y < rminy) rminy = y;
+//							if (x > rmaxx) rmaxx = x;
+//							if (y > rmaxy) rmaxy = y;
+//						}
+//						
+//						bb.x = rminx;
+//						bb.y = rminy;
+//						bb.width = rmaxx - rminx;
+//						bb.height = rmaxy - rminy;
+			}
+			return bb;
+		} catch(e) {
+			console.log(elem, e);
+			return null;
+		}
+	};
+
+	var full_bb;
+	$.each(elems, function() {
+		if (full_bb) {return;}
+		if (!this.parentNode) {return;}
+		full_bb = getCheckedBBox(this);
+	});
+
+	// This shouldn't ever happen...
+	if (full_bb == null) {return null;}
+
+	// full_bb doesn't include the stoke, so this does no good!
+//		if (elems.length == 1) return full_bb;
+
+	var max_x = full_bb.x + full_bb.width;
+	var max_y = full_bb.y + full_bb.height;
+	var min_x = full_bb.x;
+	var min_y = full_bb.y;
+
+	// FIXME: same re-creation problem with this function as getCheckedBBox() above
+	var getOffset = function(elem) {
+		var sw = elem.getAttribute("stroke-width");
+		var offset = 0;
+		if (elem.getAttribute("stroke") != "none" && !isNaN(sw)) {
+			offset += sw/2;
+		}
+		return offset;
+	};
+	var bboxes = [];
+	$.each(elems, function(i, elem) {
+		var cur_bb = getCheckedBBox(elem);
+		if (cur_bb) {
+			var offset = getOffset(elem);
+			min_x = Math.min(min_x, cur_bb.x - offset);
+			min_y = Math.min(min_y, cur_bb.y - offset);
+			bboxes.push(cur_bb);
+		}
+	});
+	
+	full_bb.x = min_x;
+	full_bb.y = min_y;
+	
+	$.each(elems, function(i, elem) {
+		var cur_bb = bboxes[i];
+		// ensure that elem is really an element node
+		if (cur_bb && elem.nodeType == 1) {
+			var offset = getOffset(elem);
+			max_x = Math.max(max_x, cur_bb.x + cur_bb.width + offset);
+			max_y = Math.max(max_y, cur_bb.y + cur_bb.height + offset);
+		}
+	});
+	
+	full_bb.width = max_x - min_x;
+	full_bb.height = max_y - min_y;
+	return full_bb;
+};
+
+// Function: getVisibleElements
+// Get all elements that have a BBox (excludes <defs>, <title>, etc).
+// Note that 0-opacity, off-screen etc elements are still considered "visible"
+// for this function
+//
+// Parameters:
+// parent - The parent DOM element to search within
+//
+// Returns:
+// An array with all "visible" elements.
+var getVisibleElements = this.getVisibleElements = function(parent) {
+	if (!parent) {
+		parent = $(svgcontent).children(); // Prevent layers from being included
+	}
+	
+	var contentElems = [];
+	$(parent).children().each(function(i, elem) {
+		try {
+			if (elem.getBBox()) {
+				contentElems.push(elem);
+			}
+		} catch(e) {}
+	});
+	return contentElems.reverse();
+};
+
+// Function: getVisibleElementsAndBBoxes
+// Get all elements that have a BBox (excludes <defs>, <title>, etc).
+// Note that 0-opacity, off-screen etc elements are still considered "visible"
+// for this function
+//
+// Parameters:
+// parent - The parent DOM element to search within
+//
+// Returns:
+// An array with objects that include:
+// * elem - The element
+// * bbox - The element's BBox as retrieved from getStrokedBBox
+var getVisibleElementsAndBBoxes = this.getVisibleElementsAndBBoxes = function(parent) {
+	if (!parent) {
+		parent = $(svgcontent).children(); // Prevent layers from being included
+	}
+	var contentElems = [];
+	$(parent).children().each(function(i, elem) {
+		try {
+			if (elem.getBBox()) {
+				contentElems.push({'elem':elem, 'bbox':getStrokedBBox([elem])});
+			}
+		} catch(e) {}
+	});
+	return contentElems.reverse();
+};
+
+// Function: groupSvgElem
+// Wrap an SVG element into a group element, mark the group as 'gsvg'
+//
+// Parameters:
+// elem - SVG element to wrap
+var groupSvgElem = this.groupSvgElem = function(elem) {
+	var g = document.createElementNS(NS.SVG, "g");
+	elem.parentNode.replaceChild(g, elem);
+	$(g).append(elem).data('gsvg', elem)[0].id = getNextId();
+};
+
+// Function: copyElem
+// Create a clone of an element, updating its ID and its children's IDs when needed
+//
+// Parameters:
+// el - DOM element to clone
+//
+// Returns: The cloned element
+var copyElem = function(el) {
+	// manually create a copy of the element
+	var new_el = document.createElementNS(el.namespaceURI, el.nodeName);
+	$.each(el.attributes, function(i, attr) {
+		if (attr.localName != '-moz-math-font-style') {
+			new_el.setAttributeNS(attr.namespaceURI, attr.nodeName, attr.nodeValue);
+		}
+	});
+	// set the copied element's new id
+	new_el.removeAttribute("id");
+	new_el.id = getNextId();
+	
+	// Opera's "d" value needs to be reset for Opera/Win/non-EN
+	// Also needed for webkit (else does not keep curved segments on clone)
+	if (svgedit.browser.isWebkit() && el.nodeName == 'path') {
+		var fixed_d = pathActions.convertPath(el);
+		new_el.setAttribute('d', fixed_d);
+	}
+
+	// now create copies of all children
+	$.each(el.childNodes, function(i, child) {
+		switch(child.nodeType) {
+			case 1: // element node
+				new_el.appendChild(copyElem(child));
+				break;
+			case 3: // text node
+				new_el.textContent = child.nodeValue;
+				break;
+			default:
+				break;
+		}
+	});
+	
+	if ($(el).data('gsvg')) {
+		$(new_el).data('gsvg', new_el.firstChild);
+	} else if ($(el).data('symbol')) {
+		var ref = $(el).data('symbol');
+		$(new_el).data('ref', ref).data('symbol', ref);
+	} else if (new_el.tagName == 'image') {
+		preventClickDefault(new_el);
+	}
+	return new_el;
+};
+
+// Set scope for these functions
+var getId, getNextId, call;
+var textActions, pathActions;
+
+(function(c) {
+
+	// Object to contain editor event names and callback functions
+	var events = {};
+
+	getId = c.getId = function() { return getCurrentDrawing().getId(); };
+	getNextId = c.getNextId = function() { return getCurrentDrawing().getNextId(); };
+
+	// Function: call
+	// Run the callback function associated with the given event
+	//
+	// Parameters:
+	// event - String with the event name
+	// arg - Argument to pass through to the callback function
+	call = c.call = function(event, arg) {
+		if (events[event]) {
+			return events[event](this, arg);
+		}
+	};
+
+	// Function: bind
+	// Attaches a callback function to an event
+	//
+	// Parameters:
+	// event - String indicating the name of the event
+	// f - The callback function to bind to the event
+	//
+	// Return:
+	// The previous event
+	c.bind = function(event, f) {
+		var old = events[event];
+		events[event] = f;
+		return old;
+	};
+
+}(canvas));
+
+// Function: canvas.prepareSvg
+// Runs the SVG Document through the sanitizer and then updates its paths.
+//
+// Parameters:
+// newDoc - The SVG DOM document
+this.prepareSvg = function(newDoc) {
+    if(svgedit.options.sanitize) this.sanitizeSvg(newDoc.documentElement);
+
+	// convert paths into absolute commands
+	var i, path, len,
+		paths = newDoc.getElementsByTagNameNS(NS.SVG, "path");
+	for (i = 0, len = paths.length; i < len; ++i) {
+		path = paths[i];
+		path.setAttribute('d', pathActions.convertPath(path));
+		pathActions.fixEnd(path);
+	}
+};
+
+// Function: ffClone
+// Hack for Firefox bugs where text element features aren't updated or get 
+// messed up. See issue 136 and issue 137.
+// This function clones the element and re-selects it 
+// TODO: Test for this bug on load and add it to "support" object instead of 
+// browser sniffing
+//
+// Parameters: 
+// elem - The (text) DOM element to clone
+var ffClone = function(elem) {
+	if (!svgedit.browser.isGecko()) {return elem;}
+	var clone = elem.cloneNode(true);
+	elem.parentNode.insertBefore(clone, elem);
+	elem.parentNode.removeChild(elem);
+	selectorManager.releaseSelector(elem);
+	selectedElements[0] = clone;
+	selectorManager.requestSelector(clone).showGrips(true);
+	return clone;
+};
+
+
+// this.each is deprecated, if any extension used this it can be recreated by doing this:
+// $(canvas.getRootElem()).children().each(...)
+
+// this.each = function(cb) {
+//	$(svgroot).children().each(cb);
+// };
+
+
+// Function: setRotationAngle
+// Removes any old rotations if present, prepends a new rotation at the
+// transformed center
+//
+// Parameters:
+// val - The new rotation angle in degrees
+// preventUndo - Boolean indicating whether the action should be undoable or not
+this.setRotationAngle = function(val, preventUndo) {
+	// ensure val is the proper type
+	val = parseFloat(val);
+	var elem = selectedElements[0];
+	var oldTransform = elem.getAttribute("transform");
+	var bbox = svgedit.utilities.getBBox(elem);
+	var cx = bbox.x+bbox.width/2, cy = bbox.y+bbox.height/2;
+	var tlist = svgedit.transformlist.getTransformList(elem);
+	
+	// only remove the real rotational transform if present (i.e. at index=0)
+	if (tlist.numberOfItems > 0) {
+		var xform = tlist.getItem(0);
+		if (xform.type == 4) {
+			tlist.removeItem(0);
+		}
+	}
+	// find R_nc and insert it
+	if (val != 0) {
+		var center = svgedit.math.transformPoint(cx, cy, svgedit.math.transformListToTransform(tlist).matrix);
+		var R_nc = svgroot.createSVGTransform();
+		R_nc.setRotate(val, center.x, center.y);
+		if (tlist.numberOfItems) {
+			tlist.insertItemBefore(R_nc, 0);
+		} else {
+			tlist.appendItem(R_nc);
+		}
+	} else if (tlist.numberOfItems == 0) {
+		elem.removeAttribute("transform");
+	}
+	
+	if (!preventUndo) {
+		// we need to undo it, then redo it so it can be undo-able! :)
+		// TODO: figure out how to make changes to transform list undo-able cross-browser?
+		var newTransform = elem.getAttribute("transform");
+		elem.setAttribute("transform", oldTransform);
+		changeSelectedAttribute("transform", newTransform, selectedElements);
+		call("changed", selectedElements);
+	}
+	var pointGripContainer = svgedit.utilities.getElem("pathpointgrip_container");
+//		if (elem.nodeName == "path" && pointGripContainer) {
+//			pathActions.setPointContainerTransform(elem.getAttribute("transform"));
+//		}
+	var selector = selectorManager.requestSelector(selectedElements[0]);
+	selector.resize();
+	selector.updateGripCursors(val);
+};
+
+// Function: recalculateAllSelectedDimensions
+// Runs recalculateDimensions on the selected elements, 
+// adding the changes to a single batch command
+var recalculateAllSelectedDimensions = this.recalculateAllSelectedDimensions = function() {
+	var text = (current_resize_mode == "none" ? "position" : "size");
+	var batchCmd = new svgedit.history.BatchCommand(text);
+
+	var i = selectedElements.length;
+	while (i--) {
+		var elem = selectedElements[i];
+//			if (svgedit.utilities.getRotationAngle(elem) && !svgedit.math.hasMatrixTransform(getTransformList(elem))) {continue;}
+		var cmd = svgedit.recalculate.recalculateDimensions(elem);
+		if (cmd) {
+			batchCmd.addSubCommand(cmd);
+		}
+	}
+
+	if (!batchCmd.isEmpty()) {
+		addCommandToHistory(batchCmd);
+		call("changed", selectedElements);
+	}
+};
+
+// this is how we map paths to our preferred relative segment types
+var pathMap = [0, 'z', 'M', 'm', 'L', 'l', 'C', 'c', 'Q', 'q', 'A', 'a', 
+					'H', 'h', 'V', 'v', 'S', 's', 'T', 't'];
+					
+// Debug tool to easily see the current matrix in the browser's console
+var logMatrix = function(m) {
+	console.log([m.a, m.b, m.c, m.d, m.e, m.f]);
+};
+
+// Root Current Transformation Matrix in user units
+var root_sctm = null;
+
+// Group: Selection
+
+// Function: clearSelection
+// Clears the selection. The 'selected' handler is then called.
+// Parameters: 
+// noCall - Optional boolean that when true does not call the "selected" handler
+var clearSelection = this.clearSelection = function(noCall) {
+	if (selectedElements[0] != null) {
+		var i, elem,
+			len = selectedElements.length;
+		for (i = 0; i < len; ++i) {
+			elem = selectedElements[i];
+			if (elem == null) {break;}
+			selectorManager.releaseSelector(elem);
+			selectedElements[i] = null;
+		}
+//		selectedBBoxes[0] = null;
+	}
+	if (!noCall) {call("selected", selectedElements);}
+};
+
+// TODO: do we need to worry about selectedBBoxes here?
+
+
+// Function: addToSelection
+// Adds a list of elements to the selection. The 'selected' handler is then called.
+//
+// Parameters:
+// elemsToAdd - an array of DOM elements to add to the selection
+// showGrips - a boolean flag indicating whether the resize grips should be shown
+var addToSelection = this.addToSelection = function(elemsToAdd, showGrips) {
+	if (elemsToAdd.length == 0) { return; }
+	// find the first null in our selectedElements array
+	var j = 0;
+	
+	while (j < selectedElements.length) {
+		if (selectedElements[j] == null) { 
+			break;
+		}
+		++j;
+	}
+
+	// now add each element consecutively
+	var i = elemsToAdd.length;
+	while (i--) {
+		var elem = elemsToAdd[i];
+		if (!elem || !svgedit.utilities.getBBox(elem)) {continue;}
+
+		if (elem.tagName === 'a' && elem.childNodes.length === 1) {
+			// Make "a" element's child be the selected element 
+			elem = elem.firstChild;
+		}
+
+		// if it's not already there, add it
+		if (selectedElements.indexOf(elem) == -1) {
+
+			selectedElements[j] = elem;
+
+			// only the first selectedBBoxes element is ever used in the codebase these days
+//			if (j == 0) selectedBBoxes[0] = svgedit.utilities.getBBox(elem);
+			j++;
+			var sel = selectorManager.requestSelector(elem);
+	
+			if (selectedElements.length > 1) {
+				sel.showGrips(false);
+			}
+		}
+	}
+	call("selected", selectedElements);
+	
+	if (showGrips || selectedElements.length == 1) {
+		selectorManager.requestSelector(selectedElements[0]).showGrips(true);
+	}
+	else {
+		selectorManager.requestSelector(selectedElements[0]).showGrips(false);
+	}
+
+	// make sure the elements are in the correct order
+	// See: http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-compareDocumentPosition
+
+	selectedElements.sort(function(a, b) {
+		if (a && b && a.compareDocumentPosition) {
+			return 3 - (b.compareDocumentPosition(a) & 6);	
+		}
+		if (a == null) {
+			return 1;
+		}
+	});
+	
+	// Make sure first elements are not null
+	while (selectedElements[0] == null) {
+		selectedElements.shift(0);
+	}
+};
+
+// Function: selectOnly()
+// Selects only the given elements, shortcut for clearSelection(); addToSelection()
+//
+// Parameters:
+// elems - an array of DOM elements to be selected
+var selectOnly = this.selectOnly = function(elems, showGrips) {
+	clearSelection(true);
+	addToSelection(elems, showGrips);
+};
+
+// TODO: could use slice here to make this faster?
+// TODO: should the 'selected' handler
+
+// Function: removeFromSelection
+// Removes elements from the selection.
+//
+// Parameters:
+// elemsToRemove - an array of elements to remove from selection
+var removeFromSelection = this.removeFromSelection = function(elemsToRemove) {
+	if (selectedElements[0] == null) { return; }
+	if (elemsToRemove.length == 0) { return; }
+
+	// find every element and remove it from our array copy
+	var i,
+		j = 0,
+		newSelectedItems = new Array(selectedElements.length),
+		len = selectedElements.length;
+	for (i = 0; i < len; ++i) {
+		var elem = selectedElements[i];
+		if (elem) {
+			// keep the item
+			if (elemsToRemove.indexOf(elem) == -1) {
+				newSelectedItems[j] = elem;
+				j++;
+			} else { // remove the item and its selector
+				selectorManager.releaseSelector(elem);
+			}
+		}
+	}
+	// the copy becomes the master now
+	selectedElements = newSelectedItems;
+};
+
+// Function: selectAllInCurrentLayer
+// Clears the selection, then adds all elements in the current layer to the selection.
+this.selectAllInCurrentLayer = function() {
+	var current_layer = getCurrentDrawing().getCurrentLayer();
+	if (current_layer) {
+		current_mode = "select";
+		selectOnly($(current_group || current_layer).children());
+	}
+};
+
+// Function: getMouseTarget
+// Gets the desired element from a mouse event
+// 
+// Parameters:
+// evt - Event object from the mouse event
+// 
+// Returns:
+// DOM element we want
+var getMouseTarget = this.getMouseTarget = function(evt) {
+	if (evt == null) {
+		return null;
+	}
+	var mouse_target = evt.target;
+	
+	// if it was a <use>, Opera and WebKit return the SVGElementInstance
+	if (mouse_target.correspondingUseElement) {mouse_target = mouse_target.correspondingUseElement;}
+	
+	// for foreign content, go up until we find the foreignObject
+	// WebKit browsers set the mouse target to the svgcanvas div 
+	if ([NS.MATH, NS.HTML].indexOf(mouse_target.namespaceURI) >= 0 && 
+		mouse_target.id != "svgcanvas") 
+	{
+		while (mouse_target.nodeName != "foreignObject") {
+			mouse_target = mouse_target.parentNode;
+			if (!mouse_target) {return svgroot;}
+		}
+	}
+	
+	// Get the desired mouse_target with jQuery selector-fu
+	// If it's root-like, select the root
+	var current_layer = getCurrentDrawing().getCurrentLayer();
+	if ([svgroot, container, svgcontent, current_layer].indexOf(mouse_target) >= 0) {
+		return svgroot;
+	}
+	
+	var $target = $(mouse_target);
+
+	// If it's a selection grip, return the grip parent
+	if ($target.closest('#selectorParentGroup').length) {
+		// While we could instead have just returned mouse_target, 
+		// this makes it easier to indentify as being a selector grip
+		return selectorManager.selectorParentGroup;
+	}
+
+	while (mouse_target.parentNode !== (current_group || current_layer)) {
+		mouse_target = mouse_target.parentNode;
+	}
+	
+//	
+//	// go up until we hit a child of a layer
+//	while (mouse_target.parentNode.parentNode.tagName == 'g') {
+//		mouse_target = mouse_target.parentNode;
+//	}
+	// Webkit bubbles the mouse event all the way up to the div, so we
+	// set the mouse_target to the svgroot like the other browsers
+//	if (mouse_target.nodeName.toLowerCase() == "div") {
+//		mouse_target = svgroot;
+//	}
+	
+	return mouse_target;
+};
+
+// Mouse events
+(function() {
+	var d_attr = null,
+		start_x = null,
+		start_y = null,
+		r_start_x = null,
+		r_start_y = null,
+		init_bbox = {},
+		freehand = {
+			minx: null,
+			miny: null,
+			maxx: null,
+			maxy: null
+		},
+		sumDistance = 0,
+		controllPoint2 = {x:0, y:0},
+		controllPoint1 = {x:0, y:0},
+		start = {x:0, y:0},
+		end = {x:0, y:0},
+		parameter,
+		nextParameter,
+		bSpline = {x:0, y:0},
+		nextPos = {x:0, y:0},
+		THRESHOLD_DIST = 0.8,
+		STEP_COUNT = 10;
+
+	var getBsplinePoint = function(t) {
+		var spline = {x:0, y:0},
+			p0 = controllPoint2,
+			p1 = controllPoint1,
+			p2 = start,
+			p3 = end,
+			S = 1.0 / 6.0,
+			t2 = t * t,
+			t3 = t2 * t;
+
+		var m = [
+				[-1, 3, -3, 1],
+				[3, -6, 3, 0],
+				[-3, 0, 3, 0],
+				[1, 4, 1, 0]
+			];
+
+		spline.x = S * (
+			(p0.x * m[0][0] + p1.x * m[0][1] + p2.x * m[0][2] + p3.x * m[0][3] ) * t3 +
+				(p0.x * m[1][0] + p1.x * m[1][1] + p2.x * m[1][2] + p3.x * m[1][3] ) * t2 +
+				(p0.x * m[2][0] + p1.x * m[2][1] + p2.x * m[2][2] + p3.x * m[2][3] ) * t +
+				(p0.x * m[3][0] + p1.x * m[3][1] + p2.x * m[3][2] + p3.x * m[3][3] )
+		);
+		spline.y = S * (
+			(p0.y * m[0][0] + p1.y * m[0][1] + p2.y * m[0][2] + p3.y * m[0][3] ) * t3 +
+				(p0.y * m[1][0] + p1.y * m[1][1] + p2.y * m[1][2] + p3.y * m[1][3] ) * t2 +
+				(p0.y * m[2][0] + p1.y * m[2][1] + p2.y * m[2][2] + p3.y * m[2][3] ) * t +
+				(p0.y * m[3][0] + p1.y * m[3][1] + p2.y * m[3][2] + p3.y * m[3][3] )
+		);
+
+		return {
+			x:spline.x,
+			y:spline.y
+		};
+	};
+	// - when we are in a create mode, the element is added to the canvas
+	// but the action is not recorded until mousing up
+	// - when we are in select mode, select the element, remember the position
+	// and do nothing else
+	var mouseDown = function(evt) {
+		if (canvas.spaceKey || evt.button === 1) {return;}
+
+		var right_click = evt.button === 2;
+	
+		if (evt.altKey) { // duplicate when dragging
+			svgCanvas.cloneSelectedElements(0, 0);
+		}
+	
+		root_sctm = $('#svgcontent g')[0].getScreenCTM().inverse();
+		
+		var pt = svgedit.math.transformPoint( evt.pageX, evt.pageY, root_sctm ),
+			mouse_x = pt.x * current_zoom,
+			mouse_y = pt.y * current_zoom;
+			
+		evt.preventDefault();
+
+		if (right_click) {
+			current_mode = "select";
+			lastClickPoint = pt;
+		}
+		
+		// This would seem to be unnecessary...
+//		if (['select', 'resize'].indexOf(current_mode) == -1) {
+//			setGradient();
+//		}
+		
+		var x = mouse_x / current_zoom,
+			y = mouse_y / current_zoom,
+			mouse_target = getMouseTarget(evt);
+		
+		if (mouse_target.tagName === 'a' && mouse_target.childNodes.length === 1) {
+			mouse_target = mouse_target.firstChild;
+		}
+		
+		// real_x/y ignores grid-snap value
+		var real_x = x;
+		r_start_x = start_x = x;
+		var real_y = y;
+		r_start_y = start_y = y;
+
+		if (curConfig.gridSnapping){
+			x = svgedit.utilities.snapToGrid(x);
+			y = svgedit.utilities.snapToGrid(y);
+			start_x = svgedit.utilities.snapToGrid(start_x);
+			start_y = svgedit.utilities.snapToGrid(start_y);
+		}
+
+		// if it is a selector grip, then it must be a single element selected, 
+		// set the mouse_target to that and update the mode to rotate/resize
+		
+		if (mouse_target == selectorManager.selectorParentGroup && selectedElements[0] != null) {
+			var grip = evt.target;
+			var griptype = elData(grip, "type");
+			// rotating
+			if (griptype == "rotate") {
+				current_mode = "rotate";
+			}
+			// resizing
+			else if (griptype == "resize") {
+				current_mode = "resize";
+				current_resize_mode = elData(grip, "dir");
+			}
+			mouse_target = selectedElements[0];
+		}
+		
+		startTransform = mouse_target.getAttribute("transform");
+		var i, stroke_w,
+			tlist = svgedit.transformlist.getTransformList(mouse_target);
+		switch (current_mode) {
+			case "select":
+				started = true;
+				current_resize_mode = "none";
+				if (right_click) {started = false;}
+				
+				if (mouse_target != svgroot) {
+					// if this element is not yet selected, clear selection and select it
+					if (selectedElements.indexOf(mouse_target) == -1) {
+						// only clear selection if shift is not pressed (otherwise, add 
+						// element to selection)
+						if (!evt.shiftKey) {
+							// No need to do the call here as it will be done on addToSelection
+							clearSelection(true);
+						}
+						addToSelection([mouse_target]);
+						justSelected = mouse_target;
+						pathActions.clear();
+					}
+					// else if it's a path, go into pathedit mode in mouseup
+					
+					if (!right_click) {
+						// insert a dummy transform so if the element(s) are moved it will have
+						// a transform to use for its translate
+						for (i = 0; i < selectedElements.length; ++i) {
+							if (selectedElements[i] == null) {continue;}
+							var slist = svgedit.transformlist.getTransformList(selectedElements[i]);
+							if (slist.numberOfItems) {
+								slist.insertItemBefore(svgroot.createSVGTransform(), 0);
+							} else {
+								slist.appendItem(svgroot.createSVGTransform());
+							}
+						}
+					}
+				} else if (!right_click){
+					clearSelection();
+					current_mode = "multiselect";
+					if (rubberBox == null) {
+						rubberBox = selectorManager.getRubberBandBox();
+					}
+					r_start_x *= current_zoom;
+					r_start_y *= current_zoom;
+//					console.log('p',[evt.pageX, evt.pageY]);					
+//					console.log('c',[evt.clientX, evt.clientY]);	
+//					console.log('o',[evt.offsetX, evt.offsetY]);	
+//					console.log('s',[start_x, start_y]);
+					
+					svgedit.utilities.assignAttributes(rubberBox, {
+						'x': r_start_x,
+						'y': r_start_y,
+						'width': 0,
+						'height': 0,
+						'display': 'inline'
+					}, 100);
+				}
+				break;
+			case "zoom": 
+				started = true;
+				if (rubberBox == null) {
+					rubberBox = selectorManager.getRubberBandBox();
+				}
+				svgedit.utilities.assignAttributes(rubberBox, {
+						'x': real_x * current_zoom,
+						'y': real_x * current_zoom,
+						'width': 0,
+						'height': 0,
+						'display': 'inline'
+				}, 100);
+				break;
+			case "resize":
+				started = true;
+				start_x = x;
+				start_y = y;
+				
+				// Getting the BBox from the selection box, since we know we
+				// want to orient around it
+				init_bbox = svgedit.utilities.getBBox($('#selectedBox0')[0]);
+				var bb = {};
+				$.each(init_bbox, function(key, val) {
+					bb[key] = val/current_zoom;
+				});
+				init_bbox = bb;
+				
+				// append three dummy transforms to the tlist so that
+				// we can translate,scale,translate in mousemove
+				var pos = svgedit.utilities.getRotationAngle(mouse_target) ? 1 : 0;
+				
+				if (svgedit.math.hasMatrixTransform(tlist)) {
+					tlist.insertItemBefore(svgroot.createSVGTransform(), pos);
+					tlist.insertItemBefore(svgroot.createSVGTransform(), pos);
+					tlist.insertItemBefore(svgroot.createSVGTransform(), pos);
+				} else {
+					tlist.appendItem(svgroot.createSVGTransform());
+					tlist.appendItem(svgroot.createSVGTransform());
+					tlist.appendItem(svgroot.createSVGTransform());
+					
+					if (svgedit.browser.supportsNonScalingStroke()) {
+						// Handle crash for newer Chrome and Safari 6 (Mobile and Desktop): 
+						// https://code.google.com/p/svg-edit/issues/detail?id=904
+						// Chromium issue: https://code.google.com/p/chromium/issues/detail?id=114625
+						// TODO: Remove this workaround once vendor fixes the issue
+						var isWebkit = svgedit.browser.isWebkit();
+
+						if (isWebkit) {
+							var delayedStroke = function(ele) {
+								var _stroke = ele.getAttributeNS(null, 'stroke');
+								ele.removeAttributeNS(null, 'stroke');
+								//Re-apply stroke after delay. Anything higher than 1 seems to cause flicker
+								setTimeout(function() { ele.setAttributeNS(null, 'stroke', _stroke); }, 0);
+							};
+						}
+						mouse_target.style.vectorEffect = 'non-scaling-stroke';
+						if (isWebkit) {delayedStroke(mouse_target);}
+
+						var all = mouse_target.getElementsByTagName('*'),
+							len = all.length;
+						for (i = 0; i < len; i++) {
+							all[i].style.vectorEffect = 'non-scaling-stroke';
+							if (isWebkit) {delayedStroke(all[i]);}
+						}
+					}
+				}
+				break;
+			case "fhellipse":
+			case "fhrect":
+			case "fhpath":
+				start.x = real_x;
+				start.y = real_y;
+				started = true;
+				d_attr = real_x + "," + real_y + " ";
+				stroke_w = cur_shape.stroke_width == 0 ? 1 : cur_shape.stroke_width;
+				addSvgElementFromJson({
+					"element": "polyline",
+					"curStyles": true,
+					"attr": {
+						"points": d_attr,
+						"id": getNextId(),
+						"fill": "none",
+						"opacity": cur_shape.opacity / 2,
+						"stroke-linecap": "round",
+						"style": "pointer-events:none"
+					}
+				});
+				freehand.minx = real_x;
+				freehand.maxx = real_x;
+				freehand.miny = real_y;
+				freehand.maxy = real_y;
+				break;
+			case "image":
+				started = true;
+				var newImage = addSvgElementFromJson({
+					"element": "image",
+					"attr": {
+						"x": x,
+						"y": y,
+						"width": 0,
+						"height": 0,
+						"id": getNextId(),
+						"opacity": cur_shape.opacity / 2,
+						"style": "pointer-events:inherit"
+					}
+				});
+				setHref(newImage, last_good_img_url);
+				preventClickDefault(newImage);
+				break;
+			case "square":
+				// FIXME: once we create the rect, we lose information that this was a square
+				// (for resizing purposes this could be important)
+			case "rect":
+				started = true;
+				start_x = x;
+				start_y = y;
+				addSvgElementFromJson({
+					"element": "rect",
+					"curStyles": true,
+					"attr": {
+						"x": x,
+						"y": y,
+						"width": 0,
+						"height": 0,
+						"id": getNextId(),
+						"opacity": cur_shape.opacity / 2
+					}
+				});
+				break;
+			case "line":
+				started = true;
+				stroke_w = cur_shape.stroke_width == 0 ? 1 : cur_shape.stroke_width;
+				addSvgElementFromJson({
+					"element": "line",
+					"curStyles": true,
+					"attr": {
+						"x1": x,
+						"y1": y,
+						"x2": x,
+						"y2": y,
+						"id": getNextId(),
+						"stroke": cur_shape.stroke,
+						"stroke-width": stroke_w,
+						"stroke-dasharray": cur_shape.stroke_dasharray,
+						"stroke-linejoin": cur_shape.stroke_linejoin,
+						"stroke-linecap": cur_shape.stroke_linecap,
+						"stroke-opacity": cur_shape.stroke_opacity,
+						"fill": "none",
+						"opacity": cur_shape.opacity / 2,
+						"style": "pointer-events:none"
+					}
+				});
+				break;
+			case "circle":
+				started = true;
+				addSvgElementFromJson({
+					"element": "circle",
+					"curStyles": true,
+					"attr": {
+						"cx": x,
+						"cy": y,
+						"r": 0,
+						"id": getNextId(),
+						"opacity": cur_shape.opacity / 2
+					}
+				});
+				break;
+			case "ellipse":
+				started = true;
+				addSvgElementFromJson({
+					"element": "ellipse",
+					"curStyles": true,
+					"attr": {
+						"cx": x,
+						"cy": y,
+						"rx": 0,
+						"ry": 0,
+						"id": getNextId(),
+						"opacity": cur_shape.opacity / 2
+					}
+				});
+				break;
+			case "text":
+				started = true;
+				var newText = addSvgElementFromJson({
+					"element": "text",
+					"curStyles": true,
+					"attr": {
+						"x": x,
+						"y": y,
+						"id": getNextId(),
+						"fill": cur_text.fill,
+						"stroke-width": cur_text.stroke_width,
+						"font-size": cur_text.font_size,
+						"font-family": cur_text.font_family,
+						"text-anchor": "middle",
+						"xml:space": "preserve",
+						"opacity": cur_shape.opacity
+					}
+				});
+//					newText.textContent = "text";
+				break;
+			case "path":
+				// Fall through
+			case "pathedit":
+				start_x *= current_zoom;
+				start_y *= current_zoom;
+				pathActions.mouseDown(evt, mouse_target, start_x, start_y);
+				started = true;
+				break;
+			case "textedit":
+				start_x *= current_zoom;
+				start_y *= current_zoom;
+				textActions.mouseDown(evt, mouse_target, start_x, start_y);
+				started = true;
+				break;
+			case "rotate":
+				started = true;
+				// we are starting an undoable change (a drag-rotation)
+				canvas.undoMgr.beginUndoableChange("transform", selectedElements);
+				break;
+			default:
+				// This could occur in an extension
+				break;
+		}
+		
+		var ext_result = runExtensions("mouseDown", {
+			event: evt,
+			start_x: start_x,
+			start_y: start_y,
+			selectedElements: selectedElements
+		}, true);
+		
+		$.each(ext_result, function(i, r) {
+			if (r && r.started) {
+				started = true;
+			}
+		});
+	};
+	
+	// in this function we do not record any state changes yet (but we do update
+	// any elements that are still being created, moved or resized on the canvas)
+	var mouseMove = function(evt) {
+		if (!started) {return;}
+		if (evt.button === 1 || canvas.spaceKey) {return;}
+
+		var i, xya, c, cx, cy, dx, dy, len, angle, box,
+			selected = selectedElements[0],
+			pt = svgedit.math.transformPoint( evt.pageX, evt.pageY, root_sctm ),
+			mouse_x = pt.x * current_zoom,
+			mouse_y = pt.y * current_zoom,
+			shape = svgedit.utilities.getElem(getId());
+
+		var real_x = mouse_x / current_zoom;
+		x = real_x;
+		var real_y = mouse_y / current_zoom;
+		y = real_y;
+	
+		if (curConfig.gridSnapping){
+			x = svgedit.utilities.snapToGrid(x);
+			y = svgedit.utilities.snapToGrid(y);
+		}
+
+		evt.preventDefault();
+		var tlist;
+		switch (current_mode) {
+			case "select":
+				// we temporarily use a translate on the element(s) being dragged
+				// this transform is removed upon mousing up and the element is 
+				// relocated to the new location
+				if (selectedElements[0] !== null) {
+					dx = x - start_x;
+					dy = y - start_y;
+					
+					if (curConfig.gridSnapping){
+						dx = svgedit.utilities.snapToGrid(dx);
+						dy = svgedit.utilities.snapToGrid(dy);
+					}
+
+					if (evt.shiftKey) { 
+						xya = svgedit.math.snapToAngle(start_x, start_y, x, y);
+						x = xya.x;
+						y = xya.y; 
+					}
+
+					if (dx != 0 || dy != 0) {
+						len = selectedElements.length;
+						for (i = 0; i < len; ++i) {
+							selected = selectedElements[i];
+							if (selected == null) {break;}
+//							if (i==0) {
+//								var box = svgedit.utilities.getBBox(selected);
+//									selectedBBoxes[i].x = box.x + dx;
+//									selectedBBoxes[i].y = box.y + dy;
+//							}
+
+							// update the dummy transform in our transform list
+							// to be a translate
+							var xform = svgroot.createSVGTransform();
+							tlist = svgedit.transformlist.getTransformList(selected);
+							// Note that if Webkit and there's no ID for this
+							// element, the dummy transform may have gotten lost.
+							// This results in unexpected behaviour
+							
+							xform.setTranslate(dx, dy);
+							if (tlist.numberOfItems) {
+								tlist.replaceItem(xform, 0);
+							} else {
+								tlist.appendItem(xform);
+							}
+							
+							// update our internal bbox that we're tracking while dragging
+							selectorManager.requestSelector(selected).resize();
+						}
+						
+						call("transition", selectedElements);
+					}
+				}
+				break;
+			case "multiselect":
+				real_x *= current_zoom;
+				real_y *= current_zoom;
+				svgedit.utilities.assignAttributes(rubberBox, {
+					'x': Math.min(r_start_x, real_x),
+					'y': Math.min(r_start_y, real_y),
+					'width': Math.abs(real_x - r_start_x),
+					'height': Math.abs(real_y - r_start_y)
+				}, 100);
+
+				// for each selected:
+				// - if newList contains selected, do nothing
+				// - if newList doesn't contain selected, remove it from selected
+				// - for any newList that was not in selectedElements, add it to selected
+				var elemsToRemove = [], elemsToAdd = [],
+					newList = getIntersectionList();
+				len = selectedElements.length;
+				
+				for (i = 0; i < len; ++i) {
+					var ind = newList.indexOf(selectedElements[i]);
+					if (ind == -1) {
+						elemsToRemove.push(selectedElements[i]);
+					} else {
+						newList[ind] = null;
+					}
+				}
+				
+				len = newList.length;
+				for (i = 0; i < len; ++i) {
+					if (newList[i]) {elemsToAdd.push(newList[i]);}
+				}
+				
+				if (elemsToRemove.length > 0) {
+					canvas.removeFromSelection(elemsToRemove);
+				}
+				
+				if (elemsToAdd.length > 0) {
+					addToSelection(elemsToAdd);
+				}
+					
+				break;
+			case "resize":
+				// we track the resize bounding box and translate/scale the selected element
+				// while the mouse is down, when mouse goes up, we use this to recalculate
+				// the shape's coordinates
+				tlist = svgedit.transformlist.getTransformList(selected);
+				var hasMatrix = svgedit.math.hasMatrixTransform(tlist);
+				box = hasMatrix ? init_bbox : svgedit.utilities.getBBox(selected);
+				var left = box.x, top = box.y, width = box.width,
+					height = box.height;
+					dx = (x-start_x);
+					dy = (y-start_y);
+				
+				if (curConfig.gridSnapping) {
+					dx = svgedit.utilities.snapToGrid(dx);
+					dy = svgedit.utilities.snapToGrid(dy);
+					height = svgedit.utilities.snapToGrid(height);
+					width = svgedit.utilities.snapToGrid(width);
+				}
+
+				// if rotated, adjust the dx,dy values
+				angle = svgedit.utilities.getRotationAngle(selected);
+				if (angle) {
+					var r = Math.sqrt( dx*dx + dy*dy ),
+						theta = Math.atan2(dy, dx) - angle * Math.PI / 180.0;
+					dx = r * Math.cos(theta);
+					dy = r * Math.sin(theta);
+				}
+
+				// if not stretching in y direction, set dy to 0
+				// if not stretching in x direction, set dx to 0
+				if (current_resize_mode.indexOf("n")==-1 && current_resize_mode.indexOf("s")==-1) {
+					dy = 0;
+				}
+				if (current_resize_mode.indexOf("e")==-1 && current_resize_mode.indexOf("w")==-1) {
+					dx = 0;
+				}				
+				
+				var ts = null,
+					tx = 0, ty = 0,
+					sy = height ? (height+dy)/height : 1, 
+					sx = width ? (width+dx)/width : 1;
+				// if we are dragging on the north side, then adjust the scale factor and ty
+				if (current_resize_mode.indexOf("n") >= 0) {
+					sy = height ? (height-dy)/height : 1;
+					ty = height;
+				}
+				
+				// if we dragging on the east side, then adjust the scale factor and tx
+				if (current_resize_mode.indexOf("w") >= 0) {
+					sx = width ? (width-dx)/width : 1;
+					tx = width;
+				}
+				
+				// update the transform list with translate,scale,translate
+				var translateOrigin = svgroot.createSVGTransform(),
+					scale = svgroot.createSVGTransform(),
+					translateBack = svgroot.createSVGTransform();
+
+				if (curConfig.gridSnapping) {
+					left = svgedit.utilities.snapToGrid(left);
+					tx = svgedit.utilities.snapToGrid(tx);
+					top = svgedit.utilities.snapToGrid(top);
+					ty = svgedit.utilities.snapToGrid(ty);
+				}
+
+				translateOrigin.setTranslate(-(left+tx), -(top+ty));
+				if (evt.shiftKey) {
+					if (sx == 1) {sx = sy;}
+					else {sy = sx;}
+				}
+				scale.setScale(sx, sy);
+				
+				translateBack.setTranslate(left+tx, top+ty);
+				if (hasMatrix) {
+					var diff = angle ? 1 : 0;
+					tlist.replaceItem(translateOrigin, 2+diff);
+					tlist.replaceItem(scale, 1+diff);
+					tlist.replaceItem(translateBack, Number(diff));
+				} else {
+					var N = tlist.numberOfItems;
+					tlist.replaceItem(translateBack, N-3);
+					tlist.replaceItem(scale, N-2);
+					tlist.replaceItem(translateOrigin, N-1);
+				}
+
+				selectorManager.requestSelector(selected).resize();
+				
+				call("transition", selectedElements);
+				
+				break;
+			case "zoom":
+				real_x *= current_zoom;
+				real_y *= current_zoom;
+				svgedit.utilities.assignAttributes(rubberBox, {
+					'x': Math.min(r_start_x*current_zoom, real_x),
+					'y': Math.min(r_start_y*current_zoom, real_y),
+					'width': Math.abs(real_x - r_start_x*current_zoom),
+					'height': Math.abs(real_y - r_start_y*current_zoom)
+				}, 100);			
+				break;
+			case "text":
+				svgedit.utilities.assignAttributes(shape,{
+					'x': x,
+					'y': y
+				}, 1000);
+				break;
+			case "line":
+				// Opera has a problem with suspendRedraw() apparently
+				var handle = null;
+				if (!window.opera) {svgroot.suspendRedraw(1000);}
+
+				if (curConfig.gridSnapping) {
+					x = svgedit.utilities.snapToGrid(x);
+					y = svgedit.utilities.snapToGrid(y);
+				}
+
+				var x2 = x;
+				var y2 = y;					
+
+				if (evt.shiftKey) {
+					xya = svgedit.math.snapToAngle(start_x, start_y, x2, y2);
+					x2 = xya.x;
+					y2 = xya.y;
+				}
+				
+				shape.setAttributeNS(null, "x2", x2);
+				shape.setAttributeNS(null, "y2", y2);
+				if (!window.opera) {svgroot.unsuspendRedraw(handle);}
+				break;
+			case "foreignObject":
+				// fall through
+			case "square":
+				// fall through
+			case "rect":
+				// fall through
+			case "image":
+				var square = (current_mode == 'square') || evt.shiftKey,
+					w = Math.abs(x - start_x),
+					h = Math.abs(y - start_y),
+					new_x, new_y;
+				if (square) {
+					w = h = Math.max(w, h);
+					new_x = start_x < x ? start_x : start_x - w;
+					new_y = start_y < y ? start_y : start_y - h;
+				} else {
+					new_x = Math.min(start_x, x);
+					new_y = Math.min(start_y, y);
+				}
+	
+				if (curConfig.gridSnapping) {
+					w = svgedit.utilities.snapToGrid(w);
+					h = svgedit.utilities.snapToGrid(h);
+					new_x = svgedit.utilities.snapToGrid(new_x);
+					new_y = svgedit.utilities.snapToGrid(new_y);
+				}
+
+				svgedit.utilities.assignAttributes(shape,{
+					'width': w,
+					'height': h,
+					'x': new_x,
+					'y': new_y
+				},1000);
+				
+				break;
+			case "circle":
+				c = $(shape).attr(["cx", "cy"]);
+				cx = c.cx;
+				cy = c.cy;
+				var rad = Math.sqrt( (x-cx)*(x-cx) + (y-cy)*(y-cy) );
+				if (curConfig.gridSnapping) {
+					rad = svgedit.utilities.snapToGrid(rad);
+				}
+				shape.setAttributeNS(null, "r", rad);
+				break;
+			case "ellipse":
+				c = $(shape).attr(["cx", "cy"]);
+				cx = c.cx;
+				cy = c.cy;
+				// Opera has a problem with suspendRedraw() apparently
+					handle = null;
+				if (!window.opera) {svgroot.suspendRedraw(1000);}
+				if (curConfig.gridSnapping) {
+					x = svgedit.utilities.snapToGrid(x);
+					cx = svgedit.utilities.snapToGrid(cx);
+					y = svgedit.utilities.snapToGrid(y);
+					cy = svgedit.utilities.snapToGrid(cy);
+				}
+				shape.setAttributeNS(null, "rx", Math.abs(x - cx) );
+				var ry = Math.abs(evt.shiftKey?(x - cx):(y - cy));
+				shape.setAttributeNS(null, "ry", ry );
+				if (!window.opera) {svgroot.unsuspendRedraw(handle);}
+				break;
+			case "fhellipse":
+			case "fhrect":
+				freehand.minx = Math.min(real_x, freehand.minx);
+				freehand.maxx = Math.max(real_x, freehand.maxx);
+				freehand.miny = Math.min(real_y, freehand.miny);
+				freehand.maxy = Math.max(real_y, freehand.maxy);
+			// break; missing on purpose
+			case "fhpath":
+//				d_attr += + real_x + "," + real_y + " ";
+//				shape.setAttributeNS(null, "points", d_attr);
+				end.x = real_x; end.y = real_y;
+				if (controllPoint2.x && controllPoint2.y) {
+					for (i = 0; i < STEP_COUNT - 1; i++) {
+						parameter = i / STEP_COUNT;
+						nextParameter = (i + 1) / STEP_COUNT;
+						bSpline = getBsplinePoint(nextParameter);
+						nextPos = bSpline;
+						bSpline = getBsplinePoint(parameter);
+						sumDistance += Math.sqrt((nextPos.x - bSpline.x) * (nextPos.x - bSpline.x) + (nextPos.y - bSpline.y) * (nextPos.y - bSpline.y));
+						if (sumDistance > THRESHOLD_DIST) {
+							d_attr += + bSpline.x + "," + bSpline.y + " ";
+							shape.setAttributeNS(null, "points", d_attr);
+							sumDistance -= THRESHOLD_DIST;
+						}
+					}
+				}
+				controllPoint2 = {x:controllPoint1.x, y:controllPoint1.y};
+				controllPoint1 = {x:start.x, y:start.y};
+				start = {x:end.x, y:end.y};
+				break;
+			// update path stretch line coordinates
+			case "path":
+				// fall through
+			case "pathedit":
+				x *= current_zoom;
+				y *= current_zoom;
+				
+				if (curConfig.gridSnapping) {
+					x = svgedit.utilities.snapToGrid(x);
+					y = svgedit.utilities.snapToGrid(y);
+					start_x = svgedit.utilities.snapToGrid(start_x);
+					start_y = svgedit.utilities.snapToGrid(start_y);
+				}
+				if (evt.shiftKey) {
+					var path = svgedit.path.path;
+					var x1, y1;
+					if (path) {
+						x1 = path.dragging?path.dragging[0]:start_x;
+						y1 = path.dragging?path.dragging[1]:start_y;
+					} else {
+						x1 = start_x;
+						y1 = start_y;
+					}
+					xya = svgedit.math.snapToAngle(x1, y1, x, y);
+					x = xya.x;
+					y = xya.y;
+				}
+				
+				if (rubberBox && rubberBox.getAttribute('display') !== 'none') {
+					real_x *= current_zoom;
+					real_y *= current_zoom;
+					svgedit.utilities.assignAttributes(rubberBox, {
+						'x': Math.min(r_start_x*current_zoom, real_x),
+						'y': Math.min(r_start_y*current_zoom, real_y),
+						'width': Math.abs(real_x - r_start_x*current_zoom),
+						'height': Math.abs(real_y - r_start_y*current_zoom)
+					},100);	
+				}
+				pathActions.mouseMove(x, y);
+				
+				break;
+			case "textedit":
+				x *= current_zoom;
+				y *= current_zoom;
+//					if (rubberBox && rubberBox.getAttribute('display') != 'none') {
+//						svgedit.utilities.assignAttributes(rubberBox, {
+//							'x': Math.min(start_x,x),
+//							'y': Math.min(start_y,y),
+//							'width': Math.abs(x-start_x),
+//							'height': Math.abs(y-start_y)
+//						},100);
+//					}
+				
+				textActions.mouseMove(mouse_x, mouse_y);
+				
+				break;
+			case "rotate":
+				box = svgedit.utilities.getBBox(selected);
+				cx = box.x + box.width/2;
+				cy = box.y + box.height/2;
+				var m = svgedit.math.getMatrix(selected),
+					center = svgedit.math.transformPoint(cx, cy, m);
+				cx = center.x;
+				cy = center.y;
+				angle = ((Math.atan2(cy-y, cx-x) * (180/Math.PI))-90) % 360;
+				if (curConfig.gridSnapping) {
+					angle = svgedit.utilities.snapToGrid(angle);
+				}
+				if (evt.shiftKey) { // restrict rotations to nice angles (WRS)
+					var snap = 45;
+					angle= Math.round(angle/snap)*snap;
+				}
+
+				canvas.setRotationAngle(angle<-180?(360+angle):angle, true);
+				call("transition", selectedElements);
+				break;
+			default:
+				break;
+		}
+		
+		runExtensions("mouseMove", {
+			event: evt,
+			mouse_x: mouse_x,
+			mouse_y: mouse_y,
+			selected: selected
+		});
+
+	}; // mouseMove()
+	
+	// - in create mode, the element's opacity is set properly, we create an InsertElementCommand
+	// and store it on the Undo stack
+	// - in move/resize mode, the element's attributes which were affected by the move/resize are
+	// identified, a ChangeElementCommand is created and stored on the stack for those attrs
+	// this is done in when we recalculate the selected dimensions()
+	var mouseUp = function(evt) {
+		if (evt.button === 2) {return;}
+		var tempJustSelected = justSelected;
+		justSelected = null;
+		if (!started) {return;}
+		var pt = svgedit.math.transformPoint(evt.pageX, evt.pageY, root_sctm),
+			mouse_x = pt.x * current_zoom,
+			mouse_y = pt.y * current_zoom,
+			x = mouse_x / current_zoom,
+			y = mouse_y / current_zoom,
+			element = svgedit.utilities.getElem(getId()),
+			keep = false;
+
+		var real_x = x;
+		var real_y = y;
+
+		// TODO: Make true when in multi-unit mode
+		var useUnit = false; // (curConfig.baseUnit !== 'px');
+		started = false;
+		var attrs, t;
+		switch (current_mode) {
+			// intentionally fall-through to select here
+			case "resize":
+			case "multiselect":
+				if (rubberBox != null) {
+					rubberBox.setAttribute("display", "none");
+					curBBoxes = [];
+				}
+				current_mode = "select";
+			case "select":
+				if (selectedElements[0] != null) {
+					// if we only have one selected element
+					if (selectedElements[1] == null) {
+						// set our current stroke/fill properties to the element's
+						var selected = selectedElements[0];
+						switch ( selected.tagName ) {
+							case "g":
+							case "use":
+							case "image":
+							case "foreignObject":
+								break;
+							default:
+								cur_properties.fill = selected.getAttribute("fill");
+								cur_properties.fill_opacity = selected.getAttribute("fill-opacity");
+								cur_properties.stroke = selected.getAttribute("stroke");
+								cur_properties.stroke_opacity = selected.getAttribute("stroke-opacity");
+								cur_properties.stroke_width = selected.getAttribute("stroke-width");
+								cur_properties.stroke_dasharray = selected.getAttribute("stroke-dasharray");
+								cur_properties.stroke_linejoin = selected.getAttribute("stroke-linejoin");
+								cur_properties.stroke_linecap = selected.getAttribute("stroke-linecap");
+						}
+
+						if (selected.tagName == "text") {
+							cur_text.font_size = selected.getAttribute("font-size");
+							cur_text.font_family = selected.getAttribute("font-family");
+						}
+						selectorManager.requestSelector(selected).showGrips(true);
+						
+						// This shouldn't be necessary as it was done on mouseDown...
+//							call("selected", [selected]);
+					}
+					// always recalculate dimensions to strip off stray identity transforms
+					recalculateAllSelectedDimensions();
+					// if it was being dragged/resized
+					if (real_x != r_start_x || real_y != r_start_y) {
+						var i, len = selectedElements.length;
+						for (i = 0; i < len; ++i) {
+							if (selectedElements[i] == null) {break;}
+							if (!selectedElements[i].firstChild) {
+								// Not needed for groups (incorrectly resizes elems), possibly not needed at all?
+								selectorManager.requestSelector(selectedElements[i]).resize();
+							}
+						}
+					}
+					// no change in position/size, so maybe we should move to pathedit
+					else {
+						t = evt.target;
+						if (selectedElements[0].nodeName === "path" && selectedElements[1] == null) {
+							pathActions.select(selectedElements[0]);
+						} // if it was a path
+						// else, if it was selected and this is a shift-click, remove it from selection
+						else if (evt.shiftKey) {
+							if (tempJustSelected != t) {
+								canvas.removeFromSelection([t]);
+							}
+						}
+					} // no change in mouse position
+					
+					// Remove non-scaling stroke
+					if (svgedit.browser.supportsNonScalingStroke()) {
+						var elem = selectedElements[0];
+						if (elem) {
+							elem.removeAttribute('style');
+							svgedit.utilities.walkTree(elem, function(elem) {
+								elem.removeAttribute('style');
+							});
+						}
+					}
+
+				}
+				return;
+			case "zoom":
+				if (rubberBox != null) {
+					rubberBox.setAttribute("display", "none");
+				}
+				var factor = evt.shiftKey ? 0.5 : 2;
+				call("zoomed", {
+					'x': Math.min(r_start_x, real_x),
+					'y': Math.min(r_start_y, real_y),
+					'width': Math.abs(real_x - r_start_x),
+					'height': Math.abs(real_y - r_start_y),
+					'factor': factor
+				});
+				return;
+			case "fhpath":
+				// Check that the path contains at least 2 points; a degenerate one-point path
+				// causes problems.
+				// Webkit ignores how we set the points attribute with commas and uses space
+				// to separate all coordinates, see https://bugs.webkit.org/show_bug.cgi?id=29870
+				sumDistance = 0;
+				controllPoint2 = {x:0, y:0};
+				controllPoint1 = {x:0, y:0};
+				start = {x:0, y:0};
+				end = {x:0, y:0};
+				var coords = element.getAttribute('points');
+				var commaIndex = coords.indexOf(',');
+				if (commaIndex >= 0) {
+					keep = coords.indexOf(',', commaIndex+1) >= 0;
+				} else {
+					keep = coords.indexOf(' ', coords.indexOf(' ')+1) >= 0;
+				}
+				if (keep) {
+					element = pathActions.smoothPolylineIntoPath(element);
+				}
+				break;
+			case "line":
+				attrs = $(element).attr(["x1", "x2", "y1", "y2"]);
+				keep = (attrs.x1 != attrs.x2 || attrs.y1 != attrs.y2);
+				break;
+			case "foreignObject":
+			case "square":
+			case "rect":
+			case "image":
+				attrs = $(element).attr(["width", "height"]);
+				// Image should be kept regardless of size (use inherit dimensions later)
+				keep = (attrs.width != 0 || attrs.height != 0) || current_mode === "image";
+				break;
+			case "circle":
+				keep = (element.getAttribute('r') != 0);
+				break;
+			case "ellipse":
+				attrs = $(element).attr(["rx", "ry"]);
+				keep = (attrs.rx != null || attrs.ry != null);
+				break;
+			case "fhellipse":
+				if ((freehand.maxx - freehand.minx) > 0 &&
+					(freehand.maxy - freehand.miny) > 0) {
+					element = addSvgElementFromJson({
+						"element": "ellipse",
+						"curStyles": true,
+						"attr": {
+							"cx": (freehand.minx + freehand.maxx) / 2,
+							"cy": (freehand.miny + freehand.maxy) / 2,
+							"rx": (freehand.maxx - freehand.minx) / 2,
+							"ry": (freehand.maxy - freehand.miny) / 2,
+							"id": getId()
+						}
+					});
+					call("changed",[element]);
+					keep = true;
+				}
+				break;
+			case "fhrect":
+				if ((freehand.maxx - freehand.minx) > 0 &&
+					(freehand.maxy - freehand.miny) > 0) {
+					element = addSvgElementFromJson({
+						"element": "rect",
+						"curStyles": true,
+						"attr": {
+							"x": freehand.minx,
+							"y": freehand.miny,
+							"width": (freehand.maxx - freehand.minx),
+							"height": (freehand.maxy - freehand.miny),
+							"id": getId()
+						}
+					});
+					call("changed",[element]);
+					keep = true;
+				}
+				break;
+			case "text":
+				keep = true;
+				selectOnly([element]);
+				textActions.start(element);
+				break;
+			case "path":
+				// set element to null here so that it is not removed nor finalized
+				element = null;
+				// continue to be set to true so that mouseMove happens
+				started = true;
+				
+				var res = pathActions.mouseUp(evt, element, mouse_x, mouse_y);
+				element = res.element;
+				keep = res.keep;
+				break;
+			case "pathedit":
+				keep = true;
+				element = null;
+				pathActions.mouseUp(evt);
+				break;
+			case "textedit":
+				keep = false;
+				element = null;
+				textActions.mouseUp(evt, mouse_x, mouse_y);
+				break;
+			case "rotate":
+				keep = true;
+				element = null;
+				current_mode = "select";
+				var batchCmd = canvas.undoMgr.finishUndoableChange();
+				if (!batchCmd.isEmpty()) { 
+					addCommandToHistory(batchCmd);
+				}
+				// perform recalculation to weed out any stray identity transforms that might get stuck
+				recalculateAllSelectedDimensions();
+				call("changed", selectedElements);
+				break;
+			default:
+				// This could occur in an extension
+				break;
+		}
+		
+		var ext_result = runExtensions("mouseUp", {
+			event: evt,
+			mouse_x: mouse_x,
+			mouse_y: mouse_y
+		}, true);
+		
+		$.each(ext_result, function(i, r) {
+			if (r) {
+				keep = r.keep || keep;
+				element = r.element;
+				started = r.started || started;
+			}
+		});
+		
+		if (!keep && element != null) {
+			getCurrentDrawing().releaseId(getId());
+			element.parentNode.removeChild(element);
+			element = null;
+			
+			t = evt.target;
+			
+			// if this element is in a group, go up until we reach the top-level group 
+			// just below the layer groups
+			// TODO: once we implement links, we also would have to check for <a> elements
+			while (t.parentNode.parentNode.tagName == "g") {
+				t = t.parentNode;
+			}
+			// if we are not in the middle of creating a path, and we've clicked on some shape, 
+			// then go to Select mode.
+			// WebKit returns <div> when the canvas is clicked, Firefox/Opera return <svg>
+			if ( (current_mode != "path" || !drawn_path) &&
+				t.parentNode.id != "selectorParentGroup" &&
+				t.id != "svgcanvas" && t.id != "svgroot") 
+			{
+				// switch into "select" mode if we've clicked on an element
+				canvas.setMode("select");
+				selectOnly([t], true);
+			}
+			
+		} else if (element != null) {
+			canvas.addedNew = true;
+			
+			if (useUnit) {svgedit.units.convertAttrs(element);}
+			
+			var ani_dur = 0.2, c_ani;
+			if (opac_ani.beginElement && element.getAttribute('opacity') != cur_shape.opacity) {
+				c_ani = $(opac_ani).clone().attr({
+					to: cur_shape.opacity,
+					dur: ani_dur
+				}).appendTo(element);
+				try {
+					// Fails in FF4 on foreignObject
+					c_ani[0].beginElement();
+				} catch(e){}
+			} else {
+				ani_dur = 0;
+			}
+			
+			// Ideally this would be done on the endEvent of the animation,
+			// but that doesn't seem to be supported in Webkit
+			setTimeout(function() {
+				if (c_ani) {c_ani.remove();}
+				element.setAttribute("opacity", cur_shape.opacity);
+				element.setAttribute("style", "pointer-events:inherit");
+				cleanupElement(element);
+				if (current_mode === "path") {
+					pathActions.toEditMode(element);
+				} else if (curConfig.selectNew) {
+					selectOnly([element], true);
+				}
+				// we create the insert command that is stored on the stack
+				// undo means to call cmd.unapply(), redo means to call cmd.apply()
+				addCommandToHistory(new svgedit.history.InsertElementCommand(element));
+				
+				call("changed",[element]);
+			}, ani_dur * 1000);
+		}
+		
+		startTransform = null;
+	};
+	
+	var dblClick = function(evt) {
+		var evt_target = evt.target;
+		var parent = evt_target.parentNode;
+		
+		// Do nothing if already in current group
+		if (parent === current_group) {return;}
+		
+		var mouse_target = getMouseTarget(evt);
+		var tagName = mouse_target.tagName;
+		
+		if (tagName === 'text' && current_mode !== 'textedit') {
+			var pt = svgedit.math.transformPoint( evt.pageX, evt.pageY, root_sctm );
+			textActions.select(mouse_target, pt.x, pt.y);
+		}
+		
+		if ((tagName === "g" || tagName === "a") && svgedit.utilities.getRotationAngle(mouse_target)) {
+			// TODO: Allow method of in-group editing without having to do 
+			// this (similar to editing rotated paths)
+		
+			// Ungroup and regroup
+			pushGroupProperties(mouse_target);
+			mouse_target = selectedElements[0];
+			clearSelection(true);
+		}
+		// Reset context
+		if (current_group) {
+			leaveContext();
+		}
+		
+		if ((parent.tagName !== 'g' && parent.tagName !== 'a') ||
+			parent === getCurrentDrawing().getCurrentLayer() ||
+			mouse_target === selectorManager.selectorParentGroup)
+		{
+			// Escape from in-group edit
+			return;
+		}
+		setContext(mouse_target);
+	};
+
+	// prevent links from being followed in the canvas
+	var handleLinkInCanvas = function(e) {
+		e.preventDefault();
+		return false;
+	};
+	
+	// Added mouseup to the container here.
+	// TODO(codedread): Figure out why after the Closure compiler, the window mouseup is ignored.
+	$(container).mousedown(mouseDown).mousemove(mouseMove).click(handleLinkInCanvas).dblclick(dblClick).mouseup(mouseUp);
+//	$(window).mouseup(mouseUp);
+	
+	 //TODO(rafaelcastrocouto): User preference for shift key and zoom factor
+	$(container).bind("mousewheel DOMMouseScroll", function(e){
+		//if (!e.shiftKey) {return;}
+		e.preventDefault();
+		var evt = e.originalEvent;
+
+		root_sctm = $('#svgcontent g')[0].getScreenCTM().inverse();
+		var pt = svgedit.math.transformPoint( evt.pageX, evt.pageY, root_sctm );
+
+		var bbox = {
+			'x': pt.x,
+			'y': pt.y,
+			'width': 0,
+			'height': 0
+		};
+
+		var delta = (evt.wheelDelta) ? evt.wheelDelta : (evt.detail) ? -evt.detail : 0;
+		if (!delta) {return;}
+
+		bbox.factor = Math.max(3/4, Math.min(4/3, (delta)));
+	
+		call("zoomed", bbox);
+	});
+	
+}());
+
+// Function: preventClickDefault
+// Prevents default browser click behaviour on the given element
+//
+// Parameters:
+// img - The DOM element to prevent the cilck on
+var preventClickDefault = function(img) {
+	$(img).click(function(e){e.preventDefault();});
+};
+
+// Group: Text edit functions
+// Functions relating to editing text elements
+textActions = canvas.textActions = (function() {
+	var curtext;
+	var textinput;
+	var cursor;
+	var selblock;
+	var blinker;
+	var chardata = [];
+	var textbb, transbb;
+	var matrix;
+	var last_x, last_y;
+	var allow_dbl;
+	
+	function setCursor(index) {
+		var empty = (textinput.value === "");
+		$(textinput).focus();
+	
+		if (!arguments.length) {
+			if (empty) {
+				index = 0;
+			} else {
+				if (textinput.selectionEnd !== textinput.selectionStart) {return;}
+				index = textinput.selectionEnd;
+			}
+		}
+		
+		var charbb;
+		charbb = chardata[index];
+		if (!empty) {
+			textinput.setSelectionRange(index, index);
+		}
+		cursor = svgedit.utilities.getElem("text_cursor");
+		if (!cursor) {
+			cursor = document.createElementNS(NS.SVG, "line");
+			svgedit.utilities.assignAttributes(cursor, {
+				'id': "text_cursor",
+				'stroke': "#333",
+				'stroke-width': 1
+			});
+			cursor = svgedit.utilities.getElem("selectorParentGroup").appendChild(cursor);
+		}
+		
+		if (!blinker) {
+			blinker = setInterval(function() {
+				var show = (cursor.getAttribute('display') === 'none');
+				cursor.setAttribute('display', show?'inline':'none');
+			}, 600);
+		}
+		
+		var start_pt = ptToScreen(charbb.x, textbb.y);
+		var end_pt = ptToScreen(charbb.x, (textbb.y + textbb.height));
+		
+		svgedit.utilities.assignAttributes(cursor, {
+			x1: start_pt.x,
+			y1: start_pt.y,
+			x2: end_pt.x,
+			y2: end_pt.y,
+			visibility: 'visible',
+			display: 'inline'
+		});
+		
+		if (selblock) {selblock.setAttribute('d', '');}
+	}
+	
+	function setSelection(start, end, skipInput) {
+		if (start === end) {
+			setCursor(end);
+			return;
+		}
+	
+		if (!skipInput) {
+			textinput.setSelectionRange(start, end);
+		}
+		
+		selblock = svgedit.utilities.getElem("text_selectblock");
+		if (!selblock) {
+
+			selblock = document.createElementNS(NS.SVG, "path");
+			svgedit.utilities.assignAttributes(selblock, {
+				'id': "text_selectblock",
+				'fill': "green",
+				'opacity': 0.5,
+				'style': "pointer-events:none"
+			});
+			svgedit.utilities.getElem("selectorParentGroup").appendChild(selblock);
+		}
+
+		var startbb = chardata[start];		
+		var endbb = chardata[end];
+		
+		cursor.setAttribute('visibility', 'hidden');
+		
+		var tl = ptToScreen(startbb.x, textbb.y),
+			tr = ptToScreen(startbb.x + (endbb.x - startbb.x), textbb.y),
+			bl = ptToScreen(startbb.x, textbb.y + textbb.height),
+			br = ptToScreen(startbb.x + (endbb.x - startbb.x), textbb.y + textbb.height);
+		
+		var dstr = "M" + tl.x + "," + tl.y
+					+ " L" + tr.x + "," + tr.y
+					+ " " + br.x + "," + br.y
+					+ " " + bl.x + "," + bl.y + "z";
+		
+		svgedit.utilities.assignAttributes(selblock, {
+			d: dstr,
+			'display': 'inline'
+		});
+	}
+	
+	function getIndexFromPoint(mouse_x, mouse_y) {
+		// Position cursor here
+		var pt = svgroot.createSVGPoint();
+		pt.x = mouse_x;
+		pt.y = mouse_y;
+
+		// No content, so return 0
+		if (chardata.length == 1) {return 0;}
+		// Determine if cursor should be on left or right of character
+		var charpos = curtext.getCharNumAtPosition(pt);
+		if (charpos < 0) {
+			// Out of text range, look at mouse coords
+			charpos = chardata.length - 2;
+			if (mouse_x <= chardata[0].x) {
+				charpos = 0;
+			}
+		} else if (charpos >= chardata.length - 2) {
+			charpos = chardata.length - 2;
+		}
+		var charbb = chardata[charpos];
+		var mid = charbb.x + (charbb.width/2);
+		if (mouse_x > mid) {
+			charpos++;
+		}
+		return charpos;
+	}
+	
+	function setCursorFromPoint(mouse_x, mouse_y) {
+		setCursor(getIndexFromPoint(mouse_x, mouse_y));
+	}
+	
+	function setEndSelectionFromPoint(x, y, apply) {
+		var i1 = textinput.selectionStart;
+		var i2 = getIndexFromPoint(x, y);
+		
+		var start = Math.min(i1, i2);
+		var end = Math.max(i1, i2);
+		setSelection(start, end, !apply);
+	}
+		
+	function screenToPt(x_in, y_in) {
+		var out = {
+			x: x_in,
+			y: y_in
+		};
+		
+		out.x /= current_zoom;
+		out.y /= current_zoom;			
+
+		if (matrix) {
+			var pt = svgedit.math.transformPoint(out.x, out.y, matrix.inverse());
+			out.x = pt.x;
+			out.y = pt.y;
+		}
+		
+		return out;
+	}	
+	
+	function ptToScreen(x_in, y_in) {
+		var out = {
+			x: x_in,
+			y: y_in
+		};
+		
+		if (matrix) {
+			var pt = svgedit.math.transformPoint(out.x, out.y, matrix);
+			out.x = pt.x;
+			out.y = pt.y;
+		}
+		
+		out.x *= current_zoom;
+		out.y *= current_zoom;
+		
+		return out;
+	}
+	
+	function hideCursor() {
+		if (cursor) {
+			cursor.setAttribute('visibility', 'hidden');
+		}
+	}
+	
+	function selectAll(evt) {
+		setSelection(0, curtext.textContent.length);
+		$(this).unbind(evt);
+	}
+
+	function selectWord(evt) {
+		if (!allow_dbl || !curtext) {return;}
+	
+		var ept = svgedit.math.transformPoint( evt.pageX, evt.pageY, root_sctm ),
+			mouse_x = ept.x * current_zoom,
+			mouse_y = ept.y * current_zoom;
+		var pt = screenToPt(mouse_x, mouse_y);
+		
+		var index = getIndexFromPoint(pt.x, pt.y);
+		var str = curtext.textContent;
+		var first = str.substr(0, index).replace(/[a-z0-9]+$/i, '').length;
+		var m = str.substr(index).match(/^[a-z0-9]+/i);
+		var last = (m?m[0].length:0) + index;
+		setSelection(first, last);
+		
+		// Set tripleclick
+		$(evt.target).click(selectAll);
+		setTimeout(function() {
+			$(evt.target).unbind('click', selectAll);
+		}, 300);
+		
+	}
+
+	return {
+		select: function(target, x, y) {
+			curtext = target;
+			textActions.toEditMode(x, y);
+		},
+		start: function(elem) {
+			curtext = elem;
+			textActions.toEditMode();
+		},
+		mouseDown: function(evt, mouse_target, start_x, start_y) {
+			var pt = screenToPt(start_x, start_y);
+		
+			textinput.focus();
+			setCursorFromPoint(pt.x, pt.y);
+			last_x = start_x;
+			last_y = start_y;
+			
+			// TODO: Find way to block native selection
+		},
+		mouseMove: function(mouse_x, mouse_y) {
+			var pt = screenToPt(mouse_x, mouse_y);
+			setEndSelectionFromPoint(pt.x, pt.y);
+		},			
+		mouseUp: function(evt, mouse_x, mouse_y) {
+			var pt = screenToPt(mouse_x, mouse_y);
+			
+			setEndSelectionFromPoint(pt.x, pt.y, true);
+			
+			// TODO: Find a way to make this work: Use transformed BBox instead of evt.target 
+//				if (last_x === mouse_x && last_y === mouse_y
+//					&& !svgedit.math.rectsIntersect(transbb, {x: pt.x, y: pt.y, width:0, height:0})) {
+//					textActions.toSelectMode(true);				
+//				}
+
+			if (
+				evt.target !== curtext
+				&&	mouse_x < last_x + 2
+				&& mouse_x > last_x - 2
+				&&	mouse_y < last_y + 2
+				&& mouse_y > last_y - 2) {
+
+				textActions.toSelectMode(true);
+			}
+
+		},
+		setCursor: setCursor,
+		toEditMode: function(x, y) {
+			allow_dbl = false;
+			current_mode = "textedit";
+			selectorManager.requestSelector(curtext).showGrips(false);
+			// Make selector group accept clicks
+			var sel = selectorManager.requestSelector(curtext).selectorRect;
+			
+			textActions.init();
+
+			$(curtext).css('cursor', 'text');
+			
+//				if (svgedit.browser.supportsEditableText()) {
+//					curtext.setAttribute('editable', 'simple');
+//					return;
+//				}
+			
+			if (!arguments.length) {
+				setCursor();
+			} else {
+				var pt = screenToPt(x, y);
+				setCursorFromPoint(pt.x, pt.y);
+			}
+			
+			setTimeout(function() {
+				allow_dbl = true;
+			}, 300);
+		},
+		toSelectMode: function(selectElem) {
+			current_mode = "select";
+			clearInterval(blinker);
+			blinker = null;
+			if (selblock) {$(selblock).attr('display', 'none');}
+			if (cursor) {$(cursor).attr('visibility', 'hidden');}
+			$(curtext).css('cursor', 'move');
+			
+			if (selectElem) {
+				clearSelection();
+				$(curtext).css('cursor', 'move');
+				
+				call("selected", [curtext]);
+				addToSelection([curtext], true);
+			}
+			if (curtext && !curtext.textContent.length) {
+				// No content, so delete
+				canvas.deleteSelectedElements();
+			}
+			
+			$(textinput).blur();
+			
+			curtext = false;
+			
+//				if (svgedit.browser.supportsEditableText()) {
+//					curtext.removeAttribute('editable');
+//				}
+		},
+		setInputElem: function(elem) {
+			textinput = elem;
+//			$(textinput).blur(hideCursor);
+		},
+		clear: function() {
+			if (current_mode == "textedit") {
+				textActions.toSelectMode();
+			}
+		},
+		init: function(inputElem) {
+			if (!curtext) {return;}
+			var i, end;
+//				if (svgedit.browser.supportsEditableText()) {
+//					curtext.select();
+//					return;
+//				}
+		
+			if (!curtext.parentNode) {
+				// Result of the ffClone, need to get correct element
+				curtext = selectedElements[0];
+				selectorManager.requestSelector(curtext).showGrips(false);
+			}
+			
+			var str = curtext.textContent;
+			var len = str.length;
+			
+			var xform = curtext.getAttribute('transform');
+
+			textbb = svgedit.utilities.getBBox(curtext);
+			
+			matrix = xform ? svgedit.math.getMatrix(curtext) : null;
+
+			chardata = new Array(len);
+			textinput.focus();
+			
+			$(curtext).unbind('dblclick', selectWord).dblclick(selectWord);
+			
+			if (!len) {
+				end = {x: textbb.x + (textbb.width/2), width: 0};
+			}
+			
+			for (i=0; i<len; i++) {
+				var start = curtext.getStartPositionOfChar(i);
+				end = curtext.getEndPositionOfChar(i);
+				
+				if (!svgedit.browser.supportsGoodTextCharPos()) {
+					var offset = canvas.contentW * current_zoom;
+					start.x -= offset;
+					end.x -= offset;
+					
+					start.x /= current_zoom;
+					end.x /= current_zoom;
+				}
+				
+				// Get a "bbox" equivalent for each character. Uses the
+				// bbox data of the actual text for y, height purposes
+				
+				// TODO: Decide if y, width and height are actually necessary
+				chardata[i] = {
+					x: start.x,
+					y: textbb.y, // start.y?
+					width: end.x - start.x,
+					height: textbb.height
+				};
+			}
+			
+			// Add a last bbox for cursor at end of text
+			chardata.push({
+				x: end.x,
+				width: 0
+			});
+			setSelection(textinput.selectionStart, textinput.selectionEnd, true);
+		}
+	};
+}());
+
+// TODO: Migrate all of this code into path.js
+// Group: Path edit functions
+// Functions relating to editing path elements
+pathActions = canvas.pathActions = function() {
+	
+	var subpath = false;
+	var current_path;
+	var newPoint, firstCtrl;
+	
+	function resetD(p) {
+		p.setAttribute("d", pathActions.convertPath(p));
+	}
+
+	// TODO: Move into path.js
+	svgedit.path.Path.prototype.endChanges = function(text) {
+		if (svgedit.browser.isWebkit()) {resetD(this.elem);}
+		var cmd = new svgedit.history.ChangeElementCommand(this.elem, {d: this.last_d}, text);
+		addCommandToHistory(cmd);
+		call("changed", [this.elem]);
+	};
+
+	svgedit.path.Path.prototype.addPtsToSelection = function(indexes) {
+		var i, seg;
+		if (!$.isArray(indexes)) {indexes = [indexes];}
+		for (i = 0; i< indexes.length; i++) {
+			var index = indexes[i];
+			seg = this.segs[index];
+			if (seg.ptgrip) {
+				if (this.selected_pts.indexOf(index) == -1 && index >= 0) {
+					this.selected_pts.push(index);
+				}
+			}
+		}
+		this.selected_pts.sort();
+		i = this.selected_pts.length;
+		var grips = new Array(i);
+		// Loop through points to be selected and highlight each
+		while (i--) {
+			var pt = this.selected_pts[i];
+			seg = this.segs[pt];
+			seg.select(true);
+			grips[i] = seg.ptgrip;
+		}
+		// TODO: Correct this:
+		pathActions.canDeleteNodes = true;
+		
+		pathActions.closed_subpath = this.subpathIsClosed(this.selected_pts[0]);
+		
+		call("selected", grips);
+	};
+
+	current_path = null;
+	var drawn_path = null,
+		hasMoved = false;
+	
+	// This function converts a polyline (created by the fh_path tool) into
+	// a path element and coverts every three line segments into a single bezier
+	// curve in an attempt to smooth out the free-hand
+	var smoothPolylineIntoPath = function(element) {
+		var i, points = element.points;
+		var N = points.numberOfItems;
+		if (N >= 4) {
+			// loop through every 3 points and convert to a cubic bezier curve segment
+			// 
+			// NOTE: this is cheating, it means that every 3 points has the potential to 
+			// be a corner instead of treating each point in an equal manner. In general,
+			// this technique does not look that good.
+			// 
+			// I am open to better ideas!
+			// 
+			// Reading:
+			// - http://www.efg2.com/Lab/Graphics/Jean-YvesQueinecBezierCurves.htm
+			// - http://www.codeproject.com/KB/graphics/BezierSpline.aspx?msg=2956963
+			// - http://www.ian-ko.com/ET_GeoWizards/UserGuide/smooth.htm
+			// - http://www.cs.mtu.edu/~shene/COURSES/cs3621/NOTES/spline/Bezier/bezier-der.html
+			var curpos = points.getItem(0), prevCtlPt = null;
+			var d = [];
+			d.push(["M", curpos.x, ",", curpos.y, " C"].join(""));
+			for (i = 1; i <= (N-4); i += 3) {
+				var ct1 = points.getItem(i);
+				var ct2 = points.getItem(i+1);
+				var end = points.getItem(i+2);
+				
+				// if the previous segment had a control point, we want to smooth out
+				// the control points on both sides
+				if (prevCtlPt) {
+					var newpts = svgedit.path.smoothControlPoints( prevCtlPt, ct1, curpos );
+					if (newpts && newpts.length == 2) {
+						var prevArr = d[d.length-1].split(',');
+						prevArr[2] = newpts[0].x;
+						prevArr[3] = newpts[0].y;
+						d[d.length-1] = prevArr.join(',');
+						ct1 = newpts[1];
+					}
+				}
+				
+				d.push([ct1.x, ct1.y, ct2.x, ct2.y, end.x, end.y].join(','));
+				
+				curpos = end;
+				prevCtlPt = ct2;
+			}
+			// handle remaining line segments
+			d.push("L");
+			while (i < N) {
+				var pt = points.getItem(i);
+				d.push([pt.x, pt.y].join(","));
+				i++;
+			}
+			d = d.join(" ");
+
+			// create new path element
+			element = addSvgElementFromJson({
+				"element": "path",
+				"curStyles": true,
+				"attr": {
+					"id": getId(),
+					"d": d,
+					"fill": "none"
+				}
+			});
+			// No need to call "changed", as this is already done under mouseUp
+		}
+		return element;
+	};
+
+	return {
+		mouseDown: function(evt, mouse_target, start_x, start_y) {
+			var id;
+			if (current_mode === "path") {
+				mouse_x = start_x;
+				mouse_y = start_y;
+				
+				var x = mouse_x/current_zoom,
+					y = mouse_y/current_zoom,
+					stretchy = svgedit.utilities.getElem("path_stretch_line");
+				newPoint = [x, y];	
+				
+				if (curConfig.gridSnapping){
+					x = svgedit.utilities.snapToGrid(x);
+					y = svgedit.utilities.snapToGrid(y);
+					mouse_x = svgedit.utilities.snapToGrid(mouse_x);
+					mouse_y = svgedit.utilities.snapToGrid(mouse_y);
+				}
+
+				if (!stretchy) {
+					stretchy = document.createElementNS(NS.SVG, "path");
+					svgedit.utilities.assignAttributes(stretchy, {
+						'id': "path_stretch_line",
+						'stroke': "#22C",
+						'stroke-width': "0.5",
+						'fill': 'none'
+					});
+					stretchy = svgedit.utilities.getElem("selectorParentGroup").appendChild(stretchy);
+				}
+				stretchy.setAttribute("display", "inline");
+				
+				var keep = null;
+				var index;
+				// if pts array is empty, create path element with M at current point
+				if (!drawn_path) {
+					d_attr = "M" + x + "," + y + " ";
+					drawn_path = addSvgElementFromJson({
+						"element": "path",
+						"curStyles": true,
+						"attr": {
+							"d": d_attr,
+							"id": getNextId(),
+							"opacity": cur_shape.opacity / 2
+						}
+					});
+					// set stretchy line to first point
+					stretchy.setAttribute('d', ['M', mouse_x, mouse_y, mouse_x, mouse_y].join(' '));
+					index = subpath ? svgedit.path.path.segs.length : 0;
+					svgedit.path.addPointGrip(index, mouse_x, mouse_y);
+				} else {
+					// determine if we clicked on an existing point
+					var seglist = drawn_path.pathSegList;
+					var i = seglist.numberOfItems;
+					var FUZZ = 6/current_zoom;
+					var clickOnPoint = false;
+					while (i) {
+						i --;
+						var item = seglist.getItem(i);
+						var px = item.x, py = item.y;
+						// found a matching point
+						if ( x >= (px-FUZZ) && x <= (px+FUZZ) && y >= (py-FUZZ) && y <= (py+FUZZ) ) {
+							clickOnPoint = true;
+							break;
+						}
+					}
+					
+					// get path element that we are in the process of creating
+					id = getId();
+				
+					// Remove previous path object if previously created
+					svgedit.path.removePath_(id);
+					
+					var newpath = svgedit.utilities.getElem(id);
+					var newseg;
+					var s_seg;
+					var len = seglist.numberOfItems;
+					// if we clicked on an existing point, then we are done this path, commit it
+					// (i, i+1) are the x,y that were clicked on
+					if (clickOnPoint) {
+						// if clicked on any other point but the first OR
+						// the first point was clicked on and there are less than 3 points
+						// then leave the path open
+						// otherwise, close the path
+						if (i <= 1 && len >= 2) {
+							// Create end segment
+							var abs_x = seglist.getItem(0).x;
+							var abs_y = seglist.getItem(0).y;
+							
+
+							s_seg = stretchy.pathSegList.getItem(1);
+							if (s_seg.pathSegType === 4) {
+								newseg = drawn_path.createSVGPathSegLinetoAbs(abs_x, abs_y);
+							} else {
+								newseg = drawn_path.createSVGPathSegCurvetoCubicAbs(
+									abs_x,
+									abs_y,
+									s_seg.x1 / current_zoom,
+									s_seg.y1 / current_zoom,
+									abs_x,
+									abs_y
+								);
+							}
+							
+							var endseg = drawn_path.createSVGPathSegClosePath();
+							seglist.appendItem(newseg);
+							seglist.appendItem(endseg);
+						} else if (len < 3) {
+							keep = false;
+							return keep;
+						}
+						$(stretchy).remove();
+						
+						// This will signal to commit the path
+						element = newpath;
+						drawn_path = null;
+						started = false;
+						
+						if (subpath) {
+							if (svgedit.path.path.matrix) {
+								svgedit.coords.remapElement(newpath, {}, svgedit.path.path.matrix.inverse());
+							}
+						
+							var new_d = newpath.getAttribute("d");
+							var orig_d = $(svgedit.path.path.elem).attr("d");
+							$(svgedit.path.path.elem).attr("d", orig_d + new_d);
+							$(newpath).remove();
+							if (svgedit.path.path.matrix) {
+								svgedit.path.recalcRotatedPath();
+							}
+							svgedit.path.path.init();
+							pathActions.toEditMode(svgedit.path.path.elem);
+							svgedit.path.path.selectPt();
+							return false;
+						}
+					}
+					// else, create a new point, update path element
+					else {
+						// Checks if current target or parents are #svgcontent
+						if (!$.contains(container, getMouseTarget(evt))) {
+							// Clicked outside canvas, so don't make point
+							console.log("Clicked outside canvas");
+							return false;
+						}
+
+						var num = drawn_path.pathSegList.numberOfItems;
+						var last = drawn_path.pathSegList.getItem(num -1);
+						var lastx = last.x, lasty = last.y;
+
+						if (evt.shiftKey) {
+							var xya = svgedit.math.snapToAngle(lastx, lasty, x, y);
+							x = xya.x;
+							y = xya.y;
+						}
+						
+						// Use the segment defined by stretchy
+						s_seg = stretchy.pathSegList.getItem(1);
+						if (s_seg.pathSegType === 4) {
+							newseg = drawn_path.createSVGPathSegLinetoAbs(round(x), round(y));
+						} else {
+							newseg = drawn_path.createSVGPathSegCurvetoCubicAbs(
+								round(x),
+								round(y),
+								s_seg.x1 / current_zoom,
+								s_seg.y1 / current_zoom,
+								s_seg.x2 / current_zoom,
+								s_seg.y2 / current_zoom
+							);
+						}
+						
+						drawn_path.pathSegList.appendItem(newseg);
+						
+						x *= current_zoom;
+						y *= current_zoom;
+						
+						// set stretchy line to latest point
+						stretchy.setAttribute('d', ['M', x, y, x, y].join(' '));
+						index = num;
+						if (subpath) {index += svgedit.path.path.segs.length;}
+						svgedit.path.addPointGrip(index, x, y);
+					}
+//					keep = true;
+				}
+				
+				return;
+			}
+			
+			// TODO: Make sure current_path isn't null at this point
+			if (!svgedit.path.path) {return;}
+			
+			svgedit.path.path.storeD();
+			
+			id = evt.target.id;
+			var cur_pt;
+			if (id.substr(0,14) == "pathpointgrip_") {
+				// Select this point
+				cur_pt = svgedit.path.path.cur_pt = parseInt(id.substr(14));
+				svgedit.path.path.dragging = [start_x, start_y];
+				var seg = svgedit.path.path.segs[cur_pt];
+				
+				// only clear selection if shift is not pressed (otherwise, add 
+				// node to selection)
+				if (!evt.shiftKey) {
+					if (svgedit.path.path.selected_pts.length <= 1 || !seg.selected) {
+						svgedit.path.path.clearSelection();
+					}
+					svgedit.path.path.addPtsToSelection(cur_pt);
+				} else if (seg.selected) {
+					svgedit.path.path.removePtFromSelection(cur_pt);
+				} else {
+					svgedit.path.path.addPtsToSelection(cur_pt);
+				}
+			} else if (id.indexOf("ctrlpointgrip_") == 0) {
+				svgedit.path.path.dragging = [start_x, start_y];
+				
+				var parts = id.split('_')[1].split('c');
+				cur_pt = Number(parts[0]);
+				var ctrl_num = Number(parts[1]);
+				svgedit.path.path.selectPt(cur_pt, ctrl_num);
+			}
+
+			// Start selection box
+			if (!svgedit.path.path.dragging) {
+				if (rubberBox == null) {
+					rubberBox = selectorManager.getRubberBandBox();
+				}
+				svgedit.utilities.assignAttributes(rubberBox, {
+						'x': start_x * current_zoom,
+						'y': start_y * current_zoom,
+						'width': 0,
+						'height': 0,
+						'display': 'inline'
+				}, 100);
+			}
+		},
+		mouseMove: function(mouse_x, mouse_y) {
+			hasMoved = true;
+			if (current_mode === "path") {
+				if (!drawn_path) {return;}
+				var seglist = drawn_path.pathSegList;
+				var index = seglist.numberOfItems - 1;
+
+				if (newPoint) {
+					// First point
+//					if (!index) {return;}
+
+					// Set control points
+					var pointGrip1 = svgedit.path.addCtrlGrip('1c1');
+					var pointGrip2 = svgedit.path.addCtrlGrip('0c2');
+					
+					// dragging pointGrip1
+					pointGrip1.setAttribute('cx', mouse_x);
+					pointGrip1.setAttribute('cy', mouse_y);
+					pointGrip1.setAttribute('display', 'inline');
+
+					var pt_x = newPoint[0];
+					var pt_y = newPoint[1];
+					
+					// set curve
+					var seg = seglist.getItem(index);
+					var cur_x = mouse_x / current_zoom;
+					var cur_y = mouse_y / current_zoom;
+					var alt_x = (pt_x + (pt_x - cur_x));
+					var alt_y = (pt_y + (pt_y - cur_y));
+					
+					pointGrip2.setAttribute('cx', alt_x * current_zoom);
+					pointGrip2.setAttribute('cy', alt_y * current_zoom);
+					pointGrip2.setAttribute('display', 'inline');
+					
+					var ctrlLine = svgedit.path.getCtrlLine(1);
+					svgedit.utilities.assignAttributes(ctrlLine, {
+						x1: mouse_x,
+						y1: mouse_y,
+						x2: alt_x * current_zoom,
+						y2: alt_y * current_zoom,
+						display: 'inline'
+					});
+
+					if (index === 0) {
+						firstCtrl = [mouse_x, mouse_y];
+					} else {
+						var last = seglist.getItem(index - 1);
+						var last_x = last.x;
+						var last_y = last.y;
+	
+						if (last.pathSegType === 6) {
+							last_x += (last_x - last.x2);
+							last_y += (last_y - last.y2);
+						} else if (firstCtrl) {
+							last_x = firstCtrl[0]/current_zoom;
+							last_y = firstCtrl[1]/current_zoom;
+						}
+						svgedit.path.replacePathSeg(6, index, [pt_x, pt_y, last_x, last_y, alt_x, alt_y], drawn_path);
+					}
+				} else {
+					var stretchy = svgedit.utilities.getElem("path_stretch_line");
+					if (stretchy) {
+						var prev = seglist.getItem(index);
+						if (prev.pathSegType === 6) {
+							var prev_x = prev.x + (prev.x - prev.x2);
+							var prev_y = prev.y + (prev.y - prev.y2);
+							svgedit.path.replacePathSeg(6, 1, [mouse_x, mouse_y, prev_x * current_zoom, prev_y * current_zoom, mouse_x, mouse_y], stretchy);							
+						} else if (firstCtrl) {
+							svgedit.path.replacePathSeg(6, 1, [mouse_x, mouse_y, firstCtrl[0], firstCtrl[1], mouse_x, mouse_y], stretchy);
+						} else {
+							svgedit.path.replacePathSeg(4, 1, [mouse_x, mouse_y], stretchy);
+						}
+					}
+				}
+				return;
+			}
+			// if we are dragging a point, let's move it
+			if (svgedit.path.path.dragging) {
+				var pt = svgedit.path.getPointFromGrip({
+					x: svgedit.path.path.dragging[0],
+					y: svgedit.path.path.dragging[1]
+				}, svgedit.path.path);
+				var mpt = svgedit.path.getPointFromGrip({
+					x: mouse_x,
+					y: mouse_y
+				}, svgedit.path.path);
+				var diff_x = mpt.x - pt.x;
+				var diff_y = mpt.y - pt.y;
+				svgedit.path.path.dragging = [mouse_x, mouse_y];
+				
+				if (svgedit.path.path.dragctrl) {
+					svgedit.path.path.moveCtrl(diff_x, diff_y);
+				} else {
+					svgedit.path.path.movePts(diff_x, diff_y);
+				}
+			} else {
+				svgedit.path.path.selected_pts = [];
+				svgedit.path.path.eachSeg(function(i) {
+					var seg = this;
+					if (!seg.next && !seg.prev) {return;}
+						
+					var item = seg.item;
+					var rbb = rubberBox.getBBox();
+					
+					var pt = svgedit.path.getGripPt(seg);
+					var pt_bb = {
+						x: pt.x,
+						y: pt.y,
+						width: 0,
+						height: 0
+					};
+				
+					var sel = svgedit.math.rectsIntersect(rbb, pt_bb);
+
+					this.select(sel);
+					//Note that addPtsToSelection is not being run
+					if (sel) {svgedit.path.path.selected_pts.push(seg.index);}
+				});
+
+			}
+		}, 
+		mouseUp: function(evt, element, mouse_x, mouse_y) {
+			
+			// Create mode
+			if (current_mode === "path") {
+				newPoint = null;
+				if (!drawn_path) {
+					element = svgedit.utilities.getElem(getId());
+					started = false;
+					firstCtrl = null;
+				}
+
+				return {
+					keep: true,
+					element: element
+				};
+			}
+			
+			// Edit mode
+			
+			if (svgedit.path.path.dragging) {
+				var last_pt = svgedit.path.path.cur_pt;
+
+				svgedit.path.path.dragging = false;
+				svgedit.path.path.dragctrl = false;
+				svgedit.path.path.update();
+				
+				if (hasMoved) {
+					svgedit.path.path.endChanges("Move path point(s)");
+				} 
+				
+				if (!evt.shiftKey && !hasMoved) {
+					svgedit.path.path.selectPt(last_pt);
+				} 
+			} else if (rubberBox && rubberBox.getAttribute('display') != 'none') {
+				// Done with multi-node-select
+				rubberBox.setAttribute("display", "none");
+				
+				if (rubberBox.getAttribute('width') <= 2 && rubberBox.getAttribute('height') <= 2) {
+					pathActions.toSelectMode(evt.target);
+				}
+				
+			// else, move back to select mode	
+			} else {
+				pathActions.toSelectMode(evt.target);
+			}
+			hasMoved = false;
+		},
+		toEditMode: function(element) {
+			svgedit.path.path = svgedit.path.getPath_(element);
+			current_mode = "pathedit";
+			clearSelection();
+			svgedit.path.path.show(true).update();
+			svgedit.path.path.oldbbox = svgedit.utilities.getBBox(svgedit.path.path.elem);
+			subpath = false;
+		},
+		toSelectMode: function(elem) {
+			var selPath = (elem == svgedit.path.path.elem);
+			current_mode = "select";
+			svgedit.path.path.show(false);
+			current_path = false;
+			clearSelection();
+			
+			if (svgedit.path.path.matrix) {
+				// Rotated, so may need to re-calculate the center
+				svgedit.path.recalcRotatedPath();
+			}
+			
+			if (selPath) {
+				call("selected", [elem]);
+				addToSelection([elem], true);
+			}
+		},
+		addSubPath: function(on) {
+			if (on) {
+				// Internally we go into "path" mode, but in the UI it will
+				// still appear as if in "pathedit" mode.
+				current_mode = "path";
+				subpath = true;
+			} else {
+				pathActions.clear(true);
+				pathActions.toEditMode(svgedit.path.path.elem);
+			}
+		},
+		select: function(target) {
+			if (current_path === target) {
+				pathActions.toEditMode(target);
+				current_mode = "pathedit";
+			} // going into pathedit mode
+			else {
+				current_path = target;
+			}	
+		},
+		reorient: function() {
+			var elem = selectedElements[0];
+			if (!elem) {return;}
+			var angle = svgedit.utilities.getRotationAngle(elem);
+			if (angle == 0) {return;}
+			
+			var batchCmd = new svgedit.history.BatchCommand("Reorient path");
+			var changes = {
+				d: elem.getAttribute('d'),
+				transform: elem.getAttribute('transform')
+			};
+			batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(elem, changes));
+			clearSelection();
+			this.resetOrientation(elem);
+			
+			addCommandToHistory(batchCmd);
+
+			// Set matrix to null
+			svgedit.path.getPath_(elem).show(false).matrix = null; 
+
+			this.clear();
+	
+			addToSelection([elem], true);
+			call("changed", selectedElements);
+		},
+		
+		clear: function(remove) {
+			current_path = null;
+			if (drawn_path) {
+				var elem = svgedit.utilities.getElem(getId());
+				$(svgedit.utilities.getElem("path_stretch_line")).remove();
+				$(elem).remove();
+				$(svgedit.utilities.getElem("pathpointgrip_container")).find('*').attr('display', 'none');
+				drawn_path = firstCtrl = null;
+				started = false;
+			} else if (current_mode == "pathedit") {
+				this.toSelectMode();
+			}
+			if (svgedit.path.path) {svgedit.path.path.init().show(false);}
+		},
+		resetOrientation: function(path) {
+			if (path == null || path.nodeName != 'path') {return false;}
+			var tlist = svgedit.transformlist.getTransformList(path);
+			var m = svgedit.math.transformListToTransform(tlist).matrix;
+			tlist.clear();
+			path.removeAttribute("transform");
+			var segList = path.pathSegList;
+			
+			// Opera/win/non-EN throws an error here.
+			// TODO: Find out why!
+			// Presumed fixed in Opera 10.5, so commented out for now
+			
+//			try {
+				var len = segList.numberOfItems;
+//			} catch(err) {
+//				var fixed_d = pathActions.convertPath(path);
+//				path.setAttribute('d', fixed_d);
+//				segList = path.pathSegList;
+//				var len = segList.numberOfItems;
+//			}
+			var i, last_x, last_y;
+
+			for (i = 0; i < len; ++i) {
+				var seg = segList.getItem(i);
+				var type = seg.pathSegType;
+				if (type == 1) {continue;}
+				var pts = [];
+				$.each(['',1,2], function(j, n) {
+					var x = seg['x'+n], y = seg['y'+n];
+					if (x !== undefined && y !== undefined) {
+						var pt = svgedit.math.transformPoint(x, y, m);
+						pts.splice(pts.length, 0, pt.x, pt.y);
+					}
+				});
+				svgedit.path.replacePathSeg(type, i, pts, path);
+			}
+			
+			reorientGrads(path, m);
+		},
+		zoomChange: function() {
+			if (current_mode == "pathedit") {
+				svgedit.path.path.update();
+			}
+		},
+		getNodePoint: function() {
+			var sel_pt = svgedit.path.path.selected_pts.length ? svgedit.path.path.selected_pts[0] : 1;
+
+			var seg = svgedit.path.path.segs[sel_pt];
+			return {
+				x: seg.item.x,
+				y: seg.item.y,
+				type: seg.type
+			};
+		}, 
+		linkControlPoints: function(linkPoints) {
+			svgedit.path.setLinkControlPoints(linkPoints);
+		},
+		clonePathNode: function() {
+			svgedit.path.path.storeD();
+			
+			var sel_pts = svgedit.path.path.selected_pts;
+			var segs = svgedit.path.path.segs;
+			
+			var i = sel_pts.length;
+			var nums = [];
+
+			while (i--) {
+				var pt = sel_pts[i];
+				svgedit.path.path.addSeg(pt);
+				
+				nums.push(pt + i);
+				nums.push(pt + i + 1);
+			}
+			svgedit.path.path.init().addPtsToSelection(nums);
+
+			svgedit.path.path.endChanges("Clone path node(s)");
+		},
+		opencloseSubPath: function() {
+			var sel_pts = svgedit.path.path.selected_pts;
+			// Only allow one selected node for now
+			if (sel_pts.length !== 1) {return;}
+			
+			var elem = svgedit.path.path.elem;
+			var list = elem.pathSegList;
+
+			var len = list.numberOfItems;
+
+			var index = sel_pts[0];
+			
+			var open_pt = null;
+			var start_item = null;
+
+			// Check if subpath is already open
+			svgedit.path.path.eachSeg(function(i) {
+				if (this.type === 2 && i <= index) {
+					start_item = this.item;
+				}
+				if (i <= index) {return true;}
+				if (this.type === 2) {
+					// Found M first, so open
+					open_pt = i;
+					return false;
+				}
+				if (this.type === 1) {
+					// Found Z first, so closed
+					open_pt = false;
+					return false;
+				}
+			});
+			
+			if (open_pt == null) {
+				// Single path, so close last seg
+				open_pt = svgedit.path.path.segs.length - 1;
+			}
+
+			if (open_pt !== false) {
+				// Close this path
+				
+				// Create a line going to the previous "M"
+				var newseg = elem.createSVGPathSegLinetoAbs(start_item.x, start_item.y);
+			
+				var closer = elem.createSVGPathSegClosePath();
+				if (open_pt == svgedit.path.path.segs.length - 1) {
+					list.appendItem(newseg);
+					list.appendItem(closer);
+				} else {
+					svgedit.path.insertItemBefore(elem, closer, open_pt);
+					svgedit.path.insertItemBefore(elem, newseg, open_pt);
+				}
+				
+				svgedit.path.path.init().selectPt(open_pt+1);
+				return;
+			}
+			
+			// M 1,1 L 2,2 L 3,3 L 1,1 z // open at 2,2
+			// M 2,2 L 3,3 L 1,1
+			
+			// M 1,1 L 2,2 L 1,1 z M 4,4 L 5,5 L6,6 L 5,5 z 
+			// M 1,1 L 2,2 L 1,1 z [M 4,4] L 5,5 L(M)6,6 L 5,5 z 
+			
+			var seg = svgedit.path.path.segs[index];
+			
+			if (seg.mate) {
+				list.removeItem(index); // Removes last "L"
+				list.removeItem(index); // Removes the "Z"
+				svgedit.path.path.init().selectPt(index - 1);
+				return;
+			}
+			
+			var i, last_m, z_seg;
+			
+			// Find this sub-path's closing point and remove
+			for (i = 0; i<list.numberOfItems; i++) {
+				var item = list.getItem(i);
+
+				if (item.pathSegType === 2) {
+					// Find the preceding M
+					last_m = i;
+				} else if (i === index) {
+					// Remove it
+					list.removeItem(last_m);
+//						index--;
+				} else if (item.pathSegType === 1 && index < i) {
+					// Remove the closing seg of this subpath
+					z_seg = i-1;
+					list.removeItem(i);
+					break;
+				}
+			}
+			
+			var num = (index - last_m) - 1;
+			
+			while (num--) {
+				svgedit.path.insertItemBefore(elem, list.getItem(last_m), z_seg);
+			}
+			
+			var pt = list.getItem(last_m);
+			
+			// Make this point the new "M"
+			svgedit.path.replacePathSeg(2, last_m, [pt.x, pt.y]);
+			
+			i = index; // i is local here, so has no effect; what is the reason for this?
+			
+			svgedit.path.path.init().selectPt(0);
+		},
+		deletePathNode: function() {
+			if (!pathActions.canDeleteNodes) {return;}
+			svgedit.path.path.storeD();
+			
+			var sel_pts = svgedit.path.path.selected_pts;
+			var i = sel_pts.length;
+
+			while (i--) {
+				var pt = sel_pts[i];
+				svgedit.path.path.deleteSeg(pt);
+			}
+			
+			// Cleanup
+			var cleanup = function() {
+				var segList = svgedit.path.path.elem.pathSegList;
+				var len = segList.numberOfItems;
+				
+				var remItems = function(pos, count) {
+					while (count--) {
+						segList.removeItem(pos);
+					}
+				};
+
+				if (len <= 1) {return true;}
+				
+				while (len--) {
+					var item = segList.getItem(len);
+					if (item.pathSegType === 1) {
+						var prev = segList.getItem(len-1);
+						var nprev = segList.getItem(len-2);
+						if (prev.pathSegType === 2) {
+							remItems(len-1, 2);
+							cleanup();
+							break;
+						} else if (nprev.pathSegType === 2) {
+							remItems(len-2, 3);
+							cleanup();
+							break;
+						}
+
+					} else if (item.pathSegType === 2) {
+						if (len > 0) {
+							var prev_type = segList.getItem(len-1).pathSegType;
+							// Path has M M
+							if (prev_type === 2) {
+								remItems(len-1, 1);
+								cleanup();
+								break;
+							// Entire path ends with Z M 
+							} else if (prev_type === 1 && segList.numberOfItems-1 === len) {
+								remItems(len, 1);
+								cleanup();
+								break;
+							}
+						}
+					}
+				}	
+				return false;
+			};
+			
+			cleanup();
+			
+			// Completely delete a path with 1 or 0 segments
+			if (svgedit.path.path.elem.pathSegList.numberOfItems <= 1) {
+				pathActions.toSelectMode(svgedit.path.path.elem);
+				canvas.deleteSelectedElements();
+				return;
+			}
+			
+			svgedit.path.path.init();
+			svgedit.path.path.clearSelection();
+			
+			// TODO: Find right way to select point now
+			// path.selectPt(sel_pt);
+			if (window.opera) { // Opera repaints incorrectly
+				var cp = $(svgedit.path.path.elem); 
+				cp.attr('d', cp.attr('d'));
+			}
+			svgedit.path.path.endChanges("Delete path node(s)");
+		},
+		smoothPolylineIntoPath: smoothPolylineIntoPath,
+		setSegType: function(v) {
+			svgedit.path.path.setSegType(v);
+		},
+		moveNode: function(attr, newValue) {
+			var sel_pts = svgedit.path.path.selected_pts;
+			if (!sel_pts.length) {return;}
+			
+			svgedit.path.path.storeD();
+			
+			// Get first selected point
+			var seg = svgedit.path.path.segs[sel_pts[0]];
+			var diff = {x:0, y:0};
+			diff[attr] = newValue - seg.item[attr];
+			
+			seg.move(diff.x, diff.y);
+			svgedit.path.path.endChanges("Move path point");
+		},
+		fixEnd: function(elem) {
+			// Adds an extra segment if the last seg before a Z doesn't end
+			// at its M point
+			// M0,0 L0,100 L100,100 z
+			var segList = elem.pathSegList;
+			var len = segList.numberOfItems;
+			var i, last_m;
+			for (i = 0; i < len; ++i) {
+				var item = segList.getItem(i);
+				if (item.pathSegType === 2) {
+					last_m = item;
+				}
+				
+				if (item.pathSegType === 1) {
+					var prev = segList.getItem(i-1);
+					if (prev.x != last_m.x || prev.y != last_m.y) {
+						// Add an L segment here
+						var newseg = elem.createSVGPathSegLinetoAbs(last_m.x, last_m.y);
+						svgedit.path.insertItemBefore(elem, newseg, i);
+						// Can this be done better?
+						pathActions.fixEnd(elem);
+						break;
+					}
+					
+				}
+			}
+			if (svgedit.browser.isWebkit()) {resetD(elem);}
+		},
+		// Convert a path to one with only absolute or relative values
+		convertPath: function(path, toRel) {
+			var i;
+			var segList = path.pathSegList;
+			var len = segList.numberOfItems;
+			var curx = 0, cury = 0;
+			var d = "";
+			var last_m = null;
+			
+			for (i = 0; i < len; ++i) {
+				var seg = segList.getItem(i);
+				// if these properties are not in the segment, set them to zero
+				var x = seg.x || 0,
+					y = seg.y || 0,
+					x1 = seg.x1 || 0,
+					y1 = seg.y1 || 0,
+					x2 = seg.x2 || 0,
+					y2 = seg.y2 || 0;
+	
+				var type = seg.pathSegType;
+				var letter = pathMap[type]['to'+(toRel?'Lower':'Upper')+'Case']();
+				
+				var addToD = function(pnts, more, last) {
+					var str = '';
+					more = more ? ' ' + more.join(' ') : '';
+					last = last ? ' ' + svgedit.units.shortFloat(last) : '';
+					$.each(pnts, function(i, pnt) {
+						pnts[i] = svgedit.units.shortFloat(pnt);
+					});
+					d += letter + pnts.join(' ') + more + last;
+				};
+				
+				switch (type) {
+					case 1: // z,Z closepath (Z/z)
+						d += "z";
+						break;
+					case 12: // absolute horizontal line (H)
+						x -= curx;
+					case 13: // relative horizontal line (h)
+						if (toRel) {
+							curx += x;
+							letter = 'l';
+						} else {
+							x += curx;
+							curx = x;
+							letter = 'L';
+						}
+						// Convert to "line" for easier editing
+						addToD([[x, cury]]);
+						break;
+					case 14: // absolute vertical line (V)
+						y -= cury;
+					case 15: // relative vertical line (v)
+						if (toRel) {
+							cury += y;
+							letter = 'l';
+						} else {
+							y += cury;
+							cury = y;
+							letter = 'L';
+						}
+						// Convert to "line" for easier editing
+						addToD([[curx, y]]);
+						break;
+					case 2: // absolute move (M)
+					case 4: // absolute line (L)
+					case 18: // absolute smooth quad (T)
+						x -= curx;
+						y -= cury;
+					case 5: // relative line (l)
+					case 3: // relative move (m)
+						// If the last segment was a "z", this must be relative to 
+						if (last_m && segList.getItem(i-1).pathSegType === 1 && !toRel) {
+							curx = last_m[0];
+							cury = last_m[1];
+						}
+					
+					case 19: // relative smooth quad (t)
+						if (toRel) {
+							curx += x;
+							cury += y;
+						} else {
+							x += curx;
+							y += cury;
+							curx = x;
+							cury = y;
+						}
+						if (type === 3) {last_m = [curx, cury];}
+						
+						addToD([[x, y]]);
+						break;
+					case 6: // absolute cubic (C)
+						x -= curx; x1 -= curx; x2 -= curx;
+						y -= cury; y1 -= cury; y2 -= cury;
+					case 7: // relative cubic (c)
+						if (toRel) {
+							curx += x;
+							cury += y;
+						} else {
+							x += curx; x1 += curx; x2 += curx;
+							y += cury; y1 += cury; y2 += cury;
+							curx = x;
+							cury = y;
+						}
+						addToD([[x1, y1], [x2, y2], [x, y]]);
+						break;
+					case 8: // absolute quad (Q)
+						x -= curx; x1 -= curx;
+						y -= cury; y1 -= cury;
+					case 9: // relative quad (q) 
+						if (toRel) {
+							curx += x;
+							cury += y;
+						} else {
+							x += curx; x1 += curx;
+							y += cury; y1 += cury;
+							curx = x;
+							cury = y;
+						}
+						addToD([[x1, y1],[x, y]]);
+						break;
+					case 10: // absolute elliptical arc (A)
+						x -= curx;
+						y -= cury;
+					case 11: // relative elliptical arc (a)
+						if (toRel) {
+							curx += x;
+							cury += y;
+						} else {
+							x += curx;
+							y += cury;
+							curx = x;
+							cury = y;
+						}
+						addToD([[seg.r1, seg.r2]], [
+								seg.angle,
+								(seg.largeArcFlag ? 1 : 0),
+								(seg.sweepFlag ? 1 : 0)
+							], [x, y]
+						);
+						break;
+					case 16: // absolute smooth cubic (S)
+						x -= curx; x2 -= curx;
+						y -= cury; y2 -= cury;
+					case 17: // relative smooth cubic (s)
+						if (toRel) {
+							curx += x;
+							cury += y;
+						} else {
+							x += curx; x2 += curx;
+							y += cury; y2 += cury;
+							curx = x;
+							cury = y;
+						}
+						addToD([[x2, y2],[x, y]]);
+						break;
+				} // switch on path segment type
+			} // for each segment
+			return d;
+		}
+	};
+}();
+// end pathActions
+
+// Group: Serialization
+
+// Function: removeUnusedDefElems
+// Looks at DOM elements inside the <defs> to see if they are referred to,
+// removes them from the DOM if they are not.
+// 
+// Returns:
+// The amount of elements that were removed
+var removeUnusedDefElems = this.removeUnusedDefElems = function() {
+	var defs = svgcontent.getElementsByTagNameNS(NS.SVG, "defs");
+	if (!defs || !defs.length) {return 0;}
+	
+//	if (!defs.firstChild) {return;}
+	
+	var defelem_uses = [],
+		numRemoved = 0;
+	var attrs = ['fill', 'stroke', 'filter', 'marker-start', 'marker-mid', 'marker-end'];
+	var alen = attrs.length;
+	
+	var all_els = svgcontent.getElementsByTagNameNS(NS.SVG, '*');
+	var all_len = all_els.length;
+	
+	var i, j;
+	for (i = 0; i < all_len; i++) {
+		var el = all_els[i];
+		for (j = 0; j < alen; j++) {
+			var ref = svgedit.utilities.getUrlFromAttr(el.getAttribute(attrs[j]));
+			if (ref) {
+				defelem_uses.push(ref.substr(1));
+			}
+		}
+		
+		// gradients can refer to other gradients
+		var href = getHref(el);
+		if (href && href.indexOf('#') === 0) {
+			defelem_uses.push(href.substr(1));
+		}
+	}
+	
+	var defelems = $(defs).find("linearGradient, radialGradient, filter, marker, svg, symbol");
+	i = defelems.length;
+	while (i--) {
+		var defelem = defelems[i];
+		var id = defelem.id;
+		if (defelem_uses.indexOf(id) < 0) {
+			// Not found, so remove (but remember)
+			removedElements[id] = defelem;
+			defelem.parentNode.removeChild(defelem);
+			numRemoved++;
+		}
+	}
+
+	return numRemoved;
+};
+
+// Function: svgCanvasToString
+// Main function to set up the SVG content for output 
+//
+// Returns: 
+// String containing the SVG image for output
+this.svgCanvasToString = function() {
+	// keep calling it until there are none to remove
+	while (removeUnusedDefElems() > 0) {}
+	
+	pathActions.clear(true);
+	
+	// Keep SVG-Edit comment on top
+	$.each(svgcontent.childNodes, function(i, node) {
+		if (i && node.nodeType === 8 && node.data.indexOf('Created with') >= 0) {
+			svgcontent.insertBefore(node, svgcontent.firstChild);
+		}
+	});
+	
+	// Move out of in-group editing mode
+	if (current_group) {
+		leaveContext();
+		selectOnly([current_group]);
+	}
+	
+	var naked_svgs = [];
+	
+	// Unwrap gsvg if it has no special attributes (only id and style)
+	$(svgcontent).find('g:data(gsvg)').each(function() {
+		var attrs = this.attributes;
+		var len = attrs.length;
+		var i;
+		for (i = 0; i < len; i++) {
+			if (attrs[i].nodeName == 'id' || attrs[i].nodeName == 'style') {
+				len--;
+			}
+		}
+		// No significant attributes, so ungroup
+		if (len <= 0) {
+			var svg = this.firstChild;
+			naked_svgs.push(svg);
+			$(this).replaceWith(svg);
+		}
+	});
+	var output = this.svgToString(svgcontent, 0);
+	
+	// Rewrap gsvg
+	if (naked_svgs.length) {
+		$(naked_svgs).each(function() {
+			groupSvgElem(this);
+		});
+	}
+	
+	return output;
+};
+
+// Function: svgToString
+// Sub function ran on each SVG element to convert it to a string as desired
+// 
+// Parameters: 
+// elem - The SVG element to convert
+// indent - Integer with the amount of spaces to indent this tag
+//
+// Returns: 
+// String with the given element as an SVG tag
+this.svgToString = function(elem, indent) {
+	var out = [], 
+		toXml = svgedit.utilities.toXml;
+	var unit = curConfig.baseUnit;
+	var unit_re = new RegExp('^-?[\\d\\.]+' + unit + '$');
+
+	if (elem) {
+		cleanupElement(elem);
+		var attrs = elem.attributes,
+			attr,
+			i,
+			childs = elem.childNodes;
+		
+		for (i = 0; i < indent; i++) {out.push(' ');}
+		out.push("<"); out.push(elem.nodeName);
+		if (elem.id === 'svgcontent') {
+			// Process root element separately
+			var res = getResolution();
+			
+			var vb = "";
+			// TODO: Allow this by dividing all values by current baseVal
+			// Note that this also means we should properly deal with this on import
+//			if (curConfig.baseUnit !== "px") {
+//				var unit = curConfig.baseUnit;
+//				var unit_m = svgedit.units.getTypeMap()[unit];
+//				res.w = svgedit.units.shortFloat(res.w / unit_m)
+//				res.h = svgedit.units.shortFloat(res.h / unit_m)
+//				vb = ' viewBox="' + [0, 0, res.w, res.h].join(' ') + '"';
+//				res.w += unit;
+//				res.h += unit;
+//			}
+			
+			if (unit !== "px") {
+				res.w = svgedit.units.convertUnit(res.w, unit) + unit;
+				res.h = svgedit.units.convertUnit(res.h, unit) + unit;
+			}
+			
+			out.push(' width="' + res.w + '" height="' + res.h + '"' + vb + ' xmlns="'+NS.SVG+'"');
+			
+			var nsuris = {};
+			
+			// Check elements for namespaces, add if found
+			$(elem).find('*').andSelf().each(function() {
+				var el = this;
+				// for some elements have no attribute
+				var uri = this.namespaceURI;
+				if(uri && !nsuris[uri] && nsMap[uri] && nsMap[uri] !== 'xmlns' && nsMap[uri] !== 'xml' ) {
+					nsuris[uri] = true;
+					out.push(" xmlns:" + nsMap[uri] + '="' + uri +'"');
+				}
+		
+				$.each(this.attributes, function(i, attr) {
+					var uri = attr.namespaceURI;
+					if (uri && !nsuris[uri] && nsMap[uri] !== 'xmlns' && nsMap[uri] !== 'xml' ) {
+						nsuris[uri] = true;
+						out.push(" xmlns:" + nsMap[uri] + '="' + uri +'"');
+					}
+				});
+			});
+			
+			i = attrs.length;
+			var attr_names = ['width', 'height', 'xmlns', 'x', 'y', 'viewBox', 'id', 'overflow'];
+			while (i--) {
+				attr = attrs.item(i);
+				var attrVal = toXml(attr.nodeValue);
+				
+				// Namespaces have already been dealt with, so skip
+				if (attr.nodeName.indexOf('xmlns:') === 0) {continue;}
+
+				// only serialize attributes we don't use internally
+				if (attrVal != "" && attr_names.indexOf(attr.localName) == -1) {
+
+					if (!attr.namespaceURI || nsMap[attr.namespaceURI]) {
+						out.push(' '); 
+						out.push(attr.nodeName); out.push("=\"");
+						out.push(attrVal); out.push("\"");
+					}
+				}
+			}
+		} else {
+			// Skip empty defs
+			if (elem.nodeName === 'defs' && !elem.firstChild) {return;}
+		
+			var moz_attrs = ['-moz-math-font-style', '_moz-math-font-style'];
+			for (i = attrs.length - 1; i >= 0; i--) {
+				attr = attrs.item(i);
+				var attrVal = toXml(attr.nodeValue);
+				//remove bogus attributes added by Gecko
+				if (moz_attrs.indexOf(attr.localName) >= 0) {continue;}
+				if (attrVal != "") {
+					if (attrVal.indexOf('pointer-events') === 0) {continue;}
+					if (attr.localName === "class" && attrVal.indexOf('se_') === 0) {continue;}
+					out.push(" "); 
+					if (attr.localName === 'd') {attrVal = pathActions.convertPath(elem, true);}
+					if (!isNaN(attrVal)) {
+						attrVal = svgedit.units.shortFloat(attrVal);
+					} else if (unit_re.test(attrVal)) {
+						attrVal = svgedit.units.shortFloat(attrVal) + unit;
+					}
+					
+					// Embed images when saving 
+					if (save_options.apply
+						&& elem.nodeName === 'image' 
+						&& attr.localName === 'href'
+						&& save_options.images
+						&& save_options.images === 'embed') 
+					{
+						var img = encodableImages[attrVal];
+						if (img) {attrVal = img;}
+					}
+					
+					// map various namespaces to our fixed namespace prefixes
+					// (the default xmlns attribute itself does not get a prefix)
+					if (!attr.namespaceURI || attr.namespaceURI == NS.SVG || nsMap[attr.namespaceURI]) {
+						out.push(attr.nodeName); out.push("=\"");
+						out.push(attrVal); out.push("\"");
+					}
+				}
+			}
+		}
+
+		if (elem.hasChildNodes()) {
+			out.push(">");
+			indent++;
+			var bOneLine = false;
+			
+			for (i = 0; i < childs.length; i++) {
+				var child = childs.item(i);
+				switch(child.nodeType) {
+				case 1: // element node
+					out.push("\n");
+					out.push(this.svgToString(childs.item(i), indent));
+					break;
+				case 3: // text node
+					var str = child.nodeValue.replace(/^\s+|\s+$/g, "");
+					if (str != "") {
+						bOneLine = true;
+						out.push(String(toXml(str)));
+					}
+					break;
+				case 4: // cdata node
+					out.push("\n");
+					out.push(new Array(indent+1).join(" "));
+					out.push("<![CDATA[");
+					out.push(child.nodeValue);
+					out.push("]]>");
+					break;
+				case 8: // comment
+					out.push("\n");
+					out.push(new Array(indent+1).join(" "));
+					out.push("<!--");
+					out.push(child.data);
+					out.push("-->");
+					break;
+				} // switch on node type
+			}
+			indent--;
+			if (!bOneLine) {
+				out.push("\n");
+				for (i = 0; i < indent; i++) {out.push(' ');}
+			}
+			out.push("</"); out.push(elem.nodeName); out.push(">");
+		} else {
+			out.push("/>");
+		}
+	}
+	return out.join('');
+}; // end svgToString()
+
+// Function: embedImage
+// Converts a given image file to a data URL when possible, then runs a given callback
+//
+// Parameters: 
+// val - String with the path/URL of the image
+// callback - Optional function to run when image data is found, supplies the
+// result (data URL or false) as first parameter.
+this.embedImage = function(val, callback) {
+	// load in the image and once it's loaded, get the dimensions
+	$(new Image()).load(function() {
+		// create a canvas the same size as the raster image
+		var canvas = document.createElement("canvas");
+		canvas.width = this.width;
+		canvas.height = this.height;
+		// load the raster image into the canvas
+		canvas.getContext("2d").drawImage(this, 0, 0);
+		// retrieve the data: URL
+		try {
+			var urldata = ';svgedit_url=' + encodeURIComponent(val);
+			urldata = canvas.toDataURL().replace(';base64', urldata+';base64');
+			encodableImages[val] = urldata;
+		} catch(e) {
+			encodableImages[val] = false;
+		}
+		last_good_img_url = val;
+		if (callback) {callback(encodableImages[val]);}
+	}).attr('src', val);
+};
+
+// Function: setGoodImage
+// Sets a given URL to be a "last good image" URL
+this.setGoodImage = function(val) {
+	last_good_img_url = val;
+};
+
+this.open = function() {
+	// Nothing by default, handled by optional widget/extension
+};
+
+// Function: save
+// Serializes the current drawing into SVG XML text and returns it to the 'saved' handler.
+// This function also includes the XML prolog. Clients of the SvgCanvas bind their save
+// function to the 'saved' event.
+//
+// Returns: 
+// Nothing
+this.save = function(opts) {
+	// remove the selected outline before serializing
+	clearSelection();
+	// Update save options if provided
+	if (opts) {$.extend(save_options, opts);}
+	save_options.apply = true;
+	
+	// no need for doctype, see http://jwatt.org/svg/authoring/#doctype-declaration
+	var str = this.svgCanvasToString();
+	call("saved", str);
+};
+
+// Function: rasterExport
+// Generates a Data URL based on the current image, then calls "exported" 
+// with an object including the string, image information, and any issues found
+this.rasterExport = function(imgType, quality) {
+	var mimeType = 'image/' + imgType.toLowerCase();
+
+	// remove the selected outline before serializing
+	clearSelection();
+	
+	// Check for known CanVG issues 
+	var issues = [];
+	
+	// Selector and notice
+	var issue_list = {
+		'feGaussianBlur': uiStrings.exportNoBlur,
+		'foreignObject': uiStrings.exportNoforeignObject,
+		'[stroke-dasharray]': uiStrings.exportNoDashArray
+	};
+	var content = $(svgcontent);
+	
+	// Add font/text check if Canvas Text API is not implemented
+	if (!("font" in $('<canvas>')[0].getContext('2d'))) {
+		issue_list.text = uiStrings.exportNoText;
+	}
+	
+	$.each(issue_list, function(sel, descr) {
+		if (content.find(sel).length) {
+			issues.push(descr);
+		}
+	});
+
+	var str = this.svgCanvasToString();
+	call("exported", {svg: str, issues: issues, type: imgType, mimeType: mimeType, quality: quality});
+};
+
+// Function: getSvgString
+// Returns the current drawing as raw SVG XML text.
+//
+// Returns:
+// The current drawing as raw SVG XML text.
+this.getSvgString = function() {
+	save_options.apply = false;
+	return this.svgCanvasToString();
+};
+
+// Function: randomizeIds
+// This function determines whether to use a nonce in the prefix, when
+// generating IDs for future documents in SVG-Edit.
+// 
+// Parameters:
+// an optional boolean, which, if true, adds a nonce to the prefix. Thus
+// svgCanvas.randomizeIds() <==> svgCanvas.randomizeIds(true)
+//
+// if you're controlling SVG-Edit externally, and want randomized IDs, call
+// this BEFORE calling svgCanvas.setSvgString
+//
+this.randomizeIds = function(enableRandomization) {
+	if (arguments.length > 0 && enableRandomization == false) {
+		svgedit.draw.randomizeIds(false, getCurrentDrawing());
+	} else {
+		svgedit.draw.randomizeIds(true, getCurrentDrawing());
+	}
+};
+
+// Function: uniquifyElems
+// Ensure each element has a unique ID
+//
+// Parameters:
+// g - The parent element of the tree to give unique IDs
+var uniquifyElems = this.uniquifyElems = function(g) {
+	var ids = {};
+	// TODO: Handle markers and connectors. These are not yet re-identified properly
+	// as their referring elements do not get remapped.
+	//
+	// <marker id='se_marker_end_svg_7'/>
+	// <polyline id='svg_7' se:connector='svg_1 svg_6' marker-end='url(#se_marker_end_svg_7)'/>
+	// 
+	// Problem #1: if svg_1 gets renamed, we do not update the polyline's se:connector attribute
+	// Problem #2: if the polyline svg_7 gets renamed, we do not update the marker id nor the polyline's marker-end attribute
+	var ref_elems = ["filter", "linearGradient", "pattern",	"radialGradient", "symbol", "textPath", "use"];
+	
+	svgedit.utilities.walkTree(g, function(n) {
+		// if it's an element node
+		if (n.nodeType == 1) {
+			// and the element has an ID
+			if (n.id) {
+				// and we haven't tracked this ID yet
+				if (!(n.id in ids)) {
+					// add this id to our map
+					ids[n.id] = {elem:null, attrs:[], hrefs:[]};
+				}
+				ids[n.id].elem = n;
+			}
+			
+			// now search for all attributes on this element that might refer
+			// to other elements
+			$.each(ref_attrs, function(i, attr) {
+				var attrnode = n.getAttributeNode(attr);
+				if (attrnode) {
+					// the incoming file has been sanitized, so we should be able to safely just strip off the leading #
+					var url = svgedit.utilities.getUrlFromAttr(attrnode.value),
+						refid = url ? url.substr(1) : null;
+					if (refid) {
+						if (!(refid in ids)) {
+							// add this id to our map
+							ids[refid] = {elem:null, attrs:[], hrefs:[]};
+						}
+						ids[refid].attrs.push(attrnode);
+					}
+				}
+			});
+			
+			// check xlink:href now
+			var href = svgedit.utilities.getHref(n);
+			// TODO: what if an <image> or <a> element refers to an element internally?
+			if (href && ref_elems.indexOf(n.nodeName) >= 0) {
+				var refid = href.substr(1);
+				if (refid) {
+					if (!(refid in ids)) {
+						// add this id to our map
+						ids[refid] = {elem:null, attrs:[], hrefs:[]};
+					}
+					ids[refid].hrefs.push(n);
+				}
+			}						
+		}
+	});
+	
+	// in ids, we now have a map of ids, elements and attributes, let's re-identify
+	var oldid;
+	for (oldid in ids) {
+		if (!oldid) {continue;}
+		var elem = ids[oldid].elem;
+		if (elem) {
+			var newid = getNextId();
+			
+			// assign element its new id
+			elem.id = newid;
+			
+			// remap all url() attributes
+			var attrs = ids[oldid].attrs;
+			var j = attrs.length;
+			while (j--) {
+				var attr = attrs[j];
+				attr.ownerElement.setAttribute(attr.name, "url(#" + newid + ")");
+			}
+			
+			// remap all href attributes
+			var hreffers = ids[oldid].hrefs;
+			var k = hreffers.length;
+			while (k--) {
+				var hreffer = hreffers[k];
+				svgedit.utilities.setHref(hreffer, "#"+newid);
+			}
+		}
+	}
+};
+
+// Function setUseData
+// Assigns reference data for each use element
+var setUseData = this.setUseData = function(parent) {
+	var elems = $(parent);
+	
+	if (parent.tagName !== 'use') {
+		elems = elems.find('use');
+	}
+	
+	elems.each(function() {
+		var id = getHref(this).substr(1);
+		var ref_elem = svgedit.utilities.getElem(id);
+		if (!ref_elem) {return;}
+		$(this).data('ref', ref_elem);
+		if (ref_elem.tagName == 'symbol' || ref_elem.tagName == 'svg') {
+			$(this).data('symbol', ref_elem).data('ref', ref_elem);
+		}
+	});
+};
+
+// Function convertGradients
+// Converts gradients from userSpaceOnUse to objectBoundingBox
+var convertGradients = this.convertGradients = function(elem) {
+	var elems = $(elem).find('linearGradient, radialGradient');
+	if (!elems.length && svgedit.browser.isWebkit()) {
+		// Bug in webkit prevents regular *Gradient selector search
+		elems = $(elem).find('*').filter(function() {
+			return (this.tagName.indexOf('Gradient') >= 0);
+		});
+	}
+	
+	elems.each(function() {
+		var grad = this;
+		if ($(grad).attr('gradientUnits') === 'userSpaceOnUse') {
+			// TODO: Support more than one element with this ref by duplicating parent grad
+			var elems = $(svgcontent).find('[fill="url(#' + grad.id + ')"],[stroke="url(#' + grad.id + ')"]');
+			if (!elems.length) {return;}
+			
+			// get object's bounding box
+			var bb = svgedit.utilities.getBBox(elems[0]);
+			
+			// This will occur if the element is inside a <defs> or a <symbol>,
+			// in which we shouldn't need to convert anyway.
+			if (!bb) {return;}
+			
+			if (grad.tagName === 'linearGradient') {
+				var g_coords = $(grad).attr(['x1', 'y1', 'x2', 'y2']);
+				
+				// If has transform, convert
+				var tlist = grad.gradientTransform.baseVal;
+				if (tlist && tlist.numberOfItems > 0) {
+					var m = svgedit.math.transformListToTransform(tlist).matrix;
+					var pt1 = svgedit.math.transformPoint(g_coords.x1, g_coords.y1, m);
+					var pt2 = svgedit.math.transformPoint(g_coords.x2, g_coords.y2, m);
+					
+					g_coords.x1 = pt1.x;
+					g_coords.y1 = pt1.y;
+					g_coords.x2 = pt2.x;
+					g_coords.y2 = pt2.y;
+					grad.removeAttribute('gradientTransform');
+				}
+				
+				$(grad).attr({
+					x1: (g_coords.x1 - bb.x) / bb.width,
+					y1: (g_coords.y1 - bb.y) / bb.height,
+					x2: (g_coords.x2 - bb.x) / bb.width,
+					y2: (g_coords.y2 - bb.y) / bb.height
+				});
+				grad.removeAttribute('gradientUnits');
+			}
+			// else {
+				// Note: radialGradient elements cannot be easily converted 
+				// because userSpaceOnUse will keep circular gradients, while
+				// objectBoundingBox will x/y scale the gradient according to
+				// its bbox. 
+				
+				// For now we'll do nothing, though we should probably have
+				// the gradient be updated as the element is moved, as 
+				// inkscape/illustrator do.
+			
+//						var g_coords = $(grad).attr(['cx', 'cy', 'r']);
+//						
+//						$(grad).attr({
+//							cx: (g_coords.cx - bb.x) / bb.width,
+//							cy: (g_coords.cy - bb.y) / bb.height,
+//							r: g_coords.r
+//						});
+//						
+//						grad.removeAttribute('gradientUnits');
+			// }
+		}
+	});
+};
+
+// Function: convertToGroup
+// Converts selected/given <use> or child SVG element to a group
+var convertToGroup = this.convertToGroup = function(elem) {
+	if (!elem) {
+		elem = selectedElements[0];
+	}
+	var $elem = $(elem);
+	var batchCmd = new svgedit.history.BatchCommand();
+	var ts;
+	
+	if ($elem.data('gsvg')) {
+		// Use the gsvg as the new group
+		var svg = elem.firstChild;
+		var pt = $(svg).attr(['x', 'y']);
+		
+		$(elem.firstChild.firstChild).unwrap();
+		$(elem).removeData('gsvg');
+		
+		var tlist = svgedit.transformlist.getTransformList(elem);
+		var xform = svgroot.createSVGTransform();
+		xform.setTranslate(pt.x, pt.y);
+		tlist.appendItem(xform);
+		svgedit.recalculate.recalculateDimensions(elem);
+		call("selected", [elem]);
+	} else if ($elem.data('symbol')) {
+		elem = $elem.data('symbol');
+		
+		ts = $elem.attr('transform');
+		var pos = $elem.attr(['x', 'y']);
+
+		var vb = elem.getAttribute('viewBox');
+		
+		if (vb) {
+			var nums = vb.split(' ');
+			pos.x -= +nums[0];
+			pos.y -= +nums[1];
+		}
+		
+		// Not ideal, but works
+		ts += " translate(" + (pos.x || 0) + "," + (pos.y || 0) + ")";
+		
+		var prev = $elem.prev();
+		
+		// Remove <use> element
+		batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand($elem[0], $elem[0].nextSibling, $elem[0].parentNode));
+		$elem.remove();
+		
+		// See if other elements reference this symbol
+		var has_more = $(svgcontent).find('use:data(symbol)').length;
+			
+		var g = svgdoc.createElementNS(NS.SVG, "g");
+		var childs = elem.childNodes;
+		
+		var i;
+		for (i = 0; i < childs.length; i++) {
+			g.appendChild(childs[i].cloneNode(true));
+		}
+		
+		// Duplicate the gradients for Gecko, since they weren't included in the <symbol>
+		if (svgedit.browser.isGecko()) {
+			var dupeGrads = $(svgedit.utilities.findDefs()).children('linearGradient,radialGradient,pattern').clone();
+			$(g).append(dupeGrads);
+		}
+		
+		if (ts) {
+			g.setAttribute("transform", ts);
+		}
+		
+		var parent = elem.parentNode;
+		
+		uniquifyElems(g);
+		
+		// Put the dupe gradients back into <defs> (after uniquifying them)
+		if (svgedit.browser.isGecko()) {
+			$(findDefs()).append( $(g).find('linearGradient,radialGradient,pattern') );
+		}
+	
+		// now give the g itself a new id
+		g.id = getNextId();
+		
+		prev.after(g);
+		
+		if (parent) {
+			if (!has_more) {
+				// remove symbol/svg element
+				var nextSibling = elem.nextSibling;
+				parent.removeChild(elem);
+				batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand(elem, nextSibling, parent));
+			}
+			batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(g));
+		}
+		
+		setUseData(g);
+		
+		if (svgedit.browser.isGecko()) {
+			convertGradients(svgedit.utilities.findDefs());
+		} else {
+			convertGradients(g);
+		}
+		
+		// recalculate dimensions on the top-level children so that unnecessary transforms
+		// are removed
+		svgedit.utilities.walkTreePost(g, function(n){
+			try {
+				svgedit.recalculate.recalculateDimensions(n);
+			} catch(e) {
+				console.log(e);
+			}
+		});
+		
+		// Give ID for any visible element missing one
+		$(g).find(visElems).each(function() {
+			if (!this.id) {this.id = getNextId();}
+		});
+		
+		selectOnly([g]);
+		
+		var cm = pushGroupProperties(g, true);
+		if (cm) {
+			batchCmd.addSubCommand(cm);
+		}
+
+		addCommandToHistory(batchCmd);
+		
+	} else {
+		console.log('Unexpected element to ungroup:', elem);
+	}
+};
+
+//
+// Function: setSvgString
+// This function sets the current drawing as the input SVG XML.
+//
+// Parameters:
+// xmlString - The SVG as XML text.
+//
+// Returns:
+// This function returns false if the set was unsuccessful, true otherwise.
+this.setSvgString = function(xmlString) {
+	try {
+		// convert string into XML document
+		var newDoc = svgedit.utilities.text2xml(xmlString);
+
+		this.prepareSvg(newDoc);
+
+		var batchCmd = new svgedit.history.BatchCommand("Change Source");
+
+		// remove old svg document
+		var nextSibling = svgcontent.nextSibling;
+		var oldzoom = svgroot.removeChild(svgcontent);
+		batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand(oldzoom, nextSibling, svgroot));
+	
+		// set new svg document
+		// If DOM3 adoptNode() available, use it. Otherwise fall back to DOM2 importNode()
+		if (svgdoc.adoptNode) {
+			svgcontent = svgdoc.adoptNode(newDoc.documentElement);
+		}
+		else {
+			svgcontent = svgdoc.importNode(newDoc.documentElement, true);
+		}
+		
+		svgroot.appendChild(svgcontent);
+		var content = $(svgcontent);
+		
+		canvas.current_drawing_ = new svgedit.draw.Drawing(svgcontent, idprefix);
+		
+		// retrieve or set the nonce
+		var nonce = getCurrentDrawing().getNonce();
+		if (nonce) {
+			call("setnonce", nonce);
+		} else {
+			call("unsetnonce");
+		}
+		
+		// change image href vals if possible
+		content.find('image').each(function() {
+			var image = this;
+			preventClickDefault(image);
+			var val = getHref(this);
+			if (val) {
+				if (val.indexOf('data:') === 0) {
+					// Check if an SVG-edit data URI
+					var m = val.match(/svgedit_url=(.*?);/);
+					if (m) {
+						var url = decodeURIComponent(m[1]);
+						$(new Image()).load(function () {
+							image.setAttributeNS(NS.XLINK, 'xlink:href', url);
+						}).attr('src', url);
+					}
+				}
+				// Add to encodableImages if it loads
+				canvas.embedImage(val);
+			}
+		});
+	
+		// Wrap child SVGs in group elements
+		content.find('svg').each(function() {
+			// Skip if it's in a <defs>
+			if ($(this).closest('defs').length) {return;}
+		
+			uniquifyElems(this);
+		
+			// Check if it already has a gsvg group
+			var pa = this.parentNode;
+			if (pa.childNodes.length === 1 && pa.nodeName === 'g') {
+				$(pa).data('gsvg', this);
+				pa.id = pa.id || getNextId();
+			} else {
+				groupSvgElem(this);
+			}
+		});
+		
+		// For Firefox: Put all paint elems in defs
+		if (svgedit.browser.isGecko()) {
+			content.find('linearGradient, radialGradient, pattern').appendTo(svgedit.utilities.findDefs());
+		}
+
+		// Set ref element for <use> elements
+		
+		// TODO: This should also be done if the object is re-added through "redo"
+		setUseData(content);
+		
+		convertGradients(content[0]);
+		
+		// recalculate dimensions on the top-level children so that unnecessary transforms
+		// are removed
+		svgedit.utilities.walkTreePost(svgcontent, function(n) {
+			try {
+				svgedit.recalculate.recalculateDimensions(n);
+			} catch(e) {
+				console.log(e);
+			}
+		});
+		
+		var attrs = {
+			id: 'svgcontent',
+			overflow: curConfig.show_outside_canvas ? 'visible' : 'hidden'
+		};
+		
+		var percs = false;
+		
+		// determine proper size
+		if (content.attr("viewBox")) {
+			var vb = content.attr("viewBox").split(' ');
+			attrs.width = vb[2];
+			attrs.height = vb[3];
+		}
+		// handle content that doesn't have a viewBox
+		else {
+			$.each(['width', 'height'], function(i, dim) {
+				// Set to 100 if not given
+				var val = content.attr(dim);
+				
+				if (!val) {val = '100%';}
+				
+				if (String(val).substr(-1) === "%") {
+					// Use user units if percentage given
+					percs = true;
+				} else {
+					attrs[dim] = svgedit.units.convertToNum(dim, val);
+				}
+			});
+		}
+		
+		// identify layers
+		identifyLayers();
+		
+		// Give ID for any visible layer children missing one
+		content.children().find(visElems).each(function() {
+			if (!this.id) {this.id = getNextId();}
+		});
+		
+		// Percentage width/height, so let's base it on visible elements
+		if (percs) {
+			var bb = getStrokedBBox();
+			attrs.width = bb.width + bb.x;
+			attrs.height = bb.height + bb.y;
+		}
+		
+		// Just in case negative numbers are given or 
+		// result from the percs calculation
+		if (attrs.width <= 0) {attrs.width = 100;}
+		if (attrs.height <= 0) {attrs.height = 100;}
+		
+		content.attr(attrs);
+		this.contentW = attrs.width;
+		this.contentH = attrs.height;
+		
+		batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(svgcontent));
+		// update root to the correct size
+		var changes = content.attr(["width", "height"]);
+		batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(svgroot, changes));
+		
+		// reset zoom
+		current_zoom = 1;
+		
+		// reset transform lists
+		svgedit.transformlist.resetListMap();
+		clearSelection();
+		svgedit.path.clearData();
+		svgroot.appendChild(selectorManager.selectorParentGroup);
+		
+		addCommandToHistory(batchCmd);
+		call("changed", [svgcontent]);
+	} catch(e) {
+		console.log(e);
+		return false;
+	}
+
+	return true;
+};
+
+// Function: importSvgString
+// This function imports the input SVG XML as a <symbol> in the <defs>, then adds a
+// <use> to the current layer.
+//
+// Parameters:
+// xmlString - The SVG as XML text.
+//
+// Returns:
+// This function returns false if the import was unsuccessful, true otherwise.
+// TODO: 
+// * properly handle if namespace is introduced by imported content (must add to svgcontent
+// and update all prefixes in the imported node)
+// * properly handle recalculating dimensions, recalculateDimensions() doesn't handle
+// arbitrary transform lists, but makes some assumptions about how the transform list 
+// was obtained
+// * import should happen in top-left of current zoomed viewport	
+this.importSvgString = function(xmlString) {
+	var j, ts;
+	try {
+		// Get unique ID
+		var uid = svgedit.utilities.encode64(xmlString.length + xmlString).substr(0,32);
+		
+		var useExisting = false;
+
+		// Look for symbol and make sure symbol exists in image
+		if (import_ids[uid]) {
+			if ( $(import_ids[uid].symbol).parents('#svgroot').length ) {
+				useExisting = true;
+			}
+		}
+		
+		var batchCmd = new svgedit.history.BatchCommand("Import SVG");
+		var symbol;
+		if (useExisting) {
+			symbol = import_ids[uid].symbol;
+			ts = import_ids[uid].xform;
+		} else {
+			// convert string into XML document
+			var newDoc = svgedit.utilities.text2xml(xmlString);
+	
+			this.prepareSvg(newDoc);
+	
+			// import new svg document into our document
+			var svg;
+			// If DOM3 adoptNode() available, use it. Otherwise fall back to DOM2 importNode()
+			if (svgdoc.adoptNode) {
+				svg = svgdoc.adoptNode(newDoc.documentElement);
+			} else {
+				svg = svgdoc.importNode(newDoc.documentElement, true);
+			}
+			
+			uniquifyElems(svg);
+			
+			var innerw = svgedit.units.convertToNum('width', svg.getAttribute("width")),
+				innerh = svgedit.units.convertToNum('height', svg.getAttribute("height")),
+				innervb = svg.getAttribute("viewBox"),
+				// if no explicit viewbox, create one out of the width and height
+				vb = innervb ? innervb.split(" ") : [0, 0, innerw, innerh];
+			for (j = 0; j < 4; ++j) {
+				vb[j] = +(vb[j]);
+			}
+	
+			// TODO: properly handle preserveAspectRatio
+			var canvasw = +svgcontent.getAttribute("width"),
+				canvash = +svgcontent.getAttribute("height");
+			// imported content should be 1/3 of the canvas on its largest dimension
+			
+			if (innerh > innerw) {
+				ts = "scale(" + (canvash/3)/vb[3] + ")";
+			} else {
+				ts = "scale(" + (canvash/3)/vb[2] + ")";
+			}
+			
+			// Hack to make recalculateDimensions understand how to scale
+			ts = "translate(0) " + ts + " translate(0)";
+			
+			symbol = svgdoc.createElementNS(NS.SVG, "symbol");
+			var defs = svgedit.utilities.findDefs();
+			
+			if (svgedit.browser.isGecko()) {
+				// Move all gradients into root for Firefox, workaround for this bug:
+				// https://bugzilla.mozilla.org/show_bug.cgi?id=353575
+				// TODO: Make this properly undo-able.
+				$(svg).find('linearGradient, radialGradient, pattern').appendTo(defs);
+			}
+	
+			while (svg.firstChild) {
+				var first = svg.firstChild;
+				symbol.appendChild(first);
+			}
+			var attrs = svg.attributes;
+			var i;
+			for (i = 0; i < attrs.length; i++) {
+				var attr = attrs[i];
+				symbol.setAttribute(attr.nodeName, attr.nodeValue);
+			}
+			symbol.id = getNextId();
+			
+			// Store data
+			import_ids[uid] = {
+				symbol: symbol,
+				xform: ts
+			};
+			
+			svgedit.utilities.findDefs().appendChild(symbol);
+			batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(symbol));
+		}
+		
+		var use_el = svgdoc.createElementNS(NS.SVG, "use");
+		use_el.id = getNextId();
+		setHref(use_el, "#" + symbol.id);
+		
+		(current_group || getCurrentDrawing().getCurrentLayer()).appendChild(use_el);
+		batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(use_el));
+		clearSelection();
+		
+		use_el.setAttribute("transform", ts);
+		svgedit.recalculate.recalculateDimensions(use_el);
+		$(use_el).data('symbol', symbol).data('ref', symbol);
+		addToSelection([use_el]);
+		
+		// TODO: Find way to add this in a recalculateDimensions-parsable way
+//				if (vb[0] != 0 || vb[1] != 0)
+//					ts = "translate(" + (-vb[0]) + "," + (-vb[1]) + ") " + ts;
+		addCommandToHistory(batchCmd);
+		call("changed", [svgcontent]);
+
+	} catch(e) {
+		console.log(e);
+		return false;
+	}
+
+	return true;
+};
+
+// TODO(codedread): Move all layer/context functions in draw.js
+// Layer API Functions
+
+// Group: Layers
+
+// Function: identifyLayers
+// Updates layer system
+var identifyLayers = canvas.identifyLayers = function() {
+	leaveContext();
+	getCurrentDrawing().identifyLayers();
+};
+
+// Function: createLayer
+// Creates a new top-level layer in the drawing with the given name, sets the current layer 
+// to it, and then clears the selection. This function then calls the 'changed' handler.
+// This is an undoable action.
+//
+// Parameters:
+// name - The given name
+this.createLayer = function(name) {
+	var batchCmd = new svgedit.history.BatchCommand("Create Layer");
+	var new_layer = getCurrentDrawing().createLayer(name);
+	batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(new_layer));
+	addCommandToHistory(batchCmd);
+	clearSelection();
+	call("changed", [new_layer]);
+};
+
+// Function: cloneLayer
+// Creates a new top-level layer in the drawing with the given name, copies all the current layer's contents
+// to it, and then clears the selection. This function then calls the 'changed' handler.
+// This is an undoable action.
+//
+// Parameters:
+// name - The given name
+this.cloneLayer = function(name) {
+	var batchCmd = new svgedit.history.BatchCommand("Duplicate Layer");
+	var new_layer = svgdoc.createElementNS(NS.SVG, "g");
+	var layer_title = svgdoc.createElementNS(NS.SVG, "title");
+	layer_title.textContent = name;
+	new_layer.appendChild(layer_title);
+	var current_layer = getCurrentDrawing().getCurrentLayer();
+	$(current_layer).after(new_layer);
+	var childs = current_layer.childNodes;
+	var i;
+	for (i = 0; i < childs.length; i++) {
+		var ch = childs[i];
+		if (ch.localName == 'title') {continue;}
+		new_layer.appendChild(copyElem(ch));
+	}
+	
+	clearSelection();
+	identifyLayers();
+
+	batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(new_layer));
+	addCommandToHistory(batchCmd);
+	canvas.setCurrentLayer(name);
+	call("changed", [new_layer]);
+};
+
+// Function: deleteCurrentLayer
+// Deletes the current layer from the drawing and then clears the selection. This function 
+// then calls the 'changed' handler. This is an undoable action.
+this.deleteCurrentLayer = function() {
+	var current_layer = getCurrentDrawing().getCurrentLayer();
+	var nextSibling = current_layer.nextSibling;
+	var parent = current_layer.parentNode;
+	current_layer = getCurrentDrawing().deleteCurrentLayer();
+	if (current_layer) {
+		var batchCmd = new svgedit.history.BatchCommand("Delete Layer");
+		// store in our Undo History
+		batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand(current_layer, nextSibling, parent));
+		addCommandToHistory(batchCmd);
+		clearSelection();
+		call("changed", [parent]);
+		return true;
+	}
+	return false;
+};
+
+// Function: setCurrentLayer
+// Sets the current layer. If the name is not a valid layer name, then this function returns
+// false. Otherwise it returns true. This is not an undo-able action.
+//
+// Parameters:
+// name - the name of the layer you want to switch to.
+//
+// Returns:
+// true if the current layer was switched, otherwise false
+this.setCurrentLayer = function(name) {
+	var result = getCurrentDrawing().setCurrentLayer(svgedit.utilities.toXml(name));
+	if (result) {
+		clearSelection();
+	}
+	return result;
+};
+
+// Function: renameCurrentLayer
+// Renames the current layer. If the layer name is not valid (i.e. unique), then this function 
+// does nothing and returns false, otherwise it returns true. This is an undo-able action.
+// 
+// Parameters:
+// newname - the new name you want to give the current layer. This name must be unique 
+// among all layer names.
+//
+// Returns:
+// true if the rename succeeded, false otherwise.
+this.renameCurrentLayer = function(newname) {
+	var i;
+	var drawing = getCurrentDrawing();
+	if (drawing.current_layer) {
+		var oldLayer = drawing.current_layer;
+		// setCurrentLayer will return false if the name doesn't already exist
+		// this means we are free to rename our oldLayer
+		if (!canvas.setCurrentLayer(newname)) {
+			var batchCmd = new svgedit.history.BatchCommand("Rename Layer");
+			// find the index of the layer
+			for (i = 0; i < drawing.getNumLayers(); ++i) {
+				if (drawing.all_layers[i][1] == oldLayer) {break;}
+			}
+			var oldname = drawing.getLayerName(i);
+			drawing.all_layers[i][0] = svgedit.utilities.toXml(newname);
+		
+			// now change the underlying title element contents
+			var len = oldLayer.childNodes.length;
+			for (i = 0; i < len; ++i) {
+				var child = oldLayer.childNodes.item(i);
+				// found the <title> element, now append all the
+				if (child && child.tagName == "title") {
+					// wipe out old name 
+					while (child.firstChild) { child.removeChild(child.firstChild); }
+					child.textContent = newname;
+
+					batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(child, {"#text":oldname}));
+					addCommandToHistory(batchCmd);
+					call("changed", [oldLayer]);
+					return true;
+				}
+			}
+		}
+		drawing.current_layer = oldLayer;
+	}
+	return false;
+};
+
+// Function: setCurrentLayerPosition
+// Changes the position of the current layer to the new value. If the new index is not valid, 
+// this function does nothing and returns false, otherwise it returns true. This is an
+// undo-able action.
+//
+// Parameters:
+// newpos - The zero-based index of the new position of the layer. This should be between
+// 0 and (number of layers - 1)
+// 
+// Returns:
+// true if the current layer position was changed, false otherwise.
+this.setCurrentLayerPosition = function(newpos) {
+	var oldpos, drawing = getCurrentDrawing();
+	if (drawing.current_layer && newpos >= 0 && newpos < drawing.getNumLayers()) {
+		for (oldpos = 0; oldpos < drawing.getNumLayers(); ++oldpos) {
+			if (drawing.all_layers[oldpos][1] == drawing.current_layer) {break;}
+		}
+		// some unknown error condition (current_layer not in all_layers)
+		if (oldpos == drawing.getNumLayers()) { return false; }
+		
+		if (oldpos != newpos) {
+			// if our new position is below us, we need to insert before the node after newpos
+			var refLayer = null;
+			var oldNextSibling = drawing.current_layer.nextSibling;
+			if (newpos > oldpos ) {
+				if (newpos < drawing.getNumLayers()-1) {
+					refLayer = drawing.all_layers[newpos+1][1];
+				}
+			}
+			// if our new position is above us, we need to insert before the node at newpos
+			else {
+				refLayer = drawing.all_layers[newpos][1];
+			}
+			svgcontent.insertBefore(drawing.current_layer, refLayer);
+			addCommandToHistory(new svgedit.history.MoveElementCommand(drawing.current_layer, oldNextSibling, svgcontent));
+			
+			identifyLayers();
+			canvas.setCurrentLayer(drawing.getLayerName(newpos));
+			
+			return true;
+		}
+	}
+	
+	return false;
+};
+
+// Function: setLayerVisibility
+// Sets the visibility of the layer. If the layer name is not valid, this function return 
+// false, otherwise it returns true. This is an undo-able action.
+//
+// Parameters:
+// layername - the name of the layer to change the visibility
+// bVisible - true/false, whether the layer should be visible
+//
+// Returns:
+// true if the layer's visibility was set, false otherwise
+this.setLayerVisibility = function(layername, bVisible) {
+	var drawing = getCurrentDrawing();
+	var prevVisibility = drawing.getLayerVisibility(layername);
+	var layer = drawing.setLayerVisibility(layername, bVisible);
+	if (layer) {
+		var oldDisplay = prevVisibility ? 'inline' : 'none';
+		addCommandToHistory(new svgedit.history.ChangeElementCommand(layer, {'display':oldDisplay}, 'Layer Visibility'));
+	} else {
+		return false;
+	}
+	
+	if (layer == drawing.getCurrentLayer()) {
+		clearSelection();
+		pathActions.clear();
+	}
+//		call("changed", [selected]);	
+	return true;
+};
+
+// Function: moveSelectedToLayer
+// Moves the selected elements to layername. If the name is not a valid layer name, then false 
+// is returned. Otherwise it returns true. This is an undo-able action.
+//
+// Parameters:
+// layername - the name of the layer you want to which you want to move the selected elements
+//
+// Returns:
+// true if the selected elements were moved to the layer, false otherwise.
+this.moveSelectedToLayer = function(layername) {
+	// find the layer
+	var i;
+	var layer = null;
+	var drawing = getCurrentDrawing();
+	for (i = 0; i < drawing.getNumLayers(); ++i) {
+		if (drawing.getLayerName(i) == layername) {
+			layer = drawing.all_layers[i][1];
+			break;
+		}
+	}
+	if (!layer) {return false;}
+	
+	var batchCmd = new svgedit.history.BatchCommand("Move Elements to Layer");
+	
+	// loop for each selected element and move it
+	var selElems = selectedElements;
+	i = selElems.length;
+	while (i--) {
+		var elem = selElems[i];
+		if (!elem) {continue;}
+		var oldNextSibling = elem.nextSibling;
+		// TODO: this is pretty brittle!
+		var oldLayer = elem.parentNode;
+		layer.appendChild(elem);
+		batchCmd.addSubCommand(new svgedit.history.MoveElementCommand(elem, oldNextSibling, oldLayer));
+	}
+	
+	addCommandToHistory(batchCmd);
+	
+	return true;
+};
+
+this.mergeLayer = function(skipHistory) {
+	var batchCmd = new svgedit.history.BatchCommand("Merge Layer");
+	var drawing = getCurrentDrawing();
+	var prev = $(drawing.current_layer).prev()[0];
+	if (!prev) {return;}
+	var childs = drawing.current_layer.childNodes;
+	var len = childs.length;
+	var layerNextSibling = drawing.current_layer.nextSibling;
+	batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand(drawing.current_layer, layerNextSibling, svgcontent));
+
+	while (drawing.current_layer.firstChild) {
+		var ch = drawing.current_layer.firstChild;
+		if (ch.localName == 'title') {
+			var chNextSibling = ch.nextSibling;
+			batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand(ch, chNextSibling, drawing.current_layer));
+			drawing.current_layer.removeChild(ch);
+			continue;
+		}
+		var oldNextSibling = ch.nextSibling;
+		prev.appendChild(ch);
+		batchCmd.addSubCommand(new svgedit.history.MoveElementCommand(ch, oldNextSibling, drawing.current_layer));
+	}
+	
+	// Remove current layer
+	svgcontent.removeChild(drawing.current_layer);
+	
+	if (!skipHistory) {
+		clearSelection();
+		identifyLayers();
+
+		call("changed", [svgcontent]);
+		
+		addCommandToHistory(batchCmd);
+	}
+	
+	drawing.current_layer = prev;
+	return batchCmd;
+};
+
+this.mergeAllLayers = function() {
+	var batchCmd = new svgedit.history.BatchCommand("Merge all Layers");
+	var drawing = getCurrentDrawing();
+	drawing.current_layer = drawing.all_layers[drawing.getNumLayers()-1][1];
+	while ($(svgcontent).children('g').length > 1) {
+		batchCmd.addSubCommand(canvas.mergeLayer(true));
+	}
+	
+	clearSelection();
+	identifyLayers();
+	call("changed", [svgcontent]);
+	addCommandToHistory(batchCmd);
+};
+
+// Function: leaveContext
+// Return from a group context to the regular kind, make any previously
+// disabled elements enabled again
+var leaveContext = this.leaveContext = function() {
+	var i, len = disabled_elems.length;
+	if (len) {
+		for (i = 0; i < len; i++) {
+			var elem = disabled_elems[i];
+			var orig = elData(elem, 'orig_opac');
+			if (orig !== 1) {
+				elem.setAttribute('opacity', orig);
+			} else {
+				elem.removeAttribute('opacity');
+			}
+			elem.setAttribute('style', 'pointer-events: inherit');
+		}
+		disabled_elems = [];
+		clearSelection(true);
+		call("contextset", null);
+	}
+	current_group = null;
+};
+
+// Function: setContext
+// Set the current context (for in-group editing)
+var setContext = this.setContext = function(elem) {
+	leaveContext();
+	if (typeof elem === 'string') {
+		elem = svgedit.utilities.getElem(elem);
+	}
+
+	// Edit inside this group
+	current_group = elem;
+	
+	// Disable other elements
+	$(elem).parentsUntil('#svgcontent').andSelf().siblings().each(function() {
+		var opac = this.getAttribute('opacity') || 1;
+		// Store the original's opacity
+		elData(this, 'orig_opac', opac);
+		this.setAttribute('opacity', opac * 0.33);
+		this.setAttribute('style', 'pointer-events: none');
+		disabled_elems.push(this);
+	});
+
+	clearSelection();
+	call("contextset", current_group);
+};
+
+// Group: Document functions
+
+// Function: clear
+// Clears the current document. This is not an undoable action.
+this.clear = function() {
+	pathActions.clear();
+
+	clearSelection();
+
+	// clear the svgcontent node
+	canvas.clearSvgContentElement();
+
+	// create new document
+	canvas.current_drawing_ = new svgedit.draw.Drawing(svgcontent);
+
+	// create empty first layer
+	canvas.createLayer("Layer 1");
+	
+	// clear the undo stack
+	canvas.undoMgr.resetUndoStack();
+
+	// reset the selector manager
+	selectorManager.initGroup();
+
+	// reset the rubber band box
+	rubberBox = selectorManager.getRubberBandBox();
+
+	call("cleared");
+};
+
+// Function: linkControlPoints
+// Alias function
+this.linkControlPoints = pathActions.linkControlPoints;
+
+// Function: getContentElem
+// Returns the content DOM element
+this.getContentElem = function() { return svgcontent; };
+
+// Function: getRootElem
+// Returns the root DOM element
+this.getRootElem = function() { return svgroot; };
+
+// Function: getSelectedElems
+// Returns the array with selected DOM elements
+this.getSelectedElems = function() { return selectedElements; };
+
+// Function: getResolution
+// Returns the current dimensions and zoom level in an object
+var getResolution = this.getResolution = function() {
+//		var vb = svgcontent.getAttribute("viewBox").split(' ');
+//		return {'w':vb[2], 'h':vb[3], 'zoom': current_zoom};
+	
+	var width = svgcontent.getAttribute("width")/current_zoom;
+	var height = svgcontent.getAttribute("height")/current_zoom;
+	
+	return {
+		'w': width,
+		'h': height,
+		'zoom': current_zoom
+	};
+};
+
+// Function: getZoom
+// Returns the current zoom level
+this.getZoom = function(){return current_zoom;};
+
+// Function: getVersion
+// Returns a string which describes the revision number of SvgCanvas.
+this.getVersion = function() {
+	return "svgcanvas.js ($Rev: 2705 $)";
+};
+
+// Function: setUiStrings
+// Update interface strings with given values
+//
+// Parameters:
+// strs - Object with strings (see uiStrings for examples)
+this.setUiStrings = function(strs) {
+	$.extend(uiStrings, strs.notification);
+};
+
+// Function: setConfig
+// Update configuration options with given values
+//
+// Parameters:
+// opts - Object with options (see curConfig for examples)
+this.setConfig = function(opts) {
+	$.extend(curConfig, opts);
+};
+
+// Function: getTitle
+// Returns the current group/SVG's title contents
+this.getTitle = function(elem) {
+	var i;
+	elem = elem || selectedElements[0];
+	if (!elem) {return;}
+	elem = $(elem).data('gsvg') || $(elem).data('symbol') || elem;
+	var childs = elem.childNodes;
+	for (i = 0; i < childs.length; i++) {
+		if (childs[i].nodeName == 'title') {
+			return childs[i].textContent;
+		}
+	}
+	return '';
+};
+
+// Function: setGroupTitle
+// Sets the group/SVG's title content
+// TODO: Combine this with setDocumentTitle
+this.setGroupTitle = function(val) {
+	var elem = selectedElements[0];
+	elem = $(elem).data('gsvg') || elem;
+	
+	var ts = $(elem).children('title');
+	
+	var batchCmd = new svgedit.history.BatchCommand("Set Label");
+	
+	if (!val.length) {
+		// Remove title element
+		var tsNextSibling = ts.nextSibling;
+		batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand(ts[0], tsNextSibling, elem));
+		ts.remove();
+	} else if (ts.length) {
+		// Change title contents
+		var title = ts[0];
+		batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(title, {'#text': title.textContent}));
+		title.textContent = val;
+	} else {
+		// Add title element
+		title = svgdoc.createElementNS(NS.SVG, "title");
+		title.textContent = val;
+		$(elem).prepend(title);
+		batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(title));
+	}
+
+	addCommandToHistory(batchCmd);
+};
+
+// Function: getDocumentTitle
+// Returns the current document title or an empty string if not found
+this.getDocumentTitle = function() {
+	return canvas.getTitle(svgcontent);
+};
+
+// Function: setDocumentTitle
+// Adds/updates a title element for the document with the given name.
+// This is an undoable action
+//
+// Parameters:
+// newtitle - String with the new title
+this.setDocumentTitle = function(newtitle) {
+	var i;
+	var childs = svgcontent.childNodes, doc_title = false, old_title = '';
+	
+	var batchCmd = new svgedit.history.BatchCommand("Change Image Title");
+	
+	for (i = 0; i < childs.length; i++) {
+		if (childs[i].nodeName == 'title') {
+			doc_title = childs[i];
+			old_title = doc_title.textContent;
+			break;
+		}
+	}
+	if (!doc_title) {
+		doc_title = svgdoc.createElementNS(NS.SVG, "title");
+		svgcontent.insertBefore(doc_title, svgcontent.firstChild);
+	} 
+	
+	if (newtitle.length) {
+		doc_title.textContent = newtitle;
+	} else {
+		// No title given, so element is not necessary
+		doc_title.parentNode.removeChild(doc_title);
+	}
+	batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(doc_title, {'#text': old_title}));
+	addCommandToHistory(batchCmd);
+};
+
+// Function: getEditorNS
+// Returns the editor's namespace URL, optionally adds it to root element
+//
+// Parameters:
+// add - Boolean to indicate whether or not to add the namespace value
+this.getEditorNS = function(add) {
+	if (add) {
+		svgcontent.setAttribute('xmlns:se', NS.SE);
+	}
+	return NS.SE;
+};
+
+// Function: setResolution
+// Changes the document's dimensions to the given size
+//
+// Parameters: 
+// x - Number with the width of the new dimensions in user units. 
+// Can also be the string "fit" to indicate "fit to content"
+// y - Number with the height of the new dimensions in user units. 
+//
+// Returns:
+// Boolean to indicate if resolution change was succesful. 
+// It will fail on "fit to content" option with no content to fit to.
+this.setResolution = function(x, y) {
+	var res = getResolution();
+	var w = res.w, h = res.h;
+	var batchCmd;
+
+	if (x == 'fit') {
+		// Get bounding box
+		var bbox = getStrokedBBox();
+		
+		if (bbox) {
+			batchCmd = new svgedit.history.BatchCommand("Fit Canvas to Content");
+			var visEls = getVisibleElements();
+			addToSelection(visEls);
+			var dx = [], dy = [];
+			$.each(visEls, function(i, item) {
+				dx.push(bbox.x*-1);
+				dy.push(bbox.y*-1);
+			});
+			
+			var cmd = canvas.moveSelectedElements(dx, dy, true);
+			batchCmd.addSubCommand(cmd);
+			clearSelection();
+			
+			x = Math.round(bbox.width);
+			y = Math.round(bbox.height);
+		} else {
+			return false;
+		}
+	}
+	if (x != w || y != h) {
+		var handle = svgroot.suspendRedraw(1000);
+		if (!batchCmd) {
+			batchCmd = new svgedit.history.BatchCommand("Change Image Dimensions");
+		}
+
+		x = svgedit.units.convertToNum('width', x);
+		y = svgedit.units.convertToNum('height', y);
+		
+		svgcontent.setAttribute('width', x);
+		svgcontent.setAttribute('height', y);
+		
+		this.contentW = x;
+		this.contentH = y;
+		batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(svgcontent, {"width":w, "height":h}));
+
+		svgcontent.setAttribute("viewBox", [0, 0, x/current_zoom, y/current_zoom].join(' '));
+		batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(svgcontent, {"viewBox": ["0 0", w, h].join(' ')}));
+	
+		addCommandToHistory(batchCmd);
+		svgroot.unsuspendRedraw(handle);
+		call("changed", [svgcontent]);
+	}
+	return true;
+};
+
+// Function: getOffset
+// Returns an object with x, y values indicating the svgcontent element's
+// position in the editor's canvas.
+this.getOffset = function() {
+	return $(svgcontent).attr(['x', 'y']);
+};
+
+// Function: setBBoxZoom
+// Sets the zoom level on the canvas-side based on the given value
+// 
+// Parameters:
+// val - Bounding box object to zoom to or string indicating zoom option 
+// editor_w - Integer with the editor's workarea box's width
+// editor_h - Integer with the editor's workarea box's height
+this.setBBoxZoom = function(val, editor_w, editor_h) {
+	var spacer = 0.85;
+	var bb;
+	var calcZoom = function(bb) {
+		if (!bb) {return false;}
+		var w_zoom = Math.round((editor_w / bb.width)*100 * spacer)/100;
+		var h_zoom = Math.round((editor_h / bb.height)*100 * spacer)/100;	
+		var zoomlevel = Math.min(w_zoom, h_zoom);
+		canvas.setZoom(zoomlevel);
+		return {'zoom': zoomlevel, 'bbox': bb};
+	};
+	
+	if (typeof val == 'object') {
+		bb = val;
+		if (bb.width == 0 || bb.height == 0) {
+			var newzoom = bb.zoom ? bb.zoom : current_zoom * bb.factor;
+			canvas.setZoom(newzoom);
+			return {'zoom': current_zoom, 'bbox': bb};
+		}
+		return calcZoom(bb);
+	}
+
+	switch (val) {
+		case 'selection':
+			if (!selectedElements[0]) {return;}
+			var sel_elems = $.map(selectedElements, function(n){ if (n) {return n;} });
+			bb = getStrokedBBox(sel_elems);
+			break;
+		case 'canvas':
+			var res = getResolution();
+			spacer = 0.95;
+			bb = {width:res.w, height:res.h , x:0, y:0};
+			break;
+		case 'content':
+			bb = getStrokedBBox();
+			break;
+		case 'layer':
+			bb = getStrokedBBox(getVisibleElements(getCurrentDrawing().getCurrentLayer()));
+			break;
+		default:
+			return;
+	}
+	return calcZoom(bb);
+};
+
+// Function: setZoom
+// Sets the zoom to the given level
+//
+// Parameters:
+// zoomlevel - Float indicating the zoom level to change to
+this.setZoom = function(zoomlevel) {
+	var res = getResolution();
+	svgcontent.setAttribute("viewBox", "0 0 " + res.w/zoomlevel + " " + res.h/zoomlevel);
+	current_zoom = zoomlevel;
+	$.each(selectedElements, function(i, elem) {
+		if (!elem) {return;}
+		selectorManager.requestSelector(elem).resize();
+	});
+	pathActions.zoomChange();
+	runExtensions("zoomChanged", zoomlevel);
+};
+
+// Function: getMode
+// Returns the current editor mode string
+this.getMode = function() {
+	return current_mode;
+};
+
+// Function: setMode
+// Sets the editor's mode to the given string
+//
+// Parameters:
+// name - String with the new mode to change to
+this.setMode = function(name) {
+	pathActions.clear(true);
+	textActions.clear();
+	cur_properties = (selectedElements[0] && selectedElements[0].nodeName == 'text') ? cur_text : cur_shape;
+	current_mode = name;
+};
+
+// Group: Element Styling
+
+// Function: getColor
+// Returns the current fill/stroke option
+this.getColor = function(type) {
+	return cur_properties[type];
+};
+
+// Function: setColor
+// Change the current stroke/fill color/gradient value
+// 
+// Parameters:
+// type - String indicating fill or stroke
+// val - The value to set the stroke attribute to
+// preventUndo - Boolean indicating whether or not this should be and undoable option
+this.setColor = function(type, val, preventUndo) {
+	cur_shape[type] = val;
+	cur_properties[type + '_paint'] = {type:"solidColor"};
+	var elems = [];
+	function addNonG (e) {
+		if (e.nodeName != "g") {
+			elems.push(e);
+		}
+	}
+	var i = selectedElements.length;
+	while (i--) {
+		var elem = selectedElements[i];
+		if (elem) {
+			if (elem.tagName == "g") {
+				svgedit.utilities.walkTree(elem, addNonG);
+			} else {
+				if (type == 'fill') {
+					if (elem.tagName != "polyline" && elem.tagName != "line") {
+						elems.push(elem);
+					}
+				} else {
+					elems.push(elem);
+				}
+			}
+		}
+	}
+	if (elems.length > 0) {
+		if (!preventUndo) {
+			changeSelectedAttribute(type, val, elems);
+			call("changed", elems);
+		} else {
+			changeSelectedAttributeNoUndo(type, val, elems);
+		}
+	}
+};
+
+// Function: setGradient
+// Apply the current gradient to selected element's fill or stroke
+//
+// Parameters
+// type - String indicating "fill" or "stroke" to apply to an element
+var setGradient = this.setGradient = function(type) {
+	if (!cur_properties[type + '_paint'] || cur_properties[type + '_paint'].type == "solidColor") {return;}
+	var grad = canvas[type + 'Grad'];
+	// find out if there is a duplicate gradient already in the defs
+	var duplicate_grad = findDuplicateGradient(grad);
+	var defs = svgedit.utilities.findDefs();
+	// no duplicate found, so import gradient into defs
+	if (!duplicate_grad) {
+		var orig_grad = grad;
+		grad = defs.appendChild( svgdoc.importNode(grad, true) );
+		// get next id and set it on the grad
+		grad.id = getNextId();
+	} else { // use existing gradient
+		grad = duplicate_grad;
+	}
+	canvas.setColor(type, "url(#" + grad.id + ")");
+};
+
+// Function: findDuplicateGradient
+// Check if exact gradient already exists
+//
+// Parameters:
+// grad - The gradient DOM element to compare to others
+//
+// Returns:
+// The existing gradient if found, null if not
+var findDuplicateGradient = function(grad) {
+	var defs = svgedit.utilities.findDefs();
+	var existing_grads = $(defs).find("linearGradient, radialGradient");
+	var i = existing_grads.length;
+	var rad_attrs = ['r', 'cx', 'cy', 'fx', 'fy'];
+	while (i--) {
+		var og = existing_grads[i];
+		if (grad.tagName == "linearGradient") {
+			if (grad.getAttribute('x1') != og.getAttribute('x1') ||
+				grad.getAttribute('y1') != og.getAttribute('y1') ||
+				grad.getAttribute('x2') != og.getAttribute('x2') ||
+				grad.getAttribute('y2') != og.getAttribute('y2')) 
+			{
+				continue;
+			}
+		} else {
+			var grad_attrs = $(grad).attr(rad_attrs);
+			var og_attrs = $(og).attr(rad_attrs);
+			
+			var diff = false;
+			$.each(rad_attrs, function(i, attr) {
+				if (grad_attrs[attr] != og_attrs[attr]) {diff = true;}
+			});
+			
+			if (diff) {continue;}
+		}
+		
+		// else could be a duplicate, iterate through stops
+		var stops = grad.getElementsByTagNameNS(NS.SVG, "stop");
+		var ostops = og.getElementsByTagNameNS(NS.SVG, "stop");
+
+		if (stops.length != ostops.length) {
+			continue;
+		}
+
+		var j = stops.length;
+		while (j--) {
+			var stop = stops[j];
+			var ostop = ostops[j];
+
+			if (stop.getAttribute('offset') != ostop.getAttribute('offset') ||
+				stop.getAttribute('stop-opacity') != ostop.getAttribute('stop-opacity') ||
+				stop.getAttribute('stop-color') != ostop.getAttribute('stop-color')) 
+			{
+				break;
+			}
+		}
+
+		if (j == -1) {
+			return og;
+		}
+	} // for each gradient in defs
+
+	return null;
+};
+
+function reorientGrads(elem, m) {
+	var i;
+	var bb = svgedit.utilities.getBBox(elem);
+	for (i = 0; i < 2; i++) {
+		var type = i === 0 ? 'fill' : 'stroke';
+		var attrVal = elem.getAttribute(type);
+		if (attrVal && attrVal.indexOf('url(') === 0) {
+			var grad = svgedit.utilities.getRefElem(attrVal);
+			if (grad.tagName === 'linearGradient') {
+				var x1 = grad.getAttribute('x1') || 0;
+				var y1 = grad.getAttribute('y1') || 0;
+				var x2 = grad.getAttribute('x2') || 1;
+				var y2 = grad.getAttribute('y2') || 0;
+				
+				// Convert to USOU points
+				x1 = (bb.width * x1) + bb.x;
+				y1 = (bb.height * y1) + bb.y;
+				x2 = (bb.width * x2) + bb.x;
+				y2 = (bb.height * y2) + bb.y;
+			
+				// Transform those points
+				var pt1 = svgedit.math.transformPoint(x1, y1, m);
+				var pt2 = svgedit.math.transformPoint(x2, y2, m);
+				
+				// Convert back to BB points
+				var g_coords = {};
+				
+				g_coords.x1 = (pt1.x - bb.x) / bb.width;
+				g_coords.y1 = (pt1.y - bb.y) / bb.height;
+				g_coords.x2 = (pt2.x - bb.x) / bb.width;
+				g_coords.y2 = (pt2.y - bb.y) / bb.height;
+		
+				var newgrad = grad.cloneNode(true);
+				$(newgrad).attr(g_coords);
+	
+				newgrad.id = getNextId();
+				svgedit.utilities.findDefs().appendChild(newgrad);
+				elem.setAttribute(type, 'url(#' + newgrad.id + ')');
+			}
+		}
+	}
+}
+
+// Function: setPaint
+// Set a color/gradient to a fill/stroke
+//
+// Parameters:
+// type - String with "fill" or "stroke"
+// paint - The jGraduate paint object to apply
+this.setPaint = function(type, paint) {
+	// make a copy
+	var p = new $.jGraduate.Paint(paint);
+	this.setPaintOpacity(type, p.alpha / 100, true);
+
+	// now set the current paint object
+	cur_properties[type + '_paint'] = p;
+	switch (p.type) {
+		case 'solidColor':
+			this.setColor(type, p.solidColor != 'none' ? '#' + p.solidColor : 'none');
+			break;
+		case 'linearGradient':
+		case 'radialGradient':
+			canvas[type + 'Grad'] = p[p.type];
+			setGradient(type);
+			break;
+	}
+};
+
+// alias
+this.setStrokePaint = function(paint) {
+	this.setPaint('stroke', paint);
+};
+
+this.setFillPaint = function(paint) {
+	this.setPaint('fill', paint);
+};
+
+// Function: getStrokeWidth
+// Returns the current stroke-width value
+this.getStrokeWidth = function() {
+	return cur_properties.stroke_width;
+};
+
+// Function: setStrokeWidth
+// Sets the stroke width for the current selected elements
+// When attempting to set a line's width to 0, this changes it to 1 instead
+//
+// Parameters:
+// val - A Float indicating the new stroke width value
+this.setStrokeWidth = function(val) {
+	if (val == 0 && ['line', 'path'].indexOf(current_mode) >= 0) {
+		canvas.setStrokeWidth(1);
+		return;
+	}
+	cur_properties.stroke_width = val;
+
+	var elems = [];
+	function addNonG (e) {
+		if (e.nodeName != 'g') {
+			elems.push(e);
+		}
+	}
+	var i = selectedElements.length;
+	while (i--) {
+		var elem = selectedElements[i];
+		if (elem) {
+			if (elem.tagName == "g") {
+				svgedit.utilities.walkTree(elem, addNonG);
+			}
+			else {
+				elems.push(elem);
+			}
+		}
+	}
+	if (elems.length > 0) {
+		changeSelectedAttribute("stroke-width", val, elems);
+		call("changed", selectedElements);
+	}
+};
+
+// Function: setStrokeAttr
+// Set the given stroke-related attribute the given value for selected elements
+//
+// Parameters:
+// attr - String with the attribute name
+// val - String or number with the attribute value
+this.setStrokeAttr = function(attr, val) {
+	cur_shape[attr.replace('-', '_')] = val;
+	var elems = [];
+	function addNonG (e) {
+		if (e.nodeName != 'g') {
+			elems.push(e);
+		}
+	}
+	var i = selectedElements.length;
+	while (i--) {
+		var elem = selectedElements[i];
+		if (elem) {
+			if (elem.tagName == "g") {
+				svgedit.utilities.walkTree(elem, function(e){if (e.nodeName!="g") {elems.push(e);}});
+			}
+			else {
+				elems.push(elem);
+			}
+		}
+	}
+	if (elems.length > 0) {
+		changeSelectedAttribute(attr, val, elems);
+		call("changed", selectedElements);
+	}
+};
+
+// Function: getStyle
+// Returns current style options
+this.getStyle = function() {
+	return cur_shape;
+};
+
+// Function: getOpacity
+// Returns the current opacity
+this.getOpacity = function() {
+	return cur_shape.opacity;
+};
+
+// Function: setOpacity
+// Sets the given opacity to the current selected elements
+this.setOpacity = function(val) {
+	cur_shape.opacity = val;
+	changeSelectedAttribute("opacity", val);
+};
+
+// Function: getOpacity
+// Returns the current fill opacity
+this.getFillOpacity = function() {
+	return cur_shape.fill_opacity;
+};
+
+// Function: getStrokeOpacity
+// Returns the current stroke opacity
+this.getStrokeOpacity = function() {
+	return cur_shape.stroke_opacity;
+};
+
+// Function: setPaintOpacity
+// Sets the current fill/stroke opacity
+//
+// Parameters:
+// type - String with "fill" or "stroke"
+// val - Float with the new opacity value
+// preventUndo - Boolean indicating whether or not this should be an undoable action
+this.setPaintOpacity = function(type, val, preventUndo) {
+	cur_shape[type + '_opacity'] = val;
+	if (!preventUndo) {
+		changeSelectedAttribute(type + "-opacity", val);
+	}
+	else {
+		changeSelectedAttributeNoUndo(type + "-opacity", val);
+	}
+};
+
+// Function: getPaintOpacity
+// Gets the current fill/stroke opacity
+//
+// Parameters:
+// type - String with "fill" or "stroke"
+this.getPaintOpacity = function(type) {
+	return type === 'fill' ? this.getFillOpacity() : this.getStrokeOpacity();
+};
+
+// Function: getBlur
+// Gets the stdDeviation blur value of the given element
+//
+// Parameters:
+// elem - The element to check the blur value for
+this.getBlur = function(elem) {
+	var val = 0;
+//	var elem = selectedElements[0];
+
+	if (elem) {
+		var filter_url = elem.getAttribute('filter');
+		if (filter_url) {
+			var blur = svgedit.utilities.getElem(elem.id + '_blur');
+			if (blur) {
+				val = blur.firstChild.getAttribute('stdDeviation');
+			}
+		}
+	}
+	return val;
+};
+
+(function() {
+	var cur_command = null;
+	var filter = null;
+	var filterHidden = false;
+	
+	// Function: setBlurNoUndo
+	// Sets the stdDeviation blur value on the selected element without being undoable
+	//
+	// Parameters:
+	// val - The new stdDeviation value
+	canvas.setBlurNoUndo = function(val) {
+		if (!filter) {
+			canvas.setBlur(val);
+			return;
+		}
+		if (val === 0) {
+			// Don't change the StdDev, as that will hide the element.
+			// Instead, just remove the value for "filter"
+			changeSelectedAttributeNoUndo("filter", "");
+			filterHidden = true;
+		} else {
+			var elem = selectedElements[0];
+			if (filterHidden) {
+				changeSelectedAttributeNoUndo("filter", 'url(#' + elem.id + '_blur)');
+			}
+			if (svgedit.browser.isWebkit()) {
+				console.log('e', elem);
+				elem.removeAttribute('filter');
+				elem.setAttribute('filter', 'url(#' + elem.id + '_blur)');
+			}
+			changeSelectedAttributeNoUndo("stdDeviation", val, [filter.firstChild]);
+			canvas.setBlurOffsets(filter, val);
+		}
+	};
+	
+	function finishChange() {
+		var bCmd = canvas.undoMgr.finishUndoableChange();
+		cur_command.addSubCommand(bCmd);
+		addCommandToHistory(cur_command);
+		cur_command = null;	
+		filter = null;
+	}
+
+	// Function: setBlurOffsets
+	// Sets the x, y, with, height values of the filter element in order to
+	// make the blur not be clipped. Removes them if not neeeded
+	//
+	// Parameters:
+	// filter - The filter DOM element to update
+	// stdDev - The standard deviation value on which to base the offset size
+	canvas.setBlurOffsets = function(filter, stdDev) {
+		if (stdDev > 3) {
+			// TODO: Create algorithm here where size is based on expected blur
+			svgedit.utilities.assignAttributes(filter, {
+				x: '-50%',
+				y: '-50%',
+				width: '200%',
+				height: '200%'
+			}, 100);
+		} else {
+			// Removing these attributes hides text in Chrome (see Issue 579)
+			if (!svgedit.browser.isWebkit()) {
+				filter.removeAttribute('x');
+				filter.removeAttribute('y');
+				filter.removeAttribute('width');
+				filter.removeAttribute('height');
+			}
+		}
+	};
+
+	// Function: setBlur 
+	// Adds/updates the blur filter to the selected element
+	//
+	// Parameters:
+	// val - Float with the new stdDeviation blur value
+	// complete - Boolean indicating whether or not the action should be completed (to add to the undo manager)
+	canvas.setBlur = function(val, complete) {
+		if (cur_command) {
+			finishChange();
+			return;
+		}
+	
+		// Looks for associated blur, creates one if not found
+		var elem = selectedElements[0];
+		var elem_id = elem.id;
+		filter = svgedit.utilities.getElem(elem_id + '_blur');
+		
+		val -= 0;
+		
+		var batchCmd = new svgedit.history.BatchCommand();
+		
+		// Blur found!
+		if (filter) {
+			if (val === 0) {
+				filter = null;
+			}
+		} else {
+			// Not found, so create
+			var newblur = addSvgElementFromJson({ "element": "feGaussianBlur",
+				"attr": {
+					"in": 'SourceGraphic',
+					"stdDeviation": val
+				}
+			});
+			
+			filter = addSvgElementFromJson({ "element": "filter",
+				"attr": {
+					"id": elem_id + '_blur'
+				}
+			});
+			
+			filter.appendChild(newblur);
+			svgedit.utilities.findDefs().appendChild(filter);
+			
+			batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(filter));
+		}
+
+		var changes = {filter: elem.getAttribute('filter')};
+		
+		if (val === 0) {
+			elem.removeAttribute("filter");
+			batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(elem, changes));
+			return;
+		}
+
+		changeSelectedAttribute("filter", 'url(#' + elem_id + '_blur)');
+		batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(elem, changes));
+		canvas.setBlurOffsets(filter, val);
+		
+		cur_command = batchCmd;
+		canvas.undoMgr.beginUndoableChange("stdDeviation", [filter?filter.firstChild:null]);
+		if (complete) {
+			canvas.setBlurNoUndo(val);
+			finishChange();
+		}
+	};
+}());
+
+// Function: getBold
+// Check whether selected element is bold or not
+//
+// Returns:
+// Boolean indicating whether or not element is bold
+this.getBold = function() {
+	// should only have one element selected
+	var selected = selectedElements[0];
+	if (selected != null && selected.tagName == "text" &&
+		selectedElements[1] == null) 
+	{
+		return (selected.getAttribute("font-weight") == "bold");
+	}
+	return false;
+};
+
+// Function: setBold
+// Make the selected element bold or normal
+//
+// Parameters:
+// b - Boolean indicating bold (true) or normal (false)
+this.setBold = function(b) {
+	var selected = selectedElements[0];
+	if (selected != null && selected.tagName == "text" &&
+		selectedElements[1] == null) 
+	{
+		changeSelectedAttribute("font-weight", b ? "bold" : "normal");
+	}
+	if (!selectedElements[0].textContent) {
+		textActions.setCursor();
+	}
+};
+
+// Function: getItalic
+// Check whether selected element is italic or not
+//
+// Returns:
+// Boolean indicating whether or not element is italic
+this.getItalic = function() {
+	var selected = selectedElements[0];
+	if (selected != null && selected.tagName == "text" &&
+		selectedElements[1] == null) 
+	{
+		return (selected.getAttribute("font-style") == "italic");
+	}
+	return false;
+};
+
+// Function: setItalic
+// Make the selected element italic or normal
+//
+// Parameters:
+// b - Boolean indicating italic (true) or normal (false)
+this.setItalic = function(i) {
+	var selected = selectedElements[0];
+	if (selected != null && selected.tagName == "text" &&
+		selectedElements[1] == null) 
+	{
+		changeSelectedAttribute("font-style", i ? "italic" : "normal");
+	}
+	if (!selectedElements[0].textContent) {
+		textActions.setCursor();
+	}
+};
+
+// Function: getFontFamily
+// Returns the current font family
+this.getFontFamily = function() {
+	return cur_text.font_family;
+};
+
+// Function: setFontFamily
+// Set the new font family
+//
+// Parameters:
+// val - String with the new font family
+this.setFontFamily = function(val) {
+	cur_text.font_family = val;
+	changeSelectedAttribute("font-family", val);
+	if (selectedElements[0] && !selectedElements[0].textContent) {
+		textActions.setCursor();
+	}
+};
+
+
+// Function: setFontColor
+// Set the new font color
+//
+// Parameters:
+// val - String with the new font color
+this.setFontColor = function(val) {
+	cur_text.fill = val;
+	changeSelectedAttribute("fill", val);
+};
+
+// Function: getFontColor
+// Returns the current font color
+this.getFontColor = function() {
+	return cur_text.fill;
+};
+
+// Function: getFontSize
+// Returns the current font size
+this.getFontSize = function() {
+	return cur_text.font_size;
+};
+
+// Function: setFontSize
+// Applies the given font size to the selected element
+//
+// Parameters:
+// val - Float with the new font size
+this.setFontSize = function(val) {
+	cur_text.font_size = val;
+	changeSelectedAttribute("font-size", val);
+	if (!selectedElements[0].textContent) {
+		textActions.setCursor();
+	}
+};
+
+// Function: getText
+// Returns the current text (textContent) of the selected element
+this.getText = function() {
+	var selected = selectedElements[0];
+	if (selected == null) { return ""; }
+	return selected.textContent;
+};
+
+// Function: setTextContent
+// Updates the text element with the given string
+//
+// Parameters:
+// val - String with the new text
+this.setTextContent = function(val) {
+	changeSelectedAttribute("#text", val);
+	textActions.init(val);
+	textActions.setCursor();
+};
+
+// Function: setImageURL
+// Sets the new image URL for the selected image element. Updates its size if
+// a new URL is given
+// 
+// Parameters:
+// val - String with the image URL/path
+this.setImageURL = function(val) {
+	var elem = selectedElements[0];
+	if (!elem) {return;}
+	
+	var attrs = $(elem).attr(['width', 'height']);
+	var setsize = (!attrs.width || !attrs.height);
+
+	var cur_href = getHref(elem);
+	
+	// Do nothing if no URL change or size change
+	if (cur_href !== val) {
+		setsize = true;
+	} else if (!setsize) {return;}
+
+	var batchCmd = new svgedit.history.BatchCommand("Change Image URL");
+
+	setHref(elem, val);
+	batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(elem, {
+		"#href": cur_href
+	}));
+
+	if (setsize) {
+		$(new Image()).load(function() {
+			var changes = $(elem).attr(['width', 'height']);
+		
+			$(elem).attr({
+				width: this.width,
+				height: this.height
+			});
+			
+			selectorManager.requestSelector(elem).resize();
+			
+			batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(elem, changes));
+			addCommandToHistory(batchCmd);
+			call("changed", [elem]);
+		}).attr('src', val);
+	} else {
+		addCommandToHistory(batchCmd);
+	}
+};
+
+// Function: setLinkURL
+// Sets the new link URL for the selected anchor element.
+// 
+// Parameters:
+// val - String with the link URL/path
+this.setLinkURL = function(val) {
+	var elem = selectedElements[0];
+	if (!elem) {return;}
+	if (elem.tagName !== 'a') {
+		// See if parent is an anchor
+		var parents_a = $(elem).parents('a');
+		if (parents_a.length) {
+			elem = parents_a[0];
+		} else {
+			return;
+		}
+	}
+	
+	var cur_href = getHref(elem);
+	
+	if (cur_href === val) {return;}
+	
+	var batchCmd = new svgedit.history.BatchCommand("Change Link URL");
+
+	setHref(elem, val);
+	batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(elem, {
+		"#href": cur_href
+	}));
+
+	addCommandToHistory(batchCmd);
+};
+
+
+// Function: setRectRadius
+// Sets the rx & ry values to the selected rect element to change its corner radius
+// 
+// Parameters:
+// val - The new radius
+this.setRectRadius = function(val) {
+	var selected = selectedElements[0];
+	if (selected != null && selected.tagName == "rect") {
+		var r = selected.getAttribute("rx");
+		if (r != val) {
+			selected.setAttribute("rx", val);
+			selected.setAttribute("ry", val);
+			addCommandToHistory(new svgedit.history.ChangeElementCommand(selected, {"rx":r, "ry":r}, "Radius"));
+			call("changed", [selected]);
+		}
+	}
+};
+
+// Function: makeHyperlink
+// Wraps the selected element(s) in an anchor element or converts group to one
+this.makeHyperlink = function(url) {
+	canvas.groupSelectedElements('a', url);
+	
+	// TODO: If element is a single "g", convert to "a"
+	//	if (selectedElements.length > 1 && selectedElements[1]) {
+
+};
+
+// Function: removeHyperlink
+this.removeHyperlink = function() {
+	canvas.ungroupSelectedElement();
+};
+
+// Group: Element manipulation
+
+// Function: setSegType
+// Sets the new segment type to the selected segment(s). 
+//
+// Parameters:
+// new_type - Integer with the new segment type
+// See http://www.w3.org/TR/SVG/paths.html#InterfaceSVGPathSeg for list
+this.setSegType = function(new_type) {
+	pathActions.setSegType(new_type);
+};
+
+// TODO(codedread): Remove the getBBox argument and split this function into two.
+// Function: convertToPath
+// Convert selected element to a path, or get the BBox of an element-as-path
+//
+// Parameters: 
+// elem - The DOM element to be converted
+// getBBox - Boolean on whether or not to only return the path's BBox
+//
+// Returns:
+// If the getBBox flag is true, the resulting path's bounding box object.
+// Otherwise the resulting path element is returned.
+this.convertToPath = function(elem, getBBox) {
+	if (elem == null) {
+		var elems = selectedElements;
+		$.each(selectedElements, function(i, elem) {
+			if (elem) {canvas.convertToPath(elem);}
+		});
+		return;
+	}
+	
+	if (!getBBox) {
+		var batchCmd = new svgedit.history.BatchCommand("Convert element to Path");
+	}
+	
+	var attrs = getBBox?{}:{
+		"fill": cur_shape.fill,
+		"fill-opacity": cur_shape.fill_opacity,
+		"stroke": cur_shape.stroke,
+		"stroke-width": cur_shape.stroke_width,
+		"stroke-dasharray": cur_shape.stroke_dasharray,
+		"stroke-linejoin": cur_shape.stroke_linejoin,
+		"stroke-linecap": cur_shape.stroke_linecap,
+		"stroke-opacity": cur_shape.stroke_opacity,
+		"opacity": cur_shape.opacity,
+		"visibility":"hidden"
+	};
+	
+	// any attribute on the element not covered by the above
+	// TODO: make this list global so that we can properly maintain it
+	// TODO: what about @transform, @clip-rule, @fill-rule, etc?
+	$.each(['marker-start', 'marker-end', 'marker-mid', 'filter', 'clip-path'], function() {
+		if (elem.getAttribute(this)) {
+			attrs[this] = elem.getAttribute(this);
+		}
+	});
+	
+	var path = addSvgElementFromJson({
+		"element": "path",
+		"attr": attrs
+	});
+	
+	var eltrans = elem.getAttribute("transform");
+	if (eltrans) {
+		path.setAttribute("transform", eltrans);
+	}
+	
+	var id = elem.id;
+	var parent = elem.parentNode;
+	if (elem.nextSibling) {
+		parent.insertBefore(path, elem);
+	} else {
+		parent.appendChild(path);
+	}
+	
+	var d = '';
+	
+	var joinSegs = function(segs) {
+		$.each(segs, function(j, seg) {
+			var i;
+			var l = seg[0], pts = seg[1];
+			d += l;
+			for (i = 0; i < pts.length; i+=2) {
+				d += (pts[i] +','+pts[i+1]) + ' ';
+			}
+		});
+	};
+
+	// Possibly the cubed root of 6, but 1.81 works best
+	var num = 1.81;
+	var a, rx;
+	switch (elem.tagName) {
+	case 'ellipse':
+	case 'circle':
+		a = $(elem).attr(['rx', 'ry', 'cx', 'cy']);
+		var cx = a.cx, cy = a.cy;
+		rx = a.rx;
+		ry = a.ry;
+		if (elem.tagName == 'circle') {
+			rx = ry = $(elem).attr('r');
+		}
+	
+		joinSegs([
+			['M',[(cx-rx),(cy)]],
+			['C',[(cx-rx),(cy-ry/num), (cx-rx/num),(cy-ry), (cx),(cy-ry)]],
+			['C',[(cx+rx/num),(cy-ry), (cx+rx),(cy-ry/num), (cx+rx),(cy)]],
+			['C',[(cx+rx),(cy+ry/num), (cx+rx/num),(cy+ry), (cx),(cy+ry)]],
+			['C',[(cx-rx/num),(cy+ry), (cx-rx),(cy+ry/num), (cx-rx),(cy)]],
+			['Z',[]]
+		]);
+		break;
+	case 'path':
+		d = elem.getAttribute('d');
+		break;
+	case 'line':
+		a = $(elem).attr(["x1", "y1", "x2", "y2"]);
+		d = "M"+a.x1+","+a.y1+"L"+a.x2+","+a.y2;
+		break;
+	case 'polyline':
+	case 'polygon':
+		d = "M" + elem.getAttribute('points');
+		break;
+	case 'rect':
+		var r = $(elem).attr(['rx', 'ry']);
+		rx = r.rx;
+		ry = r.ry;
+		var b = elem.getBBox();
+		var x = b.x, y = b.y, w = b.width, h = b.height;
+		num = 4 - num; // Why? Because!
+		
+		if (!rx && !ry) {
+			// Regular rect
+			joinSegs([
+				['M',[x, y]],
+				['L',[x+w, y]],
+				['L',[x+w, y+h]],
+				['L',[x, y+h]],
+				['L',[x, y]],
+				['Z',[]]
+			]);
+		} else {
+			joinSegs([
+				['M',[x, y+ry]],
+				['C',[x, y+ry/num, x+rx/num, y, x+rx, y]],
+				['L',[x+w-rx, y]],
+				['C',[x+w-rx/num, y, x+w, y+ry/num, x+w, y+ry]],
+				['L',[x+w, y+h-ry]],
+				['C',[x+w, y+h-ry/num, x+w-rx/num, y+h, x+w-rx, y+h]],
+				['L',[x+rx, y+h]],
+				['C',[x+rx/num, y+h, x, y+h-ry/num, x, y+h-ry]],
+				['L',[x, y+ry]],
+				['Z',[]]
+			]);
+		}
+		break;
+	default:
+		path.parentNode.removeChild(path);
+		break;
+	}
+	
+	if (d) {
+		path.setAttribute('d', d);
+	}
+	
+	if (!getBBox) {
+		// Replace the current element with the converted one
+		
+		// Reorient if it has a matrix
+		if (eltrans) {
+			var tlist = svgedit.transformlist.getTransformList(path);
+			if (svgedit.math.hasMatrixTransform(tlist)) {
+				pathActions.resetOrientation(path);
+			}
+		}
+		
+		var nextSibling = elem.nextSibling;
+		batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand(elem, nextSibling, parent));
+		batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(path));
+
+		clearSelection();
+		elem.parentNode.removeChild(elem);
+		path.setAttribute('id', id);
+		path.removeAttribute("visibility");
+		addToSelection([path], true);
+		
+		addCommandToHistory(batchCmd);
+		
+	} else {
+		// Get the correct BBox of the new path, then discard it
+		pathActions.resetOrientation(path);
+		var bb = false;
+		try {
+			bb = path.getBBox();
+		} catch(e) {
+			// Firefox fails
+		}
+		path.parentNode.removeChild(path);
+		return bb;
+	}
+};
+
+
+// Function: changeSelectedAttributeNoUndo
+// This function makes the changes to the elements. It does not add the change
+// to the history stack. 
+// 
+// Parameters:
+// attr - String with the attribute name
+// newValue - String or number with the new attribute value
+// elems - The DOM elements to apply the change to
+var changeSelectedAttributeNoUndo = function(attr, newValue, elems) {
+	var handle = svgroot.suspendRedraw(1000);
+	if (current_mode == 'pathedit') {
+		// Editing node
+		pathActions.moveNode(attr, newValue);
+	}
+	elems = elems || selectedElements;
+	var i = elems.length;
+	var no_xy_elems = ['g', 'polyline', 'path'];
+	var good_g_attrs = ['transform', 'opacity', 'filter'];
+	
+	while (i--) {
+		var elem = elems[i];
+		if (elem == null) {continue;}
+		
+		// Set x,y vals on elements that don't have them
+		if ((attr === 'x' || attr === 'y') && no_xy_elems.indexOf(elem.tagName) >= 0) {
+			var bbox = getStrokedBBox([elem]);
+			var diff_x = attr === 'x' ? newValue - bbox.x : 0;
+			var diff_y = attr === 'y' ? newValue - bbox.y : 0;
+			canvas.moveSelectedElements(diff_x*current_zoom, diff_y*current_zoom, true);
+			continue;
+		}
+		
+		// only allow the transform/opacity/filter attribute to change on <g> elements, slightly hacky
+		// TODO: FIXME: This doesn't seem right. Where's the body of this if statement?
+		if (elem.tagName === "g" && good_g_attrs.indexOf(attr) >= 0) {}
+		var oldval = attr === "#text" ? elem.textContent : elem.getAttribute(attr);
+		if (oldval == null) {oldval = "";}
+		if (oldval !== String(newValue)) {
+			if (attr == "#text") {
+				var old_w = svgedit.utilities.getBBox(elem).width;
+				elem.textContent = newValue;
+				
+				// FF bug occurs on on rotated elements
+				if (/rotate/.test(elem.getAttribute('transform'))) {
+					elem = ffClone(elem);
+				}
+				
+				// Hoped to solve the issue of moving text with text-anchor="start",
+				// but this doesn't actually fix it. Hopefully on the right track, though. -Fyrd
+				
+//					var box=getBBox(elem), left=box.x, top=box.y, width=box.width,
+//						height=box.height, dx = width - old_w, dy=0;
+//					var angle = svgedit.utilities.getRotationAngle(elem, true);
+//					if (angle) {
+//						var r = Math.sqrt( dx*dx + dy*dy );
+//						var theta = Math.atan2(dy,dx) - angle;
+//						dx = r * Math.cos(theta);
+//						dy = r * Math.sin(theta);
+//						
+//						elem.setAttribute('x', elem.getAttribute('x')-dx);
+//						elem.setAttribute('y', elem.getAttribute('y')-dy);
+//					}
+				
+			} else if (attr == "#href") {
+				setHref(elem, newValue);
+			}
+			else {elem.setAttribute(attr, newValue);}
+
+			// Go into "select" mode for text changes
+			// NOTE: Important that this happens AFTER elem.setAttribute() or else attributes like
+			// font-size can get reset to their old value, ultimately by svgEditor.updateContextPanel(),
+			// after calling textActions.toSelectMode() below
+			if (current_mode === "textedit" && attr !== "#text" && elem.textContent.length) {
+				textActions.toSelectMode(elem);
+			}
+
+//			if (i==0)
+//				selectedBBoxes[0] = svgedit.utilities.getBBox(elem);
+			// Use the Firefox ffClone hack for text elements with gradients or
+			// where other text attributes are changed. 
+			if (svgedit.browser.isGecko() && elem.nodeName === 'text' && /rotate/.test(elem.getAttribute('transform'))) {
+				if (String(newValue).indexOf('url') === 0 || (['font-size', 'font-family', 'x', 'y'].indexOf(attr) >= 0 && elem.textContent)) {
+					elem = ffClone(elem);
+				}
+			}
+			// Timeout needed for Opera & Firefox
+			// codedread: it is now possible for this function to be called with elements
+			// that are not in the selectedElements array, we need to only request a
+			// selector if the element is in that array
+			if (selectedElements.indexOf(elem) >= 0) {
+				setTimeout(function() {
+					// Due to element replacement, this element may no longer
+					// be part of the DOM
+					if (!elem.parentNode) {return;}
+					selectorManager.requestSelector(elem).resize();
+				}, 0);
+			}
+			// if this element was rotated, and we changed the position of this element
+			// we need to update the rotational transform attribute 
+			var angle = svgedit.utilities.getRotationAngle(elem);
+			if (angle != 0 && attr != "transform") {
+				var tlist = svgedit.transformlist.getTransformList(elem);
+				var n = tlist.numberOfItems;
+				while (n--) {
+					var xform = tlist.getItem(n);
+					if (xform.type == 4) {
+						// remove old rotate
+						tlist.removeItem(n);
+						
+						var box = svgedit.utilities.getBBox(elem);
+						var center = svgedit.math.transformPoint(box.x+box.width/2, box.y+box.height/2, svgedit.math.transformListToTransform(tlist).matrix);
+						var cx = center.x,
+							cy = center.y;
+						var newrot = svgroot.createSVGTransform();
+						newrot.setRotate(angle, cx, cy);
+						tlist.insertItemBefore(newrot, n);
+						break;
+					}
+				}
+			}
+		} // if oldValue != newValue
+	} // for each elem
+	svgroot.unsuspendRedraw(handle);	
+};
+
+// Function: changeSelectedAttribute
+// Change the given/selected element and add the original value to the history stack
+// If you want to change all selectedElements, ignore the elems argument.
+// If you want to change only a subset of selectedElements, then send the
+// subset to this function in the elems argument.
+// 
+// Parameters:
+// attr - String with the attribute name
+// newValue - String or number with the new attribute value
+// elems - The DOM elements to apply the change to
+var changeSelectedAttribute = this.changeSelectedAttribute = function(attr, val, elems) {
+	elems = elems || selectedElements;
+	canvas.undoMgr.beginUndoableChange(attr, elems);
+	var i = elems.length;
+
+	changeSelectedAttributeNoUndo(attr, val, elems);
+
+	var batchCmd = canvas.undoMgr.finishUndoableChange();
+	if (!batchCmd.isEmpty()) { 
+		addCommandToHistory(batchCmd);
+	}
+};
+
+// Function: deleteSelectedElements
+// Removes all selected elements from the DOM and adds the change to the 
+// history stack
+this.deleteSelectedElements = function() {
+	var i;
+	var batchCmd = new svgedit.history.BatchCommand("Delete Elements");
+	var len = selectedElements.length;
+	var selectedCopy = []; //selectedElements is being deleted
+	for (i = 0; i < len; ++i) {
+		var selected = selectedElements[i];
+		if (selected == null) {break;}
+
+		var parent = selected.parentNode;
+		var t = selected;
+		
+		// this will unselect the element and remove the selectedOutline
+		selectorManager.releaseSelector(t);
+		
+		// Remove the path if present.
+		svgedit.path.removePath_(t.id);
+		
+		// Get the parent if it's a single-child anchor
+		if (parent.tagName === 'a' && parent.childNodes.length === 1) {
+			t = parent;
+			parent = parent.parentNode;
+		}
+		
+		var nextSibling = t.nextSibling;
+		var elem = parent.removeChild(t);
+		selectedCopy.push(selected); //for the copy
+		selectedElements[i] = null;
+		batchCmd.addSubCommand(new RemoveElementCommand(elem, nextSibling, parent));
+	}
+	if (!batchCmd.isEmpty()) {addCommandToHistory(batchCmd);}
+	call("changed", selectedCopy);
+	clearSelection();
+};
+
+// Function: cutSelectedElements
+// Removes all selected elements from the DOM and adds the change to the 
+// history stack. Remembers removed elements on the clipboard
+
+// TODO: Combine similar code with deleteSelectedElements
+this.cutSelectedElements = function() {
+	var i;
+	var batchCmd = new svgedit.history.BatchCommand("Cut Elements");
+	var len = selectedElements.length;
+	var selectedCopy = []; //selectedElements is being deleted
+	for (i = 0; i < len; ++i) {
+		var selected = selectedElements[i];
+		if (selected == null) {break;}
+
+		var parent = selected.parentNode;
+		var t = selected;
+
+		// this will unselect the element and remove the selectedOutline
+		selectorManager.releaseSelector(t);
+
+		// Remove the path if present.
+		svgedit.path.removePath_(t.id);
+
+		var nextSibling = t.nextSibling;
+		var elem = parent.removeChild(t);
+		selectedCopy.push(selected); //for the copy
+		selectedElements[i] = null;
+		batchCmd.addSubCommand(new RemoveElementCommand(elem, nextSibling, parent));
+	}
+	if (!batchCmd.isEmpty()) {addCommandToHistory(batchCmd);}
+	call("changed", selectedCopy);
+	clearSelection();
+	
+	canvas.clipBoard = selectedCopy;
+};
+
+// Function: copySelectedElements
+// Remembers the current selected elements on the clipboard
+this.copySelectedElements = function() {
+	canvas.clipBoard = $.merge([], selectedElements);
+};
+
+this.pasteElements = function(type, x, y) {
+	var cb = canvas.clipBoard;
+	var len = cb.length;
+	if (!len) {return;}
+	
+	var pasted = [];
+	var batchCmd = new svgedit.history.BatchCommand('Paste elements');
+	
+	// Move elements to lastClickPoint
+
+	while (len--) {
+		var elem = cb[len];
+		if (!elem) {continue;}
+		var copy = copyElem(elem);
+
+		// See if elem with elem ID is in the DOM already
+		if (!svgedit.utilities.getElem(elem.id)) {copy.id = elem.id;}
+		
+		pasted.push(copy);
+		(current_group || getCurrentDrawing().getCurrentLayer()).appendChild(copy);
+		batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(copy));
+	}
+	
+	selectOnly(pasted);
+	
+	if (type !== 'in_place') {
+		
+		var ctr_x, ctr_y;
+		
+		if (!type) {
+			ctr_x = lastClickPoint.x;
+			ctr_y = lastClickPoint.y;
+		} else if (type === 'point') {
+			ctr_x = x;
+			ctr_y = y;
+		} 
+		
+		var bbox = getStrokedBBox(pasted);
+		var cx = ctr_x - (bbox.x + bbox.width/2),
+			cy = ctr_y - (bbox.y + bbox.height/2),
+			dx = [],
+			dy = [];
+	
+		$.each(pasted, function(i, item) {
+			dx.push(cx);
+			dy.push(cy);
+		});
+		
+		var cmd = canvas.moveSelectedElements(dx, dy, false);
+		batchCmd.addSubCommand(cmd);
+	}
+
+	addCommandToHistory(batchCmd);
+	call("changed", pasted);
+};
+
+// Function: groupSelectedElements
+// Wraps all the selected elements in a group (g) element
+
+// Parameters: 
+// type - type of element to group into, defaults to <g>
+this.groupSelectedElements = function(type, urlArg) {
+	if (!type) {type = 'g';}
+	var cmd_str = '';
+	
+	switch (type) {
+		case "a":
+			cmd_str = "Make hyperlink";
+			var url = '';
+			if (arguments.length > 1) {
+				url = urlArg;
+			}
+			break;
+		default:
+			type = 'g';
+			cmd_str = "Group Elements";
+			break;
+	}
+	
+	var batchCmd = new svgedit.history.BatchCommand(cmd_str);
+	
+	// create and insert the group element
+	var g = addSvgElementFromJson({
+							"element": type,
+							"attr": {
+								"id": getNextId()
+							}
+						});
+	if (type === 'a') {
+		setHref(g, url);
+	}
+	batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(g));
+	
+	// now move all children into the group
+	var i = selectedElements.length;
+	while (i--) {
+		var elem = selectedElements[i];
+		if (elem == null) {continue;}
+		
+		if (elem.parentNode.tagName === 'a' && elem.parentNode.childNodes.length === 1) {
+			elem = elem.parentNode;
+		}
+		
+		var oldNextSibling = elem.nextSibling;
+		var oldParent = elem.parentNode;
+		g.appendChild(elem);
+		batchCmd.addSubCommand(new svgedit.history.MoveElementCommand(elem, oldNextSibling, oldParent));			
+	}
+	if (!batchCmd.isEmpty()) {addCommandToHistory(batchCmd);}
+	
+	// update selection
+	selectOnly([g], true);
+};
+
+
+// Function: pushGroupProperties
+// Pushes all appropriate parent group properties down to its children, then
+// removes them from the group
+var pushGroupProperties = this.pushGroupProperties = function(g, undoable) {
+
+	var children = g.childNodes;
+	var len = children.length;
+	var xform = g.getAttribute("transform");
+
+	var glist = svgedit.transformlist.getTransformList(g);
+	var m = svgedit.math.transformListToTransform(glist).matrix;
+	
+	var batchCmd = new svgedit.history.BatchCommand("Push group properties");
+
+	// TODO: get all fill/stroke properties from the group that we are about to destroy
+	// "fill", "fill-opacity", "fill-rule", "stroke", "stroke-dasharray", "stroke-dashoffset", 
+	// "stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", 
+	// "stroke-width"
+	// and then for each child, if they do not have the attribute (or the value is 'inherit')
+	// then set the child's attribute
+	
+	var i = 0;
+	var gangle = svgedit.utilities.getRotationAngle(g);
+	
+	var gattrs = $(g).attr(['filter', 'opacity']);
+	var gfilter, gblur, changes;
+	
+	for (i = 0; i < len; i++) {
+		var elem = children[i];
+		
+		if (elem.nodeType !== 1) {continue;}
+		
+		if (gattrs.opacity !== null && gattrs.opacity !== 1) {
+			var c_opac = elem.getAttribute('opacity') || 1;
+			var new_opac = Math.round((elem.getAttribute('opacity') || 1) * gattrs.opacity * 100)/100;
+			changeSelectedAttribute('opacity', new_opac, [elem]);
+		}
+
+		if (gattrs.filter) {
+			var cblur = this.getBlur(elem);
+			var orig_cblur = cblur;
+			if (!gblur) {gblur = this.getBlur(g);}
+			if (cblur) {
+				// Is this formula correct?
+				cblur = Number(gblur) + Number(cblur);
+			} else if (cblur === 0) {
+				cblur = gblur;
+			}
+			
+			// If child has no current filter, get group's filter or clone it.
+			if (!orig_cblur) {
+				// Set group's filter to use first child's ID
+				if (!gfilter) {
+					gfilter = svgedit.utilities.getRefElem(gattrs.filter);
+				} else {
+					// Clone the group's filter
+					gfilter = copyElem(gfilter);
+					svgedit.utilities.findDefs().appendChild(gfilter);
+				}
+			} else {
+				gfilter = svgedit.utilities.getRefElem(elem.getAttribute('filter'));
+			}
+
+			// Change this in future for different filters
+			var suffix = (gfilter.firstChild.tagName === 'feGaussianBlur')?'blur':'filter'; 
+			gfilter.id = elem.id + '_' + suffix;
+			changeSelectedAttribute('filter', 'url(#' + gfilter.id + ')', [elem]);
+			
+			// Update blur value 
+			if (cblur) {
+				changeSelectedAttribute('stdDeviation', cblur, [gfilter.firstChild]);
+				canvas.setBlurOffsets(gfilter, cblur);
+			}
+		}
+		
+		var chtlist = svgedit.transformlist.getTransformList(elem);
+
+		// Don't process gradient transforms
+		if (~elem.tagName.indexOf('Gradient')) {chtlist = null;}
+		
+		// Hopefully not a problem to add this. Necessary for elements like <desc/>
+		if (!chtlist) {continue;}
+		
+		// Apparently <defs> can get get a transformlist, but we don't want it to have one!
+		if (elem.tagName === 'defs') {continue;}
+		
+		if (glist.numberOfItems) {
+			// TODO: if the group's transform is just a rotate, we can always transfer the
+			// rotate() down to the children (collapsing consecutive rotates and factoring
+			// out any translates)
+			if (gangle && glist.numberOfItems == 1) {
+				// [Rg] [Rc] [Mc]
+				// we want [Tr] [Rc2] [Mc] where:
+				//	- [Rc2] is at the child's current center but has the 
+				// sum of the group and child's rotation angles
+				//	- [Tr] is the equivalent translation that this child 
+				// undergoes if the group wasn't there
+				
+				// [Tr] = [Rg] [Rc] [Rc2_inv]
+				
+				// get group's rotation matrix (Rg)
+				var rgm = glist.getItem(0).matrix;
+				
+				// get child's rotation matrix (Rc)
+				var rcm = svgroot.createSVGMatrix();
+				var cangle = svgedit.utilities.getRotationAngle(elem);
+				if (cangle) {
+					rcm = chtlist.getItem(0).matrix;
+				}
+				
+				// get child's old center of rotation
+				var cbox = svgedit.utilities.getBBox(elem);
+				var ceqm = svgedit.math.transformListToTransform(chtlist).matrix;
+				var coldc = svgedit.math.transformPoint(cbox.x+cbox.width/2, cbox.y+cbox.height/2, ceqm);
+				
+				// sum group and child's angles
+				var sangle = gangle + cangle;
+				
+				// get child's rotation at the old center (Rc2_inv)
+				var r2 = svgroot.createSVGTransform();
+				r2.setRotate(sangle, coldc.x, coldc.y);
+				
+				// calculate equivalent translate
+				var trm = svgedit.math.matrixMultiply(rgm, rcm, r2.matrix.inverse());
+				
+				// set up tlist
+				if (cangle) {
+					chtlist.removeItem(0);
+				}
+				
+				if (sangle) {
+					if (chtlist.numberOfItems) {
+						chtlist.insertItemBefore(r2, 0);
+					} else {
+						chtlist.appendItem(r2);
+					}
+				}
+
+				if (trm.e || trm.f) {
+					var tr = svgroot.createSVGTransform();
+					tr.setTranslate(trm.e, trm.f);
+					if (chtlist.numberOfItems) {
+						chtlist.insertItemBefore(tr, 0);
+					} else {
+						chtlist.appendItem(tr);
+					}
+				}
+			} else { // more complicated than just a rotate
+			
+				// transfer the group's transform down to each child and then
+				// call svgedit.recalculate.recalculateDimensions()				
+				var oldxform = elem.getAttribute("transform");
+				changes = {};
+				changes.transform = oldxform || '';
+
+				var newxform = svgroot.createSVGTransform();
+
+				// [ gm ] [ chm ] = [ chm ] [ gm' ]
+				// [ gm' ] = [ chm_inv ] [ gm ] [ chm ]
+				var chm = svgedit.math.transformListToTransform(chtlist).matrix,
+					chm_inv = chm.inverse();
+				var gm = svgedit.math.matrixMultiply( chm_inv, m, chm );
+				newxform.setMatrix(gm);
+				chtlist.appendItem(newxform);
+			}
+			var cmd = svgedit.recalculate.recalculateDimensions(elem);
+			if (cmd) {batchCmd.addSubCommand(cmd);}
+		}
+	}
+
+	
+	// remove transform and make it undo-able
+	if (xform) {
+		changes = {};
+		changes["transform"] = xform;
+		g.setAttribute("transform", "");
+		g.removeAttribute("transform");				
+		batchCmd.addSubCommand(new svgedit.history.ChangeElementCommand(g, changes));
+	}
+	
+	if (undoable && !batchCmd.isEmpty()) {
+		return batchCmd;
+	}
+};
+
+
+// Function: ungroupSelectedElement
+// Unwraps all the elements in a selected group (g) element. This requires
+// significant recalculations to apply group's transforms, etc to its children
+this.ungroupSelectedElement = function() {
+	var g = selectedElements[0];
+	if ($(g).data('gsvg') || $(g).data('symbol')) {
+		// Is svg, so actually convert to group
+		convertToGroup(g);
+		return;
+	}
+	if (g.tagName === 'use') {
+		// Somehow doesn't have data set, so retrieve
+		var symbol = svgedit.utilities.getElem(getHref(g).substr(1));
+		$(g).data('symbol', symbol).data('ref', symbol);
+		convertToGroup(g);
+		return;
+	}
+	var parents_a = $(g).parents('a');
+	if (parents_a.length) {
+		g = parents_a[0];
+	}
+	
+	// Look for parent "a"
+	if (g.tagName === "g" || g.tagName === "a") {
+		
+		var batchCmd = new svgedit.history.BatchCommand("Ungroup Elements");
+		var cmd = pushGroupProperties(g, true);
+		if (cmd) {batchCmd.addSubCommand(cmd);}
+		
+		var parent = g.parentNode;
+		var anchor = g.nextSibling;
+		var children = new Array(g.childNodes.length);
+		
+		var i = 0;
+		
+		while (g.firstChild) {
+			var elem = g.firstChild;
+			var oldNextSibling = elem.nextSibling;
+			var oldParent = elem.parentNode;
+			
+			// Remove child title elements
+			if (elem.tagName === 'title') {
+				var nextSibling = elem.nextSibling;
+				batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand(elem, nextSibling, oldParent));
+				oldParent.removeChild(elem);
+				continue;
+			}
+			
+			children[i++] = elem = parent.insertBefore(elem, anchor);
+			batchCmd.addSubCommand(new svgedit.history.MoveElementCommand(elem, oldNextSibling, oldParent));
+		}
+
+		// remove the group from the selection			
+		clearSelection();
+		
+		// delete the group element (but make undo-able)
+		var gNextSibling = g.nextSibling;
+		g = parent.removeChild(g);
+		batchCmd.addSubCommand(new svgedit.history.RemoveElementCommand(g, gNextSibling, parent));
+
+		if (!batchCmd.isEmpty()) {addCommandToHistory(batchCmd);}
+		
+		// update selection
+		addToSelection(children);
+	}
+};
+
+// Function: moveToTopSelectedElement
+// Repositions the selected element to the bottom in the DOM to appear on top of
+// other elements
+this.moveToTopSelectedElement = function() {
+	var selected = selectedElements[0];
+	if (selected != null) {
+		var t = selected;
+		var oldParent = t.parentNode;
+		var oldNextSibling = t.nextSibling;
+		t = t.parentNode.appendChild(t);
+		// If the element actually moved position, add the command and fire the changed
+		// event handler.
+		if (oldNextSibling != t.nextSibling) {
+			addCommandToHistory(new svgedit.history.MoveElementCommand(t, oldNextSibling, oldParent, "top"));
+			call("changed", [t]);
+		}
+	}
+};
+
+// Function: moveToBottomSelectedElement
+// Repositions the selected element to the top in the DOM to appear under 
+// other elements
+this.moveToBottomSelectedElement = function() {
+	var selected = selectedElements[0];
+	if (selected != null) {
+		var t = selected;
+		var oldParent = t.parentNode;
+		var oldNextSibling = t.nextSibling;
+		var firstChild = t.parentNode.firstChild;
+		if (firstChild.tagName == 'title') {
+			firstChild = firstChild.nextSibling;
+		}
+		// This can probably be removed, as the defs should not ever apppear
+		// inside a layer group
+		if (firstChild.tagName == 'defs') {
+			firstChild = firstChild.nextSibling;
+		}
+		t = t.parentNode.insertBefore(t, firstChild);
+		// If the element actually moved position, add the command and fire the changed
+		// event handler.
+		if (oldNextSibling != t.nextSibling) {
+			addCommandToHistory(new svgedit.history.MoveElementCommand(t, oldNextSibling, oldParent, "bottom"));
+			call("changed", [t]);
+		}
+	}
+};
+
+// Function: moveUpDownSelected
+// Moves the select element up or down the stack, based on the visibly
+// intersecting elements
+//
+// Parameters: 
+// dir - String that's either 'Up' or 'Down'
+this.moveUpDownSelected = function(dir) {
+	var selected = selectedElements[0];
+	if (!selected) {return;}
+	
+	curBBoxes = [];
+	var closest, found_cur;
+	// jQuery sorts this list
+	var list = $(getIntersectionList(getStrokedBBox([selected]))).toArray();
+	if (dir == 'Down') {list.reverse();}
+
+	$.each(list, function() {
+		if (!found_cur) {
+			if (this == selected) {
+				found_cur = true;
+			}
+			return;
+		}
+		closest = this;
+		return false;
+	});
+	if (!closest) {return;}
+	
+	var t = selected;
+	var oldParent = t.parentNode;
+	var oldNextSibling = t.nextSibling;
+	$(closest)[dir == 'Down'?'before':'after'](t);
+	// If the element actually moved position, add the command and fire the changed
+	// event handler.
+	if (oldNextSibling != t.nextSibling) {
+		addCommandToHistory(new svgedit.history.MoveElementCommand(t, oldNextSibling, oldParent, "Move " + dir));
+		call("changed", [t]);
+	}
+};
+
+// Function: moveSelectedElements
+// Moves selected elements on the X/Y axis 
+//
+// Parameters:
+// dx - Float with the distance to move on the x-axis
+// dy - Float with the distance to move on the y-axis
+// undoable - Boolean indicating whether or not the action should be undoable
+//
+// Returns:
+// Batch command for the move
+this.moveSelectedElements = function(dx, dy, undoable) {
+	// if undoable is not sent, default to true
+	// if single values, scale them to the zoom
+	if (dx.constructor != Array) {
+		dx /= current_zoom;
+		dy /= current_zoom;
+	}
+	undoable = undoable || true;
+	var batchCmd = new svgedit.history.BatchCommand("position");
+	var i = selectedElements.length;
+	while (i--) {
+		var selected = selectedElements[i];
+		if (selected != null) {
+//			if (i==0)
+//				selectedBBoxes[0] = svgedit.utilities.getBBox(selected);
+			
+//			var b = {};
+//			for (var j in selectedBBoxes[i]) b[j] = selectedBBoxes[i][j];
+//			selectedBBoxes[i] = b;
+			
+			var xform = svgroot.createSVGTransform();
+			var tlist = svgedit.transformlist.getTransformList(selected);
+			
+			// dx and dy could be arrays
+			if (dx.constructor == Array) {
+//				if (i==0) {
+//					selectedBBoxes[0].x += dx[0];
+//					selectedBBoxes[0].y += dy[0];
+//				}
+				xform.setTranslate(dx[i], dy[i]);
+			} else {
+//				if (i==0) {
+//					selectedBBoxes[0].x += dx;
+//					selectedBBoxes[0].y += dy;
+//				}
+				xform.setTranslate(dx, dy);
+			}
+
+			if (tlist.numberOfItems) {
+				tlist.insertItemBefore(xform, 0);
+			} else {
+				tlist.appendItem(xform);
+			}
+			
+			var cmd = svgedit.recalculate.recalculateDimensions(selected);
+			if (cmd) {
+				batchCmd.addSubCommand(cmd);
+			}
+			
+			selectorManager.requestSelector(selected).resize();
+		}
+	}
+	if (!batchCmd.isEmpty()) {
+		if (undoable) {
+			addCommandToHistory(batchCmd);
+		}
+		call("changed", selectedElements);
+		return batchCmd;
+	}
+};
+
+// Function: cloneSelectedElements
+// Create deep DOM copies (clones) of all selected elements and move them slightly 
+// from their originals
+this.cloneSelectedElements = function(x, y) {
+	var i, elem;
+	var batchCmd = new svgedit.history.BatchCommand("Clone Elements");
+	// find all the elements selected (stop at first null)
+	var len = selectedElements.length;
+	function sortfunction(a, b){
+		return ($(b).index() - $(a).index()); //causes an array to be sorted numerically and ascending
+	}
+	selectedElements.sort(sortfunction);
+	for (i = 0; i < len; ++i) {
+		elem = selectedElements[i];
+		if (elem == null) {break;}
+	}
+	// use slice to quickly get the subset of elements we need
+	var copiedElements = selectedElements.slice(0, i);
+	this.clearSelection(true);
+	// note that we loop in the reverse way because of the way elements are added
+	// to the selectedElements array (top-first)
+	i = copiedElements.length;
+	while (i--) {
+		// clone each element and replace it within copiedElements
+		elem = copiedElements[i] = copyElem(copiedElements[i]);
+		(current_group || getCurrentDrawing().getCurrentLayer()).appendChild(elem);
+		batchCmd.addSubCommand(new svgedit.history.InsertElementCommand(elem));
+	}
+	
+	if (!batchCmd.isEmpty()) {
+		addToSelection(copiedElements.reverse()); // Need to reverse for correct selection-adding
+		this.moveSelectedElements(x, y, false);
+		addCommandToHistory(batchCmd);
+	}
+};
+
+// Function: alignSelectedElements
+// Aligns selected elements
+//
+// Parameters:
+// type - String with single character indicating the alignment type
+// relative_to - String that must be one of the following: 
+// "selected", "largest", "smallest", "page"
+this.alignSelectedElements = function(type, relative_to) {
+	var i, elem;
+	var bboxes = [], angles = [];
+	var minx = Number.MAX_VALUE, maxx = Number.MIN_VALUE, miny = Number.MAX_VALUE, maxy = Number.MIN_VALUE;
+	var curwidth = Number.MIN_VALUE, curheight = Number.MIN_VALUE;
+	var len = selectedElements.length;
+	if (!len) {return;}
+	for (i = 0; i < len; ++i) {
+		if (selectedElements[i] == null) {break;}
+		elem = selectedElements[i];
+		bboxes[i] = getStrokedBBox([elem]);
+		
+		// now bbox is axis-aligned and handles rotation
+		switch (relative_to) {
+			case 'smallest':
+				if ( (type == 'l' || type == 'c' || type == 'r') && (curwidth == Number.MIN_VALUE || curwidth > bboxes[i].width) ||
+					 (type == 't' || type == 'm' || type == 'b') && (curheight == Number.MIN_VALUE || curheight > bboxes[i].height) ) {
+					minx = bboxes[i].x;
+					miny = bboxes[i].y;
+					maxx = bboxes[i].x + bboxes[i].width;
+					maxy = bboxes[i].y + bboxes[i].height;
+					curwidth = bboxes[i].width;
+					curheight = bboxes[i].height;
+				}
+				break;
+			case 'largest':
+				if ( (type == 'l' || type == 'c' || type == 'r') && (curwidth == Number.MIN_VALUE || curwidth < bboxes[i].width) ||
+					 (type == 't' || type == 'm' || type == 'b') && (curheight == Number.MIN_VALUE || curheight < bboxes[i].height) ) {
+					minx = bboxes[i].x;
+					miny = bboxes[i].y;
+					maxx = bboxes[i].x + bboxes[i].width;
+					maxy = bboxes[i].y + bboxes[i].height;
+					curwidth = bboxes[i].width;
+					curheight = bboxes[i].height;
+				}
+				break;
+			default: // 'selected'
+				if (bboxes[i].x < minx) {minx = bboxes[i].x;}
+				if (bboxes[i].y < miny) {miny = bboxes[i].y;}
+				if (bboxes[i].x + bboxes[i].width > maxx) {maxx = bboxes[i].x + bboxes[i].width;}
+				if (bboxes[i].y + bboxes[i].height > maxy) {maxy = bboxes[i].y + bboxes[i].height;}
+				break;
+		}
+	} // loop for each element to find the bbox and adjust min/max
+
+	if (relative_to == 'page') {
+		minx = 0;
+		miny = 0;
+		maxx = canvas.contentW;
+		maxy = canvas.contentH;
+	}
+
+	var dx = new Array(len);
+	var dy = new Array(len);
+	for (i = 0; i < len; ++i) {
+		if (selectedElements[i] == null) {break;}
+		elem = selectedElements[i];
+		var bbox = bboxes[i];
+		dx[i] = 0;
+		dy[i] = 0;
+		switch (type) {
+			case 'l': // left (horizontal)
+				dx[i] = minx - bbox.x;
+				break;
+			case 'c': // center (horizontal)
+				dx[i] = (minx+maxx)/2 - (bbox.x + bbox.width/2);
+				break;
+			case 'r': // right (horizontal)
+				dx[i] = maxx - (bbox.x + bbox.width);
+				break;
+			case 't': // top (vertical)
+				dy[i] = miny - bbox.y;
+				break;
+			case 'm': // middle (vertical)
+				dy[i] = (miny+maxy)/2 - (bbox.y + bbox.height/2);
+				break;
+			case 'b': // bottom (vertical)
+				dy[i] = maxy - (bbox.y + bbox.height);
+				break;
+		}
+	}
+	this.moveSelectedElements(dx, dy);
+};
+
+// Group: Additional editor tools
+
+this.contentW = getResolution().w;
+this.contentH = getResolution().h;
+
+// Function: updateCanvas
+// Updates the editor canvas width/height/position after a zoom has occurred 
+//
+// Parameters:
+// w - Float with the new width
+// h - Float with the new height
+//
+// Returns: 
+// Object with the following values:
+// * x - The canvas' new x coordinate
+// * y - The canvas' new y coordinate
+// * old_x - The canvas' old x coordinate
+// * old_y - The canvas' old y coordinate
+// * d_x - The x position difference
+// * d_y - The y position difference
+this.updateCanvas = function(w, h) {
+	svgroot.setAttribute("width", w);
+	svgroot.setAttribute("height", h);
+	var bg = $('#canvasBackground')[0];
+	var old_x = svgcontent.getAttribute('x');
+	var old_y = svgcontent.getAttribute('y');
+	var x = (w/2 - this.contentW*current_zoom/2);
+	var y = (h/2 - this.contentH*current_zoom/2);
+
+	svgedit.utilities.assignAttributes(svgcontent, {
+		width: this.contentW*current_zoom,
+		height: this.contentH*current_zoom,
+		'x': x,
+		'y': y,
+		"viewBox" : "0 0 " + this.contentW + " " + this.contentH
+	});
+	
+	svgedit.utilities.assignAttributes(bg, {
+		width: svgcontent.getAttribute('width'),
+		height: svgcontent.getAttribute('height'),
+		x: x,
+		y: y
+	});
+
+	var bg_img = svgedit.utilities.getElem('background_image');
+	if (bg_img) {
+		svgedit.utilities.assignAttributes(bg_img, {
+			'width': '100%',
+			'height': '100%'
+		});
+	}
+	
+	selectorManager.selectorParentGroup.setAttribute("transform", "translate(" + x + "," + y + ")");
+	 runExtensions("canvasUpdated",{new_x:x, new_y:y, old_x:old_x, old_y:old_y, d_x:x - old_x, d_y:y - old_y});
+	return {x:x, y:y, old_x:old_x, old_y:old_y, d_x:x - old_x, d_y:y - old_y};
+};
+
+// Function: setBackground
+// Set the background of the editor (NOT the actual document)
+//
+// Parameters:
+// color - String with fill color to apply
+// url - URL or path to image to use
+this.setBackground = function(color, url) {
+	var bg = svgedit.utilities.getElem('canvasBackground');
+	var border = $(bg).find('rect')[0];
+	var bg_img = svgedit.utilities.getElem('background_image');
+	border.setAttribute('fill', color);
+	if (url) {
+		if (!bg_img) {
+			bg_img = svgdoc.createElementNS(NS.SVG, "image");
+			svgedit.utilities.assignAttributes(bg_img, {
+				'id': 'background_image',
+				'width': '100%',
+				'height': '100%',
+				'preserveAspectRatio': 'xMinYMin',
+				'style':'pointer-events:none'
+			});
+		}
+		setHref(bg_img, url);
+		bg.appendChild(bg_img);
+	} else if (bg_img) {
+		bg_img.parentNode.removeChild(bg_img);
+	}
+};
+
+// Function: cycleElement
+// Select the next/previous element within the current layer
+//
+// Parameters:
+// next - Boolean where true = next and false = previous element
+this.cycleElement = function(next) {
+	var num;
+	var cur_elem = selectedElements[0];
+	var elem = false;
+	var all_elems = getVisibleElements(current_group || getCurrentDrawing().getCurrentLayer());
+	if (!all_elems.length) {return;}
+	if (cur_elem == null) {
+		num = next?all_elems.length-1:0;
+		elem = all_elems[num];
+	} else {
+		var i = all_elems.length;
+		while (i--) {
+			if (all_elems[i] == cur_elem) {
+				num = next ? i - 1 : i + 1;
+				if (num >= all_elems.length) {
+					num = 0;
+				} else if (num < 0) {
+					num = all_elems.length-1;
+				} 
+				elem = all_elems[num];
+				break;
+			} 
+		}
+	}		
+	selectOnly([elem], true);
+	call("selected", selectedElements);
+};
+
+this.clear();
+
+
+// DEPRECATED: getPrivateMethods 
+// Since all methods are/should be public somehow, this function should be removed
+
+// Being able to access private methods publicly seems wrong somehow,
+// but currently appears to be the best way to allow testing and provide
+// access to them to plugins.
+this.getPrivateMethods = function() {
+	var obj = {
+		addCommandToHistory: addCommandToHistory,
+		setGradient: setGradient,
+		addSvgElementFromJson: addSvgElementFromJson,
+		assignAttributes: assignAttributes,
+		BatchCommand: BatchCommand,
+		call: call,
+		ChangeElementCommand: ChangeElementCommand,
+		copyElem: copyElem,
+		ffClone: ffClone,
+		findDefs: findDefs,
+		findDuplicateGradient: findDuplicateGradient,
+		getElem: getElem,
+		getId: getId,
+		getIntersectionList: getIntersectionList,
+		getMouseTarget: getMouseTarget,
+		getNextId: getNextId,
+		getPathBBox: getPathBBox,
+		getUrlFromAttr: getUrlFromAttr,
+		hasMatrixTransform: hasMatrixTransform,
+		identifyLayers: identifyLayers,
+		InsertElementCommand: InsertElementCommand,
+		isIdentity: svgedit.math.isIdentity,
+		logMatrix: logMatrix,
+		matrixMultiply: matrixMultiply,
+		MoveElementCommand: MoveElementCommand,
+		preventClickDefault: preventClickDefault,
+		recalculateAllSelectedDimensions: recalculateAllSelectedDimensions,
+		recalculateDimensions: recalculateDimensions,
+		remapElement: remapElement,
+		RemoveElementCommand: RemoveElementCommand,
+		removeUnusedDefElems: removeUnusedDefElems,
+		round: round,
+		runExtensions: runExtensions,
+		sanitizeSvg: sanitizeSvg,
+		SVGEditTransformList: svgedit.transformlist.SVGTransformList,
+		toString: toString,
+		transformBox: svgedit.math.transformBox,
+		transformListToTransform: transformListToTransform,
+		transformPoint: transformPoint,
+		walkTree: svgedit.utilities.walkTree
+	};
+	return obj;
+};
+
+};

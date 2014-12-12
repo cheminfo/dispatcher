@@ -1,1 +1,33 @@
-function touchHandler(a){var b,c=a.changedTouches,d=c[0],e="";switch(a.type){case"touchstart":e="mousedown";break;case"touchmove":e="mousemove";break;case"touchend":e="mouseup";break;default:return}b=document.createEvent("MouseEvent"),b.initMouseEvent(e,!0,!0,window,1,d.screenX,d.screenY,d.clientX,d.clientY,!1,!1,!1,!1,0,null),c.length<2&&(d.target.dispatchEvent(b),a.preventDefault())}document.addEventListener("touchstart",touchHandler,!0),document.addEventListener("touchmove",touchHandler,!0),document.addEventListener("touchend",touchHandler,!0),document.addEventListener("touchcancel",touchHandler,!0);
+// http://ross.posterous.com/2008/08/19/iphone-touch-events-in-javascript/
+function touchHandler(event) {
+
+	var simulatedEvent,
+		touches = event.changedTouches,
+		first = touches[0],
+		type = "";
+	switch (event.type) {
+		case "touchstart": type = "mousedown"; break;
+		case "touchmove":  type = "mousemove"; break;
+		case "touchend":   type = "mouseup"; break;
+		default: return;
+	}
+
+	// initMouseEvent(type, canBubble, cancelable, view, clickCount, 
+	//	screenX, screenY, clientX, clientY, ctrlKey, 
+	//	altKey, shiftKey, metaKey, button, relatedTarget);
+
+	simulatedEvent = document.createEvent("MouseEvent");
+	simulatedEvent.initMouseEvent(type, true, true, window, 1,
+								first.screenX, first.screenY,
+								first.clientX, first.clientY, false,
+								false, false, false, 0/*left*/, null);
+	if (touches.length < 2) {
+		first.target.dispatchEvent(simulatedEvent);
+		event.preventDefault();
+	}
+}
+
+document.addEventListener('touchstart', touchHandler, true);
+document.addEventListener('touchmove', touchHandler, true);
+document.addEventListener('touchend', touchHandler, true);
+document.addEventListener('touchcancel', touchHandler, true);

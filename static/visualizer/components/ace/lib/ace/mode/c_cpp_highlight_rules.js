@@ -22,8 +22,9 @@ var c_cppHighlightRules = function() {
     );
 
     var storageModifiers = (
-        "const|extern|register|restrict|static|volatile|inline|private:|" +
-        "protected:|public:|friend|explicit|virtual|export|mutable|typename"
+        "const|extern|register|restrict|static|volatile|inline|private|" +
+        "protected|public|friend|explicit|virtual|export|mutable|typename|" +
+        "constexpr|new|delete"
     );
 
     var keywordOperators = (
@@ -49,11 +50,12 @@ var c_cppHighlightRules = function() {
     // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
 
-    this.$rules = {
+    this.$rules = { 
         "start" : [
             {
                 token : "comment",
-                regex : "\\/\\/.*$"
+                regex : "//",
+                next : "singleLineComment"
             },
             DocCommentHighlightRules.getStartRule("doc-start"),
             {
@@ -120,14 +122,26 @@ var c_cppHighlightRules = function() {
                 regex : ".+"
             }
         ],
+        "singleLineComment" : [
+            {
+                token : "comment",
+                regex : /\\$/,
+                next : "singleLineComment"
+            }, {
+                token : "comment",
+                regex : /$/,
+                next : "start"
+            }, {
+                defaultToken: "comment"
+            }
+        ],
         "qqstring" : [
             {
                 token : "string",
                 regex : '(?:(?:\\\\.)|(?:[^"\\\\]))*?"',
                 next : "start"
             }, {
-                token : "string",
-                regex : '.+'
+                defaultToken : "string"
             }
         ],
         "qstring" : [
@@ -136,8 +150,7 @@ var c_cppHighlightRules = function() {
                 regex : "(?:(?:\\\\.)|(?:[^'\\\\]))*?'",
                 next : "start"
             }, {
-                token : "string",
-                regex : '.+'
+                defaultToken : "string"
             }
         ],
         "directive" : [

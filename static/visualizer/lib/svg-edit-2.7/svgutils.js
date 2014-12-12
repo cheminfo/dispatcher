@@ -1,1 +1,726 @@
-!function(){function a(a){if(svgedit.browser.supportsHVLineContainerBBox())try{return a.getBBox()}catch(b){}var c,d,e=$.data(a,"ref"),f=null;e?(d=$(e).children().clone().attr("visibility","hidden"),$(i).append(d),f=d.filter("line, path")):f=$(a).find("line, path");var g=!1;if(f.length)if(f.each(function(){var a=this.getBBox();a.width&&a.height||(g=!0)}),g){var h=e?d:$(a).children();c=getStrokedBBox(h)}else c=a.getBBox();else c=a.getBBox();return e&&d.remove(),c}svgedit.utilities||(svgedit.utilities={});var b="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",c=svgedit.NS,d="a,circle,ellipse,foreignObject,g,image,line,path,polygon,polyline,rect,svg,text,tspan,use",e=d.split(","),f=null,g=null,h=null,i=null;svgedit.utilities.init=function(a){f=a,g=a.getDOMDocument(),h=a.getDOMContainer(),i=a.getSVGRoot()},svgedit.utilities.toXml=function(a){return a.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/,"&#x27;")},svgedit.utilities.fromXml=function(a){return $("<p/>").html(a).text()},svgedit.utilities.encode64=function(a){if(a=svgedit.utilities.encodeUTF8(a),window.btoa)return window.btoa(a);var c,d,e,f,g,h,i,j=new Array(4*Math.floor((a.length+2)/3)),k=0,l=0;do c=a.charCodeAt(k++),d=a.charCodeAt(k++),e=a.charCodeAt(k++),f=c>>2,g=(3&c)<<4|d>>4,h=(15&d)<<2|e>>6,i=63&e,isNaN(d)?h=i=64:isNaN(e)&&(i=64),j[l++]=b.charAt(f),j[l++]=b.charAt(g),j[l++]=b.charAt(h),j[l++]=b.charAt(i);while(k<a.length);return j.join("")},svgedit.utilities.decode64=function(a){if(window.atob)return window.atob(a);var c,d,e,f,g,h="",i="",j="",k=0;a=a.replace(/[^A-Za-z0-9\+\/\=]/g,"");do e=b.indexOf(a.charAt(k++)),f=b.indexOf(a.charAt(k++)),g=b.indexOf(a.charAt(k++)),j=b.indexOf(a.charAt(k++)),c=e<<2|f>>4,d=(15&f)<<4|g>>2,i=(3&g)<<6|j,h+=String.fromCharCode(c),64!=g&&(h+=String.fromCharCode(d)),64!=j&&(h+=String.fromCharCode(i)),c=d=i="",e=f=g=j="";while(k<a.length);return unescape(h)},svgedit.utilities.encodeUTF8=function(a){if(null===a||"undefined"==typeof a)return"";var b,c,d=String(a),e="",f=0;b=c=0,f=d.length;var g;for(g=0;f>g;g++){var h=d.charCodeAt(g),i=null;if(128>h)c++;else if(h>127&&2048>h)i=String.fromCharCode(h>>6|192,63&h|128);else if(55296!=(63488&h))i=String.fromCharCode(h>>12|224,h>>6&63|128,63&h|128);else{if(55296!=(64512&h))throw new RangeError("Unmatched trail surrogate at "+g);var j=d.charCodeAt(++g);if(56320!=(64512&j))throw new RangeError("Unmatched lead surrogate at "+(g-1));h=((1023&h)<<10)+(1023&j)+65536,i=String.fromCharCode(h>>18|240,h>>12&63|128,h>>6&63|128,63&h|128)}null!==i&&(c>b&&(e+=d.slice(b,c)),e+=i,b=c=g+1)}return c>b&&(e+=d.slice(b,f)),e},svgedit.utilities.convertToXMLReferences=function(a){var b,c="";for(b=0;b<a.length;b++){var d=a.charCodeAt(b);128>d?c+=a[b]:d>127&&(c+="&#"+d+";")}return c},svgedit.utilities.text2xml=function(a){a.indexOf("<svg:svg")>=0&&(a=a.replace(/<(\/?)svg:/g,"<$1").replace("xmlns:svg","xmlns"));var b,c;try{c=window.DOMParser?new DOMParser:new ActiveXObject("Microsoft.XMLDOM"),c.async=!1}catch(d){throw new Error("XML Parser could not be instantiated")}try{b=c.loadXML?c.loadXML(a)?c:!1:c.parseFromString(a,"text/xml")}catch(e){throw new Error("Error parsing XML string")}return b},svgedit.utilities.bboxToObj=function(a){return{x:a.x,y:a.y,width:a.width,height:a.height}},svgedit.utilities.walkTree=function(a,b){if(a&&1==a.nodeType){b(a);for(var c=a.childNodes.length;c--;)svgedit.utilities.walkTree(a.childNodes.item(c),b)}},svgedit.utilities.walkTreePost=function(a,b){if(a&&1==a.nodeType){for(var c=a.childNodes.length;c--;)svgedit.utilities.walkTree(a.childNodes.item(c),b);b(a)}},svgedit.utilities.getUrlFromAttr=function(a){if(a){if(0===a.indexOf('url("'))return a.substring(5,a.indexOf('"',6));if(0===a.indexOf("url('"))return a.substring(5,a.indexOf("'",6));if(0===a.indexOf("url("))return a.substring(4,a.indexOf(")"))}return null},svgedit.utilities.getHref=function(a){return a.getAttributeNS(c.XLINK,"href")},svgedit.utilities.setHref=function(a,b){a.setAttributeNS(c.XLINK,"xlink:href",b)},svgedit.utilities.findDefs=function(){var a=f.getSVGContent(),b=a.getElementsByTagNameNS(c.SVG,"defs");return b.length>0?b=b[0]:(b=a.ownerDocument.createElementNS(c.SVG,"defs"),a.firstChild?a.insertBefore(b,a.firstChild.nextSibling):a.appendChild(b)),b},svgedit.utilities.getPathBBox=function(a){var b,c=a.pathSegList,d=c.numberOfItems,e=[[],[]],f=c.getItem(0),g=[f.x,f.y];for(b=0;d>b;b++){var h=c.getItem(b);if("undefined"!=typeof h.x)if(e[0].push(g[0]),e[1].push(g[1]),h.x1){var i,j=[h.x1,h.y1],k=[h.x2,h.y2],l=[h.x,h.y];for(i=0;2>i;i++){var m=function(a){return Math.pow(1-a,3)*g[i]+3*Math.pow(1-a,2)*a*j[i]+3*(1-a)*Math.pow(a,2)*k[i]+Math.pow(a,3)*l[i]},n=6*g[i]-12*j[i]+6*k[i],o=-3*g[i]+9*j[i]-9*k[i]+3*l[i],p=3*j[i]-3*g[i];if(0!=o){var q=Math.pow(n,2)-4*p*o;if(!(0>q)){var r=(-n+Math.sqrt(q))/(2*o);r>0&&1>r&&e[i].push(m(r));var s=(-n-Math.sqrt(q))/(2*o);s>0&&1>s&&e[i].push(m(s))}}else{if(0==n)continue;var t=-p/n;t>0&&1>t&&e[i].push(m(t))}}g=l}else e[0].push(h.x),e[1].push(h.y)}var u=Math.min.apply(null,e[0]),v=Math.max.apply(null,e[0])-u,w=Math.min.apply(null,e[1]),x=Math.max.apply(null,e[1])-w;return{x:u,y:w,width:v,height:x}},svgedit.utilities.getBBox=function(b){var c=b||f.geSelectedElements()[0];if(1!=b.nodeType)return null;var d=null,g=c.nodeName;switch(g){case"text":if(""===c.textContent)c.textContent="a",d=c.getBBox(),c.textContent="";else try{d=c.getBBox()}catch(h){}break;case"path":if(svgedit.browser.supportsPathBBox())try{d=c.getBBox()}catch(i){}else d=svgedit.utilities.getPathBBox(c);break;case"g":case"a":d=a(c);break;default:if("use"===g&&(d=a(c,!0)),"use"===g||"foreignObject"===g&&svgedit.browser.isWebkit()){d||(d=c.getBBox());var j={};j.width=d.width,j.height=d.height,j.x=d.x+parseFloat(c.getAttribute("x")||0),j.y=d.y+parseFloat(c.getAttribute("y")||0),d=j}else if(~e.indexOf(g))try{d=c.getBBox()}catch(k){var l=$(c).closest("foreignObject");if(l.length)try{d=l[0].getBBox()}catch(m){d=null}else d=null}}return d&&(d=svgedit.utilities.bboxToObj(d)),d},svgedit.utilities.getRotationAngle=function(a,b){var c=a||f.getSelectedElements()[0],d=svgedit.transformlist.getTransformList(c);if(!d)return 0;var e,g=d.numberOfItems;for(e=0;g>e;++e){var h=d.getItem(e);if(4==h.type)return b?h.angle*Math.PI/180:h.angle}return 0},svgedit.utilities.getRefElem=function(a){return svgedit.utilities.getElem(svgedit.utilities.getUrlFromAttr(a).substr(1))},svgedit.utilities.getElem=svgedit.browser.supportsSelectors()?function(a){return i.querySelector("#"+a)}:svgedit.browser.supportsXpath()?function(a){return g.evaluate('svg:svg[@id="svgroot"]//svg:*[@id="'+a+'"]',h,function(){return svgedit.NS.SVG},9,null).singleNodeValue}:function(a){return $(i).find("[id="+a+"]")[0]},svgedit.utilities.assignAttributes=function(a,b,d,e){d||(d=0);var f=null;svgedit.browser.isOpera()||i.suspendRedraw(d);var g;for(g in b){var h="xml:"===g.substr(0,4)?c.XML:"xlink:"===g.substr(0,6)?c.XLINK:null;h?a.setAttributeNS(h,g,b[g]):e?svgedit.units.setUnitAttr(a,g,b[g]):a.setAttribute(g,b[g])}svgedit.browser.isOpera()||i.unsuspendRedraw(f)},svgedit.utilities.cleanupElement=function(a){var b,c=i.suspendRedraw(60),d={"fill-opacity":1,"stop-opacity":1,opacity:1,stroke:"none","stroke-dasharray":"none","stroke-linejoin":"miter","stroke-linecap":"butt","stroke-opacity":1,"stroke-width":1,rx:0,ry:0};for(b in d){var e=d[b];a.getAttribute(b)==e&&a.removeAttribute(b)}i.unsuspendRedraw(c)},svgedit.utilities.snapToGrid=function(a){var b=f.getSnappingStep(),c=f.getBaseUnit();return"px"!==c&&(b*=svgedit.units.getTypeMap()[c]),a=Math.round(a/b)*b},svgedit.utilities.preg_quote=function(a,b){return String(a).replace(new RegExp("[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\"+(b||"")+"-]","g"),"\\$&")}}();
+/*globals $, svgedit, unescape, DOMParser, ActiveXObject, getStrokedBBox*/
+/*jslint vars: true, eqeq: true, bitwise: true, continue: true, forin: true*/
+/**
+ * Package: svgedit.utilities
+ *
+ * Licensed under the MIT License
+ *
+ * Copyright(c) 2010 Alexis Deveria
+ * Copyright(c) 2010 Jeff Schiller
+ */
+
+// Dependencies:
+// 1) jQuery
+// 2) browser.js
+// 3) svgtransformlist.js
+// 4) units.js
+
+(function() {
+
+if (!svgedit.utilities) {
+	svgedit.utilities = {};
+}
+
+// Constants
+
+// String used to encode base64.
+var KEYSTR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+var NS = svgedit.NS;
+
+// Much faster than running getBBox() every time
+var visElems = 'a,circle,ellipse,foreignObject,g,image,line,path,polygon,polyline,rect,svg,text,tspan,use';
+var visElems_arr = visElems.split(',');
+//var hidElems = 'clipPath,defs,desc,feGaussianBlur,filter,linearGradient,marker,mask,metadata,pattern,radialGradient,stop,switch,symbol,title,textPath';
+
+var editorContext_ = null;
+var domdoc_ = null;
+var domcontainer_ = null;
+var svgroot_ = null;
+
+svgedit.utilities.init = function(editorContext) {
+	editorContext_ = editorContext;
+	domdoc_ = editorContext.getDOMDocument();
+	domcontainer_ = editorContext.getDOMContainer();
+	svgroot_ = editorContext.getSVGRoot();
+};
+
+// Function: svgedit.utilities.toXml
+// Converts characters in a string to XML-friendly entities.
+//
+// Example: '&' becomes '&amp;'
+//
+// Parameters:
+// str - The string to be converted
+//
+// Returns:
+// The converted string
+svgedit.utilities.toXml = function(str) {
+	// &apos; is ok in XML, but not HTML
+	// &gt; does not normally need escaping, though it can if within a CDATA expression (and preceded by "]]")
+	return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/, '&#x27;');
+};
+
+// Function: svgedit.utilities.fromXml
+// Converts XML entities in a string to single characters.
+// Example: '&amp;' becomes '&'
+//
+// Parameters:
+// str - The string to be converted
+//
+// Returns:
+// The converted string
+svgedit.utilities.fromXml = function(str) {
+	return $('<p/>').html(str).text();
+};
+
+// This code was written by Tyler Akins and has been placed in the
+// public domain.  It would be nice if you left this header intact.
+// Base64 code from Tyler Akins -- http://rumkin.com
+
+// schiller: Removed string concatenation in favour of Array.join() optimization,
+//				also precalculate the size of the array needed.
+
+// Function: svgedit.utilities.encode64
+// Converts a string to base64
+svgedit.utilities.encode64 = function(input) {
+	// base64 strings are 4/3 larger than the original string
+	input = svgedit.utilities.encodeUTF8(input); // convert non-ASCII characters
+	// input = svgedit.utilities.convertToXMLReferences(input);
+	if (window.btoa) {
+		return window.btoa(input); // Use native if available
+  }
+	var output = new Array( Math.floor( (input.length + 2) / 3 ) * 4 );
+	var chr1, chr2, chr3;
+	var enc1, enc2, enc3, enc4;
+	var i = 0, p = 0;
+
+	do {
+		chr1 = input.charCodeAt(i++);
+		chr2 = input.charCodeAt(i++);
+		chr3 = input.charCodeAt(i++);
+
+		enc1 = chr1 >> 2;
+		enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+		enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+		enc4 = chr3 & 63;
+
+		if (isNaN(chr2)) {
+			enc3 = enc4 = 64;
+		} else if (isNaN(chr3)) {
+			enc4 = 64;
+		}
+
+		output[p++] = KEYSTR.charAt(enc1);
+		output[p++] = KEYSTR.charAt(enc2);
+		output[p++] = KEYSTR.charAt(enc3);
+		output[p++] = KEYSTR.charAt(enc4);
+	} while (i < input.length);
+
+	return output.join('');
+};
+
+// Function: svgedit.utilities.decode64
+// Converts a string from base64
+svgedit.utilities.decode64 = function(input) {
+	if(window.atob) {
+        return window.atob(input);
+    }
+	var output = '';
+	var chr1, chr2, chr3 = '';
+	var enc1, enc2, enc3, enc4 = '';
+	var i = 0;
+
+	// remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+	input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
+
+	do {
+		enc1 = KEYSTR.indexOf(input.charAt(i++));
+		enc2 = KEYSTR.indexOf(input.charAt(i++));
+		enc3 = KEYSTR.indexOf(input.charAt(i++));
+		enc4 = KEYSTR.indexOf(input.charAt(i++));
+
+		chr1 = (enc1 << 2) | (enc2 >> 4);
+		chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+		chr3 = ((enc3 & 3) << 6) | enc4;
+
+		output = output + String.fromCharCode(chr1);
+
+		if (enc3 != 64) {
+			output = output + String.fromCharCode(chr2);
+		}
+		if (enc4 != 64) {
+			output = output + String.fromCharCode(chr3);
+		}
+
+		chr1 = chr2 = chr3 = '';
+		enc1 = enc2 = enc3 = enc4 = '';
+
+	} while (i < input.length);
+	return unescape(output);
+};
+
+// based on http://phpjs.org/functions/utf8_encode
+// codedread:does not seem to work with webkit-based browsers on OSX // Brettz9: please test again as function upgraded
+svgedit.utilities.encodeUTF8 = function (argString) {
+	//return unescape(encodeURIComponent(input)); //may or may not work
+  if (argString === null || typeof argString === 'undefined') {
+    return '';
+  }
+
+  // .replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  var string = String(argString);
+  var utftext = '',
+    start, end, stringl = 0;
+
+  start = end = 0;
+  stringl = string.length;
+  var n;
+  for (n = 0; n < stringl; n++) {
+    var c1 = string.charCodeAt(n);
+    var enc = null;
+
+    if (c1 < 128) {
+      end++;
+    } else if (c1 > 127 && c1 < 2048) {
+      enc = String.fromCharCode(
+        (c1 >> 6) | 192, (c1 & 63) | 128
+      );
+    } else if ((c1 & 0xF800) != 0xD800) {
+      enc = String.fromCharCode(
+        (c1 >> 12) | 224, ((c1 >> 6) & 63) | 128, (c1 & 63) | 128
+      );
+    } else {
+      // surrogate pairs
+      if ((c1 & 0xFC00) != 0xD800) {
+        throw new RangeError('Unmatched trail surrogate at ' + n);
+      }
+      var c2 = string.charCodeAt(++n);
+      if ((c2 & 0xFC00) != 0xDC00) {
+        throw new RangeError('Unmatched lead surrogate at ' + (n - 1));
+      }
+      c1 = ((c1 & 0x3FF) << 10) + (c2 & 0x3FF) + 0x10000;
+      enc = String.fromCharCode(
+        (c1 >> 18) | 240, ((c1 >> 12) & 63) | 128, ((c1 >> 6) & 63) | 128, (c1 & 63) | 128
+      );
+    }
+    if (enc !== null) {
+      if (end > start) {
+        utftext += string.slice(start, end);
+      }
+      utftext += enc;
+      start = end = n + 1;
+    }
+  }
+
+  if (end > start) {
+    utftext += string.slice(start, stringl);
+  }
+
+  return utftext;
+};
+
+// Function: svgedit.utilities.convertToXMLReferences
+// Converts a string to use XML references
+svgedit.utilities.convertToXMLReferences = function(input) {
+	var n,
+		output = '';
+	for (n = 0; n < input.length; n++){
+		var c = input.charCodeAt(n);
+		if (c < 128) {
+			output += input[n];
+		} else if(c > 127) {
+			output += ('&#' + c + ';');
+		}
+	}
+	return output;
+};
+
+// Function: svgedit.utilities.text2xml
+// Cross-browser compatible method of converting a string to an XML tree
+// found this function here: http://groups.google.com/group/jquery-dev/browse_thread/thread/c6d11387c580a77f
+svgedit.utilities.text2xml = function(sXML) {
+	if(sXML.indexOf('<svg:svg') >= 0) {
+		sXML = sXML.replace(/<(\/?)svg:/g, '<$1').replace('xmlns:svg', 'xmlns');
+	}
+
+	var out, dXML;
+	try{
+		dXML = (window.DOMParser)?new DOMParser():new ActiveXObject('Microsoft.XMLDOM');
+		dXML.async = false;
+	} catch(e){
+		throw new Error('XML Parser could not be instantiated');
+	}
+	try{
+		if (dXML.loadXML) {
+			out = (dXML.loadXML(sXML)) ? dXML : false;
+		}
+		else {
+			out = dXML.parseFromString(sXML, 'text/xml');
+		}
+	}
+	catch(e2){ throw new Error('Error parsing XML string'); }
+	return out;
+};
+
+// Function: svgedit.utilities.bboxToObj
+// Converts a SVGRect into an object.
+// 
+// Parameters:
+// bbox - a SVGRect
+// 
+// Returns:
+// An object with properties names x, y, width, height.
+svgedit.utilities.bboxToObj = function(bbox) {
+	return {
+		x: bbox.x,
+		y: bbox.y,
+		width: bbox.width,
+		height: bbox.height
+	};
+};
+
+// Function: svgedit.utilities.walkTree
+// Walks the tree and executes the callback on each element in a top-down fashion
+//
+// Parameters:
+// elem - DOM element to traverse
+// cbFn - Callback function to run on each element
+svgedit.utilities.walkTree = function(elem, cbFn){
+	if (elem && elem.nodeType == 1) {
+		cbFn(elem);
+		var i = elem.childNodes.length;
+		while (i--) {
+			svgedit.utilities.walkTree(elem.childNodes.item(i), cbFn);
+		}
+	}
+};
+
+// Function: svgedit.utilities.walkTreePost
+// Walks the tree and executes the callback on each element in a depth-first fashion
+// TODO: FIXME: Shouldn't this be calling walkTreePost?
+//
+// Parameters:
+// elem - DOM element to traverse
+// cbFn - Callback function to run on each element
+svgedit.utilities.walkTreePost = function(elem, cbFn) {
+	if (elem && elem.nodeType == 1) {
+		var i = elem.childNodes.length;
+		while (i--) {
+			svgedit.utilities.walkTree(elem.childNodes.item(i), cbFn);
+		}
+		cbFn(elem);
+	}
+};
+
+// Function: svgedit.utilities.getUrlFromAttr
+// Extracts the URL from the url(...) syntax of some attributes.
+// Three variants:
+//  * <circle fill="url(someFile.svg#foo)" />
+//  * <circle fill="url('someFile.svg#foo')" />
+//  * <circle fill='url("someFile.svg#foo")' />
+//
+// Parameters:
+// attrVal - The attribute value as a string
+//
+// Returns:
+// String with just the URL, like someFile.svg#foo
+svgedit.utilities.getUrlFromAttr = function(attrVal) {
+	if (attrVal) {
+		// url("#somegrad")
+		if (attrVal.indexOf('url("') === 0) {
+			return attrVal.substring(5, attrVal.indexOf('"',6));
+		}
+		// url('#somegrad')
+		if (attrVal.indexOf("url('") === 0) {
+			return attrVal.substring(5, attrVal.indexOf("'",6));
+		}
+		if (attrVal.indexOf("url(") === 0) {
+			return attrVal.substring(4, attrVal.indexOf(')'));
+		}
+	}
+	return null;
+};
+
+// Function: svgedit.utilities.getHref
+// Returns the given element's xlink:href value
+svgedit.utilities.getHref = function(elem) {
+	return elem.getAttributeNS(NS.XLINK, 'href');
+};
+
+// Function: svgedit.utilities.setHref
+// Sets the given element's xlink:href value
+svgedit.utilities.setHref = function(elem, val) {
+	elem.setAttributeNS(NS.XLINK, 'xlink:href', val);
+};
+
+// Function: findDefs
+//
+// Returns:
+// The document's <defs> element, create it first if necessary
+svgedit.utilities.findDefs = function() {
+	var svgElement = editorContext_.getSVGContent();
+	var defs = svgElement.getElementsByTagNameNS(NS.SVG, 'defs');
+	if (defs.length > 0) {
+		defs = defs[0];
+	} else {
+		defs = svgElement.ownerDocument.createElementNS(NS.SVG, 'defs');
+		if (svgElement.firstChild) {
+			// first child is a comment, so call nextSibling
+			svgElement.insertBefore(defs, svgElement.firstChild.nextSibling);
+		} else {
+			svgElement.appendChild(defs);
+		}
+	}
+	return defs;
+};
+
+// TODO(codedread): Consider moving the next to functions to bbox.js
+
+// Function: svgedit.utilities.getPathBBox
+// Get correct BBox for a path in Webkit
+// Converted from code found here:
+// http://blog.hackers-cafe.net/2009/06/how-to-calculate-bezier-curves-bounding.html
+//
+// Parameters:
+// path - The path DOM element to get the BBox for
+//
+// Returns:
+// A BBox-like object
+svgedit.utilities.getPathBBox = function(path) {
+	var seglist = path.pathSegList;
+	var tot = seglist.numberOfItems;
+
+	var bounds = [[], []];
+	var start = seglist.getItem(0);
+	var P0 = [start.x, start.y];
+
+	var i;
+	for (i = 0; i < tot; i++) {
+		var seg = seglist.getItem(i);
+
+		if(typeof seg.x === 'undefined') {continue;}
+
+		// Add actual points to limits
+		bounds[0].push(P0[0]);
+		bounds[1].push(P0[1]);
+
+		if(seg.x1) {
+			var P1 = [seg.x1, seg.y1],
+				P2 = [seg.x2, seg.y2],
+				P3 = [seg.x, seg.y];
+
+			var j;
+			for (j = 0; j < 2; j++) {
+
+				var calc = function(t) {
+					return Math.pow(1-t,3) * P0[j]
+						+ 3 * Math.pow(1-t,2) * t * P1[j]
+						+ 3 * (1-t) * Math.pow(t, 2) * P2[j]
+						+ Math.pow(t,3) * P3[j];
+				};
+
+				var b = 6 * P0[j] - 12 * P1[j] + 6 * P2[j];
+				var a = -3 * P0[j] + 9 * P1[j] - 9 * P2[j] + 3 * P3[j];
+				var c = 3 * P1[j] - 3 * P0[j];
+
+				if (a == 0) {
+					if (b == 0) {
+						continue;
+					}
+					var t = -c / b;
+					if (0 < t && t < 1) {
+						bounds[j].push(calc(t));
+					}
+					continue;
+				}
+				var b2ac = Math.pow(b,2) - 4 * c * a;
+				if (b2ac < 0) {continue;}
+				var t1 = (-b + Math.sqrt(b2ac))/(2 * a);
+				if (0 < t1 && t1 < 1) {bounds[j].push(calc(t1));}
+				var t2 = (-b - Math.sqrt(b2ac))/(2 * a);
+				if (0 < t2 && t2 < 1) {bounds[j].push(calc(t2));}
+			}
+			P0 = P3;
+		} else {
+			bounds[0].push(seg.x);
+			bounds[1].push(seg.y);
+		}
+	}
+
+	var x = Math.min.apply(null, bounds[0]);
+	var w = Math.max.apply(null, bounds[0]) - x;
+	var y = Math.min.apply(null, bounds[1]);
+	var h = Math.max.apply(null, bounds[1]) - y;
+	return {
+		'x': x,
+		'y': y,
+		'width': w,
+		'height': h
+	};
+};
+
+// Function: groupBBFix
+// Get the given/selected element's bounding box object, checking for
+// horizontal/vertical lines (see issue 717)
+// Note that performance is currently terrible, so some way to improve would
+// be great.
+//
+// Parameters:
+// selected - Container or <use> DOM element
+function groupBBFix(selected) {
+	if(svgedit.browser.supportsHVLineContainerBBox()) {
+		try { return selected.getBBox();} catch(e){}
+	}
+	var ref = $.data(selected, 'ref');
+	var matched = null;
+	var ret, copy;
+
+	if(ref) {
+		copy = $(ref).children().clone().attr('visibility', 'hidden');
+		$(svgroot_).append(copy);
+		matched = copy.filter('line, path');
+	} else {
+		matched = $(selected).find('line, path');
+	}
+
+	var issue = false;
+	if(matched.length) {
+		matched.each(function() {
+			var bb = this.getBBox();
+			if(!bb.width || !bb.height) {
+				issue = true;
+			}
+		});
+		if(issue) {
+			var elems = ref ? copy : $(selected).children();
+			ret = getStrokedBBox(elems); // getStrokedBBox defined in svgcanvas
+		} else {
+			ret = selected.getBBox();
+		}
+	} else {
+		ret = selected.getBBox();
+	}
+	if(ref) {
+		copy.remove();
+	}
+	return ret;
+}
+
+// Function: svgedit.utilities.getBBox
+// Get the given/selected element's bounding box object, convert it to be more
+// usable when necessary
+//
+// Parameters:
+// elem - Optional DOM element to get the BBox for
+svgedit.utilities.getBBox = function(elem) {
+	var selected = elem || editorContext_.geSelectedElements()[0];
+	if (elem.nodeType != 1) {return null;}
+	var ret = null;
+	var elname = selected.nodeName;
+
+	switch ( elname ) {
+	case 'text':
+		if(selected.textContent === '') {
+			selected.textContent = 'a'; // Some character needed for the selector to use.
+			ret = selected.getBBox();
+			selected.textContent = '';
+		} else {
+			try { ret = selected.getBBox();} catch(e){}
+		}
+		break;
+	case 'path':
+		if(!svgedit.browser.supportsPathBBox()) {
+			ret = svgedit.utilities.getPathBBox(selected);
+		} else {
+			try { ret = selected.getBBox();} catch(e2){}
+		}
+		break;
+	case 'g':
+	case 'a':
+		ret = groupBBFix(selected);
+		break;
+	default:
+
+		if(elname === 'use') {
+			ret = groupBBFix(selected, true);
+		}
+		if(elname === 'use' || ( elname === 'foreignObject' && svgedit.browser.isWebkit() ) ) {
+			if(!ret) {ret = selected.getBBox();}
+			// This is resolved in later versions of webkit, perhaps we should
+			// have a featured detection for correct 'use' behavior?
+			// ——————————
+			//if(!svgedit.browser.isWebkit()) {
+				var bb = {};
+				bb.width = ret.width;
+				bb.height = ret.height;
+				bb.x = ret.x + parseFloat(selected.getAttribute('x')||0);
+				bb.y = ret.y + parseFloat(selected.getAttribute('y')||0);
+				ret = bb;
+			//}
+		} else if(~visElems_arr.indexOf(elname)) {
+			try { ret = selected.getBBox();}
+			catch(e3) {
+				// Check if element is child of a foreignObject
+				var fo = $(selected).closest('foreignObject');
+				if(fo.length) {
+					try {
+						ret = fo[0].getBBox();
+					} catch(e4) {
+						ret = null;
+					}
+				} else {
+					ret = null;
+				}
+			}
+		}
+	}
+	if(ret) {
+		ret = svgedit.utilities.bboxToObj(ret);
+	}
+
+	// get the bounding box from the DOM (which is in that element's coordinate system)
+	return ret;
+};
+
+// Function: svgedit.utilities.getRotationAngle
+// Get the rotation angle of the given/selected DOM element
+//
+// Parameters:
+// elem - Optional DOM element to get the angle for
+// to_rad - Boolean that when true returns the value in radians rather than degrees
+//
+// Returns:
+// Float with the angle in degrees or radians
+svgedit.utilities.getRotationAngle = function(elem, to_rad) {
+	var selected = elem || editorContext_.getSelectedElements()[0];
+	// find the rotation transform (if any) and set it
+	var tlist = svgedit.transformlist.getTransformList(selected);
+	if(!tlist) {return 0;} // <svg> elements have no tlist
+	var N = tlist.numberOfItems;
+	var i;
+	for (i = 0; i < N; ++i) {
+		var xform = tlist.getItem(i);
+		if (xform.type == 4) {
+			return to_rad ? xform.angle * Math.PI / 180.0 : xform.angle;
+		}
+	}
+	return 0.0;
+};
+
+// Function getRefElem
+// Get the reference element associated with the given attribute value
+//
+// Parameters:
+// attrVal - The attribute value as a string
+svgedit.utilities.getRefElem = function(attrVal) {
+	return svgedit.utilities.getElem(svgedit.utilities.getUrlFromAttr(attrVal).substr(1));
+};
+
+// Function: getElem
+// Get a DOM element by ID within the SVG root element.
+//
+// Parameters:
+// id - String with the element's new ID
+if (svgedit.browser.supportsSelectors()) {
+	svgedit.utilities.getElem = function(id) {
+		// querySelector lookup
+		return svgroot_.querySelector('#'+id);
+	};
+} else if (svgedit.browser.supportsXpath()) {
+	svgedit.utilities.getElem = function(id) {
+		// xpath lookup
+		return domdoc_.evaluate(
+			'svg:svg[@id="svgroot"]//svg:*[@id="'+id+'"]',
+			domcontainer_,
+			function() { return svgedit.NS.SVG; },
+			9,
+			null).singleNodeValue;
+	};
+} else {
+	svgedit.utilities.getElem = function(id) {
+		// jQuery lookup: twice as slow as xpath in FF
+		return $(svgroot_).find('[id=' + id + ']')[0];
+	};
+}
+
+// Function: assignAttributes
+// Assigns multiple attributes to an element.
+//
+// Parameters: 
+// node - DOM element to apply new attribute values to
+// attrs - Object with attribute keys/values
+// suspendLength - Optional integer of milliseconds to suspend redraw
+// unitCheck - Boolean to indicate the need to use svgedit.units.setUnitAttr
+svgedit.utilities.assignAttributes = function(node, attrs, suspendLength, unitCheck) {
+	if(!suspendLength) {suspendLength = 0;}
+	// Opera has a problem with suspendRedraw() apparently
+	var handle = null;
+	if (!svgedit.browser.isOpera()) {svgroot_.suspendRedraw(suspendLength);}
+
+	var i;
+	for (i in attrs) {
+		var ns = (i.substr(0,4) === 'xml:' ? NS.XML :
+			i.substr(0,6) === 'xlink:' ? NS.XLINK : null);
+
+		if(ns) {
+			node.setAttributeNS(ns, i, attrs[i]);
+		} else if(!unitCheck) {
+			node.setAttribute(i, attrs[i]);
+		} else {
+			svgedit.units.setUnitAttr(node, i, attrs[i]);
+		}
+	}
+	if (!svgedit.browser.isOpera()) {svgroot_.unsuspendRedraw(handle);}
+};
+
+// Function: cleanupElement
+// Remove unneeded (default) attributes, makes resulting SVG smaller
+//
+// Parameters:
+// element - DOM element to clean up
+svgedit.utilities.cleanupElement = function(element) {
+	var handle = svgroot_.suspendRedraw(60);
+	var defaults = {
+		'fill-opacity':1,
+		'stop-opacity':1,
+		'opacity':1,
+		'stroke':'none',
+		'stroke-dasharray':'none',
+		'stroke-linejoin':'miter',
+		'stroke-linecap':'butt',
+		'stroke-opacity':1,
+		'stroke-width':1,
+		'rx':0,
+		'ry':0
+	};
+
+	var attr;
+	for (attr in defaults) {
+		var val = defaults[attr];
+		if(element.getAttribute(attr) == val) {
+			element.removeAttribute(attr);
+		}
+	}
+
+	svgroot_.unsuspendRedraw(handle);
+};
+
+// Function: snapToGrid
+// round value to for snapping
+// NOTE: This function did not move to svgutils.js since it depends on curConfig.
+svgedit.utilities.snapToGrid = function(value) {
+	var stepSize = editorContext_.getSnappingStep();
+	var unit = editorContext_.getBaseUnit();
+	if (unit !== "px") {
+		stepSize *= svgedit.units.getTypeMap()[unit];
+	}
+	value = Math.round(value/stepSize)*stepSize;
+	return value;
+};
+
+svgedit.utilities.preg_quote = function (str, delimiter) {
+  // From: http://phpjs.org/functions
+  return String(str).replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
+};
+
+}());

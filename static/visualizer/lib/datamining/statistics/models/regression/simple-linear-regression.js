@@ -1,1 +1,57 @@
-define(["./multiple-linear-regression","./../../../math/matrix"],function(a,b){function c(){this.regression=new a(2)}function d(a,b){for(var c=new Array(b.length),d=0,e=b.length;e>d;d++)c[d]=a.compute(b[d]);return c}return c.prototype={get slope(){return this.regression.coefficients[1]},get intercept(){return this.regression.coefficients[0]},regress:function(a,c){if(a.length!==c.length)throw"Number of input and output samples does not match.";for(var d=new Array(a.length),e=0,f=a.length;f>e;e++)d[e]=[1,a[e]];return this.regression.regress(new b(d),c)},compute:function(a){return a instanceof Array?d(this,a):this.slope*a+this.intercept},coefficientOfDetermination:function(a,c,d){"undefined"==typeof d&&(d=!1);for(var e=a.length,f=new Array(e),g=0;e>g;g++)f[g]=[1,a[g]];return this.regression.coefficientOfDetermination(new b(f),c,d)},toString:function(a){return"undefined"==typeof a?"y(x) = "+parseFloat(this.slope.toFixed(10))+"x + "+parseFloat(this.intercept.toFixed(10)):"y(x) = "+this.slope.toFixed(a)+"x + "+this.intercept.toFixed(a)}},c});
+// https://github.com/accord-net/framework/blob/development/Sources/Accord.Statistics/Models/Regression/Linear/SimpleLinearRegression.cs
+define(["./multiple-linear-regression","./../../../math/matrix"],function(MLR,Matrix){
+    
+    function SimpleLinearRegression() {
+        this.regression = new MLR(2);
+    }
+    
+    SimpleLinearRegression.prototype = {
+        get slope() {
+            return this.regression.coefficients[1];
+        },
+        get intercept() {
+            return this.regression.coefficients[0];
+        },
+        regress : function(inputs, outputs) {
+            if(inputs.length !== outputs.length)
+                throw "Number of input and output samples does not match.";
+                
+            var X = new Array(inputs.length);
+            for(var i = 0, ii = inputs.length; i < ii; i++)
+                X[i] = [1, inputs[i]];
+                
+            return this.regression.regress(new Matrix(X), outputs);
+        },
+        compute : function(input) {
+            if(input instanceof Array)
+                return computeArray(this, input);
+            return this.slope * input + this.intercept;
+        },
+        coefficientOfDetermination : function(inputs, outputs, adjust) {
+            if(typeof(adjust)==='undefined') adjust = false;
+            
+            var l = inputs.length;
+            var X = new Array(l);
+            for(var i = 0; i < l; i++)
+                X[i] = [1, inputs[i]];
+                
+            return this.regression.coefficientOfDetermination(new Matrix(X), outputs, adjust);
+        },
+        toString : function(decimals) {
+            if(typeof decimals === 'undefined')
+                return "y(x) = "+parseFloat(this.slope.toFixed(10))+"x + "+parseFloat(this.intercept.toFixed(10));
+            else
+                return "y(x) = "+this.slope.toFixed(decimals)+"x + "+this.intercept.toFixed(decimals);
+        }
+    };
+    
+    function computeArray(slr, input) {
+        var output = new Array(input.length);
+        for(var i = 0, ii = input.length; i < ii; i++)
+            output[i] = slr.compute(input[i]);
+        return output;
+    }
+    
+    return SimpleLinearRegression;
+    
+});

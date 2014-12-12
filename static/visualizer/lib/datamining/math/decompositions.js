@@ -1,1 +1,1547 @@
-define(["./matrix"],function(a){function b(b){if(!(b instanceof a))throw"Argument has to be a Matrix";if(!b.isSquare())throw"Matrix is not a square matrix.";var g=b.columns;this.n=g;var h=a.zeros(g,g);this.V=h,this.d=new Array(g),this.e=new Array(g);var i=b;if(this.symmetric=b.isSymmetric(),this.symmetric){for(var j=0;g>j;j++)for(var k=0;g>k;k++)h[j][k]=i[j][k];c(this),d(this)}else{var l=a.zeros(g,g);this.H=l,this.ort=new Array(g);for(var k=0;g>k;k++)for(var j=0;g>j;j++)l[j][k]=i[j][k];e(this),f(this)}}function c(a){for(var b=a.n,c=a.d,d=a.e,e=a.V,f=0;b>f;f++)c[f]=e[b-1][f];for(var g=b-1;g>0;g--){for(var h=0,i=0,j=0;g>j;j++)h+=Math.abs(c[j]);if(0===h){d[g]=c[g-1];for(var f=0;g>f;f++)c[f]=e[g-1][f],e[g][f]=0,e[f][g]=0}else{for(var j=0;g>j;j++)c[j]/=h,i+=c[j]*c[j];var k=c[g-1],l=Math.sqrt(i);k>0&&(l=-l),d[g]=h*l,i-=k*l,c[g-1]=k-l;for(var f=0;g>f;f++)d[f]=0;for(var f=0;g>f;f++){k=c[f],e[f][g]=k,l=d[f]+e[f][f]*k;for(var j=f+1;g-1>=j;j++)l+=e[j][f]*c[j],d[j]+=e[j][f]*k;d[f]=l}k=0;for(var f=0;g>f;f++)d[f]/=i,k+=d[f]*c[f];for(var m=k/(i+i),f=0;g>f;f++)d[f]-=m*c[f];for(var f=0;g>f;f++){k=c[f],l=d[f];for(var j=f;g-1>=j;j++)e[j][f]-=k*d[j]+l*c[j];c[f]=e[g-1][f],e[g][f]=0}}c[g]=i}for(var g=0;b-1>g;g++){e[b-1][g]=e[g][g],e[g][g]=1;var i=c[g+1];if(0!==i){for(var j=0;g>=j;j++)c[j]=e[j][g+1]/i;for(var f=0;g>=f;f++){for(var l=0,j=0;g>=j;j++)l+=e[j][g+1]*e[j][f];for(var j=0;g>=j;j++)e[j][f]-=l*c[j]}}for(var j=0;g>=j;j++)e[j][g+1]=0}for(var f=0;b>f;f++)c[f]=e[b-1][f],e[b-1][f]=0;e[b-1][b-1]=1,d[0]=0}function d(a){for(var b=a.n,c=a.e,d=a.d,e=a.V,f=1;b>f;f++)c[f-1]=c[f];c[b-1]=0;for(var g=0,h=0,i=Math.pow(2,-52),j=0;b>j;j++){h=Math.max(h,Math.abs(d[j])+Math.abs(c[j]));for(var k=j;b>k&&!(Math.abs(c[k])<=i*h);)k++;if(k>j){var m=0;do{m+=1;var n=d[j],o=(d[j+1]-n)/(2*c[j]),p=l(o,1);0>o&&(p=-p),d[j]=c[j]/(o+p),d[j+1]=c[j]*(o+p);for(var q=d[j+1],r=n-d[j],f=j+2;b>f;f++)d[f]-=r;g+=r,o=d[k];for(var s=1,t=s,u=s,v=c[j+1],w=0,x=0,f=k-1;f>=j;f--){u=t,t=s,x=w,n=s*c[f],r=s*o,p=l(o,c[f]),c[f+1]=w*p,w=c[f]/p,s=o/p,o=s*d[f]-w*n,d[f+1]=r+w*(s*n+w*d[f]);for(var y=0;b>y;y++)r=e[y][f+1],e[y][f+1]=w*e[y][f]+s*r,e[y][f]=s*e[y][f]-w*r}o=-w*x*u*v*c[j]/q,c[j]=w*o,d[j]=s*o}while(Math.abs(c[j])>i*h)}d[j]=d[j]+g,c[j]=0}for(var f=0;b-1>f;f++){for(var y=f,o=d[f],z=f+1;b>z;z++)d[z]<o&&(y=z,o=d[z]);if(y!==f){d[y]=d[f],d[f]=o;for(var z=0;b>z;z++)o=e[z][f],e[z][f]=e[z][y],e[z][y]=o}}}function e(a){for(var b=a.n,c=a.H,d=a.ort,e=a.V,f=0,g=b-1,h=f+1;g-1>=h;h++){for(var i=0,j=h;g>=j;j++)i+=Math.abs(c[j][h-1]);if(0!==i){for(var k=0,j=g;j>=h;j--)d[j]=c[j][h-1]/i,k+=d[j]*d[j];var l=Math.sqrt(k);d[h]>0&&(l=-l),k-=d[h]*l,d[h]=d[h]-l;for(var m=h;b>m;m++){for(var n=0,j=g;j>=h;j--)n+=d[j]*c[j][m];n/=k;for(var j=h;g>=j;j++)c[j][m]-=n*d[j]}for(var j=0;g>=j;j++){for(var n=0,m=g;m>=h;m--)n+=d[m]*c[j][m];n/=k;for(var m=h;g>=m;m++)c[j][m]-=n*d[m]}d[h]=i*d[h],c[h][h-1]=i*l}}for(var j=0;b>j;j++)for(var m=0;b>m;m++)e[j][m]=j===m?1:0;for(var h=g-1;h>=f+1;h--)if(0!==c[h][h-1]){for(var j=h+1;g>=j;j++)d[j]=c[j][h-1];for(var m=h;g>=m;m++){for(var l=0,j=h;g>=j;j++)l+=d[j]*e[j][m];l=l/d[h]/c[h][h-1];for(var j=h;g>=j;j++)e[j][m]+=l*d[j]}}}function f(a){for(var b,c,d,e,f=a.n,h=f-1,i=0,j=f-1,k=Math.pow(2,-52),l=0,m=0,n=0,o=0,p=0,q=0,r=a.H,s=a.V,t=a.d,u=a.e,v=0,w=0;f>w;w++){i>w|w>j&&(t[w]=r[w][w],u[w]=0);for(var x=Math.max(w-1,0);f>x;x++)v+=Math.abs(r[w][x])}for(var y=0;h>=i;){for(var z=h;z>i&&(p=Math.abs(r[z-1][z-1])+Math.abs(r[z][z]),0===p&&(p=v),!(Math.abs(r[z][z-1])<k*p));)z--;if(z===h)r[h][h]=r[h][h]+l,t[h]=r[h][h],u[h]=0,h--,y=0;else if(z===h-1){if(c=r[h][h-1]*r[h-1][h],m=(r[h-1][h-1]-r[h][h])/2,n=m*m+c,q=Math.sqrt(Math.abs(n)),r[h][h]=r[h][h]+l,r[h-1][h-1]=r[h-1][h-1]+l,d=r[h][h],n>=0){q=m>=0?m+q:m-q,t[h-1]=d+q,t[h]=t[h-1],0!==q&&(t[h]=d-c/q),u[h-1]=0,u[h]=0,d=r[h-1],p=Math.abs(d)+Math.abs(q),m=d/p,n=q/p,o=Math.sqrt(m*m+n*n),m/=o,n/=o;for(var x=h-1;f>x;x++)q=r[h-1][x],r[h-1][x]=n*q+m*r[h][x],r[h][x]=n*r[h][x]-m*q;for(var w=0;h>=w;w++)q=r[w][h-1],r[w][h-1]=n*q+m*r[w][h],r[w][h]=n*r[w][h]-m*q;for(var w=i;j>=w;w++)q=s[w][h-1],s[w][h-1]=n*q+m*s[w][h],s[w][h]=n*s[w][h]-m*q}else t[h-1]=d+m,t[h]=d+m,u[h-1]=q,u[h]=-q;h-=2,y=0}else{if(d=r[h][h],e=0,c=0,h>z&&(e=r[h-1][h-1],c=r[h][h-1]*r[h-1][h]),10===y){l+=d;for(var w=i;h>=w;w++)r[w][w]-=d;p=Math.abs(r[h][h-1])+Math.abs(r[h-1][h-2]),d=e=.75*p,c=-.4375*p*p}if(30===y&&(p=(e-d)/2,p=p*p+c,p>0)){p=Math.sqrt(p),d>e&&(p=-p),p=d-c/((e-d)/2+p);for(var w=i;h>=w;w++)r[w][w]-=p;l+=p,d=e=c=.964}y+=1;for(var A=h-2;A>=z&&(q=r[A][A],o=d-q,p=e-q,m=(o*p-c)/r[A+1][A]+r[A][A+1],n=r[A+1][A+1]-q-o-p,o=r[A+2][A+1],p=Math.abs(m)+Math.abs(n)+Math.abs(o),m/=p,n/=p,o/=p,A!==z)&&!(Math.abs(r[A][A-1])*(Math.abs(n)+Math.abs(o))<k*Math.abs(m)*(Math.abs(r[A-1][A-1])+Math.abs(q)+Math.Abs(r[A+1][A+1])));)A--;for(var w=A+2;h>=w;w++)r[w][w-2]=0,w>A+2&&(r[w][w-3]=0);for(var B=A;h-1>=B;B++){var C=B!==h-1;if(B!==A&&(m=r[B][B-1],n=r[B+1][B-1],o=C?r[B+2][B-1]:0,d=Math.abs(m)+Math.abs(n)+Math.abs(o),0!==d&&(m/=d,n/=d,o/=d)),0===d)break;if(p=Math.sqrt(m*m+n*n+o*o),0>m&&(p=-p),0!==p){B!==A?r[B][B-1]=-p*d:z!==A&&(r[B][B-1]=-r[B][B-1]),m+=p,d=m/p,e=n/p,q=o/p,n/=m,o/=m;for(var x=B;f>x;x++)m=r[B][x]+n*r[B+1][x],C&&(m+=o*r[B+2][x],r[B+2][x]=r[B+2][x]-m*q),r[B][x]=r[B][x]-m*d,r[B+1][x]=r[B+1][x]-m*e;for(var w=0;w<=Math.min(h,B+3);w++)m=d*r[w][B]+e*r[w][B+1],C&&(m+=q*r[w][B+2],r[w][B+2]=r[w][B+2]-m*o),r[w][B]=r[w][B]-m,r[w][B+1]=r[w][B+1]-m*n;for(var w=i;j>=w;w++)m=d*s[w][B]+e*s[w][B+1],C&&(m+=q*s[w][B+2],s[w][B+2]=s[w][B+2]-m*o),s[w][B]=s[w][B]-m,s[w][B+1]=s[w][B+1]-m*n}}}}if(0!==v){for(h=f-1;h>=0;h--)if(m=t[h],n=u[h],0===n){var z=h;r[h][h]=1;for(var w=h-1;w>=0;w--){c=r[w][w]-m,o=0;for(var x=z;h>=x;x++)o+=r[w][x]*r[x][h];if(u[w]<0)q=c,p=o;else if(z=w,0===u[w]?r[w][h]=0!==c?-o/c:-o/(k*v):(d=r[w][w+1],e=r[w+1][w],n=(t[w]-m)*(t[w]-m)+u[w]*u[w],b=(d*p-q*o)/n,r[w][h]=b,r[w+1][h]=Math.abs(d)>Math.abs(q)?(-o-c*b)/d:(-p-e*b)/q),b=Math.abs(r[w][h]),k*b*b>1)for(var x=w;h>=x;x++)r[x][h]=r[x][h]/b}}else if(0>n){var z=h-1;Math.abs(r[h][h-1])>Math.abs(r[h-1][h])?(r[h-1][h-1]=n/r[h][h-1],r[h-1][h]=-(r[h][h]-m)/r[h][h-1]):(g(a,0,-r[h-1][h],r[h-1][h-1]-m,n),r[h-1][h-1]=a.cdivr,r[h-1][h]=a.cdivi),r[h][h-1]=0,r[h][h]=1;for(var w=h-2;w>=0;w--){var D,E,F,G;D=0,E=0;for(var x=z;h>=x;x++)D+=r[w][x]*r[x][h-1],E+=r[w][x]*r[x][h];if(c=r[w][w]-m,u[w]<0)q=c,o=D,p=E;else if(z=w,0===u[w]?(g(a,-D,-E,c,n),r[w][h-1]=a.cdivr,r[w][h]=a.cdivi):(d=r[w][w+1],e=r[w+1][w],F=(t[w]-m)*(t[w]-m)+u[w]*u[w]-n*n,G=2*(t[w]-m)*n,0===F&0===G&&(F=k*v*(Math.abs(c)+Math.abs(n)+Math.abs(d)+Math.abs(e)+Math.abs(q))),g(a,d*o-q*D+n*E,d*p-q*E-n*D,F,G),r[w][h-1]=a.cdivr,r[w][h]=a.cdivi,Math.abs(d)>Math.abs(q)+Math.abs(n)?(r[w+1][h-1]=(-D-c*r[w][h-1]+n*r[w][h])/d,r[w+1][h]=(-E-c*r[w][h]-n*r[w][h-1])/d):(g(a,-o-e*r[w][h-1],-p-e*r[w][h],q,n),r[w+1][h-1]=a.cdivr,r[w+1][h]=a.cdivi)),b=Math.max(Math.abs(r[w][h-1]),Math.abs(r[w][h])),k*b*b>1)for(var x=w;h>=x;x++)r[x][h-1]=r[x][h-1]/b,r[x][h]=r[x][h]/b}}for(var w=0;f>w;w++)if(i>w|w>j)for(var x=w;f>x;x++)s[w][x]=r[w][x];for(var x=f-1;x>=i;x--)for(var w=i;j>=w;w++){q=0;for(var B=i;B<=Math.min(x,j);B++)q+=s[w][B]*r[B][x];s[w][x]=q}}}function g(a,b,c,d,e){var f,g;Math.abs(d)>Math.abs(e)?(f=e/d,g=d+f*e,a.cdivr=(b+f*c)/g,a.cdivi=(c-f*b)/g):(f=d/e,g=e+f*d,a.cdivr=(f*b+c)/g,a.cdivi=(f*c-b)/g)}function h(b){if(!(b instanceof a))throw"Argument has to be a Matrix";this.LU=b.clone();for(var c=this.LU,d=b.rows,e=b.columns,f=new Array(d),g=0;d>g;g++)f[g]=g;for(var h,i=1,j=new Array(d),k=0;e>k;k++){for(var g=0;d>g;g++)j[g]=c[g][k];for(var g=0;d>g;g++){h=c[g];for(var l=Math.min(g,k),m=0,n=0;l>n;n++)m+=h[n]*j[n];h[k]=j[g]-=m}for(var o=k,g=k+1;d>g;g++)Math.abs(j[g])>Math.abs(j[o])&&(o=g);if(o!==k){for(var n=0;e>n;n++){var p=c[o][n];c[o][n]=c[k][n],c[k][n]=p}var q=f[o];f[o]=f[k],f[k]=q,i=-i}if(d>k&0!==c[k][k])for(var g=k+1;d>g;g++)c[g][k]/=c[k][k]}this.pivotVector=f,this.pivotSign=i}function i(b){if(!(b instanceof a))throw"Argument has to be a Matrix";this.QR=b.clone();var c=this.QR,d=b.rows,e=b.columns;this.Rdiag=new Array(e);for(var f=0;e>f;f++){for(var g=0,h=f;d>h;h++)g=l(g,c[h][f]);if(0!==g){c[f][f]<0&&(g=-g);for(var h=f;d>h;h++)c[h][f]/=g;c[f][f]+=1;for(var i=f+1;e>i;i++){for(var j=0,h=f;d>h;h++)j+=c[h][f]*c[h][i];j=-j/c[f][f];for(var h=f;d>h;h++)c[h][i]+=j*c[h][f]}}this.Rdiag[f]=-g}}function j(b,c){if(!(b instanceof a))throw"Argument has to be a Matrix";c=c?c:{};var d=b.clone(),e=b.rows,f=b.columns,g=Math.min(e,f),h=new Array(Math.min(e+1,f)),i=a.zeros(e,g),j=a.zeros(f,f),k=new Array(f),m=new Array(e),n=!0,o=!0;c.computeLeftSingularVectors===!1&&(n=!1),c.computeRightSingularVectors===!1&&(o=!1);var p=c.autoTranspose===!0?!0:!1,q=!1;if(f>e)if(p){d=d.transpose(),e=d.rows,f=d.columns,q=!0;var r=n;n=o,o=r}else console.warn("WARNING: Computing SVD on a matrix with more columns than rows.");for(var s=Math.min(e-1,f),t=Math.max(0,Math.min(f-2,e)),u=0,v=Math.max(s,t);v>u;u++){if(s>u){h[u]=0;for(var w=u;e>w;w++)h[u]=l(h[u],d[w][u]);if(0!==h[u]){d[u][u]<0&&(h[u]=-h[u]);for(var w=u;e>w;w++)d[w][u]/=h[u];d[u][u]+=1}h[u]=-h[u]}for(var x=u+1;f>x;x++){if(s>u&0!==h[u]){for(var y=0,w=u;e>w;w++)y+=d[w][u]*d[w][x];y=-y/d[u][u];for(var w=u;e>w;w++)d[w][x]+=y*d[w][u]}k[x]=d[u][x]}if(n&s>u)for(var w=u;e>w;w++)i[w][u]=d[w][u];if(t>u){k[u]=0;for(var w=u+1;f>w;w++)k[u]=l(k[u],k[w]);if(0!==k[u]){k[u+1]<0&&(k[u]=-k[u]);for(var w=u+1;f>w;w++)k[w]/=k[u];k[u+1]+=1}if(k[u]=-k[u],e>u+1&0!==k[u]){for(var w=u+1;e>w;w++)m[w]=0;for(var x=u+1;f>x;x++)for(var w=u+1;e>w;w++)m[w]+=k[x]*d[w][x];for(var x=u+1;f>x;x++)for(var y=-k[x]/k[u+1],w=u+1;e>w;w++)d[w][x]+=y*m[w]}if(o)for(var w=u+1;f>w;w++)j[w][u]=k[w]}}var z=Math.min(f,e+1);if(f>s&&(h[s]=d[s][s]),z>e&&(h[z-1]=0),z>t+1&&(k[t]=d[t][z-1]),k[z-1]=0,n){for(var x=s;g>x;x++){for(var w=0;e>w;w++)i[w][x]=0;i[x][x]=1}for(var u=s-1;u>=0;u--)if(0!==h[u]){for(var x=u+1;g>x;x++){for(var y=0,w=u;e>w;w++)y+=i[w][u]*i[w][x];y=-y/i[u][u];for(var w=u;e>w;w++)i[w][x]+=y*i[w][u]}for(var w=u;e>w;w++)i[w][u]=-i[w][u];i[u][u]=1+i[u][u];for(var w=0;u-1>w;w++)i[w][u]=0}else{for(var w=0;e>w;w++)i[w][u]=0;i[u][u]=1}}if(o)for(var u=f-1;u>=0;u--){if(t>u&0!==k[u])for(var x=u+1;g>x;x++){for(var y=0,w=u+1;f>w;w++)y+=j[w][u]*j[w][x];y=-y/j[u+1][u];for(var w=u+1;f>w;w++)j[w][x]+=y*j[w][u]}for(var w=0;f>w;w++)j[w][u]=0;j[u][u]=1}for(var A=z-1,B=0,C=Math.pow(2,-52);z>0;){var u,D;for(u=z-2;u>=-1&&-1!==u;u--)if(Math.abs(k[u])<=C*(Math.abs(h[u])+Math.abs(h[u+1]))){k[u]=0;break}if(u===z-2)D=4;else{var E;for(E=z-1;E>=u&&E!==u;E--){var y=(E!==z?Math.abs(k[E]):0)+(E!==u+1?Math.abs(k[E-1]):0);if(Math.abs(h[E])<=C*y){h[E]=0;break}}E===u?D=3:E===z-1?D=1:(D=2,u=E)}switch(u++,D){case 1:var F=k[z-2];k[z-2]=0;for(var x=z-2;x>=u;x--){var y=l(h[x],F),G=h[x]/y,H=F/y;if(h[x]=y,x!==u&&(F=-H*k[x-1],k[x-1]=G*k[x-1]),o)for(var w=0;f>w;w++)y=G*j[w][x]+H*j[w][z-1],j[w][z-1]=-H*j[w][x]+G*j[w][z-1],j[w][x]=y}break;case 2:var F=k[u-1];k[u-1]=0;for(var x=u;z>x;x++){var y=l(h[x],F),G=h[x]/y,H=F/y;if(h[x]=y,F=-H*k[x],k[x]=G*k[x],n)for(var w=0;e>w;w++)y=G*i[w][x]+H*i[w][u-1],i[w][u-1]=-H*i[w][x]+G*i[w][u-1],i[w][x]=y}break;case 3:var I=Math.max(Math.max(Math.max(Math.max(Math.abs(h[z-1]),Math.abs(h[z-2])),Math.abs(k[z-2])),Math.abs(h[u])),Math.abs(k[u])),J=h[z-1]/I,K=h[z-2]/I,L=k[z-2]/I,M=h[u]/I,N=k[u]/I,O=((K+J)*(K-J)+L*L)/2,P=J*L*J*L,Q=0;0!==O|0!==P&&(Q=Math.sqrt(O*O+P),0>O&&(Q=-Q),Q=P/(O+Q));for(var F=(M+J)*(M-J)+Q,R=M*N,x=u;z-1>x;x++){var y=l(F,R),G=F/y,H=R/y;if(x!==u&&(k[x-1]=y),F=G*h[x]+H*k[x],k[x]=G*k[x]-H*h[x],R=H*h[x+1],h[x+1]=G*h[x+1],o)for(var w=0;f>w;w++)y=G*j[w][x]+H*j[w][x+1],j[w][x+1]=-H*j[w][x]+G*j[w][x+1],j[w][x]=y;if(y=l(F,R),G=F/y,H=R/y,h[x]=y,F=G*k[x]+H*h[x+1],h[x+1]=-H*k[x]+G*h[x+1],R=H*k[x+1],k[x+1]=G*k[x+1],n&&e-1>x)for(var w=0;e>w;w++)y=G*i[w][x]+H*i[w][x+1],i[w][x+1]=-H*i[w][x]+G*i[w][x+1],i[w][x]=y}k[z-2]=F,B+=1;break;case 4:if(h[u]<=0&&(h[u]=h[u]<0?-h[u]:0,o))for(var w=0;A>=w;w++)j[w][u]=-j[w][u];for(;A>u&&!(h[u]>=h[u+1]);){var y=h[u];if(h[u]=h[u+1],h[u+1]=y,o&&f-1>u)for(var w=0;f>w;w++)y=j[w][u+1],j[w][u+1]=j[w][u],j[w][u]=y;if(n&&e-1>u)for(var w=0;e>w;w++)y=i[w][u+1],i[w][u+1]=i[w][u],i[w][u]=y;u++}B=0,z--}}this.m=e,this.n=f,this.s=h,q?(this.U=j,this.V=i):(this.U=i,this.V=j)}function k(b){if(!(b instanceof a))throw"Argument has to be a Matrix";if(!b.isSquare())throw"Matrix is not square";var c=b.rows;this.L=a.empty(c,c);var d=b,e=this.L;this.positiveDefinite=!0,this.symmetric=!0;for(var f=0;c>f;f++){for(var g=e[f],h=0,i=0;f>i;i++){for(var j=e[i],k=0,l=0;i>l;l++)k+=j[l]*g[l];g[i]=k=(d[f][i]-k)/e[i][i],h+=k*k,this.symmetric=this.symmetric&d[i][f]==d[f][i]}h=d[f][f]-h,this.positiveDefinite=this.positiveDefinite&h>0,e[f][f]=Math.sqrt(Math.max(h,0));for(var i=f+1;c>i;i++)e[f][i]=0}}function l(a,b){if(Math.abs(a)>Math.abs(b)){var c=b/a;return Math.abs(a)*Math.sqrt(1+c*c)}if(0!==b){var c=a/b;return Math.abs(b)*Math.sqrt(1+c*c)}return 0}return b.prototype={get realEigenvalues(){return this.d},get imaginaryEigenvalues(){return this.e},get eigenvectorMatrix(){return this.V},get diagonalMatrix(){for(var b=this.n,c=this.e,d=this.d,e=a.empty(b,b),f=0;b>f;f++){for(var g=0;b>g;g++)e[f][g]=0;e[f][f]=d[f],c[f]>0?e[f][f+1]=c[f]:c[f]<0&&(e[f][f-1]=c[f])}return e}},h.prototype={isNonSingular:function(){for(var a=this.LU.columns,b=this.LU,c=0;a>c;c++)if(0===b[c][c])return!1;return!0},determinant:function(){if(!this.LU.isSquare())throw"Matrix must be square";for(var a=this.pivotSign,b=this.LU.columns,c=this.LU,d=0;b>d;d++)a*=c[d][d];return a},lowerTriangularFactor:function(){for(var b=this.LU.rows,c=this.LU.columns,d=a.empty(b,c),e=this.LU,f=0;b>f;f++)for(var g=0;c>g;g++)d[f][g]=f>g?e[f][g]:f===g?1:0;return d},upperTriangularFactor:function(){for(var b=this.LU.rows,c=this.LU.columns,d=a.empty(b,c),e=this.LU,f=0;b>f;f++)for(var g=0;c>g;g++)d[f][g]=g>=f?e[f][g]:0;return d},pivotPermutationVector:function(){return this.pivotVector.slice()},solve:function(b){if(!(b instanceof a))throw"Argument has to be a Matrix.";if(this.LU.rows!==b.rows)throw"Invalid matrix dimensions.";if(!this.isNonSingular())throw"Matrix is singular.";for(var c=b.columns,d=b.subMatrixRow(this.pivotVector,0,c-1),e=(this.LU.rows,this.LU.columns),f=this.LU,g=0;e>g;g++)for(var h=g+1;e>h;h++)for(var i=0;c>i;i++)d[h][i]-=d[g][i]*f[h][g];for(var g=e-1;g>=0;g--){for(var i=0;c>i;i++)d[g][i]/=f[g][g];for(var h=0;g>h;h++)for(var i=0;c>i;i++)d[h][i]-=d[g][i]*f[h][g]}return d}},i.prototype={solve:function(b){if(!(b instanceof a))throw"Argument has to be a Matrix";if(b.rows!==this.QR.rows)throw"Matrix row dimensions must agree.";if(!this.isFullRank())throw"Matrix is rank deficient.";for(var c=b.columns,d=b.clone(),e=this.QR.rows,f=this.QR.columns,g=this.QR,h=0;f>h;h++)for(var i=0;c>i;i++){for(var j=0,k=h;e>k;k++)j+=g[k][h]*d[k][i];j=-j/g[h][h];for(var k=h;e>k;k++)d[k][i]+=j*g[k][h]}for(var h=f-1;h>=0;h--){for(var i=0;c>i;i++)d[h][i]/=this.Rdiag[h];for(var k=0;h>k;k++)for(var i=0;c>i;i++)d[k][i]-=d[h][i]*g[k][h]}return d.subMatrix(0,f-1,0,c-1)},isFullRank:function(){for(var a=this.QR.columns,b=0;a>b;b++)if(0===this.Rdiag[b])return!1;return!0},upperTriangularFactor:function(){for(var b=this.QR.columns,c=a.empty(b,b),d=this.QR,e=0;b>e;e++)for(var f=0;b>f;f++)c[e][f]=f>e?d[e][f]:e===f?this.Rdiag[e]:0;return c},orthogonalFactor:function(){for(var b=this.QR.rows,c=this.QR.columns,d=a.empty(b,c),e=this.QR,f=c-1;f>=0;f--){for(var g=0;b>g;g++)d[g][f]=0;d[f][f]=1;for(var h=f;c>h;h++)if(0!==e[f][f]){for(var i=0,g=f;b>g;g++)i+=e[g][f]*d[g][h];i=-i/e[f][f];for(var g=f;b>g;g++)d[g][h]+=i*e[g][f]}}return d}},j.prototype={get condition(){return this.s[0]/this.s[Math.min(this.m,this.n)-1]},get norm2(){return this.s[0]},get rank(){for(var a=Math.pow(2,-52),b=Math.max(this.m,this.n)*this.s[0]*a,c=0,d=this.s,e=0,f=d.length;f>e;e++)d[e]>b&&c++;return c},get diagonal(){return this.s},get threshold(){return Math.pow(2,-52)/2*Math.max(this.m,this.n)*this.s[0]},solve:function(b){for(var c=b,d=this.threshold,e=this.s.length,f=a.zeros(e,e),g=0;e>g;g++)f[g][g]=Math.abs(this.s[g])<=d?0:1/this.s[g];for(var h=this.V.mmul(f),i=this.V.rows,j=this.U.rows,k=a.zeros(i,j),g=0;i>g;g++)for(var l=0;j>l;l++){for(var m=0,n=0;e>n;n++)m+=h[g][n]*this.U[l][n];k[g][l]=m}return k.mmul(c)},solveForDiagonal:function(b){return this.solve(a.diag(b))}},k.prototype={isSymmetric:function(){return this.symmetric},isPositiveDefinite:function(){return this.positiveDefinite},get leftTriangularFactor(){return this.L},solve:function(b){if(!(b instanceof a))throw"Argument has to be a Matrix.";if(b.rows!==this.L.rows)throw"Matrix dimensions do not match.";if(!this.symmetric)throw"Matrix is not symmetric";if(!this.positiveDefinite)throw"Matrix is not positive definite";for(var c=this.L.rows,d=b.columns,e=b.clone(),f=this.L,g=0;c>g;g++)for(var h=0;d>h;h++){for(var i=0;g>i;i++)e[g][h]-=e[i][h]*f[g][i];e[g][h]/=f[g][g]}for(var g=c-1;g>=0;g--)for(var h=0;d>h;h++){for(var i=g+1;c>i;i++)e[g][h]-=e[i][h]*f[i][g];e[g][h]/=f[g][g]}return e}},{LuDecomposition:h,QrDecomposition:i,SingularValueDecomposition:j,EigenvalueDecomposition:b,CholeskyDecomposition:k}});
+define(["./matrix"],function(Matrix){
+    // https://github.com/lutzroeder/Mapack/blob/master/Source/EigenvalueDecomposition.cs
+    function EigenvalueDecomposition(matrix) {
+        if(!(matrix instanceof Matrix))
+            throw "Argument has to be a Matrix";
+        if(!matrix.isSquare())
+            throw "Matrix is not a square matrix.";
+            
+        var n = matrix.columns; this.n = n;
+        var V = Matrix.zeros(n,n); this.V = V;
+        this.d = new Array(n);
+        this.e = new Array(n);
+        
+        var value = matrix;
+        
+        this.symmetric = matrix.isSymmetric();
+        if(this.symmetric) {
+            for (var i = 0; i < n; i++) {
+                for (var j = 0; j < n; j++) {
+                    V[i][j] = value[i][j];
+                }
+            }
+            tred2(this);
+            tql2(this);
+        }
+        else {
+            var H = Matrix.zeros(n, n); this.H = H;
+            this.ort = new Array(n);
+            
+            for (var j = 0; j < n; j++) {
+                for (var i = 0; i < n; i++) {
+                    H[i][j] = value[i][j];
+                }
+            }
+            orthes(this);
+            hqr2(this);
+        }
+    }
+    
+    function tred2(evd) {
+        var n = evd.n;
+        var d = evd.d;
+        var e = evd.e;
+        var V = evd.V;
+        
+        for (var j = 0; j < n; j++)
+            d[j] = V[n-1][j];
+        
+        for(var i = n-1; i > 0; i--) {
+            var scale = 0.0;
+            var h = 0.0;
+            for (var k = 0; k < i; k++)
+                scale = scale + Math.abs(d[k]);
+            
+            if (scale === 0.0) {
+                e[i] = d[i-1];
+                for (var j = 0; j < i; j++) {
+                    d[j] = V[i-1][j];
+                    V[i][j] = 0.0;
+                    V[j][i] = 0.0;
+                }
+            }
+            else {
+                for (var k = 0; k < i; k++) {
+                    d[k] /= scale;
+                    h += d[k] * d[k];
+                }
+
+                var f = d[i-1];
+                var g = Math.sqrt(h);
+                if (f > 0) g = -g;
+
+                e[i] = scale * g;
+                h = h - f * g;
+                d[i-1] = f - g;
+                for (var j = 0; j < i; j++)
+                    e[j] = 0.0;
+
+                for (var j = 0; j < i; j++) {
+                    f = d[j];
+                    V[j][i] = f;
+                    g = e[j] + V[j][j] * f;
+                    for (var k = j+1; k <= i-1; k++) {
+                        g += V[k][j] * d[k];
+                        e[k] += V[k][j] * f;
+                    }
+                    e[j] = g;
+                }
+                                
+                f = 0.0;
+                for (var j = 0; j < i; j++) {
+                    e[j] /= h;
+                    f += e[j] * d[j];
+                }
+                
+                var hh = f / (h + h);
+                for (var j = 0; j < i; j++)
+                    e[j] -= hh * d[j];
+
+                for (var j = 0; j < i; j++) {
+                    f = d[j];
+                    g = e[j];
+                    for (var k = j; k <= i-1; k++)
+                        V[k][j] -= (f * e[k] + g * d[k]);
+
+                    d[j] = V[i-1][j];
+                    V[i][j] = 0.0;
+                }
+            }
+            d[i] = h;
+        }
+        
+        for (var i = 0; i < n-1; i++) {
+            V[n-1][i] = V[i][i];
+            V[i][i] = 1.0;
+            var h = d[i+1];
+            if (h !== 0.0) {
+                for (var k = 0; k <= i; k++)
+                    d[k] = V[k][i+1] / h;
+
+                for (var j = 0; j <= i; j++) {
+                    var g = 0.0;
+                    for (var k = 0; k <= i; k++)
+                        g += V[k][i+1] * V[k][j];
+                    for (var k = 0; k <= i; k++)
+                        V[k][j] -= g * d[k];
+                }
+            }
+
+            for (var k = 0; k <= i; k++)
+                V[k][i+1] = 0.0;
+        }
+        
+        for (var j = 0; j < n; j++) {
+            d[j] = V[n-1][j];
+            V[n-1][j] = 0.0;
+        }
+                
+        V[n-1][n-1] = 1.0;
+        e[0] = 0.0;
+    }
+    
+    function tql2(evd) {
+        var n = evd.n;
+        var e = evd.e;
+        var d = evd.d;
+        var V = evd.V;
+        
+        for (var i = 1; i < n; i++)
+            e[i-1] = e[i];
+        
+        e[n-1] = 0.0;
+        
+        var f = 0.0;
+        var tst1 = 0.0;
+        var eps = Math.pow(2.0,-52.0);
+        
+        for (var l = 0; l < n; l++) {
+            tst1 = Math.max(tst1,Math.abs(d[l]) + Math.abs(e[l]));
+            var m = l;
+            while (m < n) {
+                if (Math.abs(e[m]) <= eps*tst1)
+                    break;
+                m++;
+            }
+
+            if (m > l) {
+                var iter = 0;
+                do {
+                    iter = iter + 1;
+
+                    var g = d[l];
+                    var p = (d[l+1] - g) / (2.0 * e[l]);
+                    var r = hypotenuse(p,1.0);
+                    if (p < 0) {
+                        r = -r;
+                    }
+
+                    d[l] = e[l] / (p + r);
+                    d[l+1] = e[l] * (p + r);
+                    var dl1 = d[l+1];
+                    var h = g - d[l];
+                    for (var i = l+2; i < n; i++) {
+                        d[i] -= h;
+                    }
+
+                    f = f + h;
+
+                    p = d[m];
+                    var c = 1.0;
+                    var c2 = c;
+                    var c3 = c;
+                    var el1 = e[l+1];
+                    var s = 0.0;
+                    var s2 = 0.0;
+                    for (var i = m-1; i >= l; i--) {
+                        c3 = c2;
+                        c2 = c;
+                        s2 = s;
+                        g = c * e[i];
+                        h = c * p;
+                        r = hypotenuse(p,e[i]);
+                        e[i+1] = s * r;
+                        s = e[i] / r;
+                        c = p / r;
+                        p = c * d[i] - s * g;
+                        d[i+1] = h + s * (c * g + s * d[i]);
+
+                        for (var k = 0; k < n; k++) {
+                            h = V[k][i+1];
+                            V[k][i+1] = s * V[k][i] + c * h;
+                            V[k][i] = c * V[k][i] - s * h;
+                        }
+                    }
+                            
+                    p = -s * s2 * c3 * el1 * e[l] / dl1;
+                    e[l] = s * p;
+                    d[l] = c * p;
+
+                } 
+                while (Math.abs(e[l]) > eps*tst1);
+            }
+            d[l] = d[l] + f;
+            e[l] = 0.0;
+        }
+        
+        for (var i = 0; i < n-1; i++) {
+            var k = i;
+            var p = d[i];
+            for (var j = i+1; j < n; j++) {
+                if (d[j] < p) {
+                    k = j;
+                    p = d[j];
+                }
+            }
+                     
+            if (k !== i) {
+                d[k] = d[i];
+                d[i] = p;
+                for (var j = 0; j < n; j++) {
+                    p = V[j][i];
+                    V[j][i] = V[j][k];
+                    V[j][k] = p;
+                }
+            }
+        }
+    }
+    
+    function orthes(evd) {
+        var n = evd.n;
+        var H = evd.H;
+        var ort = evd.ort;
+        var V = evd.V
+    
+        var low = 0;
+        var high = n-1;
+ 
+        for (var m = low+1; m <= high-1; m++) {
+            var scale = 0.0;
+            for (var i = m; i <= high; i++)
+                scale = scale + Math.abs(H[i][m-1]);
+
+            if (scale !== 0.0) {
+                var h = 0.0;
+                for (var i = high; i >= m; i--) {
+                    ort[i] = H[i][m-1]/scale;
+                    h += ort[i] * ort[i];
+                }
+                        
+                var g = Math.sqrt(h);
+                if (ort[m] > 0) g = -g;
+
+                h = h - ort[m] * g;
+                ort[m] = ort[m] - g;
+
+                for (var j = m; j < n; j++) {
+                    var f = 0.0;
+                    for (var i = high; i >= m; i--) 
+                        f += ort[i]*H[i][j];
+
+                    f = f/h;
+                    for (var i = m; i <= high; i++)
+                        H[i][j] -= f*ort[i];
+                }
+
+                for (var i = 0; i <= high; i++) {
+                    var f = 0.0;
+                    for (var j = high; j >= m; j--)
+                        f += ort[j]*H[i][j];
+
+                    f = f/h;
+                    for (var j = m; j <= high; j++)
+                        H[i][j] -= f*ort[j];
+                }
+
+                ort[m] = scale*ort[m];
+                H[m][m-1] = scale*g;
+            }
+        }
+ 
+        for (var i = 0; i < n; i++)
+            for (var j = 0; j < n; j++)
+                V[i][j] = (i === j ? 1.0 : 0.0);
+
+        for (var m = high-1; m >= low+1; m--) {
+            if (H[m][m-1] !== 0.0) {
+                for (var i = m+1; i <= high; i++)
+                    ort[i] = H[i][m-1];
+
+                for (var j = m; j <= high; j++) {
+                    var g = 0.0;
+                    for (var i = m; i <= high; i++)
+                        g += ort[i] * V[i][j];
+
+                    g = (g / ort[m]) / H[m][m-1];
+                    for (var i = m; i <= high; i++)
+                        V[i][j] += g * ort[i];
+                }
+            }
+        }
+    }
+    
+    function hqr2(evd) {
+        var nn = evd.n;
+        var n = nn-1;
+        var low = 0;
+        var high = nn-1;
+        var eps = Math.pow(2.0,-52.0);
+        var exshift = 0.0;
+        var p = 0;
+        var q = 0;
+        var r = 0;
+        var s = 0;
+        var z = 0;
+        var t;
+        var w;
+        var x;
+        var y;
+        
+        var H = evd.H;
+        var V = evd.V;
+        var d = evd.d;
+        var e = evd.e
+        
+        var norm = 0.0;
+        for (var i = 0; i < nn; i++) {
+            if (i < low | i > high) {
+                d[i] = H[i][i];
+                e[i] = 0.0;
+            }
+                    
+            for (var j = Math.max(i-1,0); j < nn; j++)
+                norm = norm + Math.abs(H[i][j]);
+        }
+
+        var iter = 0;
+        while (n >= low) {
+            var l = n;
+            while (l > low) {
+                s = Math.abs(H[l-1][l-1]) + Math.abs(H[l][l]);
+                if (s === 0.0) s = norm;
+                if (Math.abs(H[l][l-1]) < eps * s)
+                    break;
+
+                l--;
+            }
+
+            if (l === n) {
+                H[n][n] = H[n][n] + exshift;
+                d[n] = H[n][n];
+                e[n] = 0.0;
+                n--;
+                iter = 0;
+            } 
+            else if (l === n-1) {
+                w = H[n][n-1] * H[n-1][n];
+                p = (H[n-1][n-1] - H[n][n]) / 2.0;
+                q = p * p + w;
+                z = Math.sqrt(Math.abs(q));
+                H[n][n] = H[n][n] + exshift;
+                H[n-1][n-1] = H[n-1][n-1] + exshift;
+                x = H[n][n];
+
+                if (q >= 0) {
+                    z = (p >= 0) ? (p + z) : (p - z);
+                    d[n-1] = x + z;
+                    d[n] = d[n-1];
+                    if (z !== 0.0) 
+                        d[n] = x - w / z;
+                    e[n-1] = 0.0;
+                    e[n] = 0.0;
+                    x = H[n,n-1];
+                    s = Math.abs(x) + Math.abs(z);
+                    p = x / s;
+                    q = z / s;
+                    r = Math.sqrt(p * p+q * q);
+                    p = p / r;
+                    q = q / r;
+
+                    for (var j = n-1; j < nn; j++) {
+                        z = H[n-1][j];
+                        H[n-1][j] = q * z + p * H[n][j];
+                        H[n][j] = q * H[n][j] - p * z;
+                    }
+
+                    for (var i = 0; i <= n; i++) {
+                        z = H[i][n-1];
+                        H[i][n-1] = q * z + p * H[i][n];
+                        H[i][n] = q * H[i][n] - p * z;
+                    }
+
+                    for (var i = low; i <= high; i++) {
+                        z = V[i][n-1];
+                        V[i][n-1] = q * z + p * V[i][n];
+                        V[i][n] = q * V[i][n] - p * z;
+                    }
+                }
+                else {
+                    d[n-1] = x + p;
+                    d[n] = x + p;
+                    e[n-1] = z;
+                    e[n] = -z;
+                }
+                        
+                n = n - 2;
+                iter = 0;
+            }
+            else {
+                x = H[n][n];
+                y = 0.0;
+                w = 0.0;
+                if (l < n) {
+                    y = H[n-1][n-1];
+                    w = H[n][n-1] * H[n-1][n];
+                }
+
+                if (iter === 10) {
+                    exshift += x;
+                    for (var i = low; i <= n; i++)
+                        H[i][i] -= x;
+
+                    s = Math.abs(H[n][n-1]) + Math.abs(H[n-1][n-2]);
+                    x = y = 0.75 * s;
+                    w = -0.4375 * s * s;
+                }
+
+                if (iter === 30) {
+                    s = (y - x) / 2.0;
+                    s = s * s + w;
+                    if (s > 0) {
+                        s = Math.sqrt(s);
+                        if (y < x) s = -s;
+                        s = x - w / ((y - x) / 2.0 + s);
+                        for (var i = low; i <= n; i++)
+                            H[i][i] -= s;
+                        exshift += s;
+                        x = y = w = 0.964;
+                    }
+                }
+
+                iter = iter + 1;
+
+                var m = n-2;
+                while (m >= l) {
+                    z = H[m][m];
+                    r = x - z;
+                    s = y - z;
+                    p = (r * s - w) / H[m+1][m] + H[m][m+1];
+                    q = H[m+1][m+1] - z - r - s;
+                    r = H[m+2][m+1];
+                    s = Math.abs(p) + Math.abs(q) + Math.abs(r);
+                    p = p / s;
+                    q = q / s;
+                    r = r / s;
+                    if (m === l) 
+                        break;
+                    if (Math.abs(H[m][m-1]) * (Math.abs(q) + Math.abs(r)) < eps * (Math.abs(p) * (Math.abs(H[m-1][m-1]) + Math.abs(z) + Math.Abs(H[m+1][m+1])))) 
+                        break;
+                    m--;
+                }
+
+                for (var i = m+2; i <= n; i++) 
+                {
+                    H[i][i-2] = 0.0;
+                    if (i > m+2)
+                        H[i][i-3] = 0.0;
+                }
+
+                for (var k = m; k <= n-1; k++) {
+                    var notlast = (k !== n-1);
+                    if (k !== m) {
+                        p = H[k][k-1];
+                        q = H[k+1][k-1];
+                        r = (notlast ? H[k+2][k-1] : 0.0);
+                        x = Math.abs(p) + Math.abs(q) + Math.abs(r);
+                        if (x !== 0.0) {
+                            p = p / x;
+                            q = q / x;
+                            r = r / x;
+                        }
+                    }
+                            
+                    if (x === 0.0)
+                        break;
+
+                    s = Math.sqrt(p * p + q * q + r * r);
+                    if (p < 0)
+                        s = -s;
+                                     
+                    if (s !== 0) {
+                        if (k !== m)
+                            H[k][k-1] = -s * x;
+                        else 
+                            if (l !== m)
+                                H[k][k-1] = -H[k][k-1];
+
+                        p = p + s;
+                        x = p / s;
+                        y = q / s;
+                        z = r / s;
+                        q = q / p;
+                        r = r / p;
+
+                        for (var j = k; j < nn; j++) 
+                        {
+                            p = H[k][j] + q * H[k+1][j];
+                            if (notlast) 
+                            {
+                                p = p + r * H[k+2][j];
+                                H[k+2][j] = H[k+2][j] - p * z;
+                            }
+                            
+                            H[k][j] = H[k][j] - p * x;
+                            H[k+1][j] = H[k+1][j] - p * y;
+                        }
+
+                        for (var i = 0; i <= Math.min(n,k+3); i++) {
+                            p = x * H[i][k] + y * H[i][k+1];
+                            if (notlast) {
+                                p = p + z * H[i][k+2];
+                                H[i][k+2] = H[i][k+2] - p * r;
+                            }
+                            
+                            H[i][k] = H[i][k] - p;
+                            H[i][k+1] = H[i][k+1] - p * q;
+                        }
+
+                        for (var i = low; i <= high; i++) {
+                            p = x * V[i][k] + y * V[i][k+1];
+                            if (notlast) {
+                                p = p + z * V[i][k+2];
+                                V[i][k+2] = V[i][k+2] - p * r;
+                            }
+                            
+                            V[i][k] = V[i][k] - p;
+                            V[i][k+1] = V[i][k+1] - p * q;
+                        }
+                    }
+                }
+            }
+        }
+                
+        if (norm === 0.0) {
+            return;
+        }
+ 
+        for (n = nn-1; n >= 0; n--) {
+            p = d[n];
+            q = e[n];
+
+            if (q === 0) {
+                var l = n;
+                H[n][n] = 1.0;
+                for (var i = n-1; i >= 0; i--) {
+                    w = H[i][i] - p;
+                    r = 0.0;
+                    for (var j = l; j <= n; j++) 
+                        r = r + H[i][j] * H[j][n];
+                    
+                    if (e[i] < 0.0) {
+                        z = w;
+                        s = r;
+                    }
+                    else {
+                        l = i;
+                        if (e[i] === 0.0) {
+                            H[i][n] = (w !== 0.0) ? (-r / w) : (-r / (eps * norm));
+                        }
+                        else {
+                            x = H[i][i+1];
+                            y = H[i+1][i];
+                            q = (d[i] - p) * (d[i] - p) + e[i] * e[i];
+                            t = (x * s - z * r) / q;
+                            H[i][n] = t;
+                            H[i+1][n] = (Math.abs(x) > Math.abs(z)) ? ((-r - w * t) / x) : ((-s - y * t) / z);
+                        }
+
+                        t = Math.abs(H[i][n]);
+                        if ((eps * t) * t > 1) 
+                            for (var j = i; j <= n; j++)
+                                H[j][n] = H[j][n] / t;
+                    }
+                }
+            }
+            else if (q < 0) {
+                var l = n-1;
+
+                if (Math.abs(H[n][n-1]) > Math.abs(H[n-1][n])) {
+                    H[n-1][n-1] = q / H[n][n-1];
+                    H[n-1][n] = -(H[n][n] - p) / H[n][n-1];
+                }
+                else {
+                    cdiv(evd,0.0,-H[n-1][n],H[n-1][n-1]-p,q);
+                    H[n-1][n-1] = evd.cdivr;
+                    H[n-1][n] = evd.cdivi;
+                }
+                        
+                H[n][n-1] = 0.0;
+                H[n][n] = 1.0;
+                for (var i = n-2; i >= 0; i--) {
+                    var ra,sa,vr,vi;
+                    ra = 0.0;
+                    sa = 0.0;
+                    for (var j = l; j <= n; j++) {
+                        ra = ra + H[i][j] * H[j][n-1];
+                        sa = sa + H[i][j] * H[j][n];
+                    }
+                    
+                    w = H[i][i] - p;
+
+                    if (e[i] < 0.0) {
+                        z = w;
+                        r = ra;
+                        s = sa;
+                    }
+                    else {
+                        l = i;
+                        if (e[i] === 0) {
+                            cdiv(evd,-ra,-sa,w,q);
+                            H[i][n-1] = evd.cdivr;
+                            H[i][n] = evd.cdivi;
+                        } 
+                        else {
+                            x = H[i][i+1];
+                            y = H[i+1][i];
+                            vr = (d[i] - p) * (d[i] - p) + e[i] * e[i] - q * q;
+                            vi = (d[i] - p) * 2.0 * q;
+                            if (vr === 0.0 & vi === 0.0) 
+                                vr = eps * norm * (Math.abs(w) + Math.abs(q) + Math.abs(x) + Math.abs(y) + Math.abs(z));
+                            cdiv(evd,x*r-z*ra+q*sa,x*s-z*sa-q*ra,vr,vi);
+                            H[i][n-1] = evd.cdivr;
+                            H[i][n] = evd.cdivi;
+                            if (Math.abs(x) > (Math.abs(z) + Math.abs(q))) {
+                                H[i+1][n-1] = (-ra - w * H[i][n-1] + q * H[i][n]) / x;
+                                H[i+1][n] = (-sa - w * H[i][n] - q * H[i][n-1]) / x;
+                            }
+                            else {
+                                cdiv(evd,-r-y*H[i][n-1],-s-y*H[i][n],z,q);
+                                H[i+1][n-1] = evd.cdivr;
+                                H[i+1][n] = evd.cdivi;
+                            }
+                        }
+
+                        t = Math.max(Math.abs(H[i][n-1]),Math.abs(H[i][n]));
+                        if ((eps * t) * t > 1) {
+                            for (var j = i; j <= n; j++) {
+                                H[j][n-1] = H[j][n-1] / t;
+                                H[j][n] = H[j][n] / t;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (var i = 0; i < nn; i++) 
+            if (i < low | i > high) 
+                for (var j = i; j < nn; j++) 
+                    V[i][j] = H[i][j];
+
+        for (var j = nn-1; j >= low; j--) {
+            for (var i = low; i <= high; i++) {
+                z = 0.0;
+                for (var k = low; k <= Math.min(j,high); k++)
+                    z = z + V[i][k] * H[k][j];
+                V[i][j] = z;
+            }
+        }
+    }
+    
+    function cdiv(evd, xr, xi, yr, yi) {
+        var r;
+        var d;
+        if (Math.abs(yr) > Math.abs(yi)) 
+        {
+            r = yi/yr;
+            d = yr + r*yi;
+            evd.cdivr = (xr + r*xi)/d;
+            evd.cdivi = (xi - r*xr)/d;
+        } 
+        else 
+        {
+            r = yr/yi;
+            d = yi + r*yr;
+            evd.cdivr = (r*xr + xi)/d;
+            evd.cdivi = (r*xi - xr)/d;
+        }
+    }
+
+    EigenvalueDecomposition.prototype = {
+        get realEigenvalues() {
+            return this.d;
+        },
+        get imaginaryEigenvalues() {
+            return this.e;
+        },
+        get eigenvectorMatrix() {
+            return this.V;
+        },
+        get diagonalMatrix() {
+            var n = this.n;
+            var e = this.e;
+            var d = this.d
+            var X = Matrix.empty(n, n);
+            for (var i = 0; i < n; i++) {
+                for (var j = 0; j < n; j++)
+                    X[i][j] = 0.0;
+
+                X[i][i] = d[i];
+                if (e[i] > 0) {
+                    X[i][i+1] = e[i];
+                }
+                else if (e[i] < 0) {
+                    X[i][i-1] = e[i];
+                }
+            }
+            
+            return X;
+        }
+    };
+    
+    // https://github.com/lutzroeder/Mapack/blob/master/Source/LuDecomposition.cs
+    function LuDecomposition(matrix) {
+        if(!(matrix instanceof Matrix))
+            throw "Argument has to be a Matrix";
+            
+        this.LU = matrix.clone();
+        var lu = this.LU;
+        var rows = matrix.rows;
+        var columns = matrix.columns;
+        var pivotVector = new Array(rows);
+        for(var i=0; i<rows; i++) {
+            pivotVector[i] = i;
+        }
+        
+        var pivotSign = 1;
+        var LUrowi;
+        var LUcolj = new Array(rows);
+        
+        for(var j=0; j<columns; j++) {
+        
+            for(var i=0; i<rows; i++) {
+                LUcolj[i] = lu[i][j];
+            }
+            
+            for(var i=0; i<rows; i++) {
+                LUrowi = lu[i];
+                var kmax = Math.min(i,j)
+                var s = 0.0;
+                for(var k=0; k<kmax; k++) {
+                    s += LUrowi[k]*LUcolj[k];
+                }
+                LUrowi[j] = LUcolj[i] -= s;
+            }
+            
+            var p = j;
+            for(var i=j+1; i<rows; i++) {
+                if(Math.abs(LUcolj[i]) > Math.abs(LUcolj[p])) {
+                    p = i;
+                }
+            }
+            
+            if(p !== j) {
+                for(var k=0; k<columns; k++) {
+                    var t = lu[p][k];
+                    lu[p][k] = lu[j][k];
+                    lu[j][k] = t;
+                }
+                
+                var v = pivotVector[p];
+                pivotVector[p] = pivotVector[j];
+                pivotVector[j] = v;
+                
+                pivotSign = -pivotSign;
+            }
+            
+            if(j < rows & lu[j][j] !== 0.0) {
+                for(var i=j+1; i<rows; i++) {
+                    lu[i][j] /= lu[j][j];
+                }
+            }
+        }
+        this.pivotVector = pivotVector;
+        this.pivotSign = pivotSign;
+    }
+    
+    LuDecomposition.prototype = {
+        isNonSingular : function() {
+            var col = this.LU.columns;
+            var data = this.LU;
+            for(var j=0; j<col; j++)
+                if(data[j][j]===0)
+                    return false;
+            return true;
+        },
+        determinant : function() {
+            if(!this.LU.isSquare())
+                throw "Matrix must be square";
+            var determinant = this.pivotSign, col = this.LU.columns, data = this.LU;
+            for(var j=0; j<col; j++)
+                determinant *= data[j][j];
+            return determinant;
+        },
+        lowerTriangularFactor : function() {
+            var rows = this.LU.rows;
+            var columns = this.LU.columns;
+            var X = Matrix.empty(rows, columns);
+            var data=this.LU;
+            for(var i=0; i<rows; i++) {
+                for(var j=0; j<columns; j++) {
+                    if(i > j)
+                        X[i][j] = data[i][j];
+                    else if (i===j)
+                        X[i][j] = 1;
+                    else
+                        X[i][j] = 0;
+                }
+            }
+            return X;
+        },
+        upperTriangularFactor : function() {
+            var rows = this.LU.rows;
+            var columns = this.LU.columns;
+            var X = Matrix.empty(rows, columns);
+            var data=this.LU;
+            for(var i=0; i<rows; i++) {
+                for(var j=0; j<columns; j++) {
+                    if(i <= j)
+                        X[i][j] = data[i][j];
+                    else
+                        X[i][j] = 0;
+                }
+            }
+            return X;
+        },
+        pivotPermutationVector : function() {
+            /*var rows = this.LU.rows;
+            var p = new Array(rows);
+            for(var i=0; i<rows; i++) {
+                p[i] = this.pivotVector[i];
+            }
+            return p;*/
+            return this.pivotVector.slice();
+        },
+        solve : function(value) {
+            if(!(value instanceof Matrix))
+                throw "Argument has to be a Matrix.";
+            if(this.LU.rows !== value.rows)
+                throw "Invalid matrix dimensions.";
+            if(!this.isNonSingular())
+                throw "Matrix is singular.";
+            
+            var count = value.columns;
+            var X = value.subMatrixRow(this.pivotVector, 0, count-1);
+            var rows = this.LU.rows;
+            var columns = this.LU.columns;
+            var lu = this.LU;
+
+            for (var k = 0; k < columns; k++) {
+                for (var i = k + 1; i < columns; i++) {
+                    for (var j = 0; j < count; j++) {
+                        X[i][j] -= X[k][j] * lu[i][k];
+                    }
+                }
+            }
+            for (var k = columns - 1; k >= 0; k--) {
+                for (var j = 0; j < count; j++) {
+                    X[k][j] /= lu[k][k];
+                }
+                for (var i = 0; i < k; i++) {
+                    for (var j = 0; j < count; j++) {
+                        X[i][j] -= X[k][j] * lu[i][k];
+                    }
+                }
+            }
+            return X;
+        }
+    };
+    
+    //https://github.com/lutzroeder/Mapack/blob/master/Source/QrDecomposition.cs
+    function QrDecomposition(value) {
+        if(!(value instanceof Matrix))
+            throw "Argument has to be a Matrix";
+            
+        this.QR = value.clone();
+        var qr = this.QR;
+        var m = value.rows;
+        var n = value.columns;
+        this.Rdiag = new Array(n);
+        
+        for(var k=0; k<n; k++) {
+            var nrm = 0;
+            for(var i=k; i<m; i++) {
+                nrm = hypotenuse(nrm,qr[i][k]);
+            }
+            if(nrm !== 0) {
+                if(qr[k][k] < 0) {
+                    nrm = -nrm;
+                }
+                for(var i=k; i<m; i++) {
+                    qr[i][k] /= nrm;
+                }
+                qr[k][k] += 1.0;
+                for(var j=k+1; j<n; j++) {
+                    var s = 0.0;
+                    for(var i=k; i<m; i++) {
+                        s += qr[i][k]*qr[i][j];
+                    }
+                    s = -s/qr[k][k];
+                    for(var i=k; i<m; i++) {
+                        qr[i][j] += s*qr[i][k];
+                    }
+                }
+            }
+            this.Rdiag[k] = -nrm;
+        }
+    }
+    
+    QrDecomposition.prototype = {
+        solve : function(value) {
+            if(!(value instanceof Matrix))
+                throw "Argument has to be a Matrix";
+            if(value.rows !== this.QR.rows)
+                throw "Matrix row dimensions must agree.";
+            if(!this.isFullRank())
+                throw "Matrix is rank deficient.";
+            
+            var count = value.columns;
+            var X = value.clone();
+            var m = this.QR.rows;
+            var n = this.QR.columns;
+            var qr = this.QR;
+            
+            for(var k=0; k<n; k++) {
+                for(var j=0; j<count; j++) {
+                    var s = 0.0;
+                    for(var i=k; i<m; i++) {
+                        s += qr[i][k] * X[i][j];
+                    }
+                    s = -s / qr[k][k];
+                    for(var i=k; i<m; i++) {
+                        X[i][j] += s * qr[i][k];
+                    }
+                }
+            }
+            for(var k = n-1; k >= 0; k--) {
+                for(var j = 0; j < count; j++) {
+                    X[k][j] /= this.Rdiag[k];
+                }
+                for(var i = 0; i < k; i++) {
+                    for(var j = 0; j < count; j++) {
+                        X[i][j] -= X[k][j] * qr[i][k];
+                    }
+                }
+            }
+            
+            return X.subMatrix(0, n-1, 0, count-1);
+        },
+        isFullRank : function() {
+            var columns = this.QR.columns;
+            for(var i = 0; i < columns; i++) {
+                if(this.Rdiag[i] === 0) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        upperTriangularFactor : function() {
+            var n = this.QR.columns;
+            var X = Matrix.empty(n, n);
+            var qr = this.QR;
+            for(var i = 0; i < n; i++) {
+                for(var j = 0; j < n; j++) {
+                    if(i < j)
+                        X[i][j] = qr[i][j];
+                    else if (i === j)
+                        X[i][j] = this.Rdiag[i];
+                    else
+                        X[i][j] = 0.0;
+                }
+            }
+            return X;
+        },
+        orthogonalFactor : function() {
+            var rows = this.QR.rows, columns = this.QR.columns;
+            var X = Matrix.empty(rows, columns);
+            var qr = this.QR;
+            
+            for(var k = columns - 1; k >= 0; k--) {
+                for(var i = 0; i < rows; i++) {
+                    X[i][k] = 0.0;
+                }
+                X[k][k] = 1.0;
+                for(var j = k; j < columns; j++) {
+                    if(qr[k][k] !== 0) {
+                        var s = 0.0;
+                        for(var i = k; i < rows; i++) {
+                            s += qr[i][k] * X[i][j];
+                        }
+                        
+                        s = -s / qr[k][k];
+                        
+                        for(var i = k; i < rows; i++) {
+                            X[i][j] += s * qr[i][k];
+                        }
+                    }
+                }
+            }
+            return X;
+        }
+    };
+    
+    // https://github.com/lutzroeder/Mapack/blob/master/Source/SingularValueDecomposition.cs
+    function SingularValueDecomposition(value, options) {
+        if(!(value instanceof Matrix))
+            throw "Argument has to be a Matrix";
+        
+        options = options ? options : {};
+        
+        var a = value.clone();
+        var m = value.rows, n = value.columns;
+        var nu = Math.min(m,n);
+        var s = new Array(Math.min(m+1,n));
+        var U = Matrix.zeros(m, nu);
+        var V = Matrix.zeros(n, n);
+        var e = new Array(n), work = new Array(m);
+        
+        var wantu = true, wantv = true;
+        if(options.computeLeftSingularVectors===false)
+            wantu = false;
+        if(options.computeRightSingularVectors===false)
+            wantv = false;
+        var autoTranspose = options.autoTranspose===true ? true : false;
+        
+        var swapped = false;
+        if(m < n) {
+            if(!autoTranspose) {
+                console.warn("WARNING: Computing SVD on a matrix with more columns than rows.");
+            }
+            else {
+                a = a.transpose();
+                m = a.rows;
+                n = a.columns;
+                swapped = true;
+                var aux = wantu;
+                wantu = wantv;
+                wantv = aux;
+            }
+        }
+        
+        var nct = Math.min(m-1,n);
+        var nrt = Math.max(0,Math.min(n-2,m));
+        for(var k = 0, max = Math.max(nct,nrt); k < max; k++) {
+            if(k < nct) {
+                s[k] = 0;
+                for (var i = k; i < m; i++) {
+                    s[k] = hypotenuse(s[k],a[i][k]);
+                }
+                if (s[k] !== 0.0) {
+                    if (a[k][k] < 0.0) {
+                        s[k] = -s[k];
+                    }
+                    for (var i = k; i < m; i++) {
+                        a[i][k] /= s[k];
+                    }
+                    a[k][k] += 1.0;
+                }
+                s[k] = -s[k];
+            }
+            
+            for (var j = k+1; j < n; j++) {
+                if ((k < nct) & (s[k] !== 0.0)) {
+                    var t = 0;
+                    for (var i = k; i < m; i++)
+                        t += a[i][k]*a[i][j];
+                    t = -t/a[k][k];
+                    for (var i = k; i < m; i++)
+                        a[i][j] += t*a[i][k];
+                }
+                e[j] = a[k][j];
+            }
+            
+            if (wantu & (k < nct)) {
+                for (var i = k; i < m; i++)
+                    U[i][k] = a[i][k];
+            }
+
+            if (k < nrt) {
+                e[k] = 0;
+                for (var i = k+1; i < n; i++) {
+                    e[k] = hypotenuse(e[k],e[i]);
+                }
+                if (e[k] !== 0.0) {
+                    if (e[k+1] < 0.0)
+                        e[k] = -e[k];
+                    for (var i = k+1; i < n; i++)
+                        e[i] /= e[k];
+                    e[k+1] += 1.0;
+                }
+                e[k] = -e[k];
+                if ((k+1 < m) & (e[k] !== 0.0)) {
+                    for (var i = k+1; i < m; i++)
+                        work[i] = 0.0;
+                    for (var j = k+1; j < n; j++)
+                        for (var i = k+1; i < m; i++)
+                            work[i] += e[j]*a[i][j];
+                    for (var j = k+1; j < n; j++) {
+                        var t = -e[j]/e[k+1];
+                        for (var i = k+1; i < m; i++)
+                            a[i][j] += t*work[i];
+                    }
+                }
+                if (wantv) {
+                    for (var i = k+1; i < n; i++)
+                        V[i][k] = e[i];
+                }
+            }
+        }
+        
+        var p = Math.min(n,m+1);
+        if(nct < n) s[nct] = a[nct][nct];
+        if (m < p) s[p-1] = 0.0;
+        if (nrt+1 < p) e[nrt] = a[nrt][p-1];
+        e[p-1] = 0.0;
+        
+        if (wantu) {
+            for (var j = nct; j < nu; j++) {
+                for (var i = 0; i < m; i++) 
+                    U[i][j] = 0.0;
+                U[j][j] = 1.0;
+            }
+            for (var k = nct-1; k >= 0; k--) {
+                if (s[k] !== 0.0) {
+                    for (var j = k+1; j < nu; j++) {
+                        var t = 0;
+                        for (var i = k; i < m; i++) 
+                            t += U[i][k]*U[i][j];
+                        t = -t/U[k][k];
+                        for (var i = k; i < m; i++)
+                            U[i][j] += t*U[i][k];
+                    }
+                    for (var i = k; i < m; i++ )
+                        U[i][k] = -U[i][k];
+                    U[k][k] = 1.0 + U[k][k];
+                    for (var i = 0; i < k-1; i++) 
+                        U[i][k] = 0.0;
+                } 
+                else {
+                    for (var i = 0; i < m; i++)
+                        U[i][k] = 0.0;
+                    U[k][k] = 1.0;
+                }
+            }
+        }
+        
+        if (wantv) {
+            for (var k = n-1; k >= 0; k--) {
+                if ((k < nrt) & (e[k] !== 0.0)) {
+                    for (var j = k+1; j < nu; j++) {
+                        var t = 0;
+                        for (var i = k+1; i < n; i++) 
+                            t += V[i][k]*V[i][j];
+                        t = -t/V[k+1][k];
+                        for (var i = k+1; i < n; i++)
+                            V[i][j] += t*V[i][k];
+                    }
+                }
+                for (var i = 0; i < n; i++) 
+                    V[i][k] = 0.0;
+                V[k][k] = 1.0;
+            }
+        }
+        
+        var pp = p-1;
+        var iter = 0;
+        var eps = Math.pow(2.0, -52.0);
+        while(p > 0) {
+            var k, kase;
+            for (k = p-2; k >= -1; k--) {
+                if (k === -1)
+                    break;
+                if (Math.abs(e[k]) <= eps*(Math.abs(s[k]) + Math.abs(s[k+1]))) {
+                    e[k] = 0.0;
+                    break;
+                }
+            }
+            if (k === p-2) {
+                kase = 4;
+            }
+            else {
+                var ks;
+                for (ks = p-1; ks >= k; ks--) {
+                    if (ks === k) 
+                        break;
+                    var t = (ks !== p ? Math.abs(e[ks]) : 0.0) + (ks !== k+1 ? Math.abs(e[ks-1]) : 0.0);
+                    if (Math.abs(s[ks]) <= eps*t) {
+                        s[ks] = 0.0;
+                        break;
+                    }
+                }
+                if (ks === k) 
+                    kase = 3;
+                else if (ks === p-1) 
+                    kase = 1;
+                else {
+                    kase = 2;
+                    k = ks;
+                }
+            }
+                                        
+            k++;
+            
+            switch(kase) {
+                case 1: {
+                    var f = e[p-2];
+                    e[p-2] = 0.0;
+                    for (var j = p-2; j >= k; j--) {
+                        var t = hypotenuse(s[j],f);
+                        var cs = s[j]/t;
+                        var sn = f/t;
+                        s[j] = t;
+                        if (j !== k) {
+                            f = -sn*e[j-1];
+                            e[j-1] = cs*e[j-1];
+                        }
+                        if (wantv) {
+                            for (var i = 0; i < n; i++) {
+                                t = cs*V[i][j] + sn*V[i][p-1];
+                                V[i][p-1] = -sn*V[i][j] + cs*V[i][p-1];
+                                V[i][j] = t;
+                            }
+                        }
+                    }
+                }
+                    break;
+                case 2 : {
+                    var f = e[k-1];
+                    e[k-1] = 0.0;
+                    for (var j = k; j < p; j++) {
+                        var t = hypotenuse(s[j],f);
+                        var cs = s[j]/t;
+                        var sn = f/t;
+                        s[j] = t;
+                        f = -sn*e[j];
+                        e[j] = cs*e[j];
+                        if (wantu) {
+                            for (var i = 0; i < m; i++) {
+                                t = cs*U[i][j] + sn*U[i][k-1];
+                                U[i][k-1] = -sn*U[i][j] + cs*U[i][k-1];
+                                U[i][j] = t;
+                            }
+                        }
+                    }
+                }
+                    break;
+                case 3 : {
+                    var scale = Math.max(Math.max(Math.max(Math.max(Math.abs(s[p-1]),Math.abs(s[p-2])),Math.abs(e[p-2])), Math.abs(s[k])),Math.abs(e[k]));
+                    var sp = s[p-1]/scale;
+                    var spm1 = s[p-2]/scale;
+                    var epm1 = e[p-2]/scale;
+                    var sk = s[k]/scale;
+                    var ek = e[k]/scale;
+                    var b = ((spm1 + sp)*(spm1 - sp) + epm1*epm1)/2.0;
+                    var c = (sp*epm1)*(sp*epm1);
+                    var shift = 0.0;
+                    if ((b !== 0.0) | (c !== 0.0)) {
+                        shift = Math.sqrt(b*b + c);
+                        if (b < 0.0)
+                            shift = -shift;
+                        shift = c/(b + shift);
+                    }
+                    var f = (sk + sp)*(sk - sp) + shift;
+                    var g = sk*ek;
+                    for (var j = k; j < p-1; j++) {
+                        var t = hypotenuse(f,g);
+                        var cs = f/t;
+                        var sn = g/t;
+                        if (j !== k)
+                            e[j-1] = t;
+                        f = cs*s[j] + sn*e[j];
+                        e[j] = cs*e[j] - sn*s[j];
+                        g = sn*s[j+1];
+                        s[j+1] = cs*s[j+1];
+                        if (wantv) {
+                            for (var i = 0; i < n; i++) {
+                                t = cs*V[i][j] + sn*V[i][j+1];
+                                V[i][j+1] = -sn*V[i][j] + cs*V[i][j+1];
+                                V[i][j] = t;
+                            }
+                        }
+                        t = hypotenuse(f, g);
+                        cs = f/t;
+                        sn = g/t;
+                        s[j] = t;
+                        f = cs*e[j] + sn*s[j+1];
+                        s[j+1] = -sn*e[j] + cs*s[j+1];
+                        g = sn*e[j+1];
+                        e[j+1] = cs*e[j+1];
+                        if (wantu && (j < m-1)) {
+                             for (var i = 0; i < m; i++) {
+                                t = cs*U[i][j] + sn*U[i][j+1];
+                                U[i][j+1] = -sn*U[i][j] + cs*U[i][j+1];
+                                U[i][j] = t;
+                            }
+                        }
+                    }
+                    e[p-2] = f;
+                    iter = iter + 1;
+                }
+                    break;
+                case 4: {
+                    if (s[k] <= 0.0) {
+                        s[k] = (s[k] < 0.0 ? -s[k] : 0.0);
+                        if (wantv)
+                            for (var i = 0; i <= pp; i++)
+                                V[i][k] = -V[i][k];
+                    }
+                    while (k < pp) {
+                        if (s[k] >= s[k+1]) 
+                            break;
+                        var t = s[k];
+                        s[k] = s[k+1];
+                        s[k+1] = t;
+                        if (wantv && (k < n-1)) 
+                            for (var i = 0; i < n; i++) {
+                                t = V[i][k+1]; 
+                                V[i][k+1] = V[i][k]; 
+                                V[i][k] = t;
+                            }
+                        if (wantu && (k < m-1)) 
+                            for (var i = 0; i < m; i++) {
+                                t = U[i][k+1]; 
+                                U[i][k+1] = U[i][k]; 
+                                U[i][k] = t;
+                            }
+                        k++;
+                    }
+                    iter = 0;
+                    p--;
+                }
+                    break;
+            }
+        }
+        
+        this.m = m;
+        this.n = n;
+        this.s = s;
+        if(swapped) {
+            this.U = V;
+            this.V = U;
+        } else {
+            this.U = U;
+            this.V = V;
+        }
+    }
+    
+    SingularValueDecomposition.prototype = {
+        get condition() {
+            return this.s[0] / this.s[Math.min(this.m,this.n) - 1];
+        },
+        get norm2() {
+            return this.s[0];
+        },
+        get rank() {
+            var eps = Math.pow(2.0,-52.0);
+            var tol = Math.max(this.m,this.n)*this.s[0]*eps;
+            var r = 0;
+            var s = this.s;
+            for(var i = 0, ii = s.length; i < ii; i++) {
+                if(s[i] > tol)
+                    r++;
+            }
+            return r;
+        },
+        get diagonal() {
+            return this.s;
+        },
+        // https://github.com/accord-net/framework/blob/development/Sources/Accord.Math/Decompositions/SingularValueDecomposition.cs
+        get threshold() {
+            return (Math.pow(2.0,-52.0)/2) * Math.max(this.m,this.n) * this.s[0];
+        },
+        solve : function(value) {
+            
+            var Y = value;
+            var e = this.threshold;
+            var scols = this.s.length;
+            
+            var Ls = Matrix.zeros(scols, scols);
+            
+            for (var i = 0; i < scols; i++) {
+                if (Math.abs(this.s[i]) <= e)
+                    Ls[i][i] = 0;
+                else Ls[i][i] = 1 / this.s[i];
+            }
+            
+
+            var VL = this.V.mmul(Ls);
+            
+            var vrows = this.V.rows;
+            var urows = this.U.rows;
+            var VLU = Matrix.zeros(vrows, urows);
+            for (var i = 0; i < vrows; i++) {
+                for (var j = 0; j < urows; j++) {
+                    var sum = 0;
+                    for (var k = 0; k < scols; k++)
+                        sum += VL[i][k] * this.U[j][k];
+                    VLU[i][j] = sum;
+                }
+            }
+
+            return VLU.mmul(Y);
+        },
+        solveForDiagonal : function(value) {
+            return this.solve(Matrix.diag(value));
+        }
+    };
+    
+    // https://github.com/lutzroeder/Mapack/blob/master/Source/CholeskyDecomposition.cs
+    function CholeskyDecomposition(value) {
+        if(!(value instanceof Matrix))
+            throw "Argument has to be a Matrix";
+        if(!value.isSquare())
+            throw "Matrix is not square";
+        
+        var dimension = value.rows;
+        this.L = Matrix.empty(dimension,dimension);
+        
+        var a = value;
+        var l = this.L;
+        
+        this.positiveDefinite = true;
+        this.symmetric = true;
+        
+        for(var j = 0; j < dimension; j++) {
+            var Lrowj = l[j];
+            var d = 0.0;
+            for (var k = 0; k < j; k++) {
+                var Lrowk = l[k];
+                var s = 0.0;
+                for (var i = 0; i < k; i++) {
+                    s += Lrowk[i] * Lrowj[i];
+                }
+                Lrowj[k] = s = (a[j][k] - s) / l[k][k];
+                d = d + s*s;
+                
+                this.symmetric = this.symmetric & (a[k][j] == a[j][k]); 
+            }
+
+            d = a[j][j] - d;
+            
+            this.positiveDefinite = this.positiveDefinite & (d > 0.0);
+            l[j][j] = Math.sqrt(Math.max(d,0.0));
+            for (var k = j + 1; k < dimension; k++) {
+                l[j][k] = 0.0;
+            }
+        }
+    }
+    
+    CholeskyDecomposition.prototype = {
+        isSymmetric : function() {
+            return this.symmetric;
+        },
+        isPositiveDefinite : function() {
+            return this.positiveDefinite;
+        },
+        get leftTriangularFactor() {
+            return this.L;
+        },
+        solve : function(value) {
+            if(!(value instanceof Matrix))
+                throw "Argument has to be a Matrix.";
+            if(value.rows !== this.L.rows)
+                throw "Matrix dimensions do not match.";
+            if(!this.symmetric)
+                throw "Matrix is not symmetric";
+            if(!this.positiveDefinite)
+                throw "Matrix is not positive definite";
+            
+            var dimension = this.L.rows;
+            var count = value.columns;
+            var B = value.clone()
+            var l = this.L;
+
+            for (var k = 0; k < dimension; k++) {
+                for (var j = 0; j < count; j++) {
+                    for (var i = 0; i < k; i++) {
+                        B[k][j] -= B[i][j] * l[k][i];
+                    }
+                    B[k][j] /= l[k][k];
+                }
+            }
+
+            for (var k = dimension - 1; k >= 0; k--) {
+                for (var j = 0; j < count; j++) {
+                    for (var i = k + 1; i < dimension; i++) {
+                        B[k][j] -= B[i][j] * l[i][k];
+                    }
+                    B[k][j] /= l[k][k];
+                }
+            }
+
+            return B;
+        }
+    };
+    
+    function hypotenuse(a, b) {
+        if(Math.abs(a) > Math.abs(b)) {
+            var r = b / a;
+            return Math.abs(a) * Math.sqrt(1 + r * r);
+        }
+        if(b !== 0) {
+            var r = a / b;
+            return Math.abs(b) * Math.sqrt(1 + r * r);
+        }
+        
+        return 0.0;
+    }
+    
+    return {
+        LuDecomposition: LuDecomposition,
+        QrDecomposition: QrDecomposition,
+        SingularValueDecomposition: SingularValueDecomposition,
+        EigenvalueDecomposition: EigenvalueDecomposition,
+        CholeskyDecomposition: CholeskyDecomposition
+    };
+    
+});

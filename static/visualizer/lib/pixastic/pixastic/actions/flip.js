@@ -1,1 +1,34 @@
-Pixastic.Actions.flip={process:function(a){var b=a.options.rect,c=document.createElement("canvas");c.width=b.width,c.height=b.height,c.getContext("2d").drawImage(a.image,b.left,b.top,b.width,b.height,0,0,b.width,b.height);var d=a.canvas.getContext("2d");return d.clearRect(b.left,b.top,b.width,b.height),"horizontal"==a.options.axis?(d.scale(-1,1),d.drawImage(c,-b.left-b.width,b.top,b.width,b.height)):(d.scale(1,-1),d.drawImage(c,b.left,-b.top-b.height,b.width,b.height)),a.useData=!1,!0},checkSupport:function(){return Pixastic.Client.hasCanvas()}};
+/*
+ * Pixastic Lib - Flip - v0.1.0
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.flip = {
+	process : function(params) {
+		var rect = params.options.rect;
+		var copyCanvas = document.createElement("canvas");
+		copyCanvas.width = rect.width;
+		copyCanvas.height = rect.height;
+		copyCanvas.getContext("2d").drawImage(params.image, rect.left, rect.top, rect.width, rect.height, 0, 0, rect.width, rect.height);
+
+		var ctx = params.canvas.getContext("2d");
+		ctx.clearRect(rect.left, rect.top, rect.width, rect.height);
+
+		if (params.options.axis == "horizontal") {
+			ctx.scale(-1,1);
+			ctx.drawImage(copyCanvas, -rect.left-rect.width, rect.top, rect.width, rect.height)
+		} else {
+			ctx.scale(1,-1);
+			ctx.drawImage(copyCanvas, rect.left, -rect.top-rect.height, rect.width, rect.height)
+		}
+
+		params.useData = false;
+
+		return true;		
+	},
+	checkSupport : function() {
+		return Pixastic.Client.hasCanvas();
+	}
+}
+

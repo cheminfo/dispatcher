@@ -1,1 +1,110 @@
-Pixastic.Actions.sharpen={process:function(a){var b=0;if("undefined"!=typeof a.options.amount&&(b=parseFloat(a.options.amount)||0),0>b&&(b=0),b>1&&(b=1),Pixastic.Client.hasCanvasImageData()){for(var c=Pixastic.prepareData(a),d=Pixastic.prepareData(a,!0),e=15,f=1+3*b,g=[[0,-f,0],[-f,e,-f],[0,-f,0]],h=0,i=0;3>i;i++)for(var j=0;3>j;j++)h+=g[i][j];h=1/h;var k=a.options.rect,l=k.width,m=k.height;e*=h,f*=h;var n=4*l,o=m;do{var p=(o-1)*n,q=o==m?o-1:o,r=1==o?0:o-2,s=r*n,t=q*n,u=l;do{var v=p+(4*u-4),w=s+4*(1==u?0:u-2),x=t+4*(u==l?u-1:u),y=(-d[w]-d[v-4]-d[v+4]-d[x])*f+d[v]*e,z=(-d[w+1]-d[v-3]-d[v+5]-d[x+1])*f+d[v+1]*e,A=(-d[w+2]-d[v-2]-d[v+6]-d[x+2])*f+d[v+2]*e;0>y&&(y=0),0>z&&(z=0),0>A&&(A=0),y>255&&(y=255),z>255&&(z=255),A>255&&(A=255),c[v]=y,c[v+1]=z,c[v+2]=A}while(--u)}while(--o);return!0}},checkSupport:function(){return Pixastic.Client.hasCanvasImageData()}};
+/*
+ * Pixastic Lib - Sharpen filter - v0.1.0
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.sharpen = {
+	process : function(params) {
+
+		var strength = 0;
+		if (typeof params.options.amount != "undefined")
+			strength = parseFloat(params.options.amount)||0;
+
+		if (strength < 0) strength = 0;
+		if (strength > 1) strength = 1;
+
+		if (Pixastic.Client.hasCanvasImageData()) {
+			var data = Pixastic.prepareData(params);
+			var dataCopy = Pixastic.prepareData(params, true)
+
+			var mul = 15;
+			var mulOther = 1 + 3*strength;
+
+			var kernel = [
+				[0, 	-mulOther, 	0],
+				[-mulOther, 	mul, 	-mulOther],
+				[0, 	-mulOther, 	0]
+			];
+
+			var weight = 0;
+			for (var i=0;i<3;i++) {
+				for (var j=0;j<3;j++) {
+					weight += kernel[i][j];
+				}
+			}
+
+			weight = 1 / weight;
+
+			var rect = params.options.rect;
+			var w = rect.width;
+			var h = rect.height;
+
+			mul *= weight;
+			mulOther *= weight;
+
+			var w4 = w*4;
+			var y = h;
+			do {
+				var offsetY = (y-1)*w4;
+
+				var nextY = (y == h) ? y - 1 : y;
+				var prevY = (y == 1) ? 0 : y-2;
+
+				var offsetYPrev = prevY*w4;
+				var offsetYNext = nextY*w4;
+
+				var x = w;
+				do {
+					var offset = offsetY + (x*4-4);
+
+					var offsetPrev = offsetYPrev + ((x == 1) ? 0 : x-2) * 4;
+					var offsetNext = offsetYNext + ((x == w) ? x-1 : x) * 4;
+
+					var r = ((
+						- dataCopy[offsetPrev]
+						- dataCopy[offset-4]
+						- dataCopy[offset+4]
+						- dataCopy[offsetNext])		* mulOther
+						+ dataCopy[offset] 	* mul
+						);
+
+					var g = ((
+						- dataCopy[offsetPrev+1]
+						- dataCopy[offset-3]
+						- dataCopy[offset+5]
+						- dataCopy[offsetNext+1])	* mulOther
+						+ dataCopy[offset+1] 	* mul
+						);
+
+					var b = ((
+						- dataCopy[offsetPrev+2]
+						- dataCopy[offset-2]
+						- dataCopy[offset+6]
+						- dataCopy[offsetNext+2])	* mulOther
+						+ dataCopy[offset+2] 	* mul
+						);
+
+
+					if (r < 0 ) r = 0;
+					if (g < 0 ) g = 0;
+					if (b < 0 ) b = 0;
+					if (r > 255 ) r = 255;
+					if (g > 255 ) g = 255;
+					if (b > 255 ) b = 255;
+
+					data[offset] = r;
+					data[offset+1] = g;
+					data[offset+2] = b;
+
+				} while (--x);
+			} while (--y);
+
+			return true;
+
+		}
+	},
+	checkSupport : function() {
+		return Pixastic.Client.hasCanvasImageData();
+	}
+}

@@ -1,1 +1,157 @@
-define(["./../../../math/matrix","./../../../math/decompositions"],function(a,b){function c(a,b){"undefined"==typeof b&&(b=!1),b===!0&&a++,this.coefficients=new Array(a),this.addIntercept=b}function d(a,b){for(var c=b.rows,d=new Array(c),e=0;c>e;e++)d[e]=a.compute(b[e]);return d}return c.prototype={get inputs(){return this.coefficients.length-(this.addIntercept?1:0)},hasIntercept:function(){return this.addIntercept},regress:function(c,d,e){if(c.rows!==d.length)throw"Number of input and output samples does not match.";"undefined"==typeof e&&(e=!0);var f=this.inputs,g=c.rows,h=c.columns;if(f!==h)throw"Input vectors should have length "+f+" but they have "+h;var i,j;if(this.addIntercept){j=a.empty(g,h+1);for(var k=0;g>k;k++){for(var l=0;h>l;l++)j[k][l]=c[k][l];j[k][h]=1}}else j=c.clone();i=e||h>=g?new b.SingularValueDecomposition(j,{computeLeftSingularVectors:!0,computeRightSingularVectors:!0,autoTranspose:!0}):new b.QrDecomposition(j),this.coefficients=i.solve(a.columnVector(d)).to1DArray();for(var m,n=0,k=0;k<d.length;k++)m=d[k]-this.compute(c[k]),n+=m*m;return n},coefficientOfDetermination:function(a,b,c){"undefined"==typeof c&&(c=!1);for(var d,e=a.rows,f=this.inputs,g=0,h=0,i=0,j=0;j<b.length;j++)i+=b[j];i/=e;for(var j=0;j<b.length;j++)d=b[j]-this.compute(a[j]),g+=d*d,d=b[j]-i,h+=d*d;var k=0!==h?1-g/h:1;return c?1===k?1:e-f===1?0/0:1-(1-k)*((e-1)/(e-f-1)):k},compute:function(b){if(b instanceof a)return d(this,b);if(b.length!==this.inputs)throw"Input vectors should have length "+this.inputs+".";for(var c=0,e=0,f=b.length;f>e;e++)c+=this.coefficients[e]*b[e];return this.addIntercept&&(c+=this.coefficients[b.length]),c},toString:function(a){for(var b="undefined"!=typeof a,c=this.coefficients,d="y(",e=this.addIntercept?c.length-1:c.length,f=0;e>f;f++)d+="x"+f,e-1>f&&(d+=", ");d+=") = ";for(var f=0;e>f;f++)d+=b?c[f].toFixed(a)+"*x"+f:parseFloat(c[f].toFixed(10))+"*x"+f,e-1>f&&(d+=" + ");return this.addIntercept&&(d+=b?" + "+c[e].toFixed(a):" + "+parseFloat(c[e].toFixed(10))),d}},c});
+// https://github.com/accord-net/framework/blob/development/Sources/Accord.Statistics/Models/Regression/Linear/MultipleLinearRegression.cs
+define(["./../../../math/matrix","./../../../math/decompositions"],function(Matrix,DC){
+    
+    function MultipleLinearRegression(inputs, intercept) {
+        if(typeof(intercept)==='undefined') intercept = false;
+        if(intercept===true) inputs++;
+        this.coefficients = new Array(inputs);
+        this.addIntercept = intercept;
+    }
+    
+    MultipleLinearRegression.prototype = {
+        get inputs() {
+            return this.coefficients.length - (this.addIntercept ? 1 : 0);
+        },
+        hasIntercept : function() {
+            return this.addIntercept;
+        },
+        regress : function(inputs, outputs, robust) {
+            if(inputs.rows !== outputs.length) throw "Number of input and output samples does not match.";
+            if(typeof(robust)==='undefined') robust = true;
+            
+            var parameters = this.inputs;
+            var rows = inputs.rows;
+            var cols = inputs.columns;
+            
+            if(parameters !== cols)
+                throw "Input vectors should have length "+parameters+" but they have "+cols;
+            
+            var solver,designMatrix;
+            
+            if(!this.addIntercept)
+                designMatrix = inputs.clone();
+            else {
+                designMatrix = Matrix.empty(rows, cols + 1);
+                for(var i = 0; i < rows; i++) {
+                    for(var j = 0; j < cols; j++)
+                        designMatrix[i][j] = inputs[i][j];
+                    designMatrix[i][cols] = 1;
+                }
+            }
+            
+            if(robust || cols >= rows) {
+                solver = new DC.SingularValueDecomposition(designMatrix,{computeLeftSingularVectors: true,
+                    computeRightSingularVectors: true,
+                    autoTranspose: true});
+            }
+            else {
+                solver = new DC.QrDecomposition(designMatrix);
+            }
+            
+            this.coefficients = solver.solve(Matrix.columnVector(outputs)).to1DArray();
+            
+            var error = 0, e;
+            for(var i = 0; i < outputs.length; i++) {
+                e = outputs[i] - this.compute(inputs[i]);
+                error += e * e;
+            }
+            
+            return error;
+        },
+        coefficientOfDetermination : function(inputs, outputs, adjust) {
+            if(typeof(adjust)==='undefined') adjust = false;
+            var n = inputs.rows;
+            var p = this.inputs;
+            var SSe = 0;
+            var SSt = 0;
+            var avg = 0;
+            var d;
+
+            for (var i = 0; i < outputs.length; i++)
+                avg += outputs[i];
+            avg /= n;
+
+            for (var i = 0; i < outputs.length; i++)
+            {
+                d = outputs[i] - this.compute(inputs[i]);
+                SSe += d * d;
+
+                d = outputs[i] - avg;
+                SSt += d * d;
+            }
+
+            var r2 = (SSt !== 0) ? 1 - (SSe / SSt) : 1;
+
+            if (!adjust)
+                return r2;
+            else {
+                if (r2 === 1)
+                    return 1;
+
+                if (n - p === 1)
+                    return NaN;
+                else
+                    return 1 - (1 - r2) * ((n - 1) / (n - p - 1));
+            }
+        },
+        compute : function(input) {
+            if(input instanceof Matrix)
+                return computeMatrix(this,input);
+            if(input.length !== this.inputs)
+                throw "Input vectors should have length "+this.inputs+".";
+            var output = 0;
+            for(var i = 0, ii = input.length; i < ii; i++)
+                output += this.coefficients[i] * input[i];
+                
+            if(this.addIntercept)
+                output += this.coefficients[input.length];
+            
+            return output;
+        },
+        toString : function(decimals) {
+            var dec = (typeof decimals !== 'undefined');
+            var coeff = this.coefficients;
+            var str = "y(";
+            var inputs = (this.addIntercept) ? coeff.length - 1 : coeff.length;
+            
+            for(var i = 0; i < inputs; i++) {
+                str += "x"+i;
+                if(i < inputs-1)
+                    str += ", ";
+            }
+            
+            str += ") = ";
+            
+            for(var i = 0; i < inputs; i++) {
+                if(dec)
+                    str += coeff[i].toFixed(decimals)+"*x"+i;
+                else
+                    str += parseFloat(coeff[i].toFixed(10))+"*x"+i;
+                    
+                if(i < inputs-1)
+                    str += " + ";
+            }
+            
+            if(this.addIntercept) {
+                if(dec)
+                    str += " + "+coeff[inputs].toFixed(decimals);
+                else
+                    str += " + "+parseFloat(coeff[inputs].toFixed(10));
+            }
+            return str;
+        }
+    };
+    
+    function computeMatrix(mlr, input) {
+        var l = input.rows;
+        var output = new Array(l);
+        
+        for(var i = 0; i < l; i++)
+            output[i] = mlr.compute(input[i]);
+            
+        return output;
+    }
+    
+    return MultipleLinearRegression;
+    
+});

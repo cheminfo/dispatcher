@@ -1,8 +1,9 @@
 
 init.js
 ----------------
-src/util/util.js
+components/jquery/jquery.min.js
 src/util/debug.js
+src/util/util.js
 src/main/datas.js
 src/util/localdb.js
 src/util/versionhandler.js
@@ -11,6 +12,8 @@ src/util/versioning.js
 src/header/header.js
 src/util/event.js
 src/util/repository.js
+components/jquery-ui/ui/minified/jquery-ui.min.js
+components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js
 src/data/structures.js
 src/util/datatraversing.js
 src/util/actionmanager.js
@@ -19,10 +22,20 @@ src/util/context.js
 src/util/fullscreen.js
 modules/module.js
 modules/modulefactory.js
+lib/forms/sectionelement.js
+lib/forms/field.js
+lib/forms/groupelement.js
+lib/forms/grouplistelement.js
+lib/forms/grouptableelement.js
+lib/forms/grouptextelement.js
+lib/forms/group.js
+lib/forms/section.js
+lib/forms/conditionalelementdisplayer.js
+lib/forms/form.js
 src/main/grid.js
 src/util/viewmigration.js
 src/util/cron.js
-components/pouchdb/dist/pouchdb-nightly.min.js
+components/pouchdb/dist/pouchdb.min.js
 components/uri.js/src/punycode.js
 components/uri.js/src/IPv6.js
 components/uri.js/src/SecondLevelDomains.js
@@ -33,6 +46,12 @@ components/lodash/dist/lodash.min.js
 components/modernizr/modernizr.js
 components/jquery-cookie/jquery.cookie.js
 src/util/browser.js
+components/superagent/superagent.js
+src/util/lru.js
+src/util/urldata.js
 src/main/entrypoint.js
 components/uri.js/src/URI.fragmentQuery.js
+components/bluebird/js/browser/bluebird.js
+lib/IndexedDBShim/IndexedDBShim.js
+components/setImmediate/setImmediate.js
 init.js

@@ -1,1 +1,128 @@
-define(function(){function a(){}function b(a,b){return b>=0?a>=0?Math.atan(b/a):Math.PI-Math.atan(-b/a):a>=0?2*Math.PI-Math.atan(-b/a):Math.PI+Math.atan(b/a)}function c(a){return--a,a|=a>>1,a|=a>>2,a|=a>>4,a|=a>>8,a|=a>>16,++a}function d(a){return c(a+1)/2}function e(a,b){var c=0,d=Math.abs(a),e=Math.abs(b);return d>e?(c=b/a,c=d*Math.sqrt(1+c*c)):0!=b&&(c=a/b,c=e*Math.sqrt(1+c*c)),c}function f(a,b){0>b&&(b=-b);var c=a%b;return 0>c?c+b:c}function g(a,b,c,d,e){if(b-a===0)return 0;if("number"==typeof e)return(d-c)*(e-a)/(b-a)+c;for(var f=new Array(e.length),g=0,h=e.length;h>g;g++)f[g]=(d-c)*(e[g]-a)/(b-a)+c;return f}function h(a){if(1>a)throw"Argument out of range";return Math.log(a+Math.sqrt(a*a-1))}function i(a){var b,c;return 0===a?a:(0>a?(c=-1,b=-a):(c=1,b=a),c*Math.log(b+Math.sqrt(b*b+1)))}function j(a){if(a>1||-1>a)throw"Argument out of range";return.5*Math.log((1+a)/(1-a))}function k(a,b){for(var c=0;b>c;c++)a*=b--;return a}function l(a,b){var c=Math.pow(a,b);return c>0?c:0}return{random:a,angle:b,nextPowerOf2:c,previousPowerOf2:d,hypotenuse:e,mod:f,scale:g,acosh:h,asinh:i,atanh:j,factorialPower:k,truncatedPower:l}});
+// https://github.com/accord-net/framework/blob/development/Sources/Accord.Math/Tools.cs
+define(function(){
+    
+    // Random number generator withseed (Mersenne twister ?)
+    function random(seed) {
+    
+    }
+    
+    function angle(x, y) {
+        if (y >= 0) {
+            if (x >= 0)
+                return Math.atan(y / x);
+            return Math.PI - Math.atan(-y / x);
+        }
+        else {
+            if (x >= 0)
+                return 2 * Math.PI - Math.atan(-y / x);
+            return Math.PI + Math.atan(y / x);
+        }
+    }
+    
+    function nextPowerOf2(x) {
+        --x;
+        x |= x >> 1;
+        x |= x >> 2;
+        x |= x >> 4;
+        x |= x >> 8;
+        x |= x >> 16;
+        return ++x;
+    }
+    
+    function previousPowerOf2(x) {
+        return nextPowerOf2(x + 1) / 2;
+    }
+    
+    function hypotenuse(a, b) {
+        var r = 0;
+        var absA = Math.abs(a);
+        var absB = Math.abs(b);
+
+        if (absA > absB) {
+            r = b / a;
+            r = absA * Math.sqrt(1 + r * r);
+        }
+        else if (b != 0) {
+            r = a / b;
+            r = absB * Math.sqrt(1 + r * r);
+        }
+        return r;
+    }
+    
+    function mod(x, m) {
+        if(m < 0)
+            m = -m;
+        var r = x % m;
+        return r < 0 ? r + m : r;
+    }
+    
+    function scale(fromMin, fromMax, toMin, toMax, x) {
+        if(fromMax - fromMin === 0) return 0;
+        if(typeof(x)==='number')
+            return (toMax - toMin) * (x - fromMin) / (fromMax - fromMin) + toMin;
+        // array
+        var result = new Array(x.length);
+        for(var i = 0, ii = x.length; i < ii; i++)
+            result[i] = (toMax - toMin) * (x[i] - fromMin) / (fromMax - fromMin) + toMin;
+        return result;
+    }
+    
+    function acosh(x) {
+        if(x < 1)
+            throw "Argument out of range";
+        return Math.log(x + Math.sqrt(x * x - 1));
+    }
+    
+    function asinh(d) {
+        var x;
+        var sign;
+
+        if (d === 0)
+            return d;
+
+        if (d < 0) {
+            sign = -1;
+            x = -d;
+        }
+        else {
+            sign = 1;
+            x = d;
+        }
+        return sign * Math.log(x + Math.sqrt(x * x + 1));
+    }
+    
+    function atanh(d) {
+        if (d > 1 || d < -1)
+            throw "Argument out of range";
+        return 0.5 * Math.log((1 + d) / (1 - d));
+    }
+    
+    function factorialPower(value, degree) {
+        for(var i = 0; i < degree; i++)
+            value *= degree--;
+        return value;
+    }
+    
+    function truncatedPower(value, degree) {
+        var x = Math.pow(value, degree);
+        return (x > 0) ? x : 0;
+    }
+    
+    
+    
+    return {
+        random: random,
+        angle: angle,
+        nextPowerOf2: nextPowerOf2,
+        previousPowerOf2: previousPowerOf2,
+        hypotenuse: hypotenuse,
+        mod: mod,
+        scale: scale,
+        acosh: acosh,
+        asinh: asinh,
+        atanh: atanh,
+        factorialPower: factorialPower,
+        truncatedPower: truncatedPower
+    }
+
+});

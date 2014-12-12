@@ -1,35 +1,51 @@
 {
 	"lockView": false,
 	"usrDir": "usr",
-	"debugLevel": -1,
+	"debugLevel": 5,
 	"filters": [
 		{
-			"file": "usr/filters/doitourl.js",
+			"file": "usr/filters/doitourl",
 			"name": "DOI to URL"
 		},
 		{
-			"file": "usr/filters/getfirstelement.js",
+			"file": "usr/filters/getfirstelement",
 			"name": "Get first element in array"
 		},
 		{
-			"file": "usr/filters/flickr.js",
+			"file": "usr/filters/flickr",
 			"name": "Flickr image"
 		},
 		{
-			"file": "usr/filters/gcgenerator.js",
+			"file": "usr/filters/gcgenerator",
 			"name": "Generate GC"
 		},
 		{
-			"file": "usr/filters/hclust.js",
+			"file": "usr/filters/hclust",
 			"name": "Hierarchical clustering"
 		},
 		{
-			"file": "usr/filters/histogram.js",
+			"file": "usr/filters/histogram",
 			"name": "Color histogram"
 		},
 		{
-			"file": "usr/filters/testdelay.js",
+			"file": "usr/filters/testdelay",
 			"name": "Delay test"
+		},
+		{
+			"file": "usr/filters/base64",
+			"name": "Extract mime and value from base64 url"
+		},
+		{
+			"file": "usr/filters/decodeBarcode",
+			"name": "Decode Barcode(s)"
+		},
+		{
+			"file": "usr/filters/getValue",
+			"name": "Extract the value of without type"
+		},
+		{
+			"file": "usr/filters/encodeBarcode",
+			"name": "Encode to Barcode"
 		}
 	],
 	"modules": {
@@ -172,7 +188,8 @@
 					},
 					{
 						"moduleName": "Sticky note",
-						"url": "modules/types/display/postit/"
+						"url": "modules/types/display/postit/",
+						"hidden": true
 					},
 					{
 						"moduleName": "Display value",
@@ -197,10 +214,6 @@
 			"Edition": {
 				"modules": [
 					{
-						"moduleName": "Filter",
-						"url": "modules/types/edition/filter/"
-					},
-					{
 						"moduleName": "Filter editor",
 						"url": "modules/types/edition/filter_editor/"
 					},
@@ -221,8 +234,8 @@
 						"url": "modules/types/edition/onde/"
 					},
 					{
-						"moduleName": "Var Editor",
-						"url": "modules/types/edition/var_editor/"
+						"moduleName": "Alpaca",
+						"url": "modules/types/edition/alpaca/"
 					},
 					{
 						"moduleName": "Edit/Display",
@@ -235,6 +248,10 @@
 					{
 						"moduleName": "SVG Editor",
 						"url": "modules/types/edition/svg_editor/"
+					},
+					{
+						"moduleName": "Table Editor",
+						"url": "modules/types/edition/slick_grid/"
 					}
 				],
 				"folders": {},
@@ -257,6 +274,14 @@
 					{
 						"moduleName": "Navigator",
 						"url": "modules/types/legacy/xyzoomnavigator/"
+					},
+					{
+						"moduleName": "Filter",
+						"url": "modules/types/edition/filter/"
+					},
+					{
+						"moduleName": "Var Editor",
+						"url": "modules/types/edition/var_editor/"
 					}
 				],
 				"folders": {},
@@ -383,12 +408,12 @@
 				"label": "Blank view"
 			},
 			{
-				"type": "pushviewtoserver",
-				"label": "Save to server"
+				"type": "pouchloadview",
+				"label": "Load local view"
 			},
 			{
-				"type": "versioning",
-				"label": "Versioning"
+				"type": "pouchsaveview",
+				"label": "Save local view"
 			},
 			{
 				"type": "couchshare",

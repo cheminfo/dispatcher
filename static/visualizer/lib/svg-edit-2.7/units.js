@@ -1,1 +1,282 @@
-!function(){svgedit.units||(svgedit.units={});var a,b=svgedit.NS,c=["x","x1","cx","rx","width"],d=["y","y1","cy","ry","height"],e=["r","radius"].concat(c,d),f={};svgedit.units.init=function(c){a=c;var d=document.createElementNS(b.SVG,"svg");document.body.appendChild(d);var e=document.createElementNS(b.SVG,"rect");e.setAttribute("width","1em"),e.setAttribute("height","1ex"),e.setAttribute("x","1in"),d.appendChild(e);var g=e.getBBox();document.body.removeChild(d);var h=g.x;f={em:g.width,ex:g.height,"in":h,cm:h/2.54,mm:h/25.4,pt:h/72,pc:h/6,px:1,"%":0}},svgedit.units.getTypeMap=function(){return f},svgedit.units.shortFloat=function(b){var c=a.getRoundDigits();return isNaN(b)?$.isArray(b)?svgedit.units.shortFloat(b[0])+","+svgedit.units.shortFloat(b[1]):parseFloat(b).toFixed(c)-0:+(+b).toFixed(c)},svgedit.units.convertUnit=function(b,c){return c=c||a.getBaseUnit(),svgedit.units.shortFloat(b/f[c])},svgedit.units.setUnitAttr=function(a,b,c){a.setAttribute(b,c)};var g={line:["x1","x2","y1","y2"],circle:["cx","cy","r"],ellipse:["cx","cy","rx","ry"],foreignObject:["x","y","width","height"],rect:["x","y","width","height"],image:["x","y","width","height"],use:["x","y","width","height"],text:["x","y"]};svgedit.units.convertAttrs=function(b){var c=b.tagName,d=a.getBaseUnit(),e=g[c];if(e){var h,i=e.length;for(h=0;i>h;h++){var j=e[h],k=b.getAttribute(j);k&&(isNaN(k)||b.setAttribute(j,k/f[d]+d))}}},svgedit.units.convertToNum=function(b,e){if(!isNaN(e))return e-0;var g;if("%"===e.substr(-1)){g=e.substr(0,e.length-1)/100;var h=a.getWidth(),i=a.getHeight();return c.indexOf(b)>=0?g*h:d.indexOf(b)>=0?g*i:g*Math.sqrt(h*h+i*i)/Math.sqrt(2)}var j=e.substr(-2);return g=e.substr(0,e.length-2),g*f[j]},svgedit.units.isValidUnit=function(b,c,d){var g=!1;if(e.indexOf(b)>=0)isNaN(c)?(c=c.toLowerCase(),$.each(f,function(a){if(!g){var b=new RegExp("^-?[\\d\\.]+"+a+"$");b.test(c)&&(g=!0)}})):g=!0;else if("id"==b){var h=!1;try{var i=a.getElement(c);h=null==i||i===d}catch(j){}return h}return g=!0}}();
+/*globals $, svgedit*/
+/*jslint vars: true, eqeq: true*/
+/**
+ * Package: svgedit.units
+ *
+ * Licensed under the MIT License
+ *
+ * Copyright(c) 2010 Alexis Deveria
+ * Copyright(c) 2010 Jeff Schiller
+ */
+
+// Dependencies:
+// 1) jQuery
+
+(function() {
+
+if (!svgedit.units) {
+	svgedit.units = {};
+}
+
+var NS = svgedit.NS;
+var wAttrs = ['x', 'x1', 'cx', 'rx', 'width'];
+var hAttrs = ['y', 'y1', 'cy', 'ry', 'height'];
+var unitAttrs = ['r', 'radius'].concat(wAttrs, hAttrs);
+// unused
+var unitNumMap = {
+	'%':  2,
+	'em': 3,
+	'ex': 4,
+	'px': 5,
+	'cm': 6,
+	'mm': 7,
+	'in': 8,
+	'pt': 9,
+	'pc': 10
+};
+
+// Container of elements.
+var elementContainer_;
+
+/**
+ * Stores mapping of unit type to user coordinates.
+ */
+var typeMap_ = {};
+
+/**
+ * ElementContainer interface
+ *
+ * function getBaseUnit() - returns a string of the base unit type of the container ('em')
+ * function getElement() - returns an element in the container given an id
+ * function getHeight() - returns the container's height
+ * function getWidth() - returns the container's width
+ * function getRoundDigits() - returns the number of digits number should be rounded to
+ */
+
+/**
+ * Function: svgedit.units.init()
+ * Initializes this module.
+ *
+ * Parameters:
+ * elementContainer - an object implementing the ElementContainer interface.
+ */
+svgedit.units.init = function(elementContainer) {
+	elementContainer_ = elementContainer;
+
+	// Get correct em/ex values by creating a temporary SVG.
+	var svg = document.createElementNS(NS.SVG, 'svg');
+	document.body.appendChild(svg);
+	var rect = document.createElementNS(NS.SVG, 'rect');
+	rect.setAttribute('width', '1em');
+	rect.setAttribute('height', '1ex');
+	rect.setAttribute('x', '1in');
+	svg.appendChild(rect);
+	var bb = rect.getBBox();
+	document.body.removeChild(svg);
+
+	var inch = bb.x;
+	typeMap_ = {
+		'em': bb.width,
+		'ex': bb.height,
+		'in': inch,
+		'cm': inch / 2.54,
+		'mm': inch / 25.4,
+		'pt': inch / 72,
+		'pc': inch / 6,
+		'px': 1,
+		'%': 0
+	};
+};
+
+// Group: Unit conversion functions
+
+// Function: svgedit.units.getTypeMap
+// Returns the unit object with values for each unit
+svgedit.units.getTypeMap = function() {
+	return typeMap_;
+};
+
+// Function: svgedit.units.shortFloat
+// Rounds a given value to a float with number of digits defined in save_options
+//
+// Parameters:
+// val - The value as a String, Number or Array of two numbers to be rounded
+//
+// Returns:
+// If a string/number was given, returns a Float. If an array, return a string
+// with comma-seperated floats
+svgedit.units.shortFloat = function(val) {
+	var digits = elementContainer_.getRoundDigits();
+	if (!isNaN(val)) {
+		// Note that + converts to Number
+		return +((+val).toFixed(digits));
+	}
+	if ($.isArray(val)) {
+		return svgedit.units.shortFloat(val[0]) + ',' + svgedit.units.shortFloat(val[1]);
+	}
+	return parseFloat(val).toFixed(digits) - 0;
+};
+
+// Function: svgedit.units.convertUnit
+// Converts the number to given unit or baseUnit
+svgedit.units.convertUnit = function(val, unit) {
+	unit = unit || elementContainer_.getBaseUnit();
+//	baseVal.convertToSpecifiedUnits(unitNumMap[unit]);
+//	var val = baseVal.valueInSpecifiedUnits;
+//	baseVal.convertToSpecifiedUnits(1);
+	return svgedit.units.shortFloat(val / typeMap_[unit]);
+};
+
+// Function: svgedit.units.setUnitAttr
+// Sets an element's attribute based on the unit in its current value.
+//
+// Parameters:
+// elem - DOM element to be changed
+// attr - String with the name of the attribute associated with the value
+// val - String with the attribute value to convert
+svgedit.units.setUnitAttr = function(elem, attr, val) {
+//	if (!isNaN(val)) {
+		// New value is a number, so check currently used unit
+//		var old_val = elem.getAttribute(attr);
+
+		// Enable this for alternate mode
+//		if (old_val !== null && (isNaN(old_val) || elementContainer_.getBaseUnit() !== 'px')) {
+//			// Old value was a number, so get unit, then convert
+//			var unit;
+//			if (old_val.substr(-1) === '%') {
+//				var res = getResolution();
+//				unit = '%';
+//				val *= 100;
+//				if (wAttrs.indexOf(attr) >= 0) {
+//					val = val / res.w;
+//				} else if (hAttrs.indexOf(attr) >= 0) {
+//					val = val / res.h;
+//				} else {
+//					return val / Math.sqrt((res.w*res.w) + (res.h*res.h))/Math.sqrt(2);
+//				}
+//			} else {
+//				if (elementContainer_.getBaseUnit() !== 'px') {
+//					unit = elementContainer_.getBaseUnit();
+//				} else {
+//					unit = old_val.substr(-2);
+//				}
+//				val = val / typeMap_[unit];
+//			}
+//
+//		val += unit;
+//		}
+//	}
+	elem.setAttribute(attr, val);
+};
+
+var attrsToConvert = {
+	'line': ['x1', 'x2', 'y1', 'y2'],
+	'circle': ['cx', 'cy', 'r'],
+	'ellipse': ['cx', 'cy', 'rx', 'ry'],
+	'foreignObject': ['x', 'y', 'width', 'height'],
+	'rect': ['x', 'y', 'width', 'height'],
+	'image': ['x', 'y', 'width', 'height'],
+	'use': ['x', 'y', 'width', 'height'],
+	'text': ['x', 'y']
+};
+
+// Function: svgedit.units.convertAttrs
+// Converts all applicable attributes to the configured baseUnit
+//
+// Parameters:
+// element - a DOM element whose attributes should be converted
+svgedit.units.convertAttrs = function(element) {
+	var elName = element.tagName;
+	var unit = elementContainer_.getBaseUnit();
+	var attrs = attrsToConvert[elName];
+	if (!attrs) {return;}
+
+	var len = attrs.length;
+	var i;
+	for (i = 0; i < len; i++) {
+		var attr = attrs[i];
+		var cur = element.getAttribute(attr);
+		if (cur) {
+			if (!isNaN(cur)) {
+				element.setAttribute(attr, (cur / typeMap_[unit]) + unit);
+			}
+			// else {
+				// Convert existing?
+			// }
+		}
+	}
+};
+
+// Function: svgedit.units.convertToNum
+// Converts given values to numbers. Attributes must be supplied in 
+// case a percentage is given
+//
+// Parameters:
+// attr - String with the name of the attribute associated with the value
+// val - String with the attribute value to convert
+svgedit.units.convertToNum = function(attr, val) {
+	// Return a number if that's what it already is
+	if (!isNaN(val)) {return val-0;}
+	var num;
+	if (val.substr(-1) === '%') {
+		// Deal with percentage, depends on attribute
+		num = val.substr(0, val.length-1)/100;
+		var width = elementContainer_.getWidth();
+		var height = elementContainer_.getHeight();
+
+		if (wAttrs.indexOf(attr) >= 0) {
+			return num * width;
+		}
+		if (hAttrs.indexOf(attr) >= 0) {
+			return num * height;
+		}
+		return num * Math.sqrt((width*width) + (height*height))/Math.sqrt(2);
+	}
+	var unit = val.substr(-2);
+	num = val.substr(0, val.length-2);
+	// Note that this multiplication turns the string into a number
+	return num * typeMap_[unit];
+};
+
+// Function: svgedit.units.isValidUnit
+// Check if an attribute's value is in a valid format
+//
+// Parameters:
+// attr - String with the name of the attribute associated with the value
+// val - String with the attribute value to check
+svgedit.units.isValidUnit = function(attr, val, selectedElement) {
+	var valid = false;
+	if (unitAttrs.indexOf(attr) >= 0) {
+		// True if it's just a number
+		if (!isNaN(val)) {
+			valid = true;
+		} else {
+		// Not a number, check if it has a valid unit
+			val = val.toLowerCase();
+			$.each(typeMap_, function(unit) {
+				if (valid) {return;}
+				var re = new RegExp('^-?[\\d\\.]+' + unit + '$');
+				if (re.test(val)) {valid = true;}
+			});
+		}
+	} else if (attr == 'id') {
+		// if we're trying to change the id, make sure it's not already present in the doc
+		// and the id value is valid.
+
+		var result = false;
+		// because getElem() can throw an exception in the case of an invalid id
+		// (according to http://www.w3.org/TR/xml-id/ IDs must be a NCName)
+		// we wrap it in an exception and only return true if the ID was valid and
+		// not already present
+		try {
+			var elem = elementContainer_.getElement(val);
+			result = (elem == null || elem === selectedElement);
+		} catch(e) {}
+		return result;
+	}
+	valid = true;
+
+	return valid;
+};
+
+}());

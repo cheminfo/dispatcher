@@ -1,1 +1,42 @@
-svgEditor.addExtension("xdomain-messaging",function(){try{window.addEventListener("message",function(a){if("string"==typeof a.data&&"|"!==a.data.charAt()){var b,c,d,e,f,g=JSON.parse(a.data);if(g&&"object"==typeof g&&"svgCanvas"===g.namespace&&(f=svgEditor.curConfig.allowedOrigins,-1!==f.indexOf("*")||-1!==f.indexOf(a.origin))){b=g.id,c=g.name,d=g.args,e={namespace:"svg-edit",id:b};try{e.result=svgCanvas[c].apply(svgCanvas,d)}catch(h){e.error=h.message}a.source.postMessage(JSON.stringify(e),"*")}}},!1)}catch(a){console.log("Error with xdomain message listener: "+a)}});
+/**
+* Should not be needed for same domain control (just call via child frame),
+*  but an API common for cross-domain and same domain use can be found
+*  in embedapi.js with a demo at embedapi.html
+*/
+/*globals svgEditor, svgCanvas*/
+svgEditor.addExtension('xdomain-messaging', function() {
+	try {
+		window.addEventListener('message', function(e) {
+			// We accept and post strings for the sake of IE9 support
+			if (typeof e.data !== 'string' || e.data.charAt() === '|') {
+				return;
+			}
+			var cbid, name, args, message, allowedOrigins, data = JSON.parse(e.data);
+			if (!data || typeof data !== 'object' || data.namespace !== 'svgCanvas') {
+				return;
+			}
+			// The default is not to allow any origins, including even the same domain or if run on a file:// URL
+			//  See config-sample.js for an example of how to configure
+			allowedOrigins = svgEditor.curConfig.allowedOrigins;
+			if (allowedOrigins.indexOf('*') === -1 && allowedOrigins.indexOf(e.origin) === -1) {
+				return;
+			}
+			cbid = data.id;
+			name = data.name;
+			args = data.args;
+			message = {
+				namespace: 'svg-edit',
+				id: cbid
+			};
+			try {
+				message.result = svgCanvas[name].apply(svgCanvas, args);
+			} catch (err) {
+				message.error = err.message;
+			}
+			e.source.postMessage(JSON.stringify(message), '*');
+		}, false);
+	}
+	catch (err) {
+		console.log('Error with xdomain message listener: ' + err);
+	}
+});

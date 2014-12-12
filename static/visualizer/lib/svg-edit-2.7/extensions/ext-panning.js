@@ -1,1 +1,46 @@
-svgEditor.addExtension("ext-panning",function(){return{name:"Extension Panning",svgicons:svgEditor.curConfig.extPath+"ext-panning.xml",buttons:[{id:"ext-panning",type:"mode",title:"Panning",events:{click:function(){svgCanvas.setMode("ext-panning")}}}],mouseDown:function(){return"ext-panning"==svgCanvas.getMode()?(svgEditor.setPanning(!0),{started:!0}):void 0},mouseUp:function(){return"ext-panning"==svgCanvas.getMode()?(svgEditor.setPanning(!1),{keep:!1,element:null}):void 0}}});
+/*globals svgEditor, svgCanvas*/
+/*jslint eqeq: true*/
+/*
+ * ext-panning.js
+ *
+ * Licensed under the MIT License
+ *
+ * Copyright(c) 2013 Luis Aguirre
+ *
+ */
+ 
+/* 
+	This is a very basic SVG-Edit extension to let tablet/mobile devices panning without problem
+*/
+
+svgEditor.addExtension('ext-panning', function() {
+	return {
+		name: 'Extension Panning',
+		svgicons: svgEditor.curConfig.extPath + 'ext-panning.xml',
+		buttons: [{
+			id: 'ext-panning',
+			type: 'mode',
+			title: 'Panning',
+			events: {
+				click: function() {
+					svgCanvas.setMode('ext-panning');
+				}
+			}
+		}],
+		mouseDown: function() {
+			if (svgCanvas.getMode() == 'ext-panning') {
+				svgEditor.setPanning(true);
+				return {started: true};
+			}
+		},
+		mouseUp: function() {
+			if (svgCanvas.getMode() == 'ext-panning') {
+				svgEditor.setPanning(false);
+				return {
+					keep: false,
+					element: null
+				};
+			}
+		}
+	};
+});

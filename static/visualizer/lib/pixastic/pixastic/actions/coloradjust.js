@@ -1,1 +1,62 @@
-Pixastic.Actions.coloradjust={process:function(a){var b=parseFloat(a.options.red)||0,c=parseFloat(a.options.green)||0,d=parseFloat(a.options.blue)||0;if(b=Math.round(255*b),c=Math.round(255*c),d=Math.round(255*d),Pixastic.Client.hasCanvasImageData()){for(var e,f,g,h,i,j=Pixastic.prepareData(a),k=a.options.rect,l=k.width*k.height,m=4*l;l--;)m-=4,b&&(j[m]=(g=j[m]+b)<0?0:g>255?255:g),c&&(j[e]=(h=j[e=m+1]+c)<0?0:h>255?255:h),d&&(j[f]=(i=j[f=m+2]+d)<0?0:i>255?255:i);return!0}},checkSupport:function(){return Pixastic.Client.hasCanvasImageData()}};
+/*
+ * Pixastic Lib - Color adjust filter - v0.1.1
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.coloradjust = {
+
+	process : function(params) {
+		var red = parseFloat(params.options.red) || 0;
+		var green = parseFloat(params.options.green) || 0;
+		var blue = parseFloat(params.options.blue) || 0;
+
+		red = Math.round(red*255);
+		green = Math.round(green*255);
+		blue = Math.round(blue*255);
+
+		if (Pixastic.Client.hasCanvasImageData()) {
+			var data = Pixastic.prepareData(params);
+			var rect = params.options.rect;
+
+			var p = rect.width*rect.height;
+			var pix = p*4, pix1, pix2;
+
+			var r, g, b;
+			while (p--) {
+				pix -= 4;
+
+				if (red) {
+					if ((r = data[pix] + red) < 0 ) 
+						data[pix] = 0;
+					else if (r > 255 ) 
+						data[pix] = 255;
+					else
+						data[pix] = r;
+				}
+
+				if (green) {
+					if ((g = data[pix1=pix+1] + green) < 0 ) 
+						data[pix1] = 0;
+					else if (g > 255 ) 
+						data[pix1] = 255;
+					else
+						data[pix1] = g;
+				}
+
+				if (blue) {
+					if ((b = data[pix2=pix+2] + blue) < 0 ) 
+						data[pix2] = 0;
+					else if (b > 255 ) 
+						data[pix2] = 255;
+					else
+						data[pix2] = b;
+				}
+			}
+			return true;
+		}
+	},
+	checkSupport : function() {
+		return (Pixastic.Client.hasCanvasImageData());
+	}
+}

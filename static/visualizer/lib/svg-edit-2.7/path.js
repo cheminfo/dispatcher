@@ -1,1 +1,992 @@
-!function(){svgedit.path||(svgedit.path={});var a=svgedit.NS,b={pathNodeTooltip:"Drag node to move it. Double-click node to change segment type",pathCtrlPtTooltip:"Drag control point to adjust curve properties"},c={2:["x","y"],4:["x","y"],6:["x","y","x1","y1","x2","y2"],8:["x","y","x1","y1"],10:["x","y","r1","r2","angle","largeArcFlag","sweepFlag"],12:["x"],14:["y"],16:["x","y","x2","y2"],18:["x","y"]},d=[],e=!0,f={};svgedit.path.setLinkControlPoints=function(a){e=a},svgedit.path.path=null;var g=null;svgedit.path.init=function(a){g=a,d=[0,"ClosePath"];var b=["Moveto","Lineto","CurvetoCubic","CurvetoQuadratic","Arc","LinetoHorizontal","LinetoVertical","CurvetoCubicSmooth","CurvetoQuadraticSmooth"];$.each(b,function(a,b){d.push(b+"Abs"),d.push(b+"Rel")})},svgedit.path.insertItemBefore=function(a,b,c){var d=a.pathSegList;if(svgedit.browser.supportsPathInsertItemBefore())return void d.insertItemBefore(b,c);var e,f=d.numberOfItems,g=[];for(e=0;f>e;e++){var h=d.getItem(e);g.push(h)}for(d.clear(),e=0;f>e;e++)e==c&&d.appendItem(b),d.appendItem(g[e])},svgedit.path.ptObjToArr=function(a,b){var d,e=c[a],f=e.length,g=[];for(d=0;f>d;d++)g[d]=b[e[d]];return g},svgedit.path.getGripPt=function(a,b){var c={x:b?b.x:a.item.x,y:b?b.y:a.item.y},d=a.path;if(d.matrix){var e=svgedit.math.transformPoint(c.x,c.y,d.matrix);c=e}return c.x*=g.getCurrentZoom(),c.y*=g.getCurrentZoom(),c},svgedit.path.getPointFromGrip=function(a,b){var c={x:a.x,y:a.y};return b.matrix&&(a=svgedit.math.transformPoint(c.x,c.y,b.imatrix),c.x=a.x,c.y=a.y),c.x/=g.getCurrentZoom(),c.y/=g.getCurrentZoom(),c},svgedit.path.addPointGrip=function(c,d,e){var f=svgedit.path.getGripContainer(),g=svgedit.utilities.getElem("pathpointgrip_"+c);if(!g){g=document.createElementNS(a.SVG,"circle"),svgedit.utilities.assignAttributes(g,{id:"pathpointgrip_"+c,display:"none",r:4,fill:"#0FF",stroke:"#00F","stroke-width":2,cursor:"move",style:"pointer-events:all","xlink:title":b.pathNodeTooltip}),g=f.appendChild(g);var h=$("#pathpointgrip_"+c);h.dblclick(function(){svgedit.path.path&&svgedit.path.path.setSegType()})}return d&&e&&svgedit.utilities.assignAttributes(g,{cx:d,cy:e,display:"inline"}),g},svgedit.path.getGripContainer=function(){var b=svgedit.utilities.getElem("pathpointgrip_container");if(!b){var c=svgedit.utilities.getElem("selectorParentGroup");b=c.appendChild(document.createElementNS(a.SVG,"g")),b.id="pathpointgrip_container"}return b},svgedit.path.addCtrlGrip=function(c){var d=svgedit.utilities.getElem("ctrlpointgrip_"+c);return d?d:(d=document.createElementNS(a.SVG,"circle"),svgedit.utilities.assignAttributes(d,{id:"ctrlpointgrip_"+c,display:"none",r:4,fill:"#0FF",stroke:"#55F","stroke-width":1,cursor:"move",style:"pointer-events:all","xlink:title":b.pathCtrlPtTooltip}),svgedit.path.getGripContainer().appendChild(d),d)},svgedit.path.getCtrlLine=function(b){var c=svgedit.utilities.getElem("ctrlLine_"+b);return c?c:(c=document.createElementNS(a.SVG,"line"),svgedit.utilities.assignAttributes(c,{id:"ctrlLine_"+b,stroke:"#555","stroke-width":1,style:"pointer-events:none"}),svgedit.path.getGripContainer().appendChild(c),c)},svgedit.path.getPointGrip=function(a,b){var c=a.index,d=svgedit.path.addPointGrip(c);if(b){var e=svgedit.path.getGripPt(a);svgedit.utilities.assignAttributes(d,{cx:e.x,cy:e.y,display:"inline"})}return d},svgedit.path.getControlPoints=function(a){var b=a.item,c=a.index;if(!("x1"in b&&"x2"in b))return null;var d,e={},f=(svgedit.path.getGripContainer(),svgedit.path.path.segs[c-1].item),g=[f,b];for(d=1;3>d;d++){var h=c+"c"+d,i=e["c"+d+"_line"]=svgedit.path.getCtrlLine(h),j=svgedit.path.getGripPt(a,{x:b["x"+d],y:b["y"+d]}),k=svgedit.path.getGripPt(a,{x:g[d-1].x,y:g[d-1].y});svgedit.utilities.assignAttributes(i,{x1:j.x,y1:j.y,x2:k.x,y2:k.y,display:"inline"}),e["c"+d+"_line"]=i;var l=e["c"+d]=svgedit.path.addCtrlGrip(h);svgedit.utilities.assignAttributes(l,{cx:j.x,cy:j.y,display:"inline"}),e["c"+d]=l}return e},svgedit.path.replacePathSeg=function(a,b,c,e){var f=e||svgedit.path.path.elem,g="createSVGPathSeg"+d[a],h=f[g].apply(f,c);if(svgedit.browser.supportsPathReplaceItem())f.pathSegList.replaceItem(h,b);else{var i,j=f.pathSegList,k=j.numberOfItems,l=[];for(i=0;k>i;i++){var m=j.getItem(i);l.push(m)}for(j.clear(),i=0;k>i;i++)j.appendItem(i==b?h:l[i])}},svgedit.path.getSegSelector=function(b,c){var d=b.index,e=svgedit.utilities.getElem("segline_"+d);if(!e){var f=svgedit.path.getGripContainer();e=document.createElementNS(a.SVG,"path"),svgedit.utilities.assignAttributes(e,{id:"segline_"+d,display:"none",fill:"none",stroke:"#0FF","stroke-width":2,style:"pointer-events:none",d:"M0,0 0,0"}),f.appendChild(e)}if(c){var g=b.prev;if(!g)return e.setAttribute("display","none"),e;var h=svgedit.path.getGripPt(g);svgedit.path.replacePathSeg(2,0,[h.x,h.y],e);var i,j=svgedit.path.ptObjToArr(b.type,b.item,!0);for(i=0;i<j.length;i+=2)h=svgedit.path.getGripPt(b,{x:j[i],y:j[i+1]}),j[i]=h.x,j[i+1]=h.y;svgedit.path.replacePathSeg(b.type,1,j,e)}return e},svgedit.path.smoothControlPoints=function(a,b,c){var d=a.x-c.x,e=a.y-c.y,f=b.x-c.x,h=b.y-c.y;if(!(0==d&&0==e||0==f&&0==h)){var i=Math.atan2(e,d),j=Math.atan2(h,f),k=Math.sqrt(d*d+e*e),l=Math.sqrt(f*f+h*h),m=g.getSVGRoot().createSVGPoint(),n=g.getSVGRoot().createSVGPoint();0>i&&(i+=2*Math.PI),0>j&&(j+=2*Math.PI);var o,p,q=Math.abs(i-j),r=Math.abs(Math.PI-q)/2;return i-j>0?(o=q<Math.PI?i+r:i-r,p=q<Math.PI?j-r:j+r):(o=q<Math.PI?i-r:i+r,p=q<Math.PI?j+r:j-r),m.x=k*Math.cos(o)+c.x,m.y=k*Math.sin(o)+c.y,n.x=l*Math.cos(p)+c.x,n.y=l*Math.sin(p)+c.y,[m,n]}return void 0},svgedit.path.Segment=function(a,b){this.selected=!1,this.index=a,this.item=b,this.type=b.pathSegType,this.ctrlpts=[],this.ptgrip=null,this.segsel=null},svgedit.path.Segment.prototype.showCtrlPts=function(a){var b;for(b in this.ctrlpts)this.ctrlpts.hasOwnProperty(b)&&this.ctrlpts[b].setAttribute("display",a?"inline":"none")},svgedit.path.Segment.prototype.selectCtrls=function(a){$("#ctrlpointgrip_"+this.index+"c1, #ctrlpointgrip_"+this.index+"c2").attr("fill",a?"#0FF":"#EEE")},svgedit.path.Segment.prototype.show=function(a){this.ptgrip&&(this.ptgrip.setAttribute("display",a?"inline":"none"),this.segsel.setAttribute("display",a?"inline":"none"),this.showCtrlPts(a))},svgedit.path.Segment.prototype.select=function(a){this.ptgrip&&(this.ptgrip.setAttribute("stroke",a?"#0FF":"#00F"),this.segsel.setAttribute("display",a?"inline":"none"),this.ctrlpts&&this.selectCtrls(a),this.selected=a)},svgedit.path.Segment.prototype.addGrip=function(){this.ptgrip=svgedit.path.getPointGrip(this,!0),this.ctrlpts=svgedit.path.getControlPoints(this,!0),this.segsel=svgedit.path.getSegSelector(this,!0)},svgedit.path.Segment.prototype.update=function(a){if(this.ptgrip){var b=svgedit.path.getGripPt(this);svgedit.utilities.assignAttributes(this.ptgrip,{cx:b.x,cy:b.y}),svgedit.path.getSegSelector(this,!0),this.ctrlpts&&(a&&(this.item=svgedit.path.path.elem.pathSegList.getItem(this.index),this.type=this.item.pathSegType),svgedit.path.getControlPoints(this))}},svgedit.path.Segment.prototype.move=function(a,b){var c,d=this.item;if(c=this.ctrlpts?[d.x+=a,d.y+=b,d.x1,d.y1,d.x2+=a,d.y2+=b]:[d.x+=a,d.y+=b],svgedit.path.replacePathSeg(this.type,this.index,c),this.next&&this.next.ctrlpts){var e=this.next.item,f=[e.x,e.y,e.x1+=a,e.y1+=b,e.x2,e.y2];svgedit.path.replacePathSeg(this.next.type,this.next.index,f)}if(this.mate){d=this.mate.item;var g=[d.x+=a,d.y+=b];svgedit.path.replacePathSeg(this.mate.type,this.mate.index,g)}this.update(!0),this.next&&this.next.update(!0)},svgedit.path.Segment.prototype.setLinked=function(a){var b,c,d;if(2==a){if(c=1,b=this.next,!b)return;d=this.item}else{if(c=2,b=this.prev,!b)return;d=b.item}var e=b.item;e["x"+c]=d.x+(d.x-this.item["x"+a]),e["y"+c]=d.y+(d.y-this.item["y"+a]);var f=[e.x,e.y,e.x1,e.y1,e.x2,e.y2];svgedit.path.replacePathSeg(b.type,b.index,f),b.update(!0)},svgedit.path.Segment.prototype.moveCtrl=function(a,b,c){var d=this.item;d["x"+a]+=b,d["y"+a]+=c;var e=[d.x,d.y,d.x1,d.y1,d.x2,d.y2];svgedit.path.replacePathSeg(this.type,this.index,e),this.update(!0)},svgedit.path.Segment.prototype.setType=function(a,b){svgedit.path.replacePathSeg(a,this.index,b),this.type=a,this.item=svgedit.path.path.elem.pathSegList.getItem(this.index),this.showCtrlPts(6===a),this.ctrlpts=svgedit.path.getControlPoints(this),this.update(!0)},svgedit.path.Path=function(a){if(!a||"path"!==a.tagName)throw"svgedit.path.Path constructed without a <path> element";this.elem=a,this.segs=[],this.selected_pts=[],svgedit.path.path=this,this.init()},svgedit.path.Path.prototype.init=function(){$(svgedit.path.getGripContainer()).find("*").attr("display","none");var a=this.elem.pathSegList,b=a.numberOfItems;this.segs=[],this.selected_pts=[],this.first_seg=null;var c;for(c=0;b>c;c++){var d=a.getItem(c),e=new svgedit.path.Segment(c,d);e.path=this,this.segs.push(e)}var f=this.segs,g=null;for(c=0;b>c;c++){var h,i=f[c],j=c+1>=b?null:f[c+1],k=0>c-1?null:f[c-1];2===i.type?(k&&1!==k.type&&(h=f[g],h.next=f[g+1],h.next.prev=h,h.addGrip()),g=c):j&&1===j.type?(i.next=f[g+1],i.next.prev=i,i.mate=f[g],i.addGrip(),null==this.first_seg&&(this.first_seg=i)):j?1!==i.type&&(i.addGrip(),j&&2!==j.type&&(i.next=j,i.next.prev=i)):1!==i.type&&(h=f[g],h.next=f[g+1],h.next.prev=h,h.addGrip(),i.addGrip(),this.first_seg||(this.first_seg=f[g]))}return this},svgedit.path.Path.prototype.eachSeg=function(a){var b,c=this.segs.length;for(b=0;c>b;b++){var d=a.call(this.segs[b],b);if(d===!1)break}},svgedit.path.Path.prototype.addSeg=function(a){var b=this.segs[a];if(b.prev){var c,d,e,f=b.prev;switch(b.item.pathSegType){case 4:d=(b.item.x+f.item.x)/2,e=(b.item.y+f.item.y)/2,c=this.elem.createSVGPathSegLinetoAbs(d,e);break;case 6:var g=(f.item.x+b.item.x1)/2,h=(b.item.x1+b.item.x2)/2,i=(b.item.x2+b.item.x)/2,j=(g+h)/2,k=(h+i)/2;d=(j+k)/2;var l=(f.item.y+b.item.y1)/2,m=(b.item.y1+b.item.y2)/2,n=(b.item.y2+b.item.y)/2,o=(l+m)/2,p=(m+n)/2;e=(o+p)/2,c=this.elem.createSVGPathSegCurvetoCubicAbs(d,e,g,l,j,o);var q=[b.item.x,b.item.y,k,p,i,n];svgedit.path.replacePathSeg(b.type,a,q)}svgedit.path.insertItemBefore(this.elem,c,a)}},svgedit.path.Path.prototype.deleteSeg=function(a){var b=this.segs[a],c=this.elem.pathSegList;b.show(!1);var d,e=b.next;if(b.mate)d=[e.item.x,e.item.y],svgedit.path.replacePathSeg(2,e.index,d),svgedit.path.replacePathSeg(4,b.index,d),c.removeItem(b.mate.index);else if(b.prev)c.removeItem(a);else{{b.item}d=[e.item.x,e.item.y],svgedit.path.replacePathSeg(2,b.next.index,d),c.removeItem(a)}},svgedit.path.Path.prototype.subpathIsClosed=function(a){var b=!1;return svgedit.path.path.eachSeg(function(c){return a>=c?!0:2===this.type?!1:1===this.type?(b=!0,!1):void 0}),b},svgedit.path.Path.prototype.removePtFromSelection=function(a){var b=this.selected_pts.indexOf(a);-1!=b&&(this.segs[a].select(!1),this.selected_pts.splice(b,1))},svgedit.path.Path.prototype.clearSelection=function(){this.eachSeg(function(){this.select(!1)}),this.selected_pts=[]},svgedit.path.Path.prototype.storeD=function(){this.last_d=this.elem.getAttribute("d")},svgedit.path.Path.prototype.show=function(a){return this.eachSeg(function(){this.show(a)}),a&&this.selectPt(this.first_seg.index),this},svgedit.path.Path.prototype.movePts=function(a,b){for(var c=this.selected_pts.length;c--;){var d=this.segs[this.selected_pts[c]];d.move(a,b)}},svgedit.path.Path.prototype.moveCtrl=function(a,b){var c=this.segs[this.selected_pts[0]];c.moveCtrl(this.dragctrl,a,b),e&&c.setLinked(this.dragctrl)},svgedit.path.Path.prototype.setSegType=function(a){this.storeD();for(var b,c=this.selected_pts.length;c--;){var d=this.selected_pts[c],e=this.segs[d],f=e.prev;if(f){if(!a){b="Toggle Path Segment Type";var g=e.type;a=6==g?4:6}a=Number(a);var h,i=e.item.x,j=e.item.y,k=f.item.x,l=f.item.y;switch(a){case 6:if(e.olditem){var m=e.olditem;h=[i,j,m.x1,m.y1,m.x2,m.y2]}else{var n=i-k,o=j-l,p=k+n/3,q=l+o/3,r=i-n/3,s=j-o/3;h=[i,j,p,q,r,s]}break;case 4:h=[i,j],e.olditem=e.item}e.setType(a,h)}}svgedit.path.path.endChanges(b)},svgedit.path.Path.prototype.selectPt=function(a,b){this.clearSelection(),null==a&&this.eachSeg(function(b){this.prev&&(a=b)}),this.addPtsToSelection(a),b&&(this.dragctrl=b,e&&this.segs[a].setLinked(b))},svgedit.path.Path.prototype.update=function(){var a=this.elem;return svgedit.utilities.getRotationAngle(a)?(this.matrix=svgedit.math.getMatrix(a),this.imatrix=this.matrix.inverse()):(this.matrix=null,this.imatrix=null),this.eachSeg(function(b){this.item=a.pathSegList.getItem(b),this.update()}),this},svgedit.path.getPath_=function(a){var b=f[a.id];return b||(b=f[a.id]=new svgedit.path.Path(a)),b},svgedit.path.removePath_=function(a){a in f&&delete f[a]};var h,i,j,k,l,m=function(a,b){var c=a-j,d=b-k,e=Math.sqrt(c*c+d*d),f=Math.atan2(d,c)+l;return c=e*Math.cos(f)+j,d=e*Math.sin(f)+k,c-=h,d-=i,e=Math.sqrt(c*c+d*d),f=Math.atan2(d,c)-l,{x:e*Math.cos(f)+h,y:e*Math.sin(f)+i}};svgedit.path.recalcRotatedPath=function(){var a=svgedit.path.path.elem;if(l=svgedit.utilities.getRotationAngle(a,!0)){var b=svgedit.utilities.getBBox(a),c=svgedit.path.path.oldbbox;j=c.x+c.width/2,k=c.y+c.height/2,h=b.x+b.width/2,i=b.y+b.height/2;var d=h-j,e=i-k,f=Math.sqrt(d*d+e*e),g=Math.atan2(e,d)+l;h=f*Math.cos(g)+j,i=f*Math.sin(g)+k;for(var n=a.pathSegList,o=n.numberOfItems;o;){o-=1;var p=n.getItem(o),q=p.pathSegType;if(1!=q){var r=m(p.x,p.y),s=[r.x,r.y];if(null!=p.x1&&null!=p.x2){var t=m(p.x1,p.y1),u=m(p.x2,p.y2);s.splice(s.length,0,t.x,t.y,u.x,u.y)}svgedit.path.replacePathSeg(q,o,s)}}b=svgedit.utilities.getBBox(a);var v=svgroot.createSVGTransform(),w=svgedit.transformlist.getTransformList(a);v.setRotate(180*l/Math.PI,h,i),w.replaceItem(v,0)}},svgedit.path.clearData=function(){f={}}}();
+/*globals $, svgedit, svgroot*/
+/*jslint vars: true, eqeq: true, continue: true*/
+/**
+ * Package: svgedit.path
+ *
+ * Licensed under the MIT License
+ *
+ * Copyright(c) 2011 Alexis Deveria
+ * Copyright(c) 2011 Jeff Schiller
+ */
+
+// Dependencies:
+// 1) jQuery
+// 2) browser.js
+// 3) math.js
+// 4) svgutils.js
+
+(function() {
+
+if (!svgedit.path) {
+	svgedit.path = {};
+}
+
+var NS = svgedit.NS;
+var uiStrings = {
+	'pathNodeTooltip': 'Drag node to move it. Double-click node to change segment type',
+	'pathCtrlPtTooltip': 'Drag control point to adjust curve properties'
+};
+
+var segData = {
+	2: ['x', 'y'],
+	4: ['x', 'y'],
+	6: ['x', 'y', 'x1', 'y1', 'x2', 'y2'],
+	8: ['x', 'y', 'x1', 'y1'],
+	10: ['x', 'y', 'r1', 'r2', 'angle', 'largeArcFlag', 'sweepFlag'],
+	12: ['x'],
+	14: ['y'],
+	16: ['x', 'y', 'x2', 'y2'],
+	18: ['x', 'y']
+};
+
+var pathFuncs = [];
+
+var link_control_pts = true;
+
+// Stores references to paths via IDs.
+// TODO: Make this cross-document happy.
+var pathData = {};
+
+svgedit.path.setLinkControlPoints = function(lcp) {
+	link_control_pts = lcp;
+};
+
+svgedit.path.path = null;
+
+var editorContext_ = null;
+
+svgedit.path.init = function(editorContext) {
+	editorContext_ = editorContext;
+
+	pathFuncs = [0, 'ClosePath'];
+	var pathFuncsStrs = ['Moveto', 'Lineto', 'CurvetoCubic', 'CurvetoQuadratic', 'Arc',
+		'LinetoHorizontal', 'LinetoVertical', 'CurvetoCubicSmooth', 'CurvetoQuadraticSmooth'];
+	$.each(pathFuncsStrs, function(i, s) {
+		pathFuncs.push(s+'Abs');
+		pathFuncs.push(s+'Rel');
+	});
+};
+
+svgedit.path.insertItemBefore = function(elem, newseg, index) {
+	// Support insertItemBefore on paths for FF2
+	var list = elem.pathSegList;
+
+	if (svgedit.browser.supportsPathInsertItemBefore()) {
+		list.insertItemBefore(newseg, index);
+		return;
+	}
+	var len = list.numberOfItems;
+	var arr = [];
+	var i;
+	for (i=0; i < len; i++) {
+		var cur_seg = list.getItem(i);
+		arr.push(cur_seg);
+	}
+	list.clear();
+	for (i=0; i < len; i++) {
+		if (i == index) { //index+1
+			list.appendItem(newseg);
+		}
+		list.appendItem(arr[i]);
+	}
+};
+
+// TODO: See if this should just live in replacePathSeg
+svgedit.path.ptObjToArr = function(type, seg_item) {
+	var arr = segData[type], len = arr.length;
+	var i, out = [];
+	for (i = 0; i < len; i++) {
+		out[i] = seg_item[arr[i]];
+	}
+	return out;
+};
+
+svgedit.path.getGripPt = function(seg, alt_pt) {
+	var out = {
+		x: alt_pt? alt_pt.x : seg.item.x,
+		y: alt_pt? alt_pt.y : seg.item.y
+	}, path = seg.path;
+
+	if (path.matrix) {
+		var pt = svgedit.math.transformPoint(out.x, out.y, path.matrix);
+		out = pt;
+	}
+
+	out.x *= editorContext_.getCurrentZoom();
+	out.y *= editorContext_.getCurrentZoom();
+
+	return out;
+};
+
+svgedit.path.getPointFromGrip = function(pt, path) {
+	var out = {
+		x: pt.x,
+		y: pt.y
+	};
+
+	if (path.matrix) {
+		pt = svgedit.math.transformPoint(out.x, out.y, path.imatrix);
+		out.x = pt.x;
+		out.y = pt.y;
+	}
+
+	out.x /= editorContext_.getCurrentZoom();
+	out.y /= editorContext_.getCurrentZoom();
+
+	return out;
+};
+
+svgedit.path.addPointGrip = function(index, x, y) {
+	// create the container of all the point grips
+	var pointGripContainer = svgedit.path.getGripContainer();
+
+	var pointGrip = svgedit.utilities.getElem('pathpointgrip_'+index);
+	// create it
+	if (!pointGrip) {
+		pointGrip = document.createElementNS(NS.SVG, 'circle');
+		svgedit.utilities.assignAttributes(pointGrip, {
+			'id': 'pathpointgrip_' + index,
+			'display': 'none',
+			'r': 4,
+			'fill': '#0FF',
+			'stroke': '#00F',
+			'stroke-width': 2,
+			'cursor': 'move',
+			'style': 'pointer-events:all',
+			'xlink:title': uiStrings.pathNodeTooltip
+		});
+		pointGrip = pointGripContainer.appendChild(pointGrip);
+
+		var grip = $('#pathpointgrip_'+index);
+		grip.dblclick(function() {
+			if (svgedit.path.path) {
+				svgedit.path.path.setSegType();
+			}
+		});
+	}
+	if (x && y) {
+		// set up the point grip element and display it
+		svgedit.utilities.assignAttributes(pointGrip, {
+			'cx': x,
+			'cy': y,
+			'display': 'inline'
+		});
+	}
+	return pointGrip;
+};
+
+svgedit.path.getGripContainer = function() {
+	var c = svgedit.utilities.getElem('pathpointgrip_container');
+	if (!c) {
+		var parent = svgedit.utilities.getElem('selectorParentGroup');
+		c = parent.appendChild(document.createElementNS(NS.SVG, 'g'));
+		c.id = 'pathpointgrip_container';
+	}
+	return c;
+};
+
+svgedit.path.addCtrlGrip = function(id) {
+	var pointGrip = svgedit.utilities.getElem('ctrlpointgrip_'+id);
+	if (pointGrip) {return pointGrip;}
+
+	pointGrip = document.createElementNS(NS.SVG, 'circle');
+	svgedit.utilities.assignAttributes(pointGrip, {
+		'id': 'ctrlpointgrip_' + id,
+		'display': 'none',
+		'r': 4,
+		'fill': '#0FF',
+		'stroke': '#55F',
+		'stroke-width': 1,
+		'cursor': 'move',
+		'style': 'pointer-events:all',
+		'xlink:title': uiStrings.pathCtrlPtTooltip
+	});
+	svgedit.path.getGripContainer().appendChild(pointGrip);
+	return pointGrip;
+};
+
+svgedit.path.getCtrlLine = function(id) {
+	var ctrlLine = svgedit.utilities.getElem('ctrlLine_'+id);
+	if (ctrlLine) {return ctrlLine;}
+
+	ctrlLine = document.createElementNS(NS.SVG, 'line');
+	svgedit.utilities.assignAttributes(ctrlLine, {
+		'id': 'ctrlLine_'+id,
+		'stroke': '#555',
+		'stroke-width': 1,
+		'style': 'pointer-events:none'
+	});
+	svgedit.path.getGripContainer().appendChild(ctrlLine);
+	return ctrlLine;
+};
+
+svgedit.path.getPointGrip = function(seg, update) {
+	var index = seg.index;
+	var pointGrip = svgedit.path.addPointGrip(index);
+
+	if (update) {
+		var pt = svgedit.path.getGripPt(seg);
+		svgedit.utilities.assignAttributes(pointGrip, {
+			'cx': pt.x,
+			'cy': pt.y,
+			'display': 'inline'
+		});
+	}
+
+	return pointGrip;
+};
+
+svgedit.path.getControlPoints = function(seg) {
+	var item = seg.item;
+	var index = seg.index;
+	if (!('x1' in item) || !('x2' in item)) {return null;}
+	var cpt = {};
+	var pointGripContainer = svgedit.path.getGripContainer();
+
+	// Note that this is intentionally not seg.prev.item
+	var prev = svgedit.path.path.segs[index-1].item;
+
+	var seg_items = [prev, item];
+
+	var i;
+	for (i = 1; i < 3; i++) {
+		var id = index + 'c' + i;
+
+		var ctrlLine = cpt['c' + i + '_line'] = svgedit.path.getCtrlLine(id);
+
+		var pt = svgedit.path.getGripPt(seg, {x:item['x' + i], y:item['y' + i]});
+		var gpt = svgedit.path.getGripPt(seg, {x:seg_items[i-1].x, y:seg_items[i-1].y});
+
+		svgedit.utilities.assignAttributes(ctrlLine, {
+			'x1': pt.x,
+			'y1': pt.y,
+			'x2': gpt.x,
+			'y2': gpt.y,
+			'display': 'inline'
+		});
+
+		cpt['c' + i + '_line'] = ctrlLine;
+
+		// create it
+		var pointGrip = cpt['c' + i] = svgedit.path.addCtrlGrip(id);
+
+		svgedit.utilities.assignAttributes(pointGrip, {
+			'cx': pt.x,
+			'cy': pt.y,
+			'display': 'inline'
+		});
+		cpt['c' + i] = pointGrip;
+	}
+	return cpt;
+};
+
+// This replaces the segment at the given index. Type is given as number.
+svgedit.path.replacePathSeg = function(type, index, pts, elem) {
+	var path = elem || svgedit.path.path.elem;
+	var func = 'createSVGPathSeg' + pathFuncs[type];
+	var seg = path[func].apply(path, pts);
+
+	if (svgedit.browser.supportsPathReplaceItem()) {
+		path.pathSegList.replaceItem(seg, index);
+	} else {
+		var segList = path.pathSegList;
+		var len = segList.numberOfItems;
+		var arr = [];
+		var i;
+		for (i = 0; i < len; i++) {
+			var cur_seg = segList.getItem(i);
+			arr.push(cur_seg);
+		}
+		segList.clear();
+		for (i = 0; i < len; i++) {
+			if (i == index) {
+				segList.appendItem(seg);
+			} else {
+				segList.appendItem(arr[i]);
+			}
+		}
+	}
+};
+
+svgedit.path.getSegSelector = function(seg, update) {
+	var index = seg.index;
+	var segLine = svgedit.utilities.getElem('segline_' + index);
+	if (!segLine) {
+		var pointGripContainer = svgedit.path.getGripContainer();
+		// create segline
+		segLine = document.createElementNS(NS.SVG, 'path');
+		svgedit.utilities.assignAttributes(segLine, {
+			'id': 'segline_' + index,
+			'display': 'none',
+			'fill': 'none',
+			'stroke': '#0FF',
+			'stroke-width': 2,
+			'style':'pointer-events:none',
+			'd': 'M0,0 0,0'
+		});
+		pointGripContainer.appendChild(segLine);
+	}
+
+	if (update) {
+		var prev = seg.prev;
+		if (!prev) {
+			segLine.setAttribute('display', 'none');
+			return segLine;
+		}
+
+		var pt = svgedit.path.getGripPt(prev);
+		// Set start point
+		svgedit.path.replacePathSeg(2, 0, [pt.x, pt.y], segLine);
+
+		var pts = svgedit.path.ptObjToArr(seg.type, seg.item, true);
+		var i;
+		for (i = 0; i < pts.length; i += 2) {
+			pt = svgedit.path.getGripPt(seg, {x:pts[i], y:pts[i+1]});
+			pts[i] = pt.x;
+			pts[i+1] = pt.y;
+		}
+
+		svgedit.path.replacePathSeg(seg.type, 1, pts, segLine);
+	}
+	return segLine;
+};
+
+// Function: smoothControlPoints
+// Takes three points and creates a smoother line based on them
+// 
+// Parameters: 
+// ct1 - Object with x and y values (first control point)
+// ct2 - Object with x and y values (second control point)
+// pt - Object with x and y values (third point)
+//
+// Returns: 
+// Array of two "smoothed" point objects
+svgedit.path.smoothControlPoints = function(ct1, ct2, pt) {
+	// each point must not be the origin
+	var x1 = ct1.x - pt.x,
+		y1 = ct1.y - pt.y,
+		x2 = ct2.x - pt.x,
+		y2 = ct2.y - pt.y;
+
+	if ( (x1 != 0 || y1 != 0) && (x2 != 0 || y2 != 0) ) {
+		var anglea = Math.atan2(y1, x1),
+			angleb = Math.atan2(y2, x2),
+			r1 = Math.sqrt(x1*x1+y1*y1),
+			r2 = Math.sqrt(x2*x2+y2*y2),
+			nct1 = editorContext_.getSVGRoot().createSVGPoint(),
+			nct2 = editorContext_.getSVGRoot().createSVGPoint();
+		if (anglea < 0) { anglea += 2*Math.PI; }
+		if (angleb < 0) { angleb += 2*Math.PI; }
+
+		var angleBetween = Math.abs(anglea - angleb),
+			angleDiff = Math.abs(Math.PI - angleBetween)/2;
+
+		var new_anglea, new_angleb;
+		if (anglea - angleb > 0) {
+			new_anglea = angleBetween < Math.PI ? (anglea + angleDiff) : (anglea - angleDiff);
+			new_angleb = angleBetween < Math.PI ? (angleb - angleDiff) : (angleb + angleDiff);
+		}
+		else {
+			new_anglea = angleBetween < Math.PI ? (anglea - angleDiff) : (anglea + angleDiff);
+			new_angleb = angleBetween < Math.PI ? (angleb + angleDiff) : (angleb - angleDiff);
+		}
+
+		// rotate the points
+		nct1.x = r1 * Math.cos(new_anglea) + pt.x;
+		nct1.y = r1 * Math.sin(new_anglea) + pt.y;
+		nct2.x = r2 * Math.cos(new_angleb) + pt.x;
+		nct2.y = r2 * Math.sin(new_angleb) + pt.y;
+
+		return [nct1, nct2];
+	}
+	return undefined;
+};
+
+svgedit.path.Segment = function(index, item) {
+	this.selected = false;
+	this.index = index;
+	this.item = item;
+	this.type = item.pathSegType;
+
+	this.ctrlpts = [];
+	this.ptgrip = null;
+	this.segsel = null;
+};
+
+svgedit.path.Segment.prototype.showCtrlPts = function(y) {
+	var i;
+	for (i in this.ctrlpts) {
+		if (this.ctrlpts.hasOwnProperty(i)) {
+			this.ctrlpts[i].setAttribute('display', y ? 'inline' : 'none');
+		}
+	}
+};
+
+svgedit.path.Segment.prototype.selectCtrls = function(y) {
+	$('#ctrlpointgrip_' + this.index + 'c1, #ctrlpointgrip_' + this.index + 'c2').
+		attr('fill', y ? '#0FF' : '#EEE');
+};
+
+svgedit.path.Segment.prototype.show = function(y) {
+	if (this.ptgrip) {
+		this.ptgrip.setAttribute('display', y ? 'inline' : 'none');
+		this.segsel.setAttribute('display', y ? 'inline' : 'none');
+		// Show/hide all control points if available
+		this.showCtrlPts(y);
+	}
+};
+
+svgedit.path.Segment.prototype.select = function(y) {
+	if (this.ptgrip) {
+		this.ptgrip.setAttribute('stroke', y ? '#0FF' : '#00F');
+		this.segsel.setAttribute('display', y ? 'inline' : 'none');
+		if (this.ctrlpts) {
+			this.selectCtrls(y);
+		}
+		this.selected = y;
+	}
+};
+
+svgedit.path.Segment.prototype.addGrip = function() {
+	this.ptgrip = svgedit.path.getPointGrip(this, true);
+	this.ctrlpts = svgedit.path.getControlPoints(this, true);
+	this.segsel = svgedit.path.getSegSelector(this, true);
+};
+
+svgedit.path.Segment.prototype.update = function(full) {
+	if (this.ptgrip) {
+		var pt = svgedit.path.getGripPt(this);
+		svgedit.utilities.assignAttributes(this.ptgrip, {
+			'cx': pt.x,
+			'cy': pt.y
+		});
+
+		svgedit.path.getSegSelector(this, true);
+
+		if (this.ctrlpts) {
+			if (full) {
+				this.item = svgedit.path.path.elem.pathSegList.getItem(this.index);
+				this.type = this.item.pathSegType;
+			}
+			svgedit.path.getControlPoints(this);
+		}
+		// this.segsel.setAttribute('display', y?'inline':'none');
+	}
+};
+
+svgedit.path.Segment.prototype.move = function(dx, dy) {
+	var cur_pts, item = this.item;
+
+	if (this.ctrlpts) {
+		cur_pts = [item.x += dx, item.y += dy, 
+			item.x1, item.y1, item.x2 += dx, item.y2 += dy];
+	} else {
+		cur_pts = [item.x += dx, item.y += dy];
+	}
+	svgedit.path.replacePathSeg(this.type, this.index, cur_pts);
+
+	if (this.next && this.next.ctrlpts) {
+		var next = this.next.item;
+		var next_pts = [next.x, next.y, 
+			next.x1 += dx, next.y1 += dy, next.x2, next.y2];
+		svgedit.path.replacePathSeg(this.next.type, this.next.index, next_pts);
+	}
+
+	if (this.mate) {
+		// The last point of a closed subpath has a 'mate',
+		// which is the 'M' segment of the subpath
+		item = this.mate.item;
+		var pts = [item.x += dx, item.y += dy];
+		svgedit.path.replacePathSeg(this.mate.type, this.mate.index, pts);
+		// Has no grip, so does not need 'updating'?
+	}
+
+	this.update(true);
+	if (this.next) {this.next.update(true);}
+};
+
+svgedit.path.Segment.prototype.setLinked = function(num) {
+	var seg, anum, pt;
+	if (num == 2) {
+		anum = 1;
+		seg = this.next;
+		if (!seg) {return;}
+		pt = this.item;
+	} else {
+		anum = 2;
+		seg = this.prev;
+		if (!seg) {return;}
+		pt = seg.item;
+	}
+
+	var item = seg.item;
+
+	item['x' + anum] = pt.x + (pt.x - this.item['x' + num]);
+	item['y' + anum] = pt.y + (pt.y - this.item['y' + num]);
+
+	var pts = [item.x, item.y,
+		item.x1, item.y1,
+		item.x2, item.y2];
+
+	svgedit.path.replacePathSeg(seg.type, seg.index, pts);
+	seg.update(true);
+};
+
+svgedit.path.Segment.prototype.moveCtrl = function(num, dx, dy) {
+	var item = this.item;
+
+	item['x' + num] += dx;
+	item['y' + num] += dy;
+
+	var pts = [item.x, item.y, item.x1, item.y1, item.x2, item.y2];
+
+	svgedit.path.replacePathSeg(this.type, this.index, pts);
+	this.update(true);
+};
+
+svgedit.path.Segment.prototype.setType = function(new_type, pts) {
+	svgedit.path.replacePathSeg(new_type, this.index, pts);
+	this.type = new_type;
+	this.item = svgedit.path.path.elem.pathSegList.getItem(this.index);
+	this.showCtrlPts(new_type === 6);
+	this.ctrlpts = svgedit.path.getControlPoints(this);
+	this.update(true);
+};
+
+svgedit.path.Path = function(elem) {
+	if (!elem || elem.tagName !== 'path') {
+		throw 'svgedit.path.Path constructed without a <path> element';
+	}
+
+	this.elem = elem;
+	this.segs = [];
+	this.selected_pts = [];
+	svgedit.path.path = this;
+
+	this.init();
+};
+
+// Reset path data
+svgedit.path.Path.prototype.init = function() {
+	// Hide all grips, etc
+	$(svgedit.path.getGripContainer()).find('*').attr('display', 'none');
+	var segList = this.elem.pathSegList;
+	var len = segList.numberOfItems;
+	this.segs = [];
+	this.selected_pts = [];
+	this.first_seg = null;
+
+	// Set up segs array
+	var i;
+	for (i = 0; i < len; i++) {
+		var item = segList.getItem(i);
+		var segment = new svgedit.path.Segment(i, item);
+		segment.path = this;
+		this.segs.push(segment);
+	}
+
+	var segs = this.segs;
+	var start_i = null;
+
+	for (i = 0; i < len; i++) {
+		var seg = segs[i];
+		var next_seg = (i+1) >= len ? null : segs[i+1];
+		var prev_seg = (i-1) < 0 ? null : segs[i-1];
+		var start_seg;
+		if (seg.type === 2) {
+			if (prev_seg && prev_seg.type !== 1) {
+				// New sub-path, last one is open,
+				// so add a grip to last sub-path's first point
+				start_seg = segs[start_i];
+				start_seg.next = segs[start_i+1];
+				start_seg.next.prev = start_seg;
+				start_seg.addGrip();
+			}
+			// Remember that this is a starter seg
+			start_i = i;
+		} else if (next_seg && next_seg.type === 1) {
+			// This is the last real segment of a closed sub-path
+			// Next is first seg after "M"
+			seg.next = segs[start_i+1];
+
+			// First seg after "M"'s prev is this
+			seg.next.prev = seg;
+			seg.mate = segs[start_i];
+			seg.addGrip();
+			if (this.first_seg == null) {
+				this.first_seg = seg;
+			}
+		} else if (!next_seg) {
+			if (seg.type !== 1) {
+				// Last seg, doesn't close so add a grip
+				// to last sub-path's first point
+				start_seg = segs[start_i];
+				start_seg.next = segs[start_i+1];
+				start_seg.next.prev = start_seg;
+				start_seg.addGrip();
+				seg.addGrip();
+
+				if (!this.first_seg) {
+					// Open path, so set first as real first and add grip
+					this.first_seg = segs[start_i];
+				}
+			}
+		} else if (seg.type !== 1){
+			// Regular segment, so add grip and its "next"
+			seg.addGrip();
+
+			// Don't set its "next" if it's an "M"
+			if (next_seg && next_seg.type !== 2) {
+				seg.next = next_seg;
+				seg.next.prev = seg;
+			}
+		}
+	}
+	return this;
+};
+
+svgedit.path.Path.prototype.eachSeg = function(fn) {
+	var i;
+	var len = this.segs.length;
+	for (i = 0; i < len; i++) {
+		var ret = fn.call(this.segs[i], i);
+		if (ret === false) {break;}
+	}
+};
+
+svgedit.path.Path.prototype.addSeg = function(index) {
+	// Adds a new segment
+	var seg = this.segs[index];
+	if (!seg.prev) {return;}
+
+	var prev = seg.prev;
+	var newseg, new_x, new_y;
+	switch(seg.item.pathSegType) {
+	case 4:
+		new_x = (seg.item.x + prev.item.x) / 2;
+		new_y = (seg.item.y + prev.item.y) / 2;
+		newseg = this.elem.createSVGPathSegLinetoAbs(new_x, new_y);
+		break;
+	case 6: //make it a curved segment to preserve the shape (WRS)
+		// http://en.wikipedia.org/wiki/De_Casteljau%27s_algorithm#Geometric_interpretation
+		var p0_x = (prev.item.x + seg.item.x1)/2;
+		var p1_x = (seg.item.x1 + seg.item.x2)/2;
+		var p2_x = (seg.item.x2 + seg.item.x)/2;
+		var p01_x = (p0_x + p1_x)/2;
+		var p12_x = (p1_x + p2_x)/2;
+		new_x = (p01_x + p12_x)/2;
+		var p0_y = (prev.item.y + seg.item.y1)/2;
+		var p1_y = (seg.item.y1 + seg.item.y2)/2;
+		var p2_y = (seg.item.y2 + seg.item.y)/2;
+		var p01_y = (p0_y + p1_y)/2;
+		var p12_y = (p1_y + p2_y)/2;
+		new_y = (p01_y + p12_y)/2;
+		newseg = this.elem.createSVGPathSegCurvetoCubicAbs(new_x, new_y, p0_x, p0_y, p01_x, p01_y);
+		var pts = [seg.item.x, seg.item.y, p12_x, p12_y, p2_x, p2_y];
+		svgedit.path.replacePathSeg(seg.type, index, pts);
+		break;
+	}
+
+	svgedit.path.insertItemBefore(this.elem, newseg, index);
+};
+
+svgedit.path.Path.prototype.deleteSeg = function(index) {
+	var seg = this.segs[index];
+	var list = this.elem.pathSegList;
+
+	seg.show(false);
+	var next = seg.next;
+	var pt;
+	if (seg.mate) {
+		// Make the next point be the "M" point
+		pt = [next.item.x, next.item.y];
+		svgedit.path.replacePathSeg(2, next.index, pt);
+
+		// Reposition last node
+		svgedit.path.replacePathSeg(4, seg.index, pt);
+
+		list.removeItem(seg.mate.index);
+	} else if (!seg.prev) {
+		// First node of open path, make next point the M
+		var item = seg.item;
+		pt = [next.item.x, next.item.y];
+		svgedit.path.replacePathSeg(2, seg.next.index, pt);
+		list.removeItem(index);
+	} else {
+		list.removeItem(index);
+	}
+};
+
+svgedit.path.Path.prototype.subpathIsClosed = function(index) {
+	var closed = false;
+	// Check if subpath is already open
+	svgedit.path.path.eachSeg(function(i) {
+		if (i <= index) {return true;}
+		if (this.type === 2) {
+			// Found M first, so open
+			return false;
+		}
+		if (this.type === 1) {
+			// Found Z first, so closed
+			closed = true;
+			return false;
+		}
+	});
+
+	return closed;
+};
+
+svgedit.path.Path.prototype.removePtFromSelection = function(index) {
+	var pos = this.selected_pts.indexOf(index);
+	if (pos == -1) {
+		return;
+	}
+	this.segs[index].select(false);
+	this.selected_pts.splice(pos, 1);
+};
+
+svgedit.path.Path.prototype.clearSelection = function() {
+	this.eachSeg(function() {
+		// 'this' is the segment here
+		this.select(false);
+	});
+	this.selected_pts = [];
+};
+
+svgedit.path.Path.prototype.storeD = function() {
+	this.last_d = this.elem.getAttribute('d');
+};
+
+svgedit.path.Path.prototype.show = function(y) {
+	// Shows this path's segment grips
+	this.eachSeg(function() {
+		// 'this' is the segment here
+		this.show(y);
+	});
+	if (y) {
+		this.selectPt(this.first_seg.index);
+	}
+	return this;
+};
+
+// Move selected points
+svgedit.path.Path.prototype.movePts = function(d_x, d_y) {
+	var i = this.selected_pts.length;
+	while(i--) {
+		var seg = this.segs[this.selected_pts[i]];
+		seg.move(d_x, d_y);
+	}
+};
+
+svgedit.path.Path.prototype.moveCtrl = function(d_x, d_y) {
+	var seg = this.segs[this.selected_pts[0]];
+	seg.moveCtrl(this.dragctrl, d_x, d_y);
+	if (link_control_pts) {
+		seg.setLinked(this.dragctrl);
+	}
+};
+
+svgedit.path.Path.prototype.setSegType = function(new_type) {
+	this.storeD();
+	var i = this.selected_pts.length;
+	var text;
+	while(i--) {
+		var sel_pt = this.selected_pts[i];
+
+		// Selected seg
+		var cur = this.segs[sel_pt];
+		var prev = cur.prev;
+		if (!prev) {continue;}
+
+		if (!new_type) { // double-click, so just toggle
+			text = 'Toggle Path Segment Type';
+
+			// Toggle segment to curve/straight line
+			var old_type = cur.type;
+
+			new_type = (old_type == 6) ? 4 : 6;
+		}
+
+		new_type = Number(new_type);
+
+		var cur_x = cur.item.x;
+		var cur_y = cur.item.y;
+		var prev_x = prev.item.x;
+		var prev_y = prev.item.y;
+		var points;
+		switch ( new_type ) {
+		case 6:
+			if (cur.olditem) {
+				var old = cur.olditem;
+				points = [cur_x, cur_y, old.x1, old.y1, old.x2, old.y2];
+			} else {
+				var diff_x = cur_x - prev_x;
+				var diff_y = cur_y - prev_y;
+				// get control points from straight line segment
+				/*
+				var ct1_x = (prev_x + (diff_y/2));
+				var ct1_y = (prev_y - (diff_x/2));
+				var ct2_x = (cur_x + (diff_y/2));
+				var ct2_y = (cur_y - (diff_x/2));
+				*/
+				//create control points on the line to preserve the shape (WRS)
+				var ct1_x = (prev_x + (diff_x/3));
+				var ct1_y = (prev_y + (diff_y/3));
+				var ct2_x = (cur_x - (diff_x/3));
+				var ct2_y = (cur_y - (diff_y/3));
+				points = [cur_x, cur_y, ct1_x, ct1_y, ct2_x, ct2_y];
+			}
+			break;
+		case 4:
+			points = [cur_x, cur_y];
+
+			// Store original prevve segment nums
+			cur.olditem = cur.item;
+			break;
+		}
+
+		cur.setType(new_type, points);
+	}
+	svgedit.path.path.endChanges(text);
+};
+
+svgedit.path.Path.prototype.selectPt = function(pt, ctrl_num) {
+	this.clearSelection();
+	if (pt == null) {
+		this.eachSeg(function(i) {
+			// 'this' is the segment here.
+			if (this.prev) {
+				pt = i;
+			}
+		});
+	}
+	this.addPtsToSelection(pt);
+	if (ctrl_num) {
+		this.dragctrl = ctrl_num;
+
+		if (link_control_pts) {
+			this.segs[pt].setLinked(ctrl_num);
+		}
+	}
+};
+
+// Update position of all points
+svgedit.path.Path.prototype.update = function() {
+	var elem = this.elem;
+	if (svgedit.utilities.getRotationAngle(elem)) {
+		this.matrix = svgedit.math.getMatrix(elem);
+		this.imatrix = this.matrix.inverse();
+	} else {
+		this.matrix = null;
+		this.imatrix = null;
+	}
+
+	this.eachSeg(function(i) {
+		this.item = elem.pathSegList.getItem(i);
+		this.update();
+	});
+
+	return this;
+};
+
+svgedit.path.getPath_ = function(elem) {
+	var p = pathData[elem.id];
+	if (!p) {
+		p = pathData[elem.id] = new svgedit.path.Path(elem);
+	}
+	return p;
+};
+
+svgedit.path.removePath_ = function(id) {
+	if (id in pathData) {delete pathData[id];}
+};
+var newcx, newcy, oldcx, oldcy, angle;
+var getRotVals = function(x, y) {
+	var dx = x - oldcx;
+	var dy = y - oldcy;
+
+	// rotate the point around the old center
+	var r = Math.sqrt(dx*dx + dy*dy);
+	var theta = Math.atan2(dy, dx) + angle;
+	dx = r * Math.cos(theta) + oldcx;
+	dy = r * Math.sin(theta) + oldcy;
+
+	// dx,dy should now hold the actual coordinates of each
+	// point after being rotated
+
+	// now we want to rotate them around the new center in the reverse direction
+	dx -= newcx;
+	dy -= newcy;
+
+	r = Math.sqrt(dx*dx + dy*dy);
+	theta = Math.atan2(dy, dx) - angle;
+
+	return {'x': r * Math.cos(theta) + newcx,
+		'y': r * Math.sin(theta) + newcy};
+};
+
+// If the path was rotated, we must now pay the piper:
+// Every path point must be rotated into the rotated coordinate system of 
+// its old center, then determine the new center, then rotate it back
+// This is because we want the path to remember its rotation
+
+// TODO: This is still using ye olde transform methods, can probably
+// be optimized or even taken care of by recalculateDimensions
+svgedit.path.recalcRotatedPath = function() {
+	var current_path = svgedit.path.path.elem;
+	angle = svgedit.utilities.getRotationAngle(current_path, true);
+	if (!angle) {return;}
+//	selectedBBoxes[0] = svgedit.path.path.oldbbox;
+	var box = svgedit.utilities.getBBox(current_path),
+		oldbox = svgedit.path.path.oldbbox; //selectedBBoxes[0],
+	oldcx = oldbox.x + oldbox.width/2;
+	oldcy = oldbox.y + oldbox.height/2;
+	newcx = box.x + box.width/2;
+	newcy = box.y + box.height/2;
+
+	// un-rotate the new center to the proper position
+	var dx = newcx - oldcx,
+		dy = newcy - oldcy,
+		r = Math.sqrt(dx*dx + dy*dy),
+		theta = Math.atan2(dy, dx) + angle;
+
+	newcx = r * Math.cos(theta) + oldcx;
+	newcy = r * Math.sin(theta) + oldcy;
+
+	var list = current_path.pathSegList,
+		i = list.numberOfItems;
+	while (i) {
+		i -= 1;
+		var seg = list.getItem(i),
+			type = seg.pathSegType;
+		if (type == 1) {continue;}
+
+		var rvals = getRotVals(seg.x, seg.y),
+			points = [rvals.x, rvals.y];
+		if (seg.x1 != null && seg.x2 != null) {
+			var c_vals1 = getRotVals(seg.x1, seg.y1);
+			var c_vals2 = getRotVals(seg.x2, seg.y2);
+			points.splice(points.length, 0, c_vals1.x , c_vals1.y, c_vals2.x, c_vals2.y);
+		}
+		svgedit.path.replacePathSeg(type, i, points);
+	} // loop for each point
+
+	box = svgedit.utilities.getBBox(current_path);
+//	selectedBBoxes[0].x = box.x; selectedBBoxes[0].y = box.y;
+//	selectedBBoxes[0].width = box.width; selectedBBoxes[0].height = box.height;
+
+	// now we must set the new transform to be rotated around the new center
+	var R_nc = svgroot.createSVGTransform(),
+		tlist = svgedit.transformlist.getTransformList(current_path);
+	R_nc.setRotate((angle * 180.0 / Math.PI), newcx, newcy);
+	tlist.replaceItem(R_nc,0);
+};
+
+// ====================================
+// Public API starts here
+
+svgedit.path.clearData =  function() {
+	pathData = {};
+};
+
+}());

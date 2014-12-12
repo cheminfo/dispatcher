@@ -1,1 +1,180 @@
-!function(){svgedit.browser||(svgedit.browser={});var a=svgedit.NS,b=function(){return!!document.createElementNS&&!!document.createElementNS(a.SVG,"svg").createSVGRect}();if(svgedit.browser.supportsSvg=function(){return b},!svgedit.browser.supportsSvg())return void(window.location="browser-not-supported.html");var c=navigator.userAgent,d=document.createElementNS(a.SVG,"svg"),e=!!window.opera,f=c.indexOf("AppleWebKit")>=0,g=c.indexOf("Gecko/")>=0,h=c.indexOf("MSIE")>=0,i=c.indexOf("Chrome/")>=0,j=c.indexOf("Windows")>=0,k=c.indexOf("Macintosh")>=0,l="ontouchstart"in window,m=function(){return!!d.querySelector}(),n=function(){return!!document.evaluate}(),o=function(){var b=document.createElementNS(a.SVG,"path");b.setAttribute("d","M0,0 10,10");var c=b.pathSegList,d=b.createSVGPathSegLinetoAbs(5,5);try{return c.replaceItem(d,0),!0}catch(e){}return!1}(),p=function(){var b=document.createElementNS(a.SVG,"path");b.setAttribute("d","M0,0 10,10");var c=b.pathSegList,d=b.createSVGPathSegLinetoAbs(5,5);try{return c.insertItemBefore(d,0),!0}catch(e){}return!1}(),q=function(){var b=document.createElementNS(a.SVG,"svg"),c=document.createElementNS(a.SVG,"svg");document.documentElement.appendChild(b),c.setAttribute("x",5),b.appendChild(c);var d=document.createElementNS(a.SVG,"text");d.textContent="a",c.appendChild(d);var e=d.getStartPositionOfChar(0).x;return document.documentElement.removeChild(b),0===e}(),r=function(){var b=document.createElementNS(a.SVG,"svg");document.documentElement.appendChild(b);var c=document.createElementNS(a.SVG,"path");c.setAttribute("d","M0,0 C0,0 10,10 10,0"),b.appendChild(c);var d=c.getBBox();return document.documentElement.removeChild(b),d.height>4&&d.height<5}(),s=function(){var b=document.createElementNS(a.SVG,"svg");document.documentElement.appendChild(b);var c=document.createElementNS(a.SVG,"path");c.setAttribute("d","M0,0 10,0");var d=document.createElementNS(a.SVG,"path");d.setAttribute("d","M5,0 15,0");var e=document.createElementNS(a.SVG,"g");e.appendChild(c),e.appendChild(d),b.appendChild(e);var f=e.getBBox();return document.documentElement.removeChild(b),15==f.width}(),t=function(){return e}(),u=function(){var b=document.createElementNS(a.SVG,"rect");b.setAttribute("x",.1);var c=b.cloneNode(!1),d=-1==c.getAttribute("x").indexOf(",");return d||$.alert('NOTE: This version of Opera is known to contain bugs in SVG-edit.\nPlease upgrade to the <a href="http://opera.com">latest version</a> in which the problems have been fixed.'),d}(),v=function(){var b=document.createElementNS(a.SVG,"rect");return b.setAttribute("style","vector-effect:non-scaling-stroke"),"non-scaling-stroke"===b.style.vectorEffect}(),w=function(){var b=document.createElementNS(a.SVG,"rect"),c=b.transform.baseVal,e=d.createSVGTransform();return c.appendItem(e),c.getItem(0)==e}();svgedit.browser.isOpera=function(){return e},svgedit.browser.isWebkit=function(){return f},svgedit.browser.isGecko=function(){return g},svgedit.browser.isIE=function(){return h},svgedit.browser.isChrome=function(){return i},svgedit.browser.isWindows=function(){return j},svgedit.browser.isMac=function(){return k},svgedit.browser.isTouch=function(){return l},svgedit.browser.supportsSelectors=function(){return m},svgedit.browser.supportsXpath=function(){return n},svgedit.browser.supportsPathReplaceItem=function(){return o},svgedit.browser.supportsPathInsertItemBefore=function(){return p},svgedit.browser.supportsPathBBox=function(){return r},svgedit.browser.supportsHVLineContainerBBox=function(){return s},svgedit.browser.supportsGoodTextCharPos=function(){return q},svgedit.browser.supportsEditableText=function(){return t},svgedit.browser.supportsGoodDecimals=function(){return u},svgedit.browser.supportsNonScalingStroke=function(){return v},svgedit.browser.supportsNativeTransformLists=function(){return w}}();
+/*globals $, svgedit*/
+/*jslint vars: true, eqeq: true*/
+/**
+ * Package: svgedit.browser
+ *
+ * Licensed under the MIT License
+ *
+ * Copyright(c) 2010 Jeff Schiller
+ * Copyright(c) 2010 Alexis Deveria
+ */
+
+// Dependencies:
+// 1) jQuery (for $.alert())
+
+(function() {
+
+if (!svgedit.browser) {
+	svgedit.browser = {};
+}
+
+// alias
+var NS = svgedit.NS;
+
+var supportsSvg_ = (function() {
+	return !!document.createElementNS && !!document.createElementNS(NS.SVG, 'svg').createSVGRect;
+}());
+
+svgedit.browser.supportsSvg = function() { return supportsSvg_; };
+if(!svgedit.browser.supportsSvg()) {
+	window.location = 'browser-not-supported.html';
+	return;
+}
+
+var userAgent = navigator.userAgent;
+var svg = document.createElementNS(NS.SVG, 'svg');
+
+// Note: Browser sniffing should only be used if no other detection method is possible
+var isOpera_ = !!window.opera;
+var isWebkit_ = userAgent.indexOf('AppleWebKit') >= 0;
+var isGecko_ = userAgent.indexOf('Gecko/') >= 0;
+var isIE_ = userAgent.indexOf('MSIE') >= 0;
+var isChrome_ = userAgent.indexOf('Chrome/') >= 0;
+var isWindows_ = userAgent.indexOf('Windows') >= 0;
+var isMac_ = userAgent.indexOf('Macintosh') >= 0;
+var isTouch_ = 'ontouchstart' in window;
+
+var supportsSelectors_ = (function() {
+	return !!svg.querySelector;
+}());
+
+var supportsXpath_ = (function() {
+	return !!document.evaluate;
+}());
+
+// segList functions (for FF1.5 and 2.0)
+var supportsPathReplaceItem_ = (function() {
+	var path = document.createElementNS(NS.SVG, 'path');
+	path.setAttribute('d', 'M0,0 10,10');
+	var seglist = path.pathSegList;
+	var seg = path.createSVGPathSegLinetoAbs(5,5);
+	try {
+		seglist.replaceItem(seg, 0);
+		return true;
+	} catch(err) {}
+	return false;
+}());
+
+var supportsPathInsertItemBefore_ = (function() {
+	var path = document.createElementNS(NS.SVG, 'path');
+	path.setAttribute('d', 'M0,0 10,10');
+	var seglist = path.pathSegList;
+	var seg = path.createSVGPathSegLinetoAbs(5,5);
+	try {
+		seglist.insertItemBefore(seg, 0);
+		return true;
+	} catch(err) {}
+	return false;
+}());
+
+// text character positioning (for IE9)
+var supportsGoodTextCharPos_ = (function() {
+	var svgroot = document.createElementNS(NS.SVG, 'svg');
+	var svgcontent = document.createElementNS(NS.SVG, 'svg');
+	document.documentElement.appendChild(svgroot);
+	svgcontent.setAttribute('x', 5);
+	svgroot.appendChild(svgcontent);
+	var text = document.createElementNS(NS.SVG, 'text');
+	text.textContent = 'a';
+	svgcontent.appendChild(text);
+	var pos = text.getStartPositionOfChar(0).x;
+	document.documentElement.removeChild(svgroot);
+	return (pos === 0);
+}());
+
+var supportsPathBBox_ = (function() {
+	var svgcontent = document.createElementNS(NS.SVG, 'svg');
+	document.documentElement.appendChild(svgcontent);
+	var path = document.createElementNS(NS.SVG, 'path');
+	path.setAttribute('d', 'M0,0 C0,0 10,10 10,0');
+	svgcontent.appendChild(path);
+	var bbox = path.getBBox();
+	document.documentElement.removeChild(svgcontent);
+	return (bbox.height > 4 && bbox.height < 5);
+}());
+
+// Support for correct bbox sizing on groups with horizontal/vertical lines
+var supportsHVLineContainerBBox_ = (function() {
+	var svgcontent = document.createElementNS(NS.SVG, 'svg');
+	document.documentElement.appendChild(svgcontent);
+	var path = document.createElementNS(NS.SVG, 'path');
+	path.setAttribute('d', 'M0,0 10,0');
+	var path2 = document.createElementNS(NS.SVG, 'path');
+	path2.setAttribute('d', 'M5,0 15,0');
+	var g = document.createElementNS(NS.SVG, 'g');
+	g.appendChild(path);
+	g.appendChild(path2);
+	svgcontent.appendChild(g);
+	var bbox = g.getBBox();
+	document.documentElement.removeChild(svgcontent);
+	// Webkit gives 0, FF gives 10, Opera (correctly) gives 15
+	return (bbox.width == 15);
+}());
+
+var supportsEditableText_ = (function() {
+	// TODO: Find better way to check support for this
+	return isOpera_;
+}());
+
+var supportsGoodDecimals_ = (function() {
+	// Correct decimals on clone attributes (Opera < 10.5/win/non-en)
+	var rect = document.createElementNS(NS.SVG, 'rect');
+	rect.setAttribute('x', 0.1);
+	var crect = rect.cloneNode(false);
+	var retValue = (crect.getAttribute('x').indexOf(',') == -1);
+	if(!retValue) {
+		$.alert('NOTE: This version of Opera is known to contain bugs in SVG-edit.\n'+
+		'Please upgrade to the <a href="http://opera.com">latest version</a> in which the problems have been fixed.');
+	}
+	return retValue;
+}());
+
+var supportsNonScalingStroke_ = (function() {
+	var rect = document.createElementNS(NS.SVG, 'rect');
+	rect.setAttribute('style', 'vector-effect:non-scaling-stroke');
+	return rect.style.vectorEffect === 'non-scaling-stroke';
+}());
+
+var supportsNativeSVGTransformLists_ = (function() {
+	var rect = document.createElementNS(NS.SVG, 'rect');
+	var rxform = rect.transform.baseVal;
+	var t1 = svg.createSVGTransform();
+	rxform.appendItem(t1);
+	return rxform.getItem(0) == t1;
+}());
+
+// Public API
+
+svgedit.browser.isOpera = function() { return isOpera_; };
+svgedit.browser.isWebkit = function() { return isWebkit_; };
+svgedit.browser.isGecko = function() { return isGecko_; };
+svgedit.browser.isIE = function() { return isIE_; };
+svgedit.browser.isChrome = function() { return isChrome_; };
+svgedit.browser.isWindows = function() { return isWindows_; };
+svgedit.browser.isMac = function() { return isMac_; };
+svgedit.browser.isTouch = function() { return isTouch_; };
+
+svgedit.browser.supportsSelectors = function() { return supportsSelectors_; };
+svgedit.browser.supportsXpath = function() { return supportsXpath_; };
+
+svgedit.browser.supportsPathReplaceItem = function() { return supportsPathReplaceItem_; };
+svgedit.browser.supportsPathInsertItemBefore = function() { return supportsPathInsertItemBefore_; };
+svgedit.browser.supportsPathBBox = function() { return supportsPathBBox_; };
+svgedit.browser.supportsHVLineContainerBBox = function() { return supportsHVLineContainerBBox_; };
+svgedit.browser.supportsGoodTextCharPos = function() { return supportsGoodTextCharPos_; };
+svgedit.browser.supportsEditableText = function() { return supportsEditableText_; };
+svgedit.browser.supportsGoodDecimals = function() { return supportsGoodDecimals_; };
+svgedit.browser.supportsNonScalingStroke = function() { return supportsNonScalingStroke_; };
+svgedit.browser.supportsNativeTransformLists = function() { return supportsNativeSVGTransformLists_; };
+
+}());

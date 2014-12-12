@@ -1,1 +1,64 @@
-define(function(){function a(a){for(var b=0,c=0,d=a.length;d>c;c++)b+=a[c]*a[c];return b}function b(b){return Math.sqrt(a(b))}function c(a,b){"undefined"==typeof b&&(b=0);var c,d=a.length,e=a[0].length;if(0===b){c=new Array(e);for(var f=0;e>f;f++){for(var g=0,h=0;d>h;h++){var i=a[h][f];g+=i*i}c[f]=g}}else{c=new Array(d);for(var h=0;d>h;h++){for(var g=0,f=0;e>f;f++){var i=a[h][f];g+=i*i}c[h]=g}}return c}function d(a,b){for(var d=c(a,b),e=0,f=d.length;f>e;e++)d[e]=Math.sqrt(d[e]);return d}return{squareEuclidean:a,euclidean:b,squareEuclideanM:c,euclideanM:d}});
+// https://github.com/accord-net/framework/blob/development/Sources/Accord.Math/Norm.cs
+define(function(){
+
+    function squareEuclidean(a) {
+        var sum = 0;
+        for(var i = 0, ii = a.length; i < ii; i++)
+            sum += a[i] * a[i];
+        return sum;
+    }
+    
+    function euclidean(a) {
+        return Math.sqrt(squareEuclidean(a));
+    }
+    
+    function squareEuclideanM(a, dimension) {
+        if(typeof(dimension)==='undefined') dimension = 0;
+        var rows = a.length;
+        var cols = a[0].length;
+        
+        var norm;
+
+        if (dimension === 0) {
+            norm = new Array(cols);
+
+            for (var j = 0; j < cols; j++) {
+                var sum = 0;
+                for (var i = 0; i < rows; i++) {
+                    var v = a[i][j];
+                    sum += v * v;
+                }
+                norm[j] = sum;
+            }
+        }
+        else {
+            norm = new Array(rows);
+
+            for (var i = 0; i < rows; i++) {
+                var sum = 0;
+                for (var j = 0; j < cols; j++) {
+                    var v = a[i][j];
+                    sum += v * v;
+                }
+                norm[i] = sum;
+            }
+        }
+        return norm;
+    }
+    
+    function euclideanM(a, dimension) {
+        var norm = squareEuclideanM(a,dimension);
+        for (var i = 0, ii = norm.length; i < ii; i++)
+            norm[i] = Math.sqrt(norm[i]);
+
+        return norm;
+    }
+    
+    return {
+        squareEuclidean: squareEuclidean,
+        euclidean: euclidean,
+        squareEuclideanM: squareEuclideanM,
+        euclideanM: euclideanM
+    };
+
+});

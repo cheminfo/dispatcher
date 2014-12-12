@@ -1,12 +1,15934 @@
-var cytoscape;!function(){var a=cytoscape=function(){return cytoscape.init.apply(cytoscape,arguments)};a.init=function(b){return void 0===b&&(b={}),a.is.plainObject(b)?new a.Core(b):a.is.string(b)?a.extension.apply(a.extension,arguments):void 0},a.fn={},"undefined"!=typeof exports&&(exports=module.exports=cytoscape),window.cytoscape=cytoscape}(),function(a){a.is={string:function(a){return null!=a&&"string"==typeof a},fn:function(a){return null!=a&&"function"==typeof a},array:function(a){return null!=a&&a instanceof Array},plainObject:function(b){return null!=b&&typeof b==typeof{}&&!a.is.array(b)&&b.constructor===Object},number:function(a){return null!=a&&"number"==typeof a&&!isNaN(a)},integer:function(b){return a.is.number(b)&&Math.floor(b)===b},color:function(a){return null!=a&&"string"==typeof a&&""!==$.Color(a).toString()},bool:function(a){return null!=a&&typeof a==typeof!0},elementOrCollection:function(b){return a.is.element(b)||a.is.collection(b)},element:function(b){return b instanceof a.Element&&b._private.single},collection:function(b){return b instanceof a.Collection&&!b._private.single},core:function(b){return b instanceof a.Core},style:function(b){return b instanceof a.Style},stylesheet:function(b){return b instanceof a.Stylesheet},event:function(b){return b instanceof a.Event},emptyString:function(b){return b?a.is.string(b)&&(""===b||b.match(/^\s+$/))?!0:!1:!0},nonemptyString:function(b){return b&&a.is.string(b)&&""!==b&&!b.match(/^\s+$/)?!0:!1},domElement:function(a){return"undefined"==typeof HTMLElement?!1:a instanceof HTMLElement}}}(cytoscape),function(a){a.util={extend:function(){var b,c,d,e,f,g,h=arguments[0]||{},i=1,j=arguments.length,k=!1;for("boolean"==typeof h&&(k=h,h=arguments[1]||{},i=2),"object"==typeof h||a.is.fn(h)||(h={}),j===i&&(h=this,--i);j>i;i++)if(null!=(b=arguments[i]))for(c in b)d=h[c],e=b[c],h!==e&&(k&&e&&(a.is.plainObject(e)||(f=a.is.array(e)))?(f?(f=!1,g=d&&a.is.array(d)?d:[]):g=d&&a.is.plainObject(d)?d:{},h[c]=a.util.extend(k,g,e)):void 0!==e&&(h[c]=e));return h},error:function(a){if(!console)throw a;if(console.error)console.error(a);else{if(!console.log)throw a;console.log(a)}},clone:function(a){var b={};for(var c in a)a.hasOwnProperty(c)&&(b[c]=a[c]);return b},copy:function(b){return null==b?b:a.is.array(b)?b.slice():a.is.plainObject(b)?a.util.clone(b):b},mapEmpty:function(a){var b=!0;if(null!=a)for(var c in a){b=!1;break}return b},pushMap:function(b){var c=a.util.getMap(b);null==c?a.util.setMap($.extend({},b,{value:[b.value]})):c.push(b.value)},setMap:function(b){for(var c,d=b.map,e=b.keys,f=e.length,g=0;f>g;g++){var c=e[g];a.is.plainObject(c)&&a.util.error("Tried to set map with object key"),g<e.length-1?(null==d[c]&&(d[c]={}),d=d[c]):d[c]=b.value}},getMap:function(b){for(var c=b.map,d=b.keys,e=d.length,f=0;e>f;f++){var g=d[f];if(a.is.plainObject(g)&&a.util.error("Tried to get map with object key"),c=c[g],null==c)return c}return c},deleteMap:function(b){for(var c=b.map,d=b.keys,e=d.length,f=b.keepChildren,g=0;e>g;g++){var h=d[g];a.is.plainObject(h)&&a.util.error("Tried to delete map with object key");var i=g===b.keys.length-1;if(i)if(f)for(var j in c)f[j]||delete c[j];else delete c[h];else c=c[h]}},capitalize:function(b){return a.is.emptyString(b)?b:b.charAt(0).toUpperCase()+b.substring(1)},camel2dash:function(a){for(var b=[],c=0;c<a.length;c++){var d=a[c],e=d.toLowerCase(),f=d!==e;f?(b.push("-"),b.push(e)):b.push(d)}var g=b.length===a.length;return g?a:b.join("")},dash2camel:function(a){for(var b=[],c=!1,d=0;d<a.length;d++){var e=a[d],f="-"===e;f?c=!0:(b.push(c?e.toUpperCase():e),c=!1)}return b.join("")},trim:function(a){var b,c;for(b=0;b<a.length&&" "===a[b];b++);for(c=a.length-1;c>b&&" "===a[c];c--);return a.substring(b,c+1)},hex2tuple:function(a){if((4===a.length||7===a.length)&&"#"===a[0]){var b,c,d,e=4===a.length,f=16;return e?(b=parseInt(a[1]+a[1],f),c=parseInt(a[2]+a[2],f),d=parseInt(a[3]+a[3],f)):(b=parseInt(a[1]+a[2],f),c=parseInt(a[3]+a[4],f),d=parseInt(a[5]+a[6],f)),[b,c,d]}},hsl2tuple:function(b){function c(a,b,c){return 0>c&&(c+=1),c>1&&(c-=1),1/6>c?a+6*(b-a)*c:.5>c?b:2/3>c?a+(b-a)*(2/3-c)*6:a}var d,e,f,g,h,i,j,k,l=(a.util.regex.number,new RegExp("^"+a.util.regex.hsla+"$").exec(b));if(l){if(e=parseInt(l[1]),0>e?e=(360- -1*e%360)%360:e>360&&(e%=360),e/=360,f=parseFloat(l[2]),0>f||f>100)return;if(f/=100,g=parseFloat(l[3]),0>g||g>100)return;if(g/=100,h=l[4],void 0!==h&&(h=parseFloat(h),0>h||h>1))return;if(0===f)i=j=k=Math.round(255*g);else{var m=.5>g?g*(1+f):g+f-g*f,n=2*g-m;i=Math.round(255*c(n,m,e+1/3)),j=Math.round(255*c(n,m,e)),k=Math.round(255*c(n,m,e-1/3))}d=[i,j,k,h]}return d},rgb2tuple:function(b){var c,d=(a.util.regex.number,new RegExp("^"+a.util.regex.rgba+"$").exec(b));if(d){c=[];for(var e=[],f=1;3>=f;f++){var g=d[f];if("%"===g[g.length-1]&&(e[f]=!0),g=parseFloat(g),e[f]&&(g=g/100*255),0>g||g>255)return;c.push(Math.floor(g))}var h=e[1]||e[2]||e[3],i=e[1]&&e[2]&&e[3];if(h&&!i)return;var j=d[4];if(void 0!==j){if(j=parseFloat(j),0>j||j>1)return;c.push(j)}}return c},colorname2tuple:function(b){return a.util.colors[b.toLowerCase()]},color2tuple:function(b){return a.util.colorname2tuple(b)||a.util.hex2tuple(b)||a.util.rgb2tuple(b)||a.util.hsl2tuple(b)},tuple2hex:function(a){function b(a){var b=a.toString(16);return 1===b.length&&(b="0"+b),b}var c=a[0],d=a[1],e=a[2];return"#"+b(c)+b(d)+b(e)},colors:{transparent:[0,0,0,0],aliceblue:[240,248,255],antiquewhite:[250,235,215],aqua:[0,255,255],aquamarine:[127,255,212],azure:[240,255,255],beige:[245,245,220],bisque:[255,228,196],black:[0,0,0],blanchedalmond:[255,235,205],blue:[0,0,255],blueviolet:[138,43,226],brown:[165,42,42],burlywood:[222,184,135],cadetblue:[95,158,160],chartreuse:[127,255,0],chocolate:[210,105,30],coral:[255,127,80],cornflowerblue:[100,149,237],cornsilk:[255,248,220],crimson:[220,20,60],cyan:[0,255,255],darkblue:[0,0,139],darkcyan:[0,139,139],darkgoldenrod:[184,134,11],darkgray:[169,169,169],darkgreen:[0,100,0],darkgrey:[169,169,169],darkkhaki:[189,183,107],darkmagenta:[139,0,139],darkolivegreen:[85,107,47],darkorange:[255,140,0],darkorchid:[153,50,204],darkred:[139,0,0],darksalmon:[233,150,122],darkseagreen:[143,188,143],darkslateblue:[72,61,139],darkslategray:[47,79,79],darkslategrey:[47,79,79],darkturquoise:[0,206,209],darkviolet:[148,0,211],deeppink:[255,20,147],deepskyblue:[0,191,255],dimgray:[105,105,105],dimgrey:[105,105,105],dodgerblue:[30,144,255],firebrick:[178,34,34],floralwhite:[255,250,240],forestgreen:[34,139,34],fuchsia:[255,0,255],gainsboro:[220,220,220],ghostwhite:[248,248,255],gold:[255,215,0],goldenrod:[218,165,32],gray:[128,128,128],grey:[128,128,128],green:[0,128,0],greenyellow:[173,255,47],honeydew:[240,255,240],hotpink:[255,105,180],indianred:[205,92,92],indigo:[75,0,130],ivory:[255,255,240],khaki:[240,230,140],lavender:[230,230,250],lavenderblush:[255,240,245],lawngreen:[124,252,0],lemonchiffon:[255,250,205],lightblue:[173,216,230],lightcoral:[240,128,128],lightcyan:[224,255,255],lightgoldenrodyellow:[250,250,210],lightgray:[211,211,211],lightgreen:[144,238,144],lightgrey:[211,211,211],lightpink:[255,182,193],lightsalmon:[255,160,122],lightseagreen:[32,178,170],lightskyblue:[135,206,250],lightslategray:[119,136,153],lightslategrey:[119,136,153],lightsteelblue:[176,196,222],lightyellow:[255,255,224],lime:[0,255,0],limegreen:[50,205,50],linen:[250,240,230],magenta:[255,0,255],maroon:[128,0,0],mediumaquamarine:[102,205,170],mediumblue:[0,0,205],mediumorchid:[186,85,211],mediumpurple:[147,112,219],mediumseagreen:[60,179,113],mediumslateblue:[123,104,238],mediumspringgreen:[0,250,154],mediumturquoise:[72,209,204],mediumvioletred:[199,21,133],midnightblue:[25,25,112],mintcream:[245,255,250],mistyrose:[255,228,225],moccasin:[255,228,181],navajowhite:[255,222,173],navy:[0,0,128],oldlace:[253,245,230],olive:[128,128,0],olivedrab:[107,142,35],orange:[255,165,0],orangered:[255,69,0],orchid:[218,112,214],palegoldenrod:[238,232,170],palegreen:[152,251,152],paleturquoise:[175,238,238],palevioletred:[219,112,147],papayawhip:[255,239,213],peachpuff:[255,218,185],peru:[205,133,63],pink:[255,192,203],plum:[221,160,221],powderblue:[176,224,230],purple:[128,0,128],red:[255,0,0],rosybrown:[188,143,143],royalblue:[65,105,225],saddlebrown:[139,69,19],salmon:[250,128,114],sandybrown:[244,164,96],seagreen:[46,139,87],seashell:[255,245,238],sienna:[160,82,45],silver:[192,192,192],skyblue:[135,206,235],slateblue:[106,90,205],slategray:[112,128,144],slategrey:[112,128,144],snow:[255,250,250],springgreen:[0,255,127],steelblue:[70,130,180],tan:[210,180,140],teal:[0,128,128],thistle:[216,191,216],tomato:[255,99,71],turquoise:[64,224,208],violet:[238,130,238],wheat:[245,222,179],white:[255,255,255],whitesmoke:[245,245,245],yellow:[255,255,0],yellowgreen:[154,205,50]}},a.util.regex={},a.util.regex.number="(?:\\d*\\.\\d+|\\d+|\\d*\\.\\d+[eE]\\d+)",a.util.regex.rgba="rgb[a]?\\(("+a.util.regex.number+"[%]?)\\s*,\\s*("+a.util.regex.number+"[%]?)\\s*,\\s*("+a.util.regex.number+"[%]?)(?:\\s*,\\s*("+a.util.regex.number+"))?\\)",a.util.regex.rgbaNoBackRefs="rgb[a]?\\((?:"+a.util.regex.number+"[%]?)\\s*,\\s*(?:"+a.util.regex.number+"[%]?)\\s*,\\s*(?:"+a.util.regex.number+"[%]?)(?:\\s*,\\s*(?:"+a.util.regex.number+"))?\\)",a.util.regex.hsla="hsl[a]?\\(("+a.util.regex.number+")\\s*,\\s*("+a.util.regex.number+"[%])\\s*,\\s*("+a.util.regex.number+"[%])(?:\\s*,\\s*("+a.util.regex.number+"))?\\)",a.util.regex.hslaNoBackRefs="hsl[a]?\\((?:"+a.util.regex.number+")\\s*,\\s*(?:"+a.util.regex.number+"[%])\\s*,\\s*(?:"+a.util.regex.number+"[%])(?:\\s*,\\s*(?:"+a.util.regex.number+"))?\\)",a.util.regex.hex3="\\#[0-9a-fA-F]{3}",a.util.regex.hex6="\\#[0-9a-fA-F]{6}"}(cytoscape),function(a){a.math={},a.math.boxInBezierVicinity=function(a,b,c,d,e,f,g,h,i,j,k){var l=Math.min(a,c)-k,m=Math.min(b,d)-k,n=Math.max(a,c)+k,o=Math.max(b,d)+k;if(e>=l&&n>=e&&f>=m&&o>=f)return 2;if(i>=l&&n>=i&&j>=m&&o>=j)return 2;if(g>=l&&n>=g&&h>=m&&o>=h)return 1;var p=Math.min(e,g,i),q=Math.min(f,h,j),r=Math.max(e,g,i),s=Math.max(f,h,j);return p>n||l>r||q>o||m>s?0:1},a.math.checkStraightEdgeCrossesBox=function(a,b,c,d,e,f,g,h,i){var j,k,l=Math.min(a,c)-i,m=Math.min(b,d)-i,n=Math.max(a,c)+i,o=Math.max(b,d)+i,p=g-e,q=e,r=h-f,s=f;if(Math.abs(p)<1e-4)return e>=l&&n>=e&&Math.min(f,h)<=m&&Math.max(f,h)>=o;var t=(l-q)/p;if(t>0&&1>=t&&(j=r*t+s,j>=m&&o>=j))return!0;var u=(n-q)/p;if(u>0&&1>=u&&(j=r*u+s,j>=m&&o>=j))return!0;var v=(m-s)/r;if(v>0&&1>=v&&(k=p*v+q,k>=l&&n>=k))return!0;var w=(o-s)/r;return w>0&&1>=w&&(k=p*w+q,k>=l&&n>=k)?!0:!1},a.math.checkBezierCrossesBox=function(a,b,c,d,e,f,g,h,i,j,k){var l=Math.min(a,c)-k,m=Math.min(b,d)-k,n=Math.max(a,c)+k,o=Math.max(b,d)+k;if(e>=l&&n>=e&&f>=m&&o>=f)return!0;if(i>=l&&n>=i&&j>=m&&o>=j)return!0;var p=e-2*g+i,q=-2*e+2*g,r=e,s=[];if(Math.abs(p)<1e-4){var t=(l-e)/q,u=(n-e)/q;s.push(t,u)}else{var v,w,x=q*q-4*p*(r-l);if(x>0){var y=Math.sqrt(x);v=(-q+y)/(2*p),w=(-q-y)/(2*p),s.push(v,w)}var z,A,B=q*q-4*p*(r-n);if(B>0){var y=Math.sqrt(B);z=(-q+y)/(2*p),A=(-q-y)/(2*p),s.push(z,A)}}s.sort(function(a,b){return a-b});var C=f-2*h+j,D=-2*f+2*h,E=f,F=[];if(Math.abs(C)<1e-4){var G=(m-f)/D,H=(o-f)/D;F.push(G,H)}else{var I,J,K=D*D-4*C*(E-m);if(K>0){var y=Math.sqrt(K);I=(-D+y)/(2*C),J=(-D-y)/(2*C),F.push(I,J)}var L,M,N=D*D-4*C*(E-o);if(N>0){var y=Math.sqrt(N);L=(-D+y)/(2*C),M=(-D-y)/(2*C),F.push(L,M)}}F.sort(function(a,b){return a-b});for(var O=0;O<s.length;O+=2)for(var P=1;P<F.length;P+=2)if(s[O]<F[P]&&F[P]>=0&&s[O]<=1&&s[O+1]>F[P-1]&&F[P-1]<=1&&s[O+1]>=0)return!0;return!1},a.math.inBezierVicinity=function(a,b,c,d,e,f,g,h,i){var j,k,l=.25*c+.5*e+.25*g,m=.25*d+.5*f+.25*h,n=function(a,b,c,d,e,f,g,h){if(j=(f-d)*(a-c)+(c-e)*(b-d),k=j*j,sideSquared=(f-d)*(f-d)+(c-e)*(c-e),h){if(j>0)return!1}else if(0>j)return!1;return k/sideSquared>g},o=(l+e)/2,p=(m+f)/2,q=!0;return n(o,p,c,d,e,f,0,q)&&(q=!q),!n(a,b,c,d,e,f,i,q)&&!n(a,b,e,f,g,h,i,q)&&!n(a,b,g,h,c,d,i,q)},a.math.solveCubic=function(a,b,c,d,e){b/=a,c/=a,d/=a;var f,g,h,i,j,k,l,m;return g=(3*c-b*b)/9,h=-(27*d)+b*(9*c-2*b*b),h/=54,f=g*g*g+h*h,e[1]=0,l=b/3,f>0?(j=h+Math.sqrt(f),j=0>j?-Math.pow(-j,1/3):Math.pow(j,1/3),k=h-Math.sqrt(f),k=0>k?-Math.pow(-k,1/3):Math.pow(k,1/3),e[0]=-l+j+k,l+=(j+k)/2,e[4]=e[2]=-l,l=Math.sqrt(3)*(-k+j)/2,e[3]=l,void(e[5]=-l)):(e[5]=e[3]=0,0==f?(m=0>h?-Math.pow(-h,1/3):Math.pow(h,1/3),e[0]=-l+2*m,void(e[4]=e[2]=-(m+l))):(g=-g,i=g*g*g,i=Math.acos(h/Math.sqrt(i)),m=2*Math.sqrt(g),e[0]=-l+m*Math.cos(i/3),e[2]=-l+m*Math.cos((i+2*Math.PI)/3),void(e[4]=-l+m*Math.cos((i+4*Math.PI)/3))))},a.math.sqDistanceToQuadraticBezier=function(a,c,d,e,f,g,h,i){var j=1*d*d-4*d*f+2*d*h+4*f*f-4*f*h+h*h+e*e-4*e*g+2*e*i+4*g*g-4*g*i+i*i,k=9*d*f-3*d*d-3*d*h-6*f*f+3*f*h+9*e*g-3*e*e-3*e*i-6*g*g+3*g*i,l=3*d*d-6*d*f+d*h-d*a+2*f*f+2*f*a-h*a+3*e*e-6*e*g+e*i-e*c+2*g*g+2*g*c-i*c,m=1*d*f-d*d+d*a-f*a+e*g-e*e+e*c-g*c;b("coefficients: "+j/j+", "+k/j+", "+l/j+", "+m/j);var n=[];this.solveCubic(j,k,l,m,n);for(var o=1e-7,p=[],q=0;6>q;q+=2)Math.abs(n[q+1])<o&&n[q]>=0&&n[q]<=1&&p.push(n[q]);p.push(1),p.push(0);for(var r,s,t,u,v=-1,w=0;w<p.length;w++)s=Math.pow(1-p[w],2)*d+2*(1-p[w])*p[w]*f+p[w]*p[w]*h,t=Math.pow(1-p[w],2)*e+2*(1-p[w])*p[w]*g+p[w]*p[w]*i,u=Math.pow(s-a,2)+Math.pow(t-c,2),b("distance for param "+p[w]+": "+Math.sqrt(u)),v>=0?v>u&&(v=u,r=p[w]):(v=u,r=p[w]);return b("given: ( "+a+", "+c+"), ( "+d+", "+e+"), ( "+f+", "+g+"), ( "+h+", "+i+")"),b("roots: "+n),b("params: "+p),b("closest param: "+r),v};var b=function(a){}}(cytoscape),function(a){a.instances=[],a.instanceCounter=0,a.lastInstanceTime,a.registerInstance=function(b,c){var d;a.is.core(b)?d=b:a.is.domElement(b)&&(c=b);var e=a.getRegistrationForInstance(b,c);if(e)return e.cy?a.util.error("Tried to register on a pre-existing registration"):(e.cy=b,e.domElement=c),e;var f,g=+new Date;a.lastInstanceTime&&a.lastInstanceTime!==g?++a.instanceCounter:a.instanceCounter=0,a.lastInstanceTime=g,f=a.instanceCounter;var h="cy-"+g+"-"+f,i={id:h,cy:d,domElement:c,readies:[]};return a.instances.push(i),a.instances[h]=i,i},a.removeRegistrationForInstance=function(b,c){var d;if(a.is.core(b)?d=b:a.is.domElement(b)&&(c=b),a.is.core(d)){var e=d._private.instanceId;delete a.instances[e],a.instances.splice(e,1)}else if(a.is.domElement(c))for(var f=0;f<a.instances.length;f++){var g=a.instances[f];g.domElement===c&&(delete a.instances[g.id],a.instances.splice(f,1),f--)}},a.getRegistrationForInstance=function(b,c){var d;if(a.is.core(b)?b.registered()&&(d=b):a.is.domElement(b)&&(c=b),a.is.core(d)){var e=d._private.instanceId;return a.instances[e]}if(a.is.domElement(c))for(var f=a.instances.length-1;f>=0;f--){var g=a.instances[f];if(g.domElement===c)return g}}}(cytoscape),function(a){function b(b,c,d){var e={};switch(e[c]=d,b){case"core":case"collection":a.fn[b](e)}return a.util.setMap({map:f,keys:[b,c],value:d})}function c(b,c){return a.util.getMap({map:f,keys:[b,c]})}function d(b,c,d,e,f){return a.util.setMap({map:g,keys:[b,c,d,e],value:f})}function e(b,c,d,e){return a.util.getMap({map:g,keys:[b,c,d,e]})}var f={};a.extensions=f;var g={};a.modules=g,a.extension=function(){return 2==arguments.length?c.apply(this,arguments):3==arguments.length?b.apply(this,arguments):4==arguments.length?e.apply(this,arguments):5==arguments.length?d.apply(this,arguments):void $.error("Invalid extension access syntax")}}(cytoscape),function(a,b){a&&(a.fn.cytoscape=function(c){var d=a(this);if("get"===c){var e=b.getRegistrationForInstance(d[0]);return e.cy}if(!b.is.fn(c)){if(b.is.plainObject(c))return d.each(function(){var b=a.extend({},c,{container:a(this)[0]});cytoscape(b)});for(var f=d[0],g=[],h=[],i=1;i<arguments.length;i++)h[i-1]=arguments[i];return d.each(function(){var a=b.getRegistrationForInstance(f),d=a.cy,e=c;if(d&&b.is.fn(d[e])){var i=d[e].apply(d,h);g.push(i)}}),1===g.length?g=g[0]:0==g.length&&(g=a(this)),g}var j=c,f=d[0],e=b.getRegistrationForInstance(f);e||(e=b.registerInstance(f)),e&&e.cy&&e.cy.ready()?e.cy.trigger("ready",[],j):e.readies.push(j)},a.cytoscape=cytoscape,null==a.fn.cy&&null==a.cy&&(a.fn.cy=a.fn.cytoscape,a.cy=a.cytoscape))}("undefined"!=typeof jQuery?jQuery:null,cytoscape),function(a){function b(){return!1}function c(){return!0}a.Event=function(d,e){return this instanceof a.Event?(d&&d.type?(this.originalEvent=d,this.type=d.type,this.isDefaultPrevented=d.defaultPrevented||d.returnValue===!1||d.getPreventDefault&&d.getPreventDefault()?c:b):this.type=d,e&&a.util.extend(this,e),void(this.timeStamp=d&&d.timeStamp||+new Date)):new a.Event(d,e)},a.Event.prototype={preventDefault:function(){this.isDefaultPrevented=c;var a=this.originalEvent;a&&(a.preventDefault?a.preventDefault():a.returnValue=!1)},stopPropagation:function(){this.isPropagationStopped=c;var a=this.originalEvent;a&&(a.stopPropagation&&a.stopPropagation(),a.cancelBubble=!0)},stopImmediatePropagation:function(){this.isImmediatePropagationStopped=c,this.stopPropagation()},isDefaultPrevented:b,isPropagationStopped:b,isImmediatePropagationStopped:b}}(cytoscape),function(a){a.define={data:function(b){var c={field:"data",bindingEvent:"data",allowBinding:!1,allowSetting:!1,allowGetting:!1,settingEvent:"data",settingTriggersEvent:!1,triggerFnName:"trigger",immutableKeys:{},updateMappers:!1};return b=a.util.extend({},c,b),function(c,d){var e=b,f=this,g=void 0!==f.length,h=g?f:[f],i=g?f[0]:f;if(a.is.string(c)){if(e.allowGetting&&void 0===d){var j;return i&&(j=i._private[e.field][c]),j}if(e.allowSetting&&void 0!==d){var k=!e.immutableKeys[c];if(k){for(var l=0,m=h.length;m>l;l++)h[l]._private[e.field][c]=d;e.updateMappers&&f.updateMappers(),e.settingTriggersEvent&&f[e.triggerFnName](e.settingEvent)}}}else if(e.allowSetting&&a.is.plainObject(c)){var n,o,p=c;for(n in p){o=p[n];var k=!e.immutableKeys[n];if(k)for(var l=0,m=h.length;m>l;l++)h[l]._private[e.field][n]=o}e.updateMappers&&f.updateMappers(),e.settingTriggersEvent&&f[e.triggerFnName](e.settingEvent)}else if(e.allowBinding&&a.is.fn(c)){var q=c;f.bind(e.bindingEvent,q)}else if(e.allowGetting&&void 0===c){var j;return i&&(j=i._private[e.field]),j}return f}},batchData:function(b){var c={field:"data",event:"data",triggerFnName:"trigger",immutableKeys:{},updateMappers:!1},d=b=a.util.extend({},c,b);return function(b){var c=this,e=void 0!==c.length,f=e?c:c._private.elements;if(0===f.length)return c;for(var g=e?f[0]._private.cy:c,h=0;h<f.length;h++){var i=f[h],j=i._private.data.id,k=b[j];if(void 0!==k&&null!==k){var l,m,n=k;for(l in n){m=n[l];var o=!d.immutableKeys[l];o&&(i._private[d.field][l]=m)}}}var p=new a.Collection(g,f);return d.updateMappers&&p.updateMappers(),p[d.triggerFnName](d.event),c}},removeData:function(b){var c={field:"data",event:"data",triggerFnName:"trigger",triggerEvent:!1,immutableKeys:{}};return b=a.util.extend({},c,b),function(c){{var d=b,e=this,f=void 0!==e.length,g=f?e:[e];f?e[0]:e}if(a.is.string(c)){for(var h=c.split(/\s+/),i=h.length,j=0;i>j;j++){var k=h[j];if(!a.is.emptyString(k)){var l=!d.immutableKeys[k];if(l)for(var m=0,n=g.length;n>m;m++)delete g[m]._private[d.field][k]}}d.triggerEvent&&e[d.triggerFnName](d.event)}else if(void 0===c){for(var m=0,n=g.length;n>m;m++){var o=g[m]._private[d.field];for(var k in o){var p=!d.immutableKeys[k];p&&delete o[k]}}d.triggerEvent&&e[d.triggerFnName](d.event)}return e}},event:{regex:/(\w+)(\.\w+)?/,optionalTypeRegex:/(\w+)?(\.\w+)?/,props:"altKey bubbles button cancelable charCode clientX clientY ctrlKey currentTarget data detail eventPhase metaKey offsetX offsetY originalTarget pageX pageY prevValue relatedTarget screenX screenY shiftKey target view which".split(/\s+/),aliases:"mousedown mouseup click mouseover mouseout mousemove touchstart touchmove touchend grab drag free".split(/\s+/),aliasesOn:function(b){for(var c=a.define.event.aliases,d=0;d<c.length;d++){var e=c[d];b[e]=function(b,c){return a.is.fn(c)?this.on(e,b,c):a.is.fn(b)?(c=b,this.on(e,c)):this.trigger(e),this}}},falseCallback:function(){return!1}},on:function(b){var c={unbindSelfOnTrigger:!1,unbindAllBindersOnTrigger:!1};return b=a.util.extend({},c,b),function(c,d,e,f){var g=this,h=void 0!==g.length,i=h?g:[g],j=(h?g[0]:g,a.is.string(c)),k=b;if(a.is.plainObject(d)?(f=e,e=d,d=void 0):(a.is.fn(d)||d===!1)&&(f=d,e=void 0,d=void 0),(a.is.fn(e)||e===!1)&&(f=e,e=void 0),!a.is.fn(f)&&f!==!1&&j)return g;if(j){var l={};l[c]=f,c=l}for(var m in c)if(f=c[m],f===!1&&(f=a.define.event.falseCallback),a.is.fn(f)){m=m.split(/\s+/);for(var n=0;n<m.length;n++){var o=m[n];if(!a.is.emptyString(o)){var p=o.match(a.define.event.regex);if(p)for(var q=p[1],r=p[2]?p[2]:void 0,s={callback:f,data:e,delegated:d?!0:!1,selector:d,type:q,namespace:r,unbindSelfOnTrigger:k.unbindSelfOnTrigger,unbindAllBindersOnTrigger:k.unbindAllBindersOnTrigger,binders:i},t=0;t<i.length;t++)i[t]._private.listeners.push(s)}}}return g}},off:function(b){var c={};return b=a.util.extend({},c,b),function(b,c,d){var e=this,f=void 0!==e.length,g=f?e:[e],h=(f?e[0]:e,a.is.string(b));if(0===arguments.length){for(var i=0;i<g.length;i++)g[i]._private.listeners=[];return e}if((a.is.fn(c)||c===!1)&&(d=c,c=void 0),h){var j={};j[b]=d,b=j}for(var k in b){d=b[k],d===!1&&(d=a.define.event.falseCallback),k=k.split(/\s+/);for(var l=0;l<k.length;l++){var m=k[l];if(!a.is.emptyString(m)){var n=m.match(a.define.event.optionalTypeRegex);if(n)for(var o=n[1]?n[1]:void 0,p=n[2]?n[2]:void 0,i=0;i<g.length;i++)for(var q=g[i]._private.listeners,r=0;r<q.length;r++){var s=q[r],t=!p||p===s.namespace,u=!o||s.type===o,v=!d||d===s.callback,w=t&&u&&v;w&&(q.splice(r,1),r--)}}}}return e}},trigger:function(b){var c={};return b=a.util.extend({},c,b),function(b,c,d){var e=this,f=void 0!==e.length,g=f?e:[e],h=(f?e[0]:e,a.is.string(b)),i=a.is.plainObject(b),j=a.is.event(b),k=this._private.cy||this;if(h){var l=b.split(/\s+/);b=[];for(var m=0;m<l.length;m++){var n=l[m];if(!a.is.emptyString(n)){var o=n.match(a.define.event.regex),p=o[1],q=o[2]?o[2]:void 0;b.push({type:p,namespace:q})}}}else if(i){var r=b;b=[r]}c?a.is.array(c)||(c=[c]):c=[];for(var m=0;m<b.length;m++)for(var s=b[m],t=0;t<g.length;t++){var n,u=g[t],v=u._private.listeners,w=a.is.element(u),x=w;if(j)n=s,n.cyTarget=n.cyTarget||u,n.cy=n.cy||k,n.namespace=n.namespace||s.namespace;else{n=new a.Event(s,{cyTarget:u,cy:k,namespace:s.namespace});for(var y=a.define.event.props,z=0;z<y.length;z++){var A=y[z];n[A]=s[A]}}d&&(v=[{namespace:n.namespace,type:n.type,callback:d}]);for(var z=0;z<v.length;z++){var B=v[z],C=!B.namespace||B.namespace===n.namespace,D=B.type===n.type,E=B.delegated?u!==n.cyTarget&&a.is.element(n.cyTarget)&&n.cyTarget.is(B.selector):!0,F=C&&D&&E;if(F){var G=[n];if(G=G.concat(c),n.data=B.data?B.data:void 0,(B.unbindSelfOnTrigger||B.unbindAllBindersOnTrigger)&&(v.splice(z,1),z--),B.unbindAllBindersOnTrigger)for(var H=B.binders,I=0;I<H.length;I++){var J=H[I];if(J&&J!==u)for(var K=J._private.listeners,L=0;L<K.length;L++){var M=K[L];M===B&&(K.splice(L,1),L--)}}var N=B.delegated?n.cyTarget:u,O=B.callback.apply(N,G);(O===!1||n.isPropagationStopped())&&(x=!1,O===!1&&(n.stopPropagation(),n.preventDefault()))}}if(x){var P=u.parent(),Q=0!==P.length;Q?(P=P[0],P.trigger(n)):k.trigger(n)}}return e}}}}(cytoscape),function($$,window){var isTouch="ontouchstart"in window||window.DocumentTouch&&document instanceof DocumentTouch;$$.Style=function(a){return this instanceof $$.Style?$$.is.core(a)?(this._private={cy:a,coreStyle:{}},this.length=0,void this.addDefaultStylesheet()):void $$.util.error("A style must have a core reference"):new $$.Style(a)},$$.style=$$.Style,$$.styfn=$$.Style.prototype,$$.fn.style=function(a){for(var b in a){var c=a[b];$$.Style.prototype=c}},$$.stylesheet=$$.Stylesheet=function(){return this instanceof $$.Stylesheet?void(this.length=0):new $$.Stylesheet},$$.Stylesheet.prototype.selector=function(a){var b=this.length++;return this[b]={selector:a,properties:[]},this},$$.Stylesheet.prototype.css=function(a,b){var c=this.length-1;if($$.is.string(a))this[c].properties.push({name:a,value:b});else if($$.is.plainObject(a)){map=a;for(var d=0;d<$$.style.properties.length;d++){var e=$$.style.properties[d],f=map[e.name];if(void 0===f&&(f=map[$$.util.dash2camel(e.name)]),void 0!==f){var a=e.name,b=f;this[c].properties.push({name:a,value:b})}}}return this},$$.style.fromJson=function(a,b){for(var c=new $$.Style(a),d=0;d<b.length;d++){var e=b[d],f=e.selector,g=e.css;c.selector(f);for(var h in g){var i=g[h];c.css(h,i)}}return c},$$.styfn.fromJson=function(a){var b=this;b.resetToDefault();for(var c=0;c<a.length;c++){var d=a[c],e=d.selector,f=d.css;b.selector(e);for(var g in f){var h=f[g];b.css(g,h)}}return b},$$.Stylesheet.prototype.generateStyle=function(a){for(var b=new $$.Style(a),c=0;c<this.length;c++){var d=this[c],e=d.selector,f=d.properties;b.selector(e);for(var g=0;g<f.length;g++){var h=f[g];b.css(h.name,h.value)}}return b},$$.Stylesheet.prototype.assignToStyle=function(a,b){a.clear(),(b||void 0===b)&&a.addDefaultStylesheet();for(var c=0;c<this.length;c++){var d=this[c],e=d.selector,f=d.properties;a.selector(e);for(var g=0;g<f.length;g++){var h=f[g];a.css(h.name,h.value)}}},function(){var a=$$.util.regex.number,b=$$.util.regex.rgbaNoBackRefs,c=$$.util.regex.hslaNoBackRefs,d=$$.util.regex.hex3,e=$$.util.regex.hex6;$$.style.types={zeroOneNumber:{number:!0,min:0,max:1,unitless:!0},nonNegativeInt:{number:!0,min:0,integer:!0,unitless:!0},size:{number:!0,min:0,enums:["auto"]},bgSize:{number:!0,min:0,allowPercent:!0},color:{color:!0},lineStyle:{enums:["solid","dotted","dashed"]},curveStyle:{enums:["bundled","bezier"]},fontFamily:{regex:"^([\\w- ]+(?:\\s*,\\s*[\\w- ]+)*)$"},fontVariant:{enums:["small-caps","normal"]},fontStyle:{enums:["italic","normal","oblique"]},fontWeight:{enums:["normal","bold","bolder","lighter","100","200","300","400","500","600","800","900",100,200,300,400,500,600,700,800,900]},textDecoration:{enums:["none","underline","overline","line-through"]},textTransform:{enums:["none","capitalize","uppercase","lowercase"]},nodeShape:{enums:["rectangle","roundrectangle","ellipse","triangle","square","pentagon","hexagon","heptagon","octagon"]},arrowShape:{enums:["tee","triangle","square","circle","diamond","none"]},visibility:{enums:["hidden","visible"]},valign:{enums:["top","center","bottom"]},halign:{enums:["left","center","right"]},positionx:{enums:["left","center","right"],number:!0,allowPercent:!0},positiony:{enums:["top","center","bottom"],number:!0,allowPercent:!0},bgRepeat:{enums:["repeat","repeat-x","repeat-y","no-repeat"]},cursor:{enums:["auto","crosshair","default","e-resize","n-resize","ne-resize","nw-resize","pointer","progress","s-resize","sw-resize","text","w-resize","wait","grab","grabbing"]},text:{string:!0},data:{mapping:!0,regex:"^data\\s*\\(\\s*([\\w\\.]+)\\s*\\)$"},mapData:{mapping:!0,regex:"^mapData\\(([\\w\\.]+)\\s*\\,\\s*("+a+")\\s*\\,\\s*("+a+")\\s*,\\s*("+a+"|\\w+|"+b+"|"+c+"|"+d+"|"+e+")\\s*\\,\\s*("+a+"|\\w+|"+b+"|"+c+"|"+d+"|"+e+")\\)$"},url:{regex:"^url\\s*\\(\\s*([^\\s]+)\\s*\\s*\\)|none|(.+)$"}};var f=$$.style.types;$$.style.properties=[{name:"cursor",type:f.cursor},{name:"text-valign",type:f.valign},{name:"text-halign",type:f.halign},{name:"color",type:f.color},{name:"content",type:f.text},{name:"text-outline-color",type:f.color},{name:"text-outline-width",type:f.size},{name:"text-outline-opacity",type:f.zeroOneNumber},{name:"text-opacity",type:f.zeroOneNumber},{name:"text-decoration",type:f.textDecoration},{name:"text-transform",type:f.textTransform},{name:"font-family",type:f.fontFamily},{name:"font-style",type:f.fontStyle},{name:"font-variant",type:f.fontVariant},{name:"font-weight",type:f.fontWeight},{name:"font-size",type:f.size},{name:"min-zoomed-font-size",type:f.size},{name:"visibility",type:f.visibility},{name:"opacity",type:f.zeroOneNumber},{name:"z-index",type:f.nonNegativeInt},{name:"overlay-padding",type:f.size},{name:"overlay-color",type:f.color},{name:"overlay-opacity",type:f.zeroOneNumber},{name:"background-color",type:f.color},{name:"background-opacity",type:f.zeroOneNumber},{name:"background-image",type:f.url},{name:"background-position-x",type:f.positionx},{name:"background-position-y",type:f.positiony},{name:"background-repeat",type:f.bgRepeat},{name:"background-size-x",type:f.bgSize},{name:"background-size-y",type:f.bgSize},{name:"border-color",type:f.color},{name:"border-opacity",type:f.zeroOneNumber},{name:"border-width",type:f.size},{name:"border-style",type:f.lineStyle},{name:"height",type:f.size},{name:"width",type:f.size},{name:"padding-left",type:f.size},{name:"padding-right",type:f.size},{name:"padding-top",type:f.size},{name:"padding-bottom",type:f.size},{name:"shape",type:f.nodeShape},{name:"source-arrow-shape",type:f.arrowShape},{name:"target-arrow-shape",type:f.arrowShape},{name:"source-arrow-color",type:f.color},{name:"target-arrow-color",type:f.color},{name:"line-style",type:f.lineStyle},{name:"line-color",type:f.color},{name:"control-point-step-size",type:f.size},{name:"curve-style",type:f.curveStyle},{name:"selection-box-color",type:f.color},{name:"selection-box-opacity",type:f.zeroOneNumber},{name:"selection-box-border-color",type:f.color},{name:"selection-box-border-width",type:f.size},{name:"panning-cursor",type:f.cursor},{name:"active-bg-color",type:f.color},{name:"active-bg-opacity",type:f.zeroOneNumber},{name:"active-bg-size",type:f.size}];for(var g=$$.style.properties,h=0;h<g.length;h++){var i=g[h];g[i.name]=i}}(),$$.styfn.addDefaultStylesheet=function(){var a=this.containerPropertyAsString("font-family")||"sans-serif",b=this.containerPropertyAsString("font-style")||"normal",c=this.containerPropertyAsString("font-variant")||"normal",d=this.containerPropertyAsString("font-weight")||"normal",e=this.containerPropertyAsString("color")||"#000",f=this.containerPropertyAsString("text-transform")||"none",g=(this.containerPropertyAsString("text-decoration")||"none",this.containerPropertyAsString("font-size")||12);this.selector("node, edge").css({cursor:"default","text-valign":"top","text-halign":"center",color:e,content:void 0,"text-outline-color":"#000","text-outline-width":0,"text-outline-opacity":1,"text-opacity":1,"text-decoration":"none","text-transform":f,"font-family":a,"font-style":b,"font-variant":c,"font-weight":d,"font-size":g,"min-zoomed-font-size":0,visibility:"visible",opacity:1,"z-index":0,content:"","overlay-opacity":0,"overlay-color":"#000","overlay-padding":10,"background-color":"#888","background-opacity":1,"background-image":"none","border-color":"#000","border-opacity":1,"border-width":0,"border-style":"solid",height:30,width:30,"padding-top":0,"padding-bottom":0,"padding-left":0,"padding-right":0,shape:"ellipse","source-arrow-shape":"none","target-arrow-shape":"none","source-arrow-color":"#bbb","target-arrow-color":"#bbb","line-style":"solid","line-color":"#bbb","control-point-step-size":40,"curve-style":"bezier"}).selector("$node > node").css({width:"auto",height:"auto",shape:"rectangle","background-opacity":.5,"padding-top":10,"padding-right":10,"padding-left":10,"padding-bottom":10}).selector("edge").css({width:1}).selector(":active").css({"overlay-color":"black","overlay-padding":10,"overlay-opacity":.25}).selector("core").css({"selection-box-color":"#ddd","selection-box-opacity":.65,"selection-box-border-color":"#aaa","selection-box-border-width":1,"panning-cursor":"grabbing","active-bg-color":"black","active-bg-opacity":.15,"active-bg-size":isTouch?40:15})},$$.styfn.clear=function(){this._private.newStyle=!0;for(var a=0;a<this.length;a++)delete this[a];return this.length=0,this},$$.styfn.resetToDefault=function(){return this.clear(),this.addDefaultStylesheet(),this},$$.styfn.core=function(){return this._private.coreStyle},$$.styfn.parse=function(a,b,c){a=$$.util.camel2dash(a);var d=$$.style.properties[a],e=b;if(!d)return null;if(void 0===b||null===b)return null;var f=$$.is.string(b);f&&(b=$$.util.trim(b));var g=d.type;if(!g)return null;if(c&&(""===b||null===b))return{name:a,value:b,bypass:!0,deleteBypass:!0};var h,i;if(f){if(h=new RegExp($$.style.types.data.regex).exec(b))return{name:a,value:h,strValue:b,mapped:$$.style.types.data,field:h[1],bypass:c};if(i=new RegExp($$.style.types.mapData.regex).exec(b)){if(!g.color&&!g.number)return!1;var j=this.parse(a,i[4]);
-if(!j||j.mapped)return!1;var k=this.parse(a,i[5]);if(!k||k.mapped)return!1;if(j.value===k.value)return!1;if(g.color){var l=j.value,m=k.value,n=!(l[0]!==m[0]||l[1]!==m[1]||l[2]!==m[2]||l[3]!==m[3]&&(null!=l[3]&&1!==l[3]||null!=m[3]&&1!==m[3]));if(n)return!1}return{name:a,value:i,strValue:b,mapped:$$.style.types.mapData,field:i[1],fieldMin:parseFloat(i[2]),fieldMax:parseFloat(i[3]),valueMin:j.value,valueMax:k.value,bypass:c}}}else;if(g.number){var o;if(!g.unitless)if(f){var p=b.match("^("+$$.util.regex.number+")(px|em"+(g.allowPercent?"|\\%":"")+")?$");if(!g.enums){if(!p)return null;b=p[1],o=p[2]||"px"}}else o="px";if(b=parseFloat(b),isNaN(b)&&void 0!==g.enums){b=e;for(var q=0;q<g.enums.length;q++){var r=g.enums[q];if(r===b)return{name:a,value:b,strValue:b,bypass:c}}return null}if(g.integer&&!$$.is.integer(b))return null;if(void 0!==g.min&&b<g.min||void 0!==g.max&&b>g.max)return null;var s={name:a,value:b,strValue:""+b+(o?o:""),units:o,bypass:c,pxValue:g.unitless||"%"===o?void 0:"px"!==o&&o?this.getEmSizeInPixels()*b:b};return s}if(g.color){var t=$$.util.color2tuple(b);return{name:a,value:t,strValue:b,bypass:c}}if(!g.enums){if(g.regex){var u=new RegExp(g.regex),v=u.exec(b);return v?{name:a,value:v,strValue:b,bypass:c}:null}return g.string?{name:a,value:b,strValue:b,bypass:c}:null}for(var q=0;q<g.enums.length;q++){var r=g.enums[q];if(r===b)return{name:a,value:b,strValue:b,bypass:c}}},$$.styfn.getEmSizeInPixels=function(){var a=this._private.cy,b=a.container();if(window&&b){var c=window.getComputedStyle(b).getPropertyValue("font-size"),d=parseFloat(c);return d}return 1},$$.styfn.containerCss=function(a){var b=this._private.cy,c=b.container();return window&&c?window.getComputedStyle(c).getPropertyValue(a):void 0},$$.styfn.containerProperty=function(a){var b=this.containerCss(a),c=this.parse(a,b);return c},$$.styfn.containerPropertyAsString=function(a){var b=this.containerProperty(a);return b?b.strValue:void 0},$$.styfn.selector=function(a){var b="core"===a?null:new $$.Selector(a),c=this.length++;return this[c]={selector:b,properties:[]},this},$$.styfn.css=function(){var a=arguments;switch(a.length){case 1:for(var b=a[0],c=0;c<$$.style.properties.length;c++){var d=$$.style.properties[c],e=b[d.name];void 0===e&&(e=b[$$.util.dash2camel(d.name)]),void 0!==e&&this.cssRule(d.name,e)}break;case 2:this.cssRule(a[0],a[1])}return this},$$.styfn.cssRule=function(a,b){var c=this.parse(a,b);if(c){var d=this.length-1;this[d].properties.push(c);var e=!this[d].selector;e&&(this._private.coreStyle[c.name]=c)}return this},$$.styfn.applyParsedProperty=function(ele,parsedProp,context){parsedProp=$$.util.clone(parsedProp);var prop=parsedProp,style=ele._private.style,fieldVal,flatProp,type=$$.style.properties[prop.name].type,propIsBypass=prop.bypass,origProp=style[prop.name],origPropIsBypass=origProp&&origProp.bypass;if(("height"===parsedProp.name||"width"===parsedProp.name)&&"auto"===parsedProp.value&&ele.isNode()&&!ele.isParent())return!1;if(propIsBypass&&prop.deleteBypass){var currentProp=style[prop.name];return currentProp?currentProp.bypass&&currentProp.bypassed?(style[prop.name]=currentProp.bypassed,!0):!1:!0}switch(prop.mapped){case $$.style.types.mapData:if(fieldVal=ele._private.data[prop.field],!$$.is.number(fieldVal))return!1;var percent=(fieldVal-prop.fieldMin)/(prop.fieldMax-prop.fieldMin);if(type.color){var r1=prop.valueMin[0],r2=prop.valueMax[0],g1=prop.valueMin[1],g2=prop.valueMax[1],b1=prop.valueMin[2],b2=prop.valueMax[2],a1=null==prop.valueMin[3]?1:prop.valueMin[3],a2=null==prop.valueMax[3]?1:prop.valueMax[3],clr=[Math.round(r1+(r2-r1)*percent),Math.round(g1+(g2-g1)*percent),Math.round(b1+(b2-b1)*percent),Math.round(a1+(a2-a1)*percent)];flatProp={bypass:prop.bypass,name:prop.name,value:clr,strValue:["rgba(",clr[0],", ",clr[1],", ",clr[2],", ",clr[3],")"].join("")}}else{if(!type.number)return!1;var calcValue=prop.valueMin+(prop.valueMax-prop.valueMin)*percent;flatProp=this.parse(prop.name,calcValue,prop.bypass)}flatProp||(flatProp=this.parse(prop.name,origProp.strValue,prop.bypass)),flatProp.mapping=prop,prop=flatProp;break;case $$.style.types.data:fieldVal=eval("ele._private.data."+prop.field),flatProp=this.parse(prop.name,fieldVal,prop.bypass),flatProp||(flatProp=this.parse(prop.name,origProp.strValue,prop.bypass)),flatProp.mapping=prop,prop=flatProp;break;case void 0:break;default:return!1}if(propIsBypass)prop.bypassed=origPropIsBypass?origProp.bypassed:origProp,style[prop.name]=prop;else{var prevProp;origPropIsBypass?(prevProp=origProp.bypassed,origProp.bypassed=prop):(prevProp=style[prop.name],style[prop.name]=prop),prevProp&&prevProp.mapping&&prop.mapping&&prevProp.context===context&&(prevProp=prevProp.prev),prevProp&&prevProp!==prop&&(prop.prev=prevProp)}return prop.context=context,!0},$$.styfn.rollBackContext=function(a,b){for(var c=0;c<b.properties.length;c++){var d=b.properties[c],e=a._private.style[d.name];e.bypassed&&(e=e.bypassed);for(var f,g=!0,h=0;e.prev;){var i=e.prev;e.context===b&&(g?a._private.style[d.name]=i:f&&(f.prev=i)),f=e,e=i,g=!1,h++}}},$$.styfn.apply=function(a){for(var b=this,c=0;c<a.length;c++){var d=a[c];b._private.newStyle&&(d._private.styleCxts=[],d._private.style={});for(var e=0;e<this.length;e++){var f=this[e],g=f.selector&&f.selector.filter(d).length>0,h=f.properties;if(g){for(var i=0;i<h.length;i++){var j=h[i];(!d._private.styleCxts[e]||j.mapped)&&this.applyParsedProperty(d,j,f)}d._private.styleCxts[e]=f}else d._private.styleCxts[e]&&this.rollBackContext(d,f),delete d._private.styleCxts[e]}}b._private.newStyle=!1},$$.styfn.update=function(){var a=this._private.cy,b=a.elements();b.updateStyle()},$$.styfn.getRenderedStyle=function(a){var a=a[0];if(a){for(var b={},c=a._private.style,d=this._private.cy,e=d.zoom(),f=0;f<$$.style.properties.length;f++){var g=$$.style.properties[f],h=c[g.name];if(h){var i=h.unitless?h.strValue:h.pxValue*e+"px";b[g.name]=i,b[$$.util.dash2camel(g.name)]=i}}return b}},$$.styfn.getRawStyle=function(a){var a=a[0];if(a){for(var b={},c=a._private.style,d=0;d<$$.style.properties.length;d++){var e=$$.style.properties[d],f=c[e.name];f&&(b[e.name]=f.strValue,b[$$.util.dash2camel(e.name)]=f.strValue)}return b}},$$.styfn.getValueStyle=function(a){var b,c;if($$.is.element(a)?(b={},c=a._private.style):(b={},c=a),c)for(var d=0;d<$$.style.properties.length;d++){var e=$$.style.properties[d],f=c[e.name]||c[$$.util.dash2camel(e.name)];if(void 0===f||$$.is.plainObject(f)||(f=this.parse(e.name,f)),f){var g=void 0===f.value?f:f.value;b[e.name]=g,b[$$.util.dash2camel(e.name)]=g}}return b},$$.styfn.updateFunctionalProperties=function(a){for(var b=0;b<a.length;b++)for(var c=a[b],d=c._private.style,e=0;e<$$.style.properties.length;e++){var f=$$.style.properties[e],g=d[f.name];if(g&&g.mapping){var h=g.mapping;this.applyParsedProperty(c,h)}}},$$.styfn.applyBypass=function(a,b,c){var d=[];if("*"===b||"**"===b){if(void 0!==c)for(var e=0;e<$$.style.properties.length;e++){var f=$$.style.properties[e],b=f.name,g=this.parse(b,c,!0);g&&d.push(g)}}else if($$.is.string(b)){var g=this.parse(b,c,!0);g&&d.push(g)}else{if(!$$.is.plainObject(b))return!1;for(var h=b,e=0;e<$$.style.properties.length;e++){var f=$$.style.properties[e],b=f.name,c=h[b];if(void 0===c&&(c=h[$$.util.dash2camel(b)]),void 0!==c){var g=this.parse(b,c,!0);g&&d.push(g)}}}if(0===d.length)return!1;for(var i=!1,e=0;e<a.length;e++)for(var j=a[e],k=0;k<d.length;k++){var f=d[k];i=this.applyParsedProperty(j,f)||i}return i},$$.styfn.removeAllBypasses=function(a){for(var b=0;b<$$.style.properties.length;b++)for(var c=$$.style.properties[b],d=c.name,e="",f=this.parse(d,e,!0),g=0;g<a.length;g++){var h=a[g];this.applyParsedProperty(h,f)}}}(cytoscape,"undefined"==typeof window?null:window),function(a){var b={showOverlay:!0,hideEdgesOnViewport:!1},c=a.util.copy(b);a.defaults=function(d){b=a.util.extend({},c,d)},a.fn.core=function(b){for(var c in b){var d=b[c];a.Core.prototype[c]=d}},a.Core=function(c){if(!(this instanceof a.Core))return new a.Core(c);var d=this;c=a.util.extend({},b,c);var e=c.container,f=a.getRegistrationForInstance(d,e);f&&f.cy&&(f.domElement.innerHTML="",f.cy.notify({type:"destroy"}),a.removeRegistrationForInstance(f.cy,f.domElement)),f=a.registerInstance(d,e);var g=f.readies,h=c;h.layout=a.util.extend({name:"undefined"==typeof window?"null":"grid"},h.layout),h.renderer=a.util.extend({name:"undefined"==typeof window?"null":"canvas"},h.renderer),this._private={ready:!1,instanceId:f.id,options:h,elements:[],id2index:{},listeners:[],aniEles:[],scratch:{},layout:null,renderer:null,notificationsEnabled:!0,minZoom:1e-50,maxZoom:1e50,zoomEnabled:void 0===h.zoomEnabled?!0:h.zoomEnabled,panEnabled:void 0===h.panEnabled?!0:h.panEnabled,boxSelectionEnabled:void 0===h.boxSelectionEnabled?!0:h.boxSelectionEnabled,zoom:a.is.number(h.zoom)?h.zoom:1,pan:{x:a.is.plainObject(h.pan)&&a.is.number(h.pan.x)?h.pan.x:0,y:a.is.plainObject(h.pan)&&a.is.number(h.pan.y)?h.pan.y:0},hasCompoundNodes:!1},a.is.number(h.minZoom)&&a.is.number(h.maxZoom)&&h.minZoom<h.maxZoom?(this._private.minZoom=h.minZoom,this._private.maxZoom=h.maxZoom):a.is.number(h.minZoom)&&void 0===h.maxZoom?this._private.minZoom=h.minZoom:a.is.number(h.maxZoom)&&void 0===h.minZoom&&(this._private.maxZoom=h.maxZoom),this._private.style=a.is.stylesheet(h.style)?h.style.generateStyle(this):a.is.array(h.style)?a.style.fromJson(this,h.style):new a.Style(d),d.initRenderer(a.util.extend({showOverlay:h.showOverlay,hideEdgesOnViewport:h.hideEdgesOnViewport},h.renderer)),d.load(h.elements,function(){d.startAnimationLoop(),d._private.ready=!0,a.is.fn(h.ready)&&d.bind("ready",h.ready);for(var b=0;b<g.length;b++){var c=g[b];d.bind("ready",c)}f.readies=[],d.trigger("ready")},h.done)},a.corefn=a.Core.prototype,a.fn.core({ready:function(){return this._private.ready},registered:function(){return this._private&&null!=this._private.instanceId?!0:!1},registeredId:function(){return this._private.instanceId},getElementById:function(b){var c=this._private.id2index[b];return void 0!==c?this._private.elements[c]:new a.Collection(this)},hasCompoundNodes:function(){return this._private.hasCompoundNodes},addToPool:function(a){for(var b=this._private.elements,c=this._private.id2index,d=0;d<a.length;d++){var e=a[d],f=e._private.data.id,g=c[f],h=void 0!==g;h||(g=b.length,b.push(e),c[f]=g,e._private.index=g)}return this},removeFromPool:function(a){for(var b=this._private.elements,c=this._private.id2index,d=0;d<a.length;d++){var e=a[d],f=e._private.data.id,g=c[f],h=void 0!==g;if(h){delete this._private.id2index[f],b.splice(g,1);for(var i=g;i<b.length;i++){var j=b[i]._private.data.id;c[j]--}}}},container:function(){return this._private.options.container},options:function(){return a.util.copy(this._private.options)},json:function(){var a={},b=this;return a.elements={},b.elements().each(function(b,c){var d=c.group();a.elements[d]||(a.elements[d]=[]),a.elements[d].push(c.json())}),a.style=b.style(),a.scratch=b.scratch(),a.zoomEnabled=b._private.zoomEnabled,a.panEnabled=b._private.panEnabled,a.layout=b._private.options.layout,a.renderer=b._private.options.renderer,a}})}(cytoscape),function(a,b){a.fn.core({add:function(b){var c,d=this;if(a.is.elementOrCollection(b)){for(var e=b,f=[],g=0;g<e.length;g++){var h=e[g];f.push(h.json())}c=new a.Collection(d,f)}else if(a.is.array(b)){var f=b;c=new a.Collection(d,f)}else if(a.is.plainObject(b)&&(a.is.array(b.nodes)||a.is.array(b.edges))){for(var i=b,f=[],j=["nodes","edges"],g=0,k=j.length;k>g;g++){var l=j[g],m=i[l];if(a.is.array(m))for(var n=0,o=m.length;o>n;n++){var p=m[n],q=a.util.extend({},p,{group:l});f.push(q)}}c=new a.Collection(d,f)}else{var p=b;c=new a.Element(d,p).collection()}return c.filter(function(){return!this.removed()})},remove:function(b){if(a.is.elementOrCollection(b))b=b;else if(a.is.string(b)){var c=b;b=this.$(c)}return b.remove()},load:function(b,c,d){function e(){f.one("layoutready",function(a){f.notifications(!0),f.trigger(a),f.notify({type:"load",collection:f.elements(),style:f._private.style}),f.one("load",c),f.trigger("load")}).one("layoutstop",function(){f.one("done",d),f.trigger("done")}),f.layout(f._private.options.layout)}var f=this,g=f.elements();g.length>0&&g.remove(),f.notifications(!1);return null!=b&&(a.is.plainObject(b)||a.is.array(b))&&f.add(b),setTimeout(function(){e()},30),this}})}(cytoscape,"undefined"==typeof window?null:window),function(a){a.fn.core({addToAnimationPool:function(a){for(var b=this,c=b._private.aniEles,d=[],e=0;e<c.length;e++){var f=c[e]._private.data.id;d[f]=!0}for(var e=0;e<a.length;e++){var g=a[e],f=g._private.data.id;d[f]||c.push(g)}},startAnimationLoop:function(){function b(){function a(){k(function(a){c(a),b()},l)}i?setTimeout(function(){a()},h):a()}function c(b){b=+new Date;for(var c=g._private.aniEles,e=0;e<c.length;e++){var f=c[e],h=f._private.animation.current,i=f._private.animation.queue;if(0===h.length){var j=i,k=j.length>0?j.shift():null;null!=k&&(k.callTime=+new Date,h.push(k))}for(var l=[],m=0;m<h.length;m++){var n=h[m];d(f,n,b),h[m].done&&(l.push(n),h.splice(m,1),m--)}for(var m=0;m<l.length;m++){var n=l[m],o=n.params.complete;a.is.fn(o)&&o.apply(f,[b])}}c.length>0&&g.notify({type:"draw",collection:c});for(var m=0;m<c.length;m++){var f=c[m],i=f._private.animation.queue,h=f._private.animation.current,p=h.length>0||i.length>0;p||(c.splice(m,1),m--)}}function d(b,c,d){var h,i=g._private.style,j=c.properties,k=c.params,l=c.callTime;if(h=0===c.duration?1:Math.min(1,(d-l)/c.duration),0>h?h=0:h>1&&(h=1),null==j.delay){var m=c.startPosition,n=j.position,o=b._private.position;if(n&&(e(m.x,n.x)&&(o.x=f(m.x,n.x,h)),e(m.y,n.y)&&(o.y=f(m.y,n.y,h))),j.css)for(var p=a.style.properties,q=0;q<p.length;q++){var r=p[q].name,s=j.css[r];if(void 0!==s){var t=c.startStyle[r],u=f(t,s,h);i.applyBypass(b,r,u)}}}return a.is.fn(k.step)&&k.step.apply(b,[d]),h>=1&&(c.done=!0),h}function e(b,c){return null==b||null==c?!1:a.is.number(b)&&a.is.number(c)?!0:b&&c?!0:!1}function f(b,c,d){function e(a,b){var c=b-a,e=a;return Math.round(d*c+e)}if(0>d?d=0:d>1&&(d=1),a.is.number(b)&&a.is.number(c))return b+(c-b)*d;if(a.is.number(b[0])&&a.is.number(c[0])){var f=b,g=c,h=e(f[0],g[0]),i=e(f[1],g[1]),j=e(f[2],g[2]);return"rgb("+h+", "+i+", "+j+")"}return void 0}var g=this,h=1e3/60,i=!1,j=!0;g._private.aniEles=[];var k="undefined"==typeof window?function(){}:window.requestAnimationFrame||window.mozRequestAnimationFrame||window.webkitRequestAnimationFrame||window.msRequestAnimationFrame;null!=k&&j||(k=function(a){window.setTimeout(function(){a(+new Date)},h)});var l=g.container();b()}})}(cytoscape),function(a){a.fn.core({data:a.define.data({field:"data",bindingEvent:"data",allowBinding:!0,allowSetting:!0,settingEvent:"data",settingTriggersEvent:!0,triggerFnName:"trigger",allowGetting:!0}),removeData:a.define.removeData({field:"data",event:"data",triggerFnName:"trigger",triggerEvent:!0}),batchData:a.define.batchData({field:"data",event:"data",triggerFnName:"trigger",immutableKeys:{id:!0,source:!0,target:!0,parent:!0},updateMappers:!0}),scratch:a.define.data({field:"scratch",allowBinding:!1,allowSetting:!0,settingTriggersEvent:!1,allowGetting:!0}),removeScratch:a.define.removeData({field:"scratch",triggerEvent:!1})})}(cytoscape),function(a){a.fn.core({on:a.define.on(),one:a.define.on({unbindSelfOnTrigger:!0}),once:a.define.on({unbindAllBindersOnTrigger:!0}),off:a.define.off(),trigger:a.define.trigger()}),a.corefn.bind=a.corefn.on,a.corefn.unbind=a.corefn.off,a.define.event.aliasesOn(a.corefn)}(cytoscape),function(a){a.fn.core({png:function(){var a=this._private.renderer;return a.png()}})}(cytoscape),function(a){a.fn.core({layout:function(a){var b=this;return this._private.layoutRunning?this:(null==a&&(a=this._private.options.layout),this.initLayout(a),b.trigger("layoutstart"),this._private.layoutRunning=!0,this.one("layoutstop",function(){this._private.layoutRunning=!1}),this._private.layout.run(),this)},initLayout:function(b){if(null==b)return void a.util.error("Layout options must be specified to run a layout");if(null==b.name)return void a.util.error("A `name` must be specified to run a layout");var c=b.name,d=a.extension("layout",c);return null==d?void a.util.error("Can not apply layout: No such layout `%s` found; did you include its JS file?",c):(this._private.layout=new d(a.util.extend({},b,{renderer:this._private.renderer,cy:this})),void(this._private.options.layout=b))}})}(cytoscape),function(a){a.fn.core({notify:function(b){if(this._private.notificationsEnabled){var c=this.renderer(),d=this;if(a.is.element(b.collection)){var e=b.collection;b.collection=new a.Collection(d,[e])}else if(a.is.array(b.collection)){var f=b.collection;b.collection=new a.Collection(d,f)}c.notify(b)}},notifications:function(a){var b=this._private;return void 0===a?b.notificationsEnabled:void(b.notificationsEnabled=a?!0:!1)},noNotifications:function(a){this.notifications(!1),a(),this.notifications(!0)}})}(cytoscape),function(a){a.fn.core({renderTo:function(a,b,c){var d=this._private.renderer;d.renderTo(a,b,c)},renderer:function(){return this._private.renderer},initRenderer:function(b){var c=this,d=a.extension("renderer",b.name);return null==d?void a.util.error("Can not initialise: No such renderer `%s` found; did you include its JS file?",b.name):void(this._private.renderer=new d(a.util.extend({},b,{cy:c,style:c._private.style})))}})}(cytoscape),function(a){a.fn.core({collection:function(b){return a.is.string(b)?this.$(b):a.is.elementOrCollection(b)?b.collection():new a.Collection(this)},nodes:function(a){var b=this.$("node");return a?b.filter(a):b},edges:function(a){var b=this.$("edge");return a?b.filter(a):b},$:function(b){var c=new a.Collection(this,this._private.elements);return b?c.filter(b):c}}),a.corefn.elements=a.corefn.filter=a.corefn.$}(cytoscape),function(a){a.fn.core({style:function(){return this._private.style}})}(cytoscape),function(a){a.fn.core({panningEnabled:function(a){return void 0===a?this._private.panEnabled:(this._private.panEnabled=a?!0:!1,this)},zoomingEnabled:function(a){return void 0===a?this._private.zoomEnabled:(this._private.zoomEnabled=a?!0:!1,this)},boxSelectionEnabled:function(a){return void 0===a?this._private.boxSelectionEnabled:(this._private.boxSelectionEnabled=a?!0:!1,this)},pan:function(){var b,c,d,e,f,g=arguments,h=this._private.pan;switch(g.length){case 0:return h;case 1:if(!this._private.panEnabled)return this;if(a.is.string(g[0]))return b=g[0],h[b];a.is.plainObject(g[0])&&(d=g[0],e=d.x,f=d.y,a.is.number(e)&&(h.x=e),a.is.number(f)&&(h.y=f),this.trigger("pan"));break;case 2:if(!this._private.panEnabled)return this;b=g[0],c=g[1],"x"!==b&&"y"!==b||!a.is.number(c)||(h[b]=c),this.trigger("pan")}return this.notify({type:"viewport"}),this},panBy:function(){var b,c,d,e,f,g=arguments,h=this._private.pan;if(!this._private.panEnabled)return this;switch(g.length){case 1:a.is.plainObject(g[0])&&(d=g[0],e=d.x,f=d.y,a.is.number(e)&&(h.x+=e),a.is.number(f)&&(h.y+=f),this.trigger("pan"));break;case 2:b=g[0],c=g[1],"x"!==b&&"y"!==b||!a.is.number(c)||(h[b]+=c),this.trigger("pan")}return this.notify({type:"viewport"}),this},fit:function(b,c){if(a.is.number(b)&&void 0===c&&(c=b,b=void 0),!this._private.panEnabled||!this._private.zoomEnabled)return this;if(a.is.string(b)){var d=b;b=this.$(d)}else a.is.elementOrCollection(b)||(b=this.elements());var e,f=b.boundingBox(),g=this.style(),h=parseFloat(g.containerCss("width")),i=parseFloat(g.containerCss("height"));return c=a.is.number(c)?c:0,isNaN(h)||isNaN(i)||(e=this._private.zoom=Math.min((h-2*c)/f.w,(i-2*c)/f.h),e=e>this._private.maxZoom?this._private.maxZoom:e,e=e<this._private.minZoom?this._private.minZoom:e,this._private.pan={x:(h-e*(f.x1+f.x2))/2,y:(i-e*(f.y1+f.y2))/2}),this.trigger("pan zoom"),this.notify({type:"viewport"}),this},minZoom:function(b){return void 0===b?this._private.minZoom:(a.is.number(b)&&(this._private.minZoom=b),this)},maxZoom:function(b){return void 0===b?this._private.maxZoom:(a.is.number(b)&&(this._private.maxZoom=b),this)},zoom:function(b){var c,d;if(void 0===b)return this._private.zoom;if(a.is.number(b))d=b,c={x:0,y:0};else if(a.is.plainObject(b)){if(d=b.level,b.renderedPosition){var e=b.renderedPosition,f=this._private.pan,g=this._private.zoom;c={x:(e.x-f.x)/g,y:(e.y-f.y)/g}}else b.position&&(c=b.position);if(c&&!this._private.panEnabled)return this}if(!this._private.zoomEnabled)return this;if(!a.is.number(d)||!a.is.number(c.x)||!a.is.number(c.y))return this;d=d>this._private.maxZoom?this._private.maxZoom:d,d=d<this._private.minZoom?this._private.minZoom:d;var h=this._private.pan,i=this._private.zoom,j=d,k={x:-j/i*(c.x-h.x)+c.x,y:-j/i*(c.y-h.y)+c.y};this._private.zoom=d,this._private.pan=k;var l=h.x!==k.x||h.y!==k.y;return this.trigger("zoom"+(l?" pan":"")),this.notify({type:"viewport"}),this},boundingBox:function(a){var b=this.$(a);return b.boundingBox()},center:function(b){if(!this._private.panEnabled||!this._private.zoomEnabled)return this;if(a.is.string(b)){var c=b;b=cy.elements(c)}else a.is.elementOrCollection(b)||(b=cy.elements());var d=b.boundingBox(),e=this.style(),f=parseFloat(e.containerCss("width")),g=parseFloat(e.containerCss("height")),h=this._private.zoom;return this.pan({x:(f-h*(d.x1+d.x2))/2,y:(g-h*(d.y1+d.y2))/2}),this.trigger("pan"),this.notify({type:"viewport"}),this},reset:function(){return this._private.panEnabled&&this._private.zoomEnabled?(this.pan({x:0,y:0}),this._private.maxZoom>1&&this._private.minZoom<1&&this.zoom(1),this.notify({type:"viewport"}),this):this}})}(cytoscape),function(a){a.fn.collection=a.fn.eles=function(b){for(var c in b){var d=b[c];a.Collection.prototype[c]=d}};var b={prefix:{nodes:"n",edges:"e"},id:{nodes:0,edges:0},generate:function(b,c,d){var e=a.is.element(c)?c._private:c,f=e.group,g=null!=d?d:this.prefix[f]+this.id[f];if(b.getElementById(g).empty())this.id[f]++;else for(;!b.getElementById(g).empty();)g=this.prefix[f]+ ++this.id[f];return g}};a.Element=function(b,c,d){if(!(this instanceof a.Element))return new a.Element(b,c,d);var e=this;if(d=void 0===d||d?!0:!1,void 0===b||void 0===c||!a.is.core(b))return void a.util.error("An element must have a core reference and parameters set");if("nodes"!==c.group&&"edges"!==c.group)return void a.util.error("An element must be of type `nodes` or `edges`; you specified `"+c.group+"`");if(this.length=1,this[0]=this,this._private={cy:b,single:!0,data:c.data||{},position:c.position||{},autoWidth:void 0,autoHeight:void 0,listeners:[],group:c.group,style:{},rstyle:{},styleCxts:[],removed:!0,selected:c.selected?!0:!1,selectable:void 0===c.selectable?!0:c.selectable?!0:!1,locked:c.locked?!0:!1,grabbed:!1,grabbable:void 0===c.grabbable?!0:c.grabbable?!0:!1,active:!1,classes:{},animation:{current:[],queue:[]},rscratch:{},scratch:{},edges:[],children:[]},c.renderedPosition){var f=c.renderedPosition,g=b.pan(),h=b.zoom();this._private.position={x:(f.x-g.x)/h,y:(f.y-g.y)/h}}if(a.is.string(c.classes))for(var i=c.classes.split(/\s+/),j=0,k=i.length;k>j;j++){var l=i[j];l&&""!==l&&(e._private.classes[l]=!0)}(void 0===d||d)&&this.restore()},a.Collection=function(c,d){if(!(this instanceof a.Collection))return new a.Collection(c,d);if(void 0===c||!a.is.core(c))return void a.util.error("A collection must have a reference to the core");var e={},f=[],g=!1;if(d){if(d.length>0&&a.is.plainObject(d[0])&&!a.is.element(d[0])){g=!0;for(var h=[],i={},j=0,k=d.length;k>j;j++){var l=d[j];null==l.data&&(l.data={});var m=l.data;if(null==m.id)m.id=b.generate(c,l);else if(0!=c.getElementById(m.id).length||i[m.id])continue;var n=new a.Element(c,l,!1);h.push(n),i[m.id]=!0}d=h}}else d=[];for(var j=0,k=d.length;k>j;j++){var o=d[j];if(o){var p=o._private.data.id;e[p]||(e[p]=o,f.push(o))}}for(var j=0,k=f.length;k>j;j++)this[j]=f[j];this.length=f.length,this._private={cy:c,ids:e},g&&this.restore()},a.elefn=a.elesfn=a.Element.prototype=a.Collection.prototype,a.elesfn.cy=function(){return this._private.cy},a.elesfn.element=function(){return this[0]},a.elesfn.collection=function(){return a.is.collection(this)?this:new a.Collection(this._private.cy,[this])},a.elesfn.json=function(){var b=this.element();if(null==b)return void 0;var c=b._private,d=a.util.copy({data:c.data,position:c.position,group:c.group,bypass:c.bypass,removed:c.removed,selected:c.selected,selectable:c.selectable,locked:c.locked,grabbed:c.grabbed,grabbable:c.grabbable,classes:""}),e=[];for(var f in c.classes)e.push(f);for(var g=0;g<e.length;g++){var f=e[g];d.classes+=f+(g<e.length-1?" ":"")}return d},a.elesfn.restore=function(c){var d=this,e=[],f=d.cy();void 0===c&&(c=!0);for(var g=[],h=[],i=[],j=0,k=0,l=0,m=d.length;m>l;l++){var n=d[l];n.isNode()?(h.push(n),j++):(i.push(n),k++)}g=h.concat(i);for(var l=0,m=g.length;m>l;l++){var n=g[l];if(n.removed()){var o=n._private,p=o.data;if(void 0===p.id)p.id=b.generate(f,n);else{if(a.is.emptyString(p.id)||!a.is.string(p.id))continue;if(0!=f.getElementById(p.id).length)continue}{p.id}if(n.isEdge()){for(var q=n,r=["source","target"],s=r.length,t=0;s>t;t++){var u=r[t],v=p[u];null!=v&&""!==v&&!f.getElementById(v).empty()}var w=f.getElementById(p.source),x=f.getElementById(p.target);w._private.edges.push(q),x._private.edges.push(q)}o.ids={},o.ids[p.id]=n,o.removed=!1,f.addToPool(n),e.push(n)}}for(var l=0;j>l;l++){var y=g[l],p=y._private.data,z=(p.id,y._private.data.parent),A=null!=z;if(A){var B=f.getElementById(z);if(B.empty())delete p.parent;else{for(var C=!1,D=B;!D.empty();){if(y.same(D)){C=!0,delete p.parent;break}D=D.parent()}C||(B[0]._private.children.push(y),f._private.hasCompoundNodes=!0)}}}if(e=new a.Collection(f,e),e.length>0){var E=e.add(e.connectedNodes()).add(e.parent());E.updateStyle(c),c?e.rtrigger("add"):e.trigger("add")}return d},a.elesfn.removed=function(){var a=this[0];return a&&a._private.removed},a.elesfn.inside=function(){var a=this[0];return a&&!a._private.removed},a.elesfn.remove=function(b){function c(a){for(var b=a._private.edges,c=0;c<b.length;c++)e(b[c])}function d(a){for(var b=a._private.children,c=0;c<b.length;c++)e(b[c])}function e(a){var b=k[a.id()];b||(k[a.id()]=!0,a.isNode()?(j.push(a),c(a),d(a)):j.unshift(a))}function f(a,b){for(var c=a._private.edges,d=0;d<c.length;d++){var e=c[d];if(b===e){c.splice(d,1);break}}}function g(a,b){b=b[0],a=a[0];for(var c=a._private.children,d=0;d<c.length;d++)if(c[d][0]===b[0]){c.splice(d,1);break}}var h=this,i=[],j=[],k={},l=h._private.cy;void 0===b&&(b=!0);for(var m=0,n=h.length;n>m;m++){var o=h[m];e(o)}for(var m=0;m<j.length;m++){var o=j[m];if(o._private.removed=!0,l.removeFromPool(o),i.push(o),o.isEdge()){var p=o.source()[0],q=o.target()[0];f(p,o),f(q,o)}else{var r=o.parent();0!==r.length&&g(r,o)}}var s=l._private.elements;l._private.hasCompoundNodes=!1;for(var m=0;m<s.length;m++){var o=s[m];if(o.isParent()){l._private.hasCompoundNodes=!0;break}}var t=new a.Collection(this.cy(),i);t.size()>0&&(b&&this.cy().notify({type:"remove",collection:t}),t.trigger("remove"));for(var u={},m=0;m<j.length;m++){var o=j[m],v="nodes"===o._private.group,w=o._private.data.parent;if(v&&void 0!==w&&!u[w]){u[w]=!0;var r=l.getElementById(w);r&&0!==r.length&&!r._private.removed&&0===r.children().length&&r.updateStyle()}}return this}}(cytoscape),function(a){a.fn.eles({animated:function(){var a=this[0];return a?a._private.animation.current.length>0:void 0},clearQueue:function(){for(var a=0;a<this.length;a++){var b=this[a];b._private.animation.queue=[]}return this},delay:function(a,b){return this.animate({delay:a},{duration:a,complete:b}),this},animate:function(a,b){var c,d=+new Date,e=this._private.cy,f=e.style();switch(void 0===b&&(b={}),void 0===b.duration&&(b.duration=400),b.duration){case"slow":b.duration=600;break;case"fast":b.duration=200}if(null==a||null==a.position&&null==a.css&&null==a.delay)return this;a.css&&(a.css=f.getValueStyle(a.css));for(var g=0;g<this.length;g++){var h=this[g],i=h._private.position,j={x:i.x,y:i.y},k=f.getValueStyle(h);c=h.animated()&&(void 0===b.queue||b.queue)?h._private.animation.queue:h._private.animation.current,c.push({properties:a,duration:b.duration,params:b,callTime:d,startPosition:j,startStyle:k})}return e.addToAnimationPool(this),this},stop:function(a,b){for(var c=0;c<this.length;c++){for(var d=this[c],e=d._private.animation.current,f=0;f<e.length;f++){var g=e[f];b&&(g.duration=0)}a&&(d._private.animation.queue=[])}return this.cy().notify({collection:this,type:"draw"}),this}})}(cytoscape),function(a){a.fn.eles({addClass:function(b){b=b.split(/\s+/);for(var c=this,d=[],e=0;e<b.length;e++){var f=b[e];if(!a.is.emptyString(f))for(var g=0;g<c.length;g++){var h=c[g],i=h._private.classes[f];h._private.classes[f]=!0,i||d.push(h)}}return d.length>0&&new a.Collection(this._private.cy,d).updateStyle(),c.trigger("class"),c},hasClass:function(a){var b=this[0];return null!=b&&b._private.classes[a]},toggleClass:function(b,c){for(var d=b.split(/\s+/),e=this,f=[],g=0,h=e.length;h>g;g++)for(var i=e[g],j=0;j<d.length;j++){var k=d[j];if(!a.is.emptyString(k)){var l=i._private.classes[k],m=c||void 0===c&&!l;m?(i._private.classes[k]=!0,l||f.push(i)):(i._private.classes[k]=!1,l&&f.push(i))}}return f.length>0&&new a.Collection(this._private.cy,f).updateStyle(),e.trigger("class"),e},removeClass:function(b){b=b.split(/\s+/);for(var c=this,d=[],e=0;e<c.length;e++)for(var f=c[e],g=0;g<b.length;g++){var h=b[g];if(h&&""!==h){var i=f._private.classes[h];delete f._private.classes[h],i&&d.push(f)}}return d.length>0&&new a.Collection(c._private.cy,d).updateStyle(),c.trigger("class"),c}})}(cytoscape),function(a){a.fn.eles({allAre:function(a){return this.filter(a).length===this.length},is:function(a){return this.filter(a).length>0},same:function(a){return a=this.cy().collection(a),this.length!==a.length?!1:this.intersect(a).length===this.length},anySame:function(a){return a=this.cy().collection(a),this.intersect(a).length>0},allAreNeighbors:function(a){return a=this.cy().collection(a),this.neighborhood().intersect(a).length===a.length}})}(cytoscape),function(a){var b=1.4,c=1;a.fn.eles({updateStyle:function(a){var b=this._private.cy,c=b.style();return a=a||void 0===a?!0:!1,c.apply(this),a?this.rtrigger("style"):this.trigger("style"),this},updateMappers:function(a){var b=this._private.cy,c=b.style();a=a||void 0===a?!0:!1;for(var d=0;d<this.length;d++){var e=this[d];c.apply(e)}return a?this.rtrigger("style"):this.trigger("style"),this},data:a.define.data({field:"data",bindingEvent:"data",allowBinding:!0,allowSetting:!0,settingEvent:"data",settingTriggersEvent:!0,triggerFnName:"trigger",allowGetting:!0,immutableKeys:{id:!0,source:!0,target:!0,parent:!0},updateMappers:!0}),removeData:a.define.removeData({field:"data",event:"data",triggerFnName:"trigger",triggerEvent:!0,immutableKeys:{id:!0,source:!0,target:!0,parent:!0},updateMappers:!0}),batchData:a.define.batchData({field:"data",event:"data",triggerFnName:"trigger",immutableKeys:{id:!0,source:!0,target:!0,parent:!0},updateMappers:!0}),scratch:a.define.data({field:"scratch",allowBinding:!1,allowSetting:!0,settingTriggersEvent:!1,allowGetting:!0}),removeScratch:a.define.removeData({field:"scratch",triggerEvent:!1}),rscratch:a.define.data({field:"rscratch",allowBinding:!1,allowSetting:!0,settingTriggersEvent:!1,allowGetting:!0}),removeRscratch:a.define.removeData({field:"rscratch",triggerEvent:!1}),id:function(){var a=this[0];return a?a._private.data.id:void 0},position:a.define.data({field:"position",bindingEvent:"position",allowBinding:!0,allowSetting:!0,settingEvent:"position",settingTriggersEvent:!0,triggerFnName:"rtrigger",allowGetting:!0,validKeys:["x","y"]}),positions:function(b){if(a.is.plainObject(b))this.position(b);else if(a.is.fn(b)){for(var c=b,d=0;d<this.length;d++){var e=this[d],b=c.apply(e,[d,e]);if(b&&!e.locked()){var f=e._private.position;f.x=b.x,f.y=b.y}}this.rtrigger("position")}return this},renderedPosition:function(a){var b=this[0],c=this.cy(),d=c.zoom(),e=c.pan();if(b&&b.isNode()){var f=b._private.position,g={x:f.x*d+e.x,y:f.y*d+e.y};return void 0===a?g:g[a]}},renderedCss:function(a){var b=this[0];if(b){var c=b.cy().style().getRenderedStyle(b);return void 0===a?c:c[a]}},css:function(b,c){var d=this.cy().style();
-if(a.is.plainObject(b)){var e=b;d.applyBypass(this,e),this.rtrigger("style")}else if(a.is.string(b)){if(void 0===c){var f=this[0];return f?f._private.style[b].strValue:void 0}d.applyBypass(this,b,c),this.rtrigger("style")}else if(void 0===b){var f=this[0];return f?d.getRawStyle(f):void 0}return this},removeCss:function(){for(var a=this.cy().style(),b=this,c=0;c<b.length;c++){var d=b[c];a.removeAllBypasses(d)}this.rtrigger("style")},show:function(){return this.css("visibility","visible"),this},hide:function(){return this.css("visibility","hidden"),this},visible:function(){var a=this[0];if(a){if("visible"!==a.css("visibility"))return!1;if(a.isNode()){for(var b=a.parents(),c=0;c<b.length;c++){var d=b[c],e=d.css("visibility");if("visible"!==e)return!1}return!0}if(a.isEdge()){var f=a.source(),g=a.target();return f.visible()&&g.visible()}}},hidden:function(){var a=this[0];return a?!this.visible():void 0},width:function(){var a=this[0];if(a){var b=this._private.style.width;return"auto"===b.strValue?a._private.autoWidth:b.pxValue}},outerWidth:function(){var a=this[0];if(a){var d=this._private.style,e="auto"===d.width.strValue?a._private.autoWidth:d.width.pxValue,f=d["border-width"]?d["border-width"].pxValue*b+c:0;return e+f}},renderedWidth:function(){var a=this[0];if(a){var b=this.width();return b*this.cy().zoom()}},renderedOuterWidth:function(){var a=this[0];if(a){var b=this.outerWidth();return b*this.cy().zoom()}},height:function(){var a=this[0];if(a&&a.isNode()){var b=this._private.style.height;return"auto"===b.strValue?a._private.autoHeight:b.pxValue}},outerHeight:function(){var a=this[0];if(a){var d=this._private.style,e="auto"===d.height.strValue?a._private.autoHeight:d.height.pxValue,f=d["border-width"]?d["border-width"].pxValue*b+c:0;return e+f}},renderedHeight:function(){var a=this[0];if(a){var b=this.height();return b*this.cy().zoom()}},renderedOuterHeight:function(){var a=this[0];if(a){var b=this.outerHeight();return b*this.cy().zoom()}},offset:function(){var a=this[0];if(a&&a.isNode()){for(var b={x:a._private.position.x,y:a._private.position.y},c=a.parents(),d=0;d<c.length;d++){var e=c[d],f=e._private.position;b.x+=f.x,b.y+=f.y}return b}},renderedOffset:function(){var a=this[0];if(a&&a.isNode()){var b=this.offset(),c=this.cy(),d=c.zoom(),e=c.pan();return{x:b.x*d+e.x,y:b.y*d+e.y}}},boundingBox:function(b){var c=this;!b||a.is.elementOrCollection(b)&&0===b.length?c=this:a.is.string(b)?c=this.filter(b):a.is.elementOrCollection(b)&&(c=b);for(var d=1/0,e=-1/0,f=1/0,g=-1/0,h=0;h<c.length;h++){var i,j,k,l,m,n,o=c[h];if(o.isNode()){var p=o._private.position;m=p.x,n=p.y;var q=o.outerWidth(),r=q/2,s=o.outerHeight(),t=s/2;i=m-r,j=m+r,k=n-t,l=n+t,d=d>i?i:d,e=j>e?j:e,f=f>k?k:f,g=l>g?l:g}else{var u=o.source()[0]._private.position,v=o.target()[0]._private.position,w=o._private.rstyle;if(m=w.labelX,n=w.labelY,i=u.x,j=v.x,k=u.y,l=v.y,i>j){var x=i;i=j,j=x}if(k>l){var x=k;k=l,l=x}d=d>i?i:d,e=j>e?j:e,f=f>k?k:f,g=l>g?l:g;for(var y=w.bezierPts||[],q=o._private.style.width.value,z=0;z<y.length;z++){var A=y[z];d=A.x-q<d?A.x-q:d,e=A.x+q>e?A.x+q:e,f=A.y-q<f?A.y-q:f,g=A.y+q>g?A.y+q:g}}var B=o._private.style,C=B.content.value,D=B["font-size"],E=B["text-halign"],F=B["text-valign"],G=o._private.rstyle.labelWidth;if(C&&D&&void 0!=G&&E&&F){var H,I,J,K,L=D.value,M=G;switch(E.value){case"left":H=i-M,I=i;break;case"center":H=m-M/2,I=m+M/2;break;case"right":H=j,I=j+M}switch(o.isEdge()&&(H=m-M/2,I=m+M/2),F.value){case"top":J=k-L,K=k;break;case"center":J=n-L/2,K=n+L/2;break;case"bottom":J=l,K=l+L}o.isEdge()&&(J=n-L/2,K=n+L/2),d=d>H?H:d,e=I>e?I:e,f=f>J?J:f,g=K>g?K:g}}return{x1:d,x2:e,y1:f,y2:g,w:e-d,h:g-f}}})}(cytoscape),function(a){function b(a){return function(){var b=this;if(0!==b.length&&b.isNode()&&!b.removed()){for(var c=0,d=b[0],e=d._private.edges,f=0;f<e.length;f++){var g=e[f];c+=a(d,g)}return c}}}function c(a,b){return function(){for(var c=void 0,d=this.nodes(),e=0;e<d.length;e++){var f=d[e],g=f[a]();void 0===g||void 0!==c&&!b(g,c)||(c=g)}return c}}a.fn.eles({degree:b(function(a,b){return b.source().same(b.target())?2:1}),indegree:b(function(a,b){return b.target().same(a)?1:0}),outdegree:b(function(a,b){return b.source().same(a)?1:0})}),a.fn.eles({minDegree:c("degree",function(a,b){return b>a}),maxDegree:c("degree",function(a,b){return a>b}),minIndegree:c("indegree",function(a,b){return b>a}),maxIndegree:c("indegree",function(a,b){return a>b}),minOutdegree:c("outdegree",function(a,b){return b>a}),maxOutdegree:c("outdegree",function(a,b){return a>b})}),a.fn.eles({totalDegree:function(){for(var a=0,b=this.nodes(),c=0;c<b.length;c++)a+=b[c].degree();return a}})}(cytoscape),function(a){a.fn.eles({on:a.define.on(),one:a.define.on({unbindSelfOnTrigger:!0}),once:a.define.on({unbindAllBindersOnTrigger:!0}),off:a.define.off(),trigger:a.define.trigger(),rtrigger:function(a,b){return this.cy().notify({type:a,collection:this.filter(function(){return!this.removed()})}),this.trigger(a,b),this}}),a.elesfn.bind=a.elesfn.on,a.elesfn.unbind=a.elesfn.off,a.define.event.aliasesOn(a.elesfn)}(cytoscape),function(a){a.fn.eles({isNode:function(){return"nodes"===this.group()},isEdge:function(){return"edges"===this.group()},isLoop:function(){return this.isEdge()&&this.source().id()===this.target().id()},group:function(){var a=this[0];return a?a._private.group:void 0}})}(cytoscape),function(a){a.fn.eles({each:function(b){if(a.is.fn(b))for(var c=0;c<this.length;c++){var d=this[c],e=b.apply(d,[c,d]);if(e===!1)break}return this},toArray:function(){for(var a=[],b=0;b<this.length;b++)a.push(this[b]);return a},slice:function(b,c){var d=[],e=this.length;null==c&&(c=e),0>b&&(b=e+b);for(var f=b;f>=0&&c>f&&e>f;f++)d.push(this[f]);return new a.Collection(this.cy(),d)},size:function(){return this.length},eq:function(a){return this[a]},empty:function(){return 0===this.length},nonempty:function(){return!this.empty()}})}(cytoscape),function(a){function b(a){return function(){var b=arguments;if(2===b.length){var c=b[0],d=b[1];this.bind(a.event,c,d)}else if(1===b.length){var d=b[0];this.bind(a.event,d)}else if(0===b.length){for(var e=0;e<this.length;e++){var f=this[e];(!a.ableField||f._private[a.ableField])&&(f._private[a.field]=a.value)}this.updateStyle(),this.trigger(a.event)}return this}}function c(c){a.elesfn[c.field]=function(){var a=this[0];return a?a._private[c.field]:void 0},a.elesfn[c.on]=b({event:c.on,field:c.field,ableField:c.ableField,value:!0}),a.elesfn[c.off]=b({event:c.off,field:c.field,ableField:c.ableField,value:!1})}c({field:"locked",on:"lock",off:"unlock"}),c({field:"grabbable",on:"grabify",off:"ungrabify"}),c({field:"selected",ableField:"selectable",on:"select",off:"unselect"}),c({field:"selectable",on:"selectify",off:"unselectify"}),a.elesfn.grabbed=function(){var a=this[0];return a?a._private.grabbed:void 0},c({field:"active",on:"activate",off:"unactivate"}),a.elesfn.inactive=function(){var a=this[0];return a?!a._private.active:void 0}}(cytoscape),function(a){function b(b){return function(c){for(var d=[],e=this.edges(),f=this._private.cy,g=0;g<e.length;g++){var h=e[g],i=h._private.data[b.attr],j=f.getElementById(i);j.length>0&&d.push(j)}return new a.Collection(f,d).filter(c)}}function c(b){return function(c){var d=[],e=this._private.cy,f=b||{};a.is.string(c)&&(c=e.$(c));for(var g=c.connectedEdges(),h=this._private.ids,i=0;i<g.length;i++){var j,k=g[i],l=k._private.data;if(f.thisIs){var m=l[f.thisIs];j=h[m]}else j=h[l.source]||h[l.target];j&&d.push(k)}return new a.Collection(e,d)}}function d(b){var c={codirected:!1};return b=a.util.extend({},c,b),function(c){for(var d=this._private.cy,e=[],f=this.edges(),g=b,h=0;h<f.length;h++)for(var i=f[h],j=i.source()[0],k=j.id(),l=i.target()[0],m=l.id(),n=j._private.edges,o=0;o<n.length;o++){var p=n[o],q=p._private.data,r=q.target,s=q.source,t=r===m&&s===k,u=k===r&&m===s;(g.codirected&&t||!g.codirected&&(t||u))&&e.push(p)}return new a.Collection(d,e).filter(c)}}a.fn.eles({nodes:function(a){return this.filter(function(a,b){return b.isNode()}).filter(a)},edges:function(a){return this.filter(function(a,b){return b.isEdge()}).filter(a)},filter:function(b){var c=this._private.cy;if(a.is.fn(b)){for(var d=[],e=0;e<this.length;e++){var f=this[e];b.apply(f,[e,f])&&d.push(f)}return new a.Collection(c,d)}return a.is.string(b)||a.is.elementOrCollection(b)?new a.Selector(b).filter(this):void 0===b?this:new a.Collection(c)},not:function(b){var c=this._private.cy;if(b){a.is.string(b)&&(b=this.filter(b));for(var d=[],e=0;e<this.length;e++){var f=this[e],g=b._private.ids[f.id()];g||d.push(f)}return new a.Collection(c,d)}return this},intersect:function(b){var c=this._private.cy;if(a.is.string(b)){var d=b;return this.filter(d)}var e=[],f=this,g=b,h=this.length<b.length,i=h?f._private.ids:g._private.ids,j=h?g._private.ids:f._private.ids;for(var k in i){var l=j[k];l&&e.push(l)}return new a.Collection(c,e)},add:function(b){function c(a){a&&(h[a.id()]||(g.push(a),h[a.id()]=!0))}var d=this,e=this._private.cy;if(!b)return this;if(a.is.string(b)){var f=b;b=e.elements(f)}for(var g=[],h={},i=0;i<d.length;i++){var j=d[i];c(j)}for(var i=0;i<b.length;i++){var j=b[i];c(j)}return new a.Collection(e,g)}}),a.fn.eles({breadthFirstSearch:function(b,c){b=b||function(){};for(var d=this._private.cy,e=this,f=[],g={},h={},i={},j=[],k=0;k<e.length;k++)e[k].isNode()&&(f.unshift(e[k]),g[e[k].id()]=!0,h[e[k].id()]=0,j.push(e[k]));for(k=0;0!==f.length;){for(var l=f.shift(),m=0,n=i[l.id()];n;)m++,n=i[n];h[l.id()]=m;var o=b.call(l,k,m);if(k++,o===!0)return new a.Collection(d,[l]);if(o===!1)break;for(var p=l.connectedEdges(c?'[source = "'+l.id()+'"]':void 0),q=0;q<p.length;q++){var r=p[q],s=r.connectedNodes('[id != "'+l.id()+'"]');0!==s.length&&(s=s[0],g[s.id()]||(g[s.id()]=!0,f.unshift(s),i[s.id()]=l.id(),j.push(s),j.push(r)))}}return new a.Collection(d,j)},depthFirstSearch:function(b,c){function d(a){var b=a.id();return i[b]||j[b]||k[b]||l[b]}b=b||function(){};for(var e=this._private.cy,f=this,g=[],h=[],i={},j={},k={},l={},m={},n=0;n<f.length;n++)f[n].isNode()&&(g.push(f[n]),h[f[n].id()]=!0);for(;0!==g.length;){var o=g[g.length-1],p=b.call(o),q=!1;if(p===!0)return new a.Collection(e,[o]);for(var r=o.connectedEdges(c?'[source = "'+o.id()+'"]':void 0),n=0;n<r.length;n++){var s=r[n];if(!d(s)){var t=s.connectedNodes('[id != "'+o.id()+'"]');if(0!==t.length){t=t[0];var u=t.id();if(!h[u]&&!m[u]){l[u]=!0,h[u]=!0,g.push(t),q=!0;break}h[u]?j[u]=!0:k[u]=!0}}}q||(m[o.id()]=!0,g.pop())}},roots:function(b){for(var c=this,d=[],e=0;e<c.length;e++){var f=c[e];if(f.isNode()){var g=f.connectedEdges('[target = "'+f.id()+'"][source != "'+f.id()+'"]').length>0;g||d.push(f)}}return new a.Collection(this._private.cy,d).filter(b)},kruskal:function(b){function c(a){for(var b=0;b<e.length;b++){var c=e[b];if(c.anySame(a))return{eles:c,index:b}}}b=b||function(){return 1};for(var d=new a.Collection(this._private.cy,[]),e=[],f=this.nodes(),g=0;g<f.length;g++)e.push(f[g].collection());for(var h=this.edges(),i=h.toArray().sort(function(a,c){var d=b.call(a),e=b.call(c);return d-e}),g=0;g<i.length;g++){var j=i[g],k=j.source()[0],l=j.target()[0],m=c(k),n=c(l);m.eles!==n.eles&&(d=d.add(j),e[m.index]=m.eles.add(n.eles),e.splice(n.index,1))}return f.add(d)},dijkstra:function(b,c,d){var e=this._private.cy;if(d=a.is.fn(c)?d:c,d=void 0===d||d,c=a.is.fn(c)?c:function(){return 1},0===this.length||!b||!a.is.elementOrCollection(b)||0===b.length)return new a.Collection(e,[]);var f=this[0];b=b[0];for(var g={},h={},i=e.nodes(),j=0;j<i.length;j++)g[i[j].id()]=1/0;g[f.id()]=0;for(var k=i,l=function(a){var b,c=1/0;for(var d in g)g[d]<c&&0!==a.$("#"+d).length&&(c=g[d],b=d);return b},m=function(a,b){for(var d,e=a.edgesWith(b),f=1/0,g=0;g<e.length;g++){var h=e[g],i=c.call(h);f>i&&(f=i,d=h)}return{edge:d,dist:f}};0!==k.length;){var n=l(k),o=k.filter("#"+n);if(0!==o.length){if(k=k.not(o),o.same(b))break;if(g[n]===Math.Infinite)break;for(var p=o.neighborhood().nodes(),j=0;j<p.length;j++){var q=p[j],r=q.id(),s=m(o,q),t=g[n]+s.dist;t<g[r]&&(g[r]=t,h[r]={node:q,edge:s.edge})}}}}}),a.elesfn.bfs=a.elesfn.breadthFirstSearch,a.elesfn.dfs=a.elesfn.depthFirstSearch,a.fn.eles({neighborhood:function(b){for(var c=[],d=this._private.cy,e=this.nodes(),f=0;f<e.length;f++)for(var g=e[f],h=g.connectedEdges(),i=0;i<h.length;i++){var j=h[i],k=j.connectedNodes().not(g);k.length>0&&c.push(k[0]),c.push(j[0])}return new a.Collection(d,c).filter(b)},closedNeighborhood:function(a){return this.neighborhood().add(this).filter(a)},openNeighborhood:function(a){return this.neighborhood(a)}}),a.fn.eles({source:b({attr:"source"}),target:b({attr:"target"})}),a.fn.eles({edgesWith:c(),edgesTo:c({thisIs:"source"})}),a.fn.eles({connectedEdges:function(b){for(var c=[],d=this._private.cy,e=this.nodes(),f=0;f<e.length;f++)for(var g=e[f],h=g._private.edges,i=0;i<h.length;i++){var j=h[i];c.push(j)}return new a.Collection(d,c).filter(b)},connectedNodes:function(b){for(var c=[],d=this._private.cy,e=this.edges(),f=0;f<e.length;f++){var g=e[f];c.push(g.source()[0]),c.push(g.target()[0])}return new a.Collection(d,c).filter(b)},parallelEdges:d(),codirectedEdges:d({codirected:!0}),parallelIndex:function(){var a=this[0];if(a.isEdge())for(var b=a.source()[0],c=b._private.edges,d=0,e=0;e<c.length;e++){var f=c[e],g=f===a;if(g)return d;var h=a._private.data.source===f._private.data.source&&a._private.data.target===f._private.data.target,i=a._private.data.source===f._private.data.target&&a._private.data.target===f._private.data.source,j=h||i;j&&d++}},parallelSize:function(){var a=this[0];if(a.isEdge()){for(var b=a.source()[0],c=b._private.edges,d=0,e=0;e<c.length;e++){var f=c[e],g=a._private.data.source===f._private.data.source&&a._private.data.target===f._private.data.target,h=a._private.data.source===f._private.data.target&&a._private.data.target===f._private.data.source,i=g||h;i&&d++}return d}}}),a.fn.eles({parent:function(b){for(var c=[],d=this._private.cy,e=0;e<this.length;e++){var f=this[e],g=d.getElementById(f._private.data.parent);g.size()>0&&c.push(g)}return new a.Collection(d,c).filter(b)},parents:function(b){for(var c=[],d=this.parent();d.nonempty();){for(var e=0;e<d.length;e++){var f=d[e];c.push(f)}d=d.parent()}return new a.Collection(this.cy(),c).filter(b)},children:function(b){for(var c=[],d=0;d<this.length;d++){var e=this[d];c=c.concat(e._private.children)}return new a.Collection(this.cy(),c).filter(b)},siblings:function(a){return this.parent().children().not(this).filter(a)},isParent:function(){var a=this[0];return a?0!==a._private.children.length:void 0},isChild:function(){var a=this[0];return a?void 0!==a._private.data.parent&&0!==a.parent().length:void 0},descendants:function(b){function c(a){for(var b=0;b<a.length;b++){var e=a[b];d.push(e),e.children().nonempty()&&c(e.children())}}var d=[];return c(this.children()),new a.Collection(this.cy(),d).filter(b)}})}(cytoscape),function($$){$$.fn.selector=function(a){for(var b in a){var c=a[b];$$.Selector.prototype[b]=c}},$$.Selector=function(a,b){function c(){return{classes:[],colonSelectors:[],data:[],group:null,ids:[],meta:[],collection:null,filter:null,parent:null,ancestor:null,subject:null,child:null,descendant:null}}function d(a){return a.replace(new RegExp("\\\\("+i+")","g"),"")}function e(a){for(var b,c,d,e=0;e<A.length;e++){var f=A[e],g=f.name;if(!$$.is.fn(a)||a(g,f)){var h=D.match(new RegExp("^"+f.regex));if(null!=h){c=h,b=f,d=g;var i=h[0];D=D.substring(i.length);break}}}return{expr:b,match:c,name:d}}function f(){var a=D.match(/^\s+/);if(a){var b=a[0];D=D.substring(b.length)}}if(!(this instanceof $$.Selector))return new $$.Selector(a,b);void 0===b&&void 0!==a&&(b=a,a=void 0);var g=this;if(g._private={selectorText:null,invalid:!0},!b||$$.is.string(b)&&b.match(/^\s*$/))null==a?g.length=0:(g[0]=c(),g[0].group=a,g.length=1);else if($$.is.element(b)){var h=new $$.Collection(g.cy(),[b]);g[0]=c(),g[0].collection=h,g.length=1}else if($$.is.collection(b))g[0]=c(),g[0].collection=b,g.length=1;else if($$.is.fn(b))g[0]=c(),g[0].filter=b,g.length=1;else{if(!$$.is.string(b))return void $$.util.error("A selector must be created from a string; found "+b);for(var i="[\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\`\\{\\|\\}\\~]",j="(?:[\\w-]|(?:\\\\"+i+"))+",k="=|\\!=|>|>=|<|<=|\\$=|\\^=|\\*=",l="\\?|\\!|\\^",m='"(?:\\\\"|[^"])+"|'+"'(?:\\\\'|[^'])+'",n=$$.util.regex.number,o=m+"|"+n,p="degree|indegree|outdegree",q="\\s*,\\s*",r=j,s="\\s+",t="\\s+>\\s+",u="\\$",v=j,w=k.split("|"),x=0;x<w.length;x++){var y=w[x];k+="|@"+y}var z=null,A={group:{query:!0,regex:"(node|edge|\\*)",populate:function(a){this.group="*"==a?a:a+"s"}},state:{query:!0,regex:"(:selected|:unselected|:locked|:unlocked|:visible|:hidden|:grabbed|:free|:removed|:inside|:grabbable|:ungrabbable|:animated|:unanimated|:selectable|:unselectable|:parent|:child|:active|:inactive|:touch)",populate:function(a){this.colonSelectors.push(a)}},id:{query:!0,regex:"\\#("+v+")",populate:function(a){this.ids.push(d(a))}},className:{query:!0,regex:"\\.("+r+")",populate:function(a){this.classes.push(d(a))}},dataExists:{query:!0,regex:"\\[\\s*("+j+")\\s*\\]",populate:function(a){this.data.push({field:d(a)})}},dataCompare:{query:!0,regex:"\\[\\s*("+j+")\\s*("+k+")\\s*("+o+")\\s*\\]",populate:function(a,b,c){this.data.push({field:d(a),operator:b,value:c})}},dataBool:{query:!0,regex:"\\[\\s*("+l+")\\s*("+j+")\\s*\\]",populate:function(a,b){this.data.push({field:d(b),operator:a})}},metaCompare:{query:!0,regex:"\\{\\s*("+p+")\\s*("+k+")\\s*("+n+")\\s*\\}",populate:function(a,b,c){this.meta.push({field:d(a),operator:b,value:c})}},nextQuery:{separator:!0,regex:q,populate:function(){g[++x]=c(),z=null}},child:{separator:!0,regex:t,populate:function(){var a=c();a.parent=this,a.subject=z,g[x]=a}},descendant:{separator:!0,regex:s,populate:function(){var a=c();a.ancestor=this,a.subject=z,g[x]=a}},subject:{modifier:!0,regex:u,populate:function(){return null!=z&&this.subject!=this?($$.util.error("Redefinition of subject in selector `"+b+"`"),!1):(z=this,void(this.subject=this))}}},B=0;for(var C in A)A[B]=A[C],A[B].name=C,B++;A.length=B,g._private.selectorText=b;var D=b,x=0;for(g[0]=c(),f();;){var E=e();if(null==E.expr)return void $$.util.error("The selector `"+b+"`is invalid");for(var F=[],B=1;B<E.match.length;B++)F.push(E.match[B]);var G=E.expr.populate.apply(g[x],F);if(G===!1)return;if(D.match(/^\s*$/))break}for(g.length=x+1,B=0;B<g.length;B++){var H=g[B];if(null!=H.subject){for(;H.subject!=H;)if(null!=H.parent){var I=H.parent,t=H;t.parent=null,I.child=t,H=I}else{if(null==H.ancestor){$$.util.error("When adjusting references for the selector `"+H+"`, neither parent nor ancestor was found");break}var J=H.ancestor,s=H;s.ancestor=null,J.descendant=s,H=J}g[B]=H.subject}}if(null!=a)for(var B=0;B<g.length;B++){if(null!=g[B].group&&g[B].group!=a)return void $$.util.error("Group `"+g[B].group+"` conflicts with implicit group `"+a+"` in selector `"+b+"`");g[B].group=a}}g._private.invalid=!1},$$.selfn=$$.Selector.prototype,$$.selfn.size=function(){return this.length},$$.selfn.eq=function(a){return this[a]},$$.selfn.find=function(){},$$.selfn.filter=function(collection,addLiveFunction){var self=this,cy=collection.cy();if(self._private.invalid)return new $$.Collection(cy);var queryMatches=function(query,element){function operandsMatch(params){for(var allDataMatches=!0,k=0;k<query[params.name].length;k++){var data=query[params.name][k],operator=data.operator,value=data.value,field=data.field,matches;if(null!=operator&&null!=value){var fieldStr=""+params.fieldValue(field),valStr=""+eval(value),caseInsensitive=!1;switch("@"==operator.charAt(0)&&(fieldStr=fieldStr.toLowerCase(),valStr=valStr.toLowerCase(),operator=operator.substring(1),caseInsensitive=!0),"="==operator&&(operator="=="),operator){case"*=":matches=fieldStr.search(valStr)>=0;break;case"$=":matches=null!=new RegExp(valStr+"$").exec(fieldStr);break;case"^=":matches=null!=new RegExp("^"+valStr).exec(fieldStr);break;default:if(caseInsensitive){var expr="fieldStr "+operator+" valStr";matches=eval(expr)}else{var expr=params.fieldRef(field)+" "+operator+" "+value;matches=eval(expr)}}}else if(null!=operator)switch(operator){case"?":matches=params.fieldTruthy(field);break;case"!":matches=!params.fieldTruthy(field);break;case"^":matches=params.fieldUndefined(field)}else matches=!params.fieldUndefined(field);if(!matches){allDataMatches=!1;break}}return allDataMatches}function confirmRelations(a,b){if(null!=a){var c=!1;b=b();for(var d=0;d<b.size();d++)if(queryMatches(a,b.eq(d))){c=!0;break}return c}return!0}if(null!=query.group&&"*"!=query.group&&query.group!=element._private.group)return!1;for(var allColonSelectorsMatch=!0,k=0;k<query.colonSelectors.length;k++){var sel=query.colonSelectors[k],renderer=cy.renderer();switch(sel){case":selected":allColonSelectorsMatch=element.selected();break;case":unselected":allColonSelectorsMatch=!element.selected();break;case":selectable":allColonSelectorsMatch=element.selectable();break;case":unselectable":allColonSelectorsMatch=!element.selectable();break;case":locked":allColonSelectorsMatch=element.locked();break;case":unlocked":allColonSelectorsMatch=!element.locked();break;case":visible":allColonSelectorsMatch=element.visible();break;case":hidden":allColonSelectorsMatch=!element.visible();break;case":grabbed":allColonSelectorsMatch=element.grabbed();break;case":free":allColonSelectorsMatch=!element.grabbed();break;case":removed":allColonSelectorsMatch=element.removed();break;case":inside":allColonSelectorsMatch=!element.removed();break;case":grabbable":allColonSelectorsMatch=element.grabbable();break;case":ungrabbable":allColonSelectorsMatch=!element.grabbable();break;case":animated":allColonSelectorsMatch=element.animated();break;case":unanimated":allColonSelectorsMatch=!element.animated();break;case":parent":allColonSelectorsMatch=element.children().nonempty();break;case":child":allColonSelectorsMatch=element.parent().nonempty();break;case":active":allColonSelectorsMatch=element.active();break;case":inactive":allColonSelectorsMatch=!element.active();break;case":touch":allColonSelectorsMatch=window&&document&&("ontouchstart"in window||window.DocumentTouch&&document instanceof DocumentTouch)}if(!allColonSelectorsMatch)break}if(!allColonSelectorsMatch)return!1;for(var allIdsMatch=!0,k=0;k<query.ids.length;k++){var id=query.ids[k],actualId=element._private.data.id;if(allIdsMatch=allIdsMatch&&id==actualId,!allIdsMatch)break}if(!allIdsMatch)return!1;for(var allClassesMatch=!0,k=0;k<query.classes.length;k++){var cls=query.classes[k];if(allClassesMatch=allClassesMatch&&element.hasClass(cls),!allClassesMatch)break}if(!allClassesMatch)return!1;var allDataMatches=operandsMatch({name:"data",fieldValue:function(a){return element._private.data[a]},fieldRef:function(a){return"element._private.data."+a},fieldUndefined:function(a){return void 0===element._private.data[a]},fieldTruthy:function(a){return element._private.data[a]?!0:!1}});if(!allDataMatches)return!1;var allMetaMatches=operandsMatch({name:"meta",fieldValue:function(a){return element[a]()},fieldRef:function(a){return"element."+a+"()"},fieldUndefined:function(a){return void 0==element[a]()},fieldTruthy:function(a){return element[a]()?!0:!1}});if(!allMetaMatches)return!1;if(null!=query.collection){var matchesAny=null!=query.collection._private.ids[element.id()];if(!matchesAny)return!1}return null!=query.filter&&0==element.collection().filter(query.filter).size()?!1:confirmRelations(query.parent,function(){return element.parent()})?confirmRelations(query.ancestor,function(){return element.parents()})?confirmRelations(query.child,function(){return element.children()})?confirmRelations(query.descendant,function(){return element.descendants()})?!0:!1:!1:!1:!1},selectorFunction=function(a,b){for(var c=0;c<self.length;c++){var d=self[c];if(queryMatches(d,b))return!0}return!1};null==self._private.selectorText&&(selectorFunction=function(){return!0});var filteredCollection=collection.filter(selectorFunction);return filteredCollection},$$.selfn.toString=$$.selfn.selector=function(){function a(a){return $$.is.string(a)?a:""}function b(c){var e="",f=a(c.group);e+=f.substring(0,f.length-1);for(var g=0;g<c.data.length;g++){var h=c.data[g];e+="["+h.field+a(h.operator)+a(h.value)+"]"}for(var g=0;g<c.meta.length;g++){var i=c.meta[g];e+="{"+i.field+a(i.operator)+a(i.value)+"}"}for(var g=0;g<c.colonSelectors.length;g++){var j=c.colonSelectors[d];e+=j}for(var g=0;g<c.ids.length;g++){var j="#"+c.ids[d];e+=j}for(var g=0;g<c.classes.length;g++){var j="."+c.classes[d];e+=j}return null!=c.parent&&(e=b(c.parent)+" > "+e),null!=c.ancestor&&(e=b(c.ancestor)+" "+e),null!=c.child&&(e+=" > "+b(c.child)),null!=c.descendant&&(e+=" "+b(c.descendant)),e}for(var c="",d=0;d<this.length;d++){var e=this[d];c+=b(e),this.length>1&&d<this.length-1&&(c+=", ")}return c}}(cytoscape),function(a){function b(){}b.prototype.notify=function(){},a("renderer","null",b)}(cytoscape),function(a){function b(a){this.options=a,this.data={select:[void 0,void 0,void 0,void 0,0],renderer:this,cy:a.cy,container:a.cy.container(),canvases:new Array(i),canvasRedrawReason:new Array(i),canvasNeedsRedraw:new Array(i),bufferCanvases:new Array(o)},this.hoverData={down:null,last:null,downTime:null,triggerMode:null,dragging:!1,initialPan:[null,null],capture:!1},this.timeoutData={panTimeout:null},this.dragData={possibleDragElements:[]},this.touchData={start:null,capture:!1,startPosition:[null,null,null,null,null,null],singleTouchStartTime:null,singleTouchMoved:!0,now:[null,null,null,null,null,null],earlier:[null,null,null,null,null,null]},this.zoomData={freeToZoom:!1,lastPointerX:null},this.redraws=0,this.bindings=[],this.init();for(var b=0;i>b;b++)this.data.canvases[b]=document.createElement("canvas"),this.data.canvases[b].style.position="absolute",this.data.canvases[b].setAttribute("data-id","layer"+b),this.data.canvases[b].style.zIndex=String(i-b),this.data.container.appendChild(this.data.canvases[b]),this.data.canvasRedrawReason[b]=new Array,this.data.canvasNeedsRedraw[b]=!1;this.data.canvases[m].setAttribute("data-id","layer"+m+"-node"),this.data.canvases[j].setAttribute("data-id","layer"+j+"-selectbox"),this.data.canvases[k].setAttribute("data-id","layer"+k+"-drag"),this.data.canvases[l].setAttribute("data-id","layer"+l+"-overlay");for(var b=0;o>b;b++)this.data.bufferCanvases[b]=document.createElement("canvas"),this.data.bufferCanvases[b].style.position="absolute",this.data.bufferCanvases[b].setAttribute("data-id","buffer"+b),this.data.bufferCanvases[b].style.zIndex=String(-b-1),this.data.bufferCanvases[b].style.visibility="visible",this.data.container.appendChild(this.data.bufferCanvases[b]);var c=document.createElement("div");if(this.data.container.appendChild(c),this.data.overlay=c,c.style.position="absolute",c.style.zIndex=1e3,a.showOverlay){var d=document.createElement("a");c.appendChild(d),this.data.link=d,d.innerHTML="cytoscape.js",d.style.font="14px helvetica",d.style.position="absolute",d.style.right=0,d.style.bottom=0,d.style.padding="1px 3px",d.style.paddingLeft="5px",d.style.paddingTop="5px",d.style.opacity=0,d.style["-webkit-tap-highlight-color"]="transparent",d.style.background="red",d.href="http://cytoscape.github.io/cytoscape.js/",d.target="_blank"}this.hideEdgesOnViewport=a.hideEdgesOnViewport,this.load()}var c="ontouchstart"in window||window.DocumentTouch&&document instanceof DocumentTouch,d=function(){return Date.now()},e={},f={},g=b.prototype,h=400,i=5,j=0,k=2,l=3,m=4,o=2;b.prototype.notify=function(a){return"destroy"==a.type?void this.destroy():(("add"==a.type||"remove"==a.type||"load"==a.type)&&(this.updateNodesCache(),this.updateEdgesCache()),"viewport"==a.type&&(this.data.canvasNeedsRedraw[j]=!0,this.data.canvasRedrawReason[j].push("viewchange")),this.data.canvasNeedsRedraw[k]=!0,this.data.canvasRedrawReason[k].push("notify"),this.data.canvasNeedsRedraw[m]=!0,this.data.canvasRedrawReason[m].push("notify"),this.redraws++,void this.redraw())},b.prototype.registerBinding=function(a,b,c,d){this.bindings.push({target:a,event:b,handler:c,useCapture:d}),a.addEventListener(b,c,d)},b.prototype.destroy=function(){this.destroyed=!0;for(var a=0;a<this.bindings.length;a++){var b=this.bindings[a],c=b;c.target.removeEventListener(c.event,c.handler,c.useCapture)}},b.prototype.png=function(){var a=this.data;this.data.container.clientHeight>0&&this.data.container.clientWidth>0&&(context=a.bufferCanvases[1].getContext("2d"),context.globalCompositeOperation="copy",context.drawImage(a.canvases[4],0,0),context.globalCompositeOperation="source-over",context.drawImage(a.canvases[2],0,0),context.drawImage(a.canvases[0],0,0),context=a.bufferCanvases[0].getContext("2d"),context.globalCompositeOperation="copy",context.drawImage(a.bufferCanvases[1],0,0));var b=this.data.bufferCanvases[0];return b.toDataURL("image/png")},b.prototype.load=function(){function c(a,b,c,d){return Math.sqrt((c-a)*(c-a)+(d-b)*(d-b))}var e=this,f=function(a,b,c){if(!b)for(var d=a.parents(),e=0;e<d.size();e++)if(d[e]._private.selected)return;for(var f=a.descendants(),e=0;e<f.size();e++)if(b||!f[e]._private.selected){f[e]._private.rscratch.inDragLayer=!0,c.push(f[e]);for(var g=0;g<f[e]._private.edges.length;g++)f[e]._private.edges[g]._private.rscratch.inDragLayer=!0}},g=function(a,b){a._private.grabbed=!0,a._private.rscratch.inDragLayer=!0,b.push(a);for(var c=0;c<a._private.edges.length;c++)a._private.edges[c]._private.rscratch.inDragLayer=!0},i=function(a,b){for(var c=a;c.parent().nonempty();)c=c.parent()[0];if(c!=a||!b)for(var d=c.descendants().add(c),e=0;e<d.size();e++){d[e]._private.rscratch.inDragLayer=b;for(var f=0;f<d[e]._private.edges.length;f++)d[e]._private.edges[f]._private.rscratch.inDragLayer=b}};b.prototype.nodeIsDraggable=function(a){return 0!=a._private.style.opacity.value&&"visible"==a._private.style.visibility.value&&!a._private.locked&&a._private.grabbable?!0:!1},e.registerBinding(window,"resize",function(){e.data.canvasNeedsRedraw[m]=!0,e.data.canvasNeedsRedraw[l]=!0,e.matchCanvasSize(e.data.container),e.redraw()},!0),e.registerBinding(e.data.container,"contextmenu",function(a){a.preventDefault()}),e.registerBinding(e.data.container,"mousedown",function(b){b.preventDefault(),e.hoverData.capture=!0,e.hoverData.which=b.which;var c=e.data.cy,d=e.projectIntoViewport(b.pageX,b.pageY),k=e.data.select,l=e.findNearestElement(d[0],d[1],!0),m=(e.hoverData.down,e.dragData.possibleDragElements),n=new a.Event(b,{type:"grab"});if(3==b.which)l&&(l.activate(),l.trigger(new a.Event(b,{type:"cxttapstart"})),e.hoverData.down=l,e.hoverData.downTime=(new Date).getTime(),e.hoverData.cxtDragged=!1);else if(1==b.which){if(l&&l.activate(),null!=l&&e.nodeIsDraggable(l)){if("nodes"==l._private.group&&0==l._private.selected&&(m=e.dragData.possibleDragElements=[],g(l,m),l.trigger(n),("auto"==l._private.style.width.value||"auto"==l._private.style.height.value)&&f(l,!0,m),i(l,!0)),"nodes"==l._private.group&&1==l._private.selected){m=e.dragData.possibleDragElements=[];for(var o=!1,p=c.$("node:selected"),q=0;q<p.length;q++)e.nodeIsDraggable(p[q])&&(g(p[q],m),o||(l.trigger(n),o=!0),("auto"==p[q]._private.style.width.value||"auto"==p[q]._private.style.height.value)&&f(p[q],!1,m),i(p[q],!0))}l.trigger(new a.Event(b,{type:"mousedown"})).trigger(new a.Event(b,{type:"tapstart"})).trigger(new a.Event(b,{type:"vmousedown"}))}else null==l&&c.trigger(new a.Event(b,{type:"mousedown"})).trigger(new a.Event(b,{type:"tapstart"})).trigger(new a.Event(b,{type:"vmousedown"}));if(e.hoverData.down=l,e.hoverData.downTime=(new Date).getTime(),null==l||l.isEdge()){k[4]=1;var r=Math.max(0,h-(+new Date-e.hoverData.downTime));clearTimeout(e.bgActiveTimeout),e.bgActiveTimeout=setTimeout(function(){l&&l.unactivate(),e.data.bgActivePosistion={x:d[0],y:d[1]},e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("bgactive"),e.redraw()},r)}}k[0]=k[2]=d[0],k[1]=k[3]=d[1],e.redraw()},!1),e.registerBinding(window,"mousemove",function(b){var c=!1,d=e.hoverData.capture;if(!d){var f=e.findContainerPageCoords();if(!(b.pageX>f[0]&&b.pageX<f[0]+e.data.container.clientWidth&&b.pageY>f[1]&&b.pageY<f[1]+e.data.container.clientHeight))return
-}{var g=e.data.cy,i=e.projectIntoViewport(b.pageX,b.pageY),l=e.data.select,n=e.findNearestElement(i[0],i[1],!0),o=e.hoverData.last,p=e.hoverData.down,q=[i[0]-l[2],i[1]-l[3]],r=(e.getCachedNodes(),e.getCachedEdges(),e.dragData.possibleDragElements);b.shiftKey}c=!0;var s=new a.Event(b,{type:"mousemove"});if(null!=n?n.trigger(s):null==n&&g.trigger(s),3===e.hoverData.which){var t=new a.Event(b,{type:"cxtdrag"});p?p.trigger(t):g.trigger(t),e.hoverData.cxtDragged=!0}else if(e.hoverData.dragging){if(c=!0,g.panningEnabled()){var u={x:q[0]*g.zoom(),y:q[1]*g.zoom()};g.panBy(u)}i=e.projectIntoViewport(b.pageX,b.pageY)}else if(1==l[4]&&(null==p||p.isEdge())&&(!g.boxSelectionEnabled()||+new Date-e.hoverData.downTime>=h)&&Math.abs(l[3]-l[1])+Math.abs(l[2]-l[0])<4&&g.panningEnabled())e.hoverData.dragging=!0,l[4]=0;else{if(g.boxSelectionEnabled()&&Math.pow(l[2]-l[0],2)+Math.pow(l[3]-l[1],2)>7&&l[4]&&clearTimeout(e.bgActiveTimeout),p&&p.isEdge()&&p.active()&&p.unactivate(),n!=o&&(o&&o.trigger(new a.Event(b,{type:"mouseout"})),n&&n.trigger(new a.Event(b,{type:"mouseover"})),e.hoverData.last=n),p&&p.isNode()&&e.nodeIsDraggable(p)){e.dragData.didDrag=!0;for(var v=[],w=0;w<r.length;w++)"nodes"==r[w]._private.group&&e.nodeIsDraggable(r[w])&&(r[w]._private.position.x+=q[0],r[w]._private.position.y+=q[1],v.push(r[w]));new a.Collection(g,v).trigger(new a.Event(b,{type:"drag"})).trigger(new a.Event(b,{type:"position"})),l[2]==l[0]&&l[3]==l[1]&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("Node(s) and edge(s) moved to drag layer")),e.data.canvasNeedsRedraw[k]=!0,e.data.canvasRedrawReason[k].push("Nodes dragged")}g.boxSelectionEnabled()&&(e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("Mouse moved, redraw selection box")),c=!0}return l[2]=i[0],l[3]=i[1],e.redraw(),c?(b.stopPropagation&&b.stopPropagation(),b.preventDefault&&b.preventDefault(),b.cancelBubble=!0,b.returnValue=!1,!1):void 0},!1),e.registerBinding(window,"mouseup",function(b){var c=e.hoverData.capture;if(c){e.hoverData.capture=!1;var d=e.data.cy,f=e.projectIntoViewport(b.pageX,b.pageY),g=e.data.select,h=e.findNearestElement(f[0],f[1],!0),l=(e.getCachedNodes(),e.getCachedEdges(),e.dragData.possibleDragElements),n=e.hoverData.down,o=b.shiftKey;if(e.data.bgActivePosistion=void 0,clearTimeout(e.bgActiveTimeout),n&&n.unactivate(),3===e.hoverData.which){var p=new a.Event(b,{type:"cxttapend"});if(n?n.trigger(p):d.trigger(p),!e.hoverData.cxtDragged){var q=new a.Event(b,{type:"cxttap"});n?n.trigger(q):d.trigger(q)}e.hoverData.cxtDragged=!1,e.hoverData.which=null}else{if(null!=n||e.dragData.didDrag||Math.pow(g[2]-g[0],2)+Math.pow(g[3]-g[1],2)>7&&g[4]||e.hoverData.dragging||(d.$(":selected").unselect(),l.length>0&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("De-select")),e.dragData.possibleDragElements=l=[]),Math.pow(g[2]-g[0],2)+Math.pow(g[3]-g[1],2)==0&&(null!=h?h.trigger(new a.Event(b,{type:"click"})).trigger(new a.Event(b,{type:"tap"})).trigger(new a.Event(b,{type:"vclick"})):null==h&&d.trigger(new a.Event(b,{type:"click"})).trigger(new a.Event(b,{type:"tap"})).trigger(new a.Event(b,{type:"vclick"}))),null!=h?h.trigger(new a.Event(b,{type:"mouseup"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"})):null==h&&d.trigger(new a.Event(b,{type:"mouseup"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"})),h!=n||e.dragData.didDrag){if(h==n&&null!=h&&h._private.grabbed){for(var r=d.$(":grabbed"),s=0;s<r.length;s++){var t=r[s];t._private.grabbed=!1;for(var u=t._private.edges,v=0;v<u.length;v++)u[v]._private.rscratch.inDragLayer=!1;i(t,!1)}var w=new a.Event(b,{type:"free"});r.trigger(w)}}else null!=h&&h._private.selectable&&(o||d.$(":selected").unselect(),h.selected()?h.unselect():h.select(),i(h,!1),e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("sglslct"));if(d.boxSelectionEnabled()&&Math.pow(g[2]-g[0],2)+Math.pow(g[3]-g[1],2)>7&&g[4]){o||d.$(":selected").unselect();for(var x=[],y=e.getAllInBox(g[0],g[1],g[2],g[3]),s=(new a.Event(b,{type:"select"}),0);s<y.length;s++)y[s]._private.selectable&&(l.push(y[s]),x.push(y[s]));new a.Collection(d,x).select(),y.length>0&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("Selection"))}if(e.hoverData.dragging=!1,!g[4]){for(var w=new a.Event(b,{type:"free"}),s=0;s<l.length;s++)if("nodes"==l[s]._private.group){l[s]._private.rscratch.inDragLayer=!1;for(var u=l[s]._private.edges,v=0;v<u.length;v++)u[v]._private.rscratch.inDragLayer=!1;i(l[s],!1)}else"edges"==l[s]._private.group&&(l[s]._private.rscratch.inDragLayer=!1);n&&n.trigger(w),e.data.canvasNeedsRedraw[k]=!0,e.data.canvasRedrawReason[k].push("Node/nodes back from drag"),e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("Node/nodes back from drag")}}g[4]=0,e.hoverData.down=null,e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("Mouse up, selection box gone"),e.dragData.didDrag=!1,e.redraw()}},!1);var n=function(a){var b=e.data.cy,c=e.projectIntoViewport(a.pageX,a.pageY),d=[c[0]*b.zoom()+b.pan().x,c[1]*b.zoom()+b.pan().y];if(e.zoomData.freeToZoom){a.preventDefault();var f=a.wheelDeltaY/1e3||a.detail/-32;b.panningEnabled()&&b.zoomingEnabled()&&b.zoom({level:b.zoom()*Math.pow(10,f),position:{x:d[0],y:d[1]}}),e.data.wheel=!0,clearTimeout(e.data.wheelTimeout),e.data.wheelTimeout=setTimeout(function(){e.data.wheel=!1,e.data.canvasNeedsRedraw[m]=!0,e.redraw()},100)}};e.registerBinding(e.data.container,"mousewheel",n,!0),e.registerBinding(e.data.container,"DOMMouseScroll",n,!0),e.registerBinding(e.data.container,"MozMousePixelScroll",function(a){e.zoomData.freeToZoom&&a.preventDefault()},!1),e.registerBinding(e.data.container,"mousemove",function(a){e.zoomData.lastPointerX&&e.zoomData.lastPointerX!=a.pageX&&!e.zoomData.freeToZoom&&(e.zoomData.freeToZoom=!0),e.zoomData.lastPointerX=a.pageX},!1),e.registerBinding(e.data.container,"mouseout",function(){e.zoomData.freeToZoom=!1,e.zoomData.lastPointerX=null},!1),e.registerBinding(e.data.container,"mouseout",function(b){e.data.cy.trigger(new a.Event(b,{type:"mouseout"}))},!1),e.registerBinding(e.data.container,"mouseover",function(b){e.data.cy.trigger(new a.Event(b,{type:"mouseover"}))},!1);var o,p,q,r,s,t,u,v,w,x,y=e.data.container.clientWidth,z=e.data.container.clientHeight;e.registerBinding(e.data.container,"touchstart",function(b){function h(a){for(var b=0;b<a.length;b++)a[b]._private.grabbed=!1,a[b]._private.rscratch.inDragLayer=!1,a[b].active()&&a[b].unactivate()}b.target!==e.data.link&&b.preventDefault(),e.touchData.capture=!0,e.data.bgActivePosistion=void 0;var k=e.data.cy,l=e.getCachedNodes(),m=e.getCachedEdges(),n=e.touchData.now,A=e.touchData.earlier;if(b.touches[0]){var B=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);n[0]=B[0],n[1]=B[1]}if(b.touches[1]){var B=e.projectIntoViewport(b.touches[1].pageX,b.touches[1].pageY);n[2]=B[0],n[3]=B[1]}if(b.touches[2]){var B=e.projectIntoViewport(b.touches[2].pageX,b.touches[2].pageY);n[4]=B[0],n[5]=B[1]}if(b.touches[1]){h(l),h(m);var C=e.findContainerPageCoords();w=C[1],v=C[0],o=b.touches[0].pageX-v,p=b.touches[0].pageY-w,q=b.touches[1].pageX-v,r=b.touches[1].pageY-w,x=o>=0&&y>=o&&q>=0&&y>=q&&p>=0&&z>=p&&r>=0&&z>=r;var D=k.pan(),E=k.zoom();if(s=c(o,p,q,r),t=[(o+q)/2,(p+r)/2],u=[(t[0]-D.x)/E,(t[1]-D.y)/E],100>s){var F=e.findNearestElement(n[0],n[1],!0),G=e.findNearestElement(n[2],n[3],!0),H=new a.Event(b,{type:"cxttapstart"});return F&&F.isNode()?(F.activate().trigger(H),e.touchData.start=F):G&&G.isNode()?(G.activate().trigger(H),e.touchData.start=G):(k.trigger(H),e.touchData.start=null),e.touchData.start&&(e.touchData.start._private.grabbed=!1),e.touchData.cxt=!0,e.touchData.cxtDragged=!1,e.data.bgActivePosistion=void 0,void e.redraw()}}if(b.touches[2]);else if(b.touches[1]);else if(b.touches[0]){var I=e.findNearestElement(n[0],n[1],!0);if(null!=I){if(I.activate(),e.touchData.start=I,"nodes"==I._private.group&&e.nodeIsDraggable(I)){var J=e.dragData.touchDragEles=[];if(g(I,J),I.trigger(new a.Event(b,{type:"grab"})),I.selected()){J=e.dragData.touchDragEles=[];for(var K=k.$("node:selected"),L=0;L<K.length;L++){var M=K[L];if(e.nodeIsDraggable(M)){J.push(M),M._private.rscratch.inDragLayer=!0;for(var N=M._private.edges,O=0;O<N.length;O++)N[O]._private.rscratch.inDragLayer=!0;("auto"==M._private.style.width.value||"auto"==M._private.style.height.value)&&f(M,!1,J),i(M,!0)}}}else("auto"==I._private.style.width.value||"auto"==I._private.style.height.value)&&f(I,!0,J),i(I,!0)}I.trigger(new a.Event(b,{type:"touchstart"})).trigger(new a.Event(b,{type:"tapstart"})).trigger(new a.Event(b,{type:"vmousdown"}))}null==I&&(k.trigger(new a.Event(b,{type:"touchstart"})).trigger(new a.Event(b,{type:"tapstart"})).trigger(new a.Event(b,{type:"vmousedown"})),e.data.bgActivePosistion={x:B[0],y:B[1]},e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("bgactive"));for(var P=0;P<n.length;P++)A[P]=n[P],e.touchData.startPosition[P]=n[P];e.touchData.singleTouchMoved=!1,e.touchData.singleTouchStartTime=d();{setTimeout(function(){0==e.touchData.singleTouchMoved&&d()-e.touchData.singleTouchStartTime>250&&(e.touchData.start?e.touchData.start.trigger(new a.Event(b,{type:"taphold"})):(e.data.cy.trigger(new a.Event(b,{type:"taphold"})),k.$(":selected").unselect()))},1e3)}}e.redraw()},!1),e.registerBinding(window,"touchmove",function(b){var d=e.data.select,f=e.touchData.capture;f&&b.preventDefault();var g=e.data.cy,h=(e.getCachedNodes(),e.getCachedEdges(),e.touchData.now),i=e.touchData.earlier;if(b.touches[0]){var l=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);h[0]=l[0],h[1]=l[1]}if(b.touches[1]){var l=e.projectIntoViewport(b.touches[1].pageX,b.touches[1].pageY);h[2]=l[0],h[3]=l[1]}if(b.touches[2]){var l=e.projectIntoViewport(b.touches[2].pageX,b.touches[2].pageY);h[4]=l[0],h[5]=l[1]}for(var n=[],t=0;t<h.length;t++)n[t]=h[t]-i[t];if(f&&e.touchData.cxt){var y=b.touches[0].pageX-v,z=b.touches[0].pageY-w,A=b.touches[1].pageX-v,B=b.touches[1].pageY-w,C=c(y,z,A,B),D=C/s;if(D>=1.5||C>=150){e.touchData.cxt=!1,e.touchData.start&&(e.touchData.start.unactivate(),e.touchData.start=null),e.data.bgActivePosistion=void 0,e.data.canvasNeedsRedraw[j]=!0;var E=new a.Event(b,{type:"cxttapend"});e.touchData.start?e.touchData.start.trigger(E):g.trigger(E)}}if(f&&e.touchData.cxt){var E=new a.Event(b,{type:"cxtdrag"});e.data.bgActivePosistion=void 0,e.data.canvasNeedsRedraw[j]=!0,e.touchData.start?e.touchData.start.trigger(E):g.trigger(E),e.touchData.start&&(e.touchData.start._private.grabbed=!1),e.touchData.cxtDragged=!0}else if(f&&b.touches[2]&&g.boxSelectionEnabled())e.data.bgActivePosistion=void 0,clearTimeout(this.threeFingerSelectTimeout),this.lastThreeTouch=+new Date,e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("Touch moved, redraw selection box"),d&&0!==d.length&&void 0!==d[0]?(d[2]=(h[0]+h[2]+h[4])/3,d[3]=(h[1]+h[3]+h[5])/3):(d[0]=(h[0]+h[2]+h[4])/3,d[1]=(h[1]+h[3]+h[5])/3,d[2]=(h[0]+h[2]+h[4])/3+1,d[3]=(h[1]+h[3]+h[5])/3+1),d[4]=1;else if(f&&b.touches[1]&&g.zoomingEnabled()&&g.panningEnabled()){e.data.bgActivePosistion=void 0,e.data.canvasNeedsRedraw[j]=!0;var y=b.touches[0].pageX-v,z=b.touches[0].pageY-w,A=b.touches[1].pageX-v,B=b.touches[1].pageY-w,C=c(y,z,A,B),D=C/s;if(1!=D&&x){var F=y-o,G=z-p,H=A-q,I=B-r,J=(F+H)/2,K=(G+I)/2,L=g.zoom(),M=L*D,N=g.pan(),O=u[0]*L+N.x,P=u[1]*L+N.y,Q={x:-M/L*(O-N.x-J)+O,y:-M/L*(P-N.y-K)+P};g._private.zoom=M,g._private.pan=Q,g.trigger("pan zoom").notify("viewport"),s=C,o=y,p=z,q=A,r=B,e.pinching=!0}if(b.touches[0]){var l=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);h[0]=l[0],h[1]=l[1]}if(b.touches[1]){var l=e.projectIntoViewport(b.touches[1].pageX,b.touches[1].pageY);h[2]=l[0],h[3]=l[1]}if(b.touches[2]){var l=e.projectIntoViewport(b.touches[2].pageX,b.touches[2].pageY);h[4]=l[0],h[5]=l[1]}}else if(b.touches[0]){var R=e.touchData.start,S=e.touchData.last;if(null!=R&&"nodes"==R._private.group&&e.nodeIsDraggable(R)){for(var T=e.dragData.touchDragEles,U=0;U<T.length;U++){var V=T[U];e.nodeIsDraggable(V)&&(e.dragData.didDrag=!0,V._private.position.x+=n[0],V._private.position.y+=n[1])}new a.Collection(g,T).trigger(new a.Event(b,{type:"drag"})).trigger(new a.Event(b,{type:"position"})),e.data.canvasNeedsRedraw[k]=!0,e.data.canvasRedrawReason[k].push("touchdrag node"),e.touchData.startPosition[0]==i[0]&&e.touchData.startPosition[1]==i[1]&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("node drag started"))}if(null!=R&&R.trigger(new a.Event(b,{type:"touchmove"})),null==R){var W=e.findNearestElement(h[0],h[1],!0);null!=W&&W.trigger(new a.Event(b,{type:"touchmove"})),null==W&&g.trigger(new a.Event(b,{type:"touchmove"}))}W!=S&&(S&&S.trigger(new a.Event(b,{type:"touchout"})),W&&W.trigger(new a.Event(b,{type:"touchover"}))),e.touchData.last=W;for(var X=0;X<h.length;X++)h[X]&&e.touchData.startPosition[X]&&Math.abs(h[X]-e.touchData.startPosition[X])>4&&(e.touchData.singleTouchMoved=!0);if(f&&(null==R||R.isEdge())&&g.panningEnabled()){R&&(R.unactivate(),e.data.bgActivePosistion||(e.data.bgActivePosistion={x:h[0],y:h[1]}),e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("bgactive")),g.panBy({x:n[0]*g.zoom(),y:n[1]*g.zoom()}),e.swipePanning=!0;var l=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);h[0]=l[0],h[1]=l[1]}}for(var t=0;t<h.length;t++)i[t]=h[t];e.redraw()},!1),e.registerBinding(window,"touchend",function(b){var c=e.touchData.capture;if(c){e.touchData.capture=!1,b.preventDefault();var d=e.data.select;e.swipePanning=!1;var f=e.data.cy,g=(e.getCachedNodes(),e.getCachedEdges(),e.touchData.now),h=e.touchData.earlier,l=e.touchData.start;if(b.touches[0]){var n=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);g[0]=n[0],g[1]=n[1]}if(b.touches[1]){var n=e.projectIntoViewport(b.touches[1].pageX,b.touches[1].pageY);g[2]=n[0],g[3]=n[1]}if(b.touches[2]){var n=e.projectIntoViewport(b.touches[2].pageX,b.touches[2].pageY);g[4]=n[0],g[5]=n[1]}if(e.touchData.cxt){if(ctxTapend=new a.Event(b,{type:"cxttapend"}),l?(l.unactivate(),l.trigger(ctxTapend)):f.trigger(ctxTapend),!e.touchData.cxtDragged){var o=new a.Event(b,{type:"cxttap"});l?l.trigger(o):f.trigger(o)}return e.touchData.start&&(e.touchData.start._private.grabbed=!1),e.touchData.cxt=!1,e.touchData.start=null,void e.redraw()}{+new Date}!b.touches[2]&&f.boxSelectionEnabled()&&(clearTimeout(this.threeFingerSelectTimeout),this.threeFingerSelectTimeout=setTimeout(function(){var c=[],g=e.getAllInBox(d[0],d[1],d[2],d[3]);d[0]=void 0,d[1]=void 0,d[2]=void 0,d[3]=void 0,d[4]=0,e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("Touch moved, redraw selection box");for(var h=(new a.Event(b,{type:"select"}),0);h<g.length;h++)g[h]._private.selectable&&c.push(g[h]);new a.Collection(f,c).select(),g.length>0&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("Selection"))},100)),b.touches[1]||(e.pinching=!1);var p=!1;if(null!=l&&(l._private.active=!1,p=!0,l.trigger(new a.Event(b,{type:"unactivate"}))),b.touches[2])e.data.bgActivePosistion=void 0;else if(b.touches[1]);else if(b.touches[0]);else if(!b.touches[0]){if(e.data.bgActivePosistion=void 0,null!=l){1==l._private.grabbed&&(l._private.grabbed=!1,l.trigger(new a.Event(b,{type:"free"})),l._private.rscratch.inDragLayer=!1);for(var q=l._private.edges,r=0;r<q.length;r++)q[r]._private.rscratch.inDragLayer=!1;if(i(l,!1),l.selected())for(var s=f.$("node:selected"),t=0;t<s.length;t++){var u=s[t];u._private.rscratch.inDragLayer=!1;for(var q=u._private.edges,r=0;r<q.length;r++)q[r]._private.rscratch.inDragLayer=!1;i(u,!1)}e.data.canvasNeedsRedraw[k]=!0,e.data.canvasRedrawReason[k].push("touchdrag node end"),e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("touchdrag node end"),l.trigger(new a.Event(b,{type:"touchend"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"})),e.touchData.start=null}else{var v=e.findNearestElement(g[0],g[1],!0);null!=v&&v.trigger(new a.Event(b,{type:"touchend"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"})),null==v&&f.trigger(new a.Event(b,{type:"touchend"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"}))}null!=l&&!e.dragData.didDrag&&l._private.selectable&&Math.sqrt(Math.pow(e.touchData.startPosition[0]-g[0],2)+Math.pow(e.touchData.startPosition[1]-g[1],2))<6&&(l.selected()?(l._private.selected=!1,l.trigger(new a.Event(b,{type:"unselect"}))):(l._private.selected=!0,l.trigger(new a.Event(b,{type:"select"}))),p=!0,e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("sglslct")),0==e.touchData.singleTouchMoved&&(l?l.trigger(new a.Event(b,{type:"tap"})).trigger(new a.Event(b,{type:"vclick"})):f.trigger(new a.Event(b,{type:"tap"})).trigger(new a.Event(b,{type:"vclick"}))),e.touchData.singleTouchMoved=!0}for(var r=0;r<g.length;r++)h[r]=g[r];e.dragData.didDrag=!1,p&&l&&l.updateStyle(!1),e.redraw()}},!1)},b.prototype.init=function(){},b.prototype.getCachedNodes=function(){var a=this.data,b=this.data.cy;return void 0==a.cache&&(a.cache={}),void 0==a.cache.cachedNodes&&(a.cache.cachedNodes=b.nodes()),a.cache.cachedNodes},b.prototype.updateNodesCache=function(){var a=this.data,b=this.data.cy;void 0==a.cache&&(a.cache={}),a.cache.cachedNodes=b.nodes()},b.prototype.getCachedEdges=function(){var a=this.data,b=this.data.cy;return void 0==a.cache&&(a.cache={}),void 0==a.cache.cachedEdges&&(a.cache.cachedEdges=b.edges()),a.cache.cachedEdges},b.prototype.updateEdgesCache=function(){var a=this.data,b=this.data.cy;void 0==a.cache&&(a.cache={}),a.cache.cachedEdges=b.edges()},b.prototype.projectIntoViewport=function(a,b){n=this.data.container;var c=this.findContainerPageCoords(),d=c[0],e=c[1];return x=a-d,y=b-e,x-=this.data.cy.pan().x,y-=this.data.cy.pan().y,x/=this.data.cy.zoom(),y/=this.data.cy.zoom(),[x,y]},b.prototype.findContainerPageCoords=function(){var a,b=0,c=0;a=this.data.container;for(var d=!1;null!=a;){var e=window.getComputedStyle(a);"fixed"===e.getPropertyValue("position").toLowerCase()?(b=a.offsetLeft+window.scrollX,c=a.offsetTop+window.scrollY,a=null):"number"==typeof a.offsetLeft&&(b+=a.offsetLeft,c+=a.offsetTop,(a==document.body||a==document.header)&&(d=!0),d||(b-=a.scrollLeft,c-=a.scrollTop)),a&&(a=a.offsetParent)}return[b,c]},b.prototype.findNearestElement=function(a,b,d){for(var g=this.data,h=this.getCachedNodes(),i=this.getCachedEdges(),j=[],k=this.data.cy.zoom(),l=(c?256:32)/k,m=(c?16:0)/k,n=0;n<h.length;n++)f[this.getNodeShape(h[n])].checkPointRough(a,b,h[n]._private.style["border-width"].value/2,this.getNodeWidth(h[n])+m,this.getNodeHeight(h[n])+m,h[n]._private.position.x,h[n]._private.position.y)&&f[this.getNodeShape(h[n])].checkPoint(a,b,h[n]._private.style["border-width"].value/2,this.getNodeWidth(h[n])+m,this.getNodeHeight(h[n])+m,h[n]._private.position.x,h[n]._private.position.y)&&(d?0!=h[n]._private.style.opacity.value&&"visible"==h[n]._private.style.visibility.value&&j.push(h[n]):j.push(h[n]));for(var o,n=0;n<i.length;n++){var p=i[n],r=p._private.rscratch;if(o=!1,"self"==r.edgeType?(this.inBezierVicinity(a,b,r.startX,r.startY,r.cp2ax,r.cp2ay,r.selfEdgeMidX,r.selfEdgeMidY,Math.pow(p._private.style.width.value/2,2))&&Math.pow(i[n]._private.style.width.value/2,2)+l>this.sqDistanceToQuadraticBezier(a,b,r.startX,r.startY,r.cp2ax,r.cp2ay,r.selfEdgeMidX,r.selfEdgeMidY)||this.inBezierVicinity(a,b,r.selfEdgeMidX,r.selfEdgeMidY,r.cp2cx,r.cp2cy,r.endX,r.endY,Math.pow(i[n]._private.style.width.value/2,2))&&Math.pow(i[n]._private.style.width.value/2,2)+l>this.sqDistanceToQuadraticBezier(a,b,r.selfEdgeMidX,r.selfEdgeMidY,r.cp2cx,r.cp2cy,r.endX,r.endY))&&(o=!0):"straight"==r.edgeType?this.inLineVicinity(a,b,r.startX,r.startY,r.endX,r.endY,2*i[n]._private.style.width.value)&&Math.pow(i[n]._private.style.width.value/2,2)+l>this.sqDistanceToFiniteLine(a,b,r.startX,r.startY,r.endX,r.endY)&&(o=!0):"bezier"==r.edgeType&&this.inBezierVicinity(a,b,r.startX,r.startY,r.cp2x,r.cp2y,r.endX,r.endY,Math.pow(i[n]._private.style.width.value/2,2))&&Math.pow(i[n]._private.style.width.value/2,2)+l>this.sqDistanceToQuadraticBezier(a,b,r.startX,r.startY,r.cp2x,r.cp2y,r.endX,r.endY)&&(o=!0),j.length&&j[j.length-1]==i[n]||(e[i[n]._private.style["source-arrow-shape"].value].roughCollide(a,b,i[n]._private.rscratch.arrowStartX,i[n]._private.rscratch.arrowStartY,this.getArrowWidth(i[n]._private.style.width.value),this.getArrowHeight(i[n]._private.style.width.value),[i[n]._private.rscratch.arrowStartX-i[n].source()[0]._private.position.x,i[n]._private.rscratch.arrowStartY-i[n].source()[0]._private.position.y],0)&&e[i[n]._private.style["source-arrow-shape"].value].collide(a,b,i[n]._private.rscratch.arrowStartX,i[n]._private.rscratch.arrowStartY,this.getArrowWidth(i[n]._private.style.width.value),this.getArrowHeight(i[n]._private.style.width.value),[i[n]._private.rscratch.arrowStartX-i[n].source()[0]._private.position.x,i[n]._private.rscratch.arrowStartY-i[n].source()[0]._private.position.y],0)||e[i[n]._private.style["target-arrow-shape"].value].roughCollide(a,b,i[n]._private.rscratch.arrowEndX,i[n]._private.rscratch.arrowEndY,this.getArrowWidth(i[n]._private.style.width.value),this.getArrowHeight(i[n]._private.style.width.value),[i[n]._private.rscratch.arrowEndX-i[n].target()[0]._private.position.x,i[n]._private.rscratch.arrowEndY-i[n].target()[0]._private.position.y],0)&&e[i[n]._private.style["target-arrow-shape"].value].collide(a,b,i[n]._private.rscratch.arrowEndX,i[n]._private.rscratch.arrowEndY,this.getArrowWidth(i[n]._private.style.width.value),this.getArrowHeight(i[n]._private.style.width.value),[i[n]._private.rscratch.arrowEndX-i[n].target()[0]._private.position.x,i[n]._private.rscratch.arrowEndY-i[n].target()[0]._private.position.y],0))&&(o=!0),o)if(d){var s=g.cy.getElementById(i[n]._private.data.source),t=g.cy.getElementById(i[n]._private.data.target);0!=i[n]._private.style.opacity.value&&"visible"==i[n]._private.style.visibility.value&&0!=s._private.style.opacity.value&&"visible"==s._private.style.visibility.value&&0!=t._private.style.opacity.value&&"visible"==t._private.style.visibility.value&&j.push(i[n])}else j.push(i[n])}return j.sort(q),j.length>0?j[j.length-1]:null},b.prototype.getAllInBox=function(a,b,c,d){var e=(this.data,this.getCachedNodes()),g=this.getCachedEdges(),h=[],i=Math.min(a,c),j=Math.max(a,c),k=Math.min(b,d),l=Math.max(b,d);a=i,c=j,b=k,d=l;for(var m,n=0;n<e.length;n++)f[this.getNodeShape(e[n])].intersectBox(a,b,c,d,this.getNodeWidth(e[n]),this.getNodeHeight(e[n]),e[n]._private.position.x,e[n]._private.position.y,e[n]._private.style["border-width"].value/2)&&h.push(e[n]);for(var n=0;n<g.length;n++)"self"==g[n]._private.rscratch.edgeType&&((m=this.boxInBezierVicinity(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2ax,g[n]._private.rscratch.cp2ay,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&(2==m||1==m&&this.checkBezierInBox(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2ax,g[n]._private.rscratch.cp2ay,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))||(m=this.boxInBezierVicinity(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2cx,g[n]._private.rscratch.cp2cy,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&(2==m||1==m&&this.checkBezierInBox(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2cx,g[n]._private.rscratch.cp2cy,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value)))&&h.push(g[n]),"bezier"==g[n]._private.rscratch.edgeType&&(m=this.boxInBezierVicinity(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2x,g[n]._private.rscratch.cp2y,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&(2==m||1==m&&this.checkBezierInBox(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2x,g[n]._private.rscratch.cp2y,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&h.push(g[n]),"straight"==g[n]._private.rscratch.edgeType&&(m=this.boxInBezierVicinity(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,.5*g[n]._private.rscratch.startX+.5*g[n]._private.rscratch.endX,.5*g[n]._private.rscratch.startY+.5*g[n]._private.rscratch.endY,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&(2==m||1==m&&this.checkStraightEdgeInBox(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&h.push(g[n]);return h},b.prototype.updateAllCompounds=function(a){for(var b=a.length-1;b>=0;b--)if(a[b].isNode()&&("auto"==a[b]._private.style.width.value||"auto"==a[b]._private.style.height.value)&&a[b].children().length>0){var c=a[b],d=this.calcCompoundBounds(c);c._private.position.x=d.x,c._private.position.y=d.y,c._private.autoWidth=d.width,c._private.autoHeight=d.height}},b.prototype.calcCompoundBounds=function(a){var b=a.descendants().not(":removed"),c={x:a._private.position.x,y:a._private.position.y,width:a._private.autoWidth,height:a._private.autoHeight};if("visible"!=a._private.style.visibility.value)return c;for(var d=[],e=0;e<b.size();e++)"visible"==b[e]._private.style.visibility.value&&d.push(b[e]);if(0==d.length)return c;b=d;var f=this.borderValue(b,"left"),g=this.borderValue(b,"right"),h=this.borderValue(b,"top"),i=this.borderValue(b,"bottom"),j=this.getNodePadding(a),k=(f-j.left+g+j.right)/2,l=(h-j.top+i+j.bottom)/2,m=g-f+j.left+j.right,n=i-h+j.top+j.bottom;return c={x:k,y:l,width:m,height:n}},b.prototype.borderValue=function(a,b){var c,d,e=1/0,f=-1/0,g=this,h=function(a){var b={};return b.x=a._private.position.x,b.y=a._private.position.y,b.width=a.outerWidth(),b.height=a.outerHeight(),b},i=function(a){var b={},c=g.getNodeWidth(a),d=g.getNodeHeight(a);b.height=a._private.style["font-size"].value,b.width=b.height;var e=a._private.style["text-halign"].strValue;"left"==e?(b.x=a._private.position.x-c/2,b.left=b.x-b.width,b.right=b.x):"right"==e?(b.x=a._private.position.x+c/2,b.left=b.x,b.right=b.x+b.width):(b.x=a._private.position.x,b.left=b.x-b.width/2,b.right=b.x+b.width/2);var f=a._private.style["text-valign"].strValue;return"top"==f?(b.y=a._private.position.y-d/2,b.top=b.y-b.height,b.bottom=b.y):"bottom"==f?(b.y=a._private.position.y+d/2,b.top=b.y,b.bottom=b.y+b.height):(b.y=a._private.position.y,b.top=b.y-b.height/2,b.bottom=b.y+b.height/2),b};for(D=0;D<a.length;D++)if(c=h(a[D]),d=i(a[D]),"left"==b){var j=Math.min(c.x-c.width/2,d.left);e>j&&(e=j)}else if("right"==b){var k=Math.max(c.x+c.width/2,d.right);k>f&&(f=k)}else if("top"==b){var l=Math.min(c.y-c.height/2,d.top);e>l&&(e=l)}else if("bottom"==b){var m=Math.max(c.y+c.height/2,d.bottom);m>f&&(f=m)}return"left"==b||"top"==b?e:f},b.prototype.getNodeWidth=function(a){return"auto"==a._private.style.width.value||"auto"==a._private.style.height.value?a._private.autoWidth:a._private.style.width.value},b.prototype.getNodeHeight=function(a){return"auto"==a._private.style.width.value||"auto"==a._private.style.height.value?a._private.autoHeight:a._private.style.height.value},b.prototype.getNodeShape=function(a){var b=a._private.style.shape.value;return a.isParent()?"rectangle"===b||"roundrectangle"===b?b:"rectangle":b},b.prototype.getNodePadding=function(a){var b=a._private.style["padding-left"].value,c=a._private.style["padding-right"].value,d=a._private.style["padding-top"].value,e=a._private.style["padding-bottom"].value;return isNaN(b)&&(b=0),isNaN(c)&&(c=0),isNaN(d)&&(d=0),isNaN(e)&&(e=0),{left:b,right:c,top:d,bottom:e}},b.prototype.matchCanvasSize=function(a){var b,c=this.data,d=a.clientWidth,e=a.clientHeight,f=d,g=e;"devicePixelRatio"in window&&(f*=devicePixelRatio,g*=devicePixelRatio);for(var h=0;i>h;h++)b=c.canvases[h],(b.width!==f||b.height!==g)&&(b.width=f,b.height=g,b.style.width=d+"px",b.style.height=e+"px");for(var h=0;o>h;h++)b=c.bufferCanvases[h],(b.width!==f||b.height!==g)&&(b.width=f,b.height=g);this.data.overlay.style.width=d+"px",this.data.overlay.style.height=e+"px"};var p=function(a){return"nodes"==a._private.group?a.parents().size():"edges"==a._private.group?Math.max(a.source()[0].parents().size(),a.target()[0].parents().size()):0};b.prototype.getCachedZSortedEles=function(){var a=this.lastZOrderCachedNodes,b=this.lastZOrderCachedEdges,c=this.getCachedNodes(),d=this.getCachedEdges(),e=[];if(a&&b&&a===c&&b===d)e=this.cachedZSortedEles;else{for(var f=0;f<c.length;f++)e.push(c[f]);for(var f=0;f<d.length;f++)e.push(d[f]);e.sort(q),this.cachedZSortedEles=e}return this.lastZOrderCachedNodes=c,this.lastZOrderCachedEdges=d,e};var q=function(a,b){var c=a._private.style["z-index"].value-b._private.style["z-index"].value,d=0,e=0;return a.cy().hasCompoundNodes()&&(d=p(a),e=p(b)),d-e===0?"nodes"===a._private.group&&"edges"===b._private.group?1:"edges"===a._private.group&&"nodes"===b._private.group?-1:0===c?a._private.index-b._private.index:c:d-e};b.prototype.renderTo=function(a,b,c){this.redraw(a,!0,b,c)},b.prototype.redraw=function(a,b,c,d){var e=this;void 0===this.averageRedrawTime&&(this.averageRedrawTime=0);var f=1e3/60,g=1e3,h=this.averageRedrawTime;h=Math.max(f,h),h=Math.min(h,g),void 0===this.lastDrawTime&&(this.lastDrawTime=0);var i=+new Date,n=i-this.lastDrawTime,o=n>=h;if(!a){if(!o)return clearTimeout(this.redrawTimeout),void(this.redrawTimeout=setTimeout(function(){e.redraw()},h));this.lastDrawTime=i}setTimeout(function(){var f=i,g=e.data.cy,h=e.data,n=e.getCachedNodes(),o=e.getCachedEdges();e.matchCanvasSize(h.container);var p=g.zoom(),q=void 0!==c?c:p,r=g.pan(),s={x:r.x,y:r.y};d&&(s=d),"devicePixelRatio"in window&&(q*=devicePixelRatio,s.x*=devicePixelRatio,s.y*=devicePixelRatio);for(var t=[],u=0;u<n.length;u++)t.push(n[u]);for(var u=0;u<o.length;u++)t.push(o[u]);if(h.canvasNeedsRedraw[k]||h.canvasNeedsRedraw[m]||b){e.hideEdgesOnViewport&&(e.pinching||e.hoverData.dragging||e.data.wheel||e.swipePanning)||e.findEdgeControlPoints(o);var t=e.getCachedZSortedEles();g.hasCompoundNodes()&&e.updateAllCompounds(t)}var v,w,x;if(h.canvasNeedsRedraw[m]||b){if(!v||!w){v=[],w=[];for(var y=0;y<t.length;y++)x=t[y],x._private.rscratch.inDragLayer?v.push(x):w.push(x)}var z=a||h.canvases[m].getContext("2d");z.setTransform(1,0,0,1,0,0),z.clearRect(0,0,z.canvas.width,z.canvas.height),b||(z.translate(s.x,s.y),z.scale(q,q)),d&&z.translate(d.x,d.y),c&&z.scale(c,c);for(var y=0;y<w.length;y++)x=w[y],"nodes"==x._private.group?e.drawNode(z,x):"edges"==x._private.group&&e.drawEdge(z,x);for(var y=0;y<w.length;y++)x=w[y],"nodes"==x._private.group?e.drawNodeText(z,x):"edges"==x._private.group&&e.drawEdgeText(z,x),"nodes"==x._private.group?e.drawNode(z,x,!0):"edges"==x._private.group&&e.drawEdge(z,x,!0);b||(h.canvasNeedsRedraw[m]=!1,h.canvasRedrawReason[m]=[])}if(h.canvasNeedsRedraw[k]||b){if(!v||!w){v=[],w=[];for(var y=0;y<t.length;y++)x=t[y],x._private.rscratch.inDragLayer?v.push(x):w.push(x)}var z=a||h.canvases[k].getContext("2d");b||(z.setTransform(1,0,0,1,0,0),z.clearRect(0,0,z.canvas.width,z.canvas.height),z.translate(s.x,s.y),z.scale(q,q)),d&&z.translate(d.x,d.y),c&&z.scale(c,c);for(var x,y=0;y<v.length;y++)x=v[y],"nodes"==x._private.group?e.drawNode(z,x):"edges"==x._private.group&&e.drawEdge(z,x);for(var y=0;y<v.length;y++)x=v[y],"nodes"==x._private.group?e.drawNodeText(z,x):"edges"==x._private.group&&e.drawEdgeText(z,x),"nodes"==x._private.group?e.drawNode(z,x,!0):"edges"==x._private.group&&e.drawEdge(z,x,!0);b||(h.canvasNeedsRedraw[k]=!1,h.canvasRedrawReason[k]=[])}if(h.canvasNeedsRedraw[j]){var z=a||h.canvases[j].getContext("2d");b||(z.setTransform(1,0,0,1,0,0),z.clearRect(0,0,z.canvas.width,z.canvas.height),z.translate(s.x,s.y),z.scale(q,q)),d&&z.translate(d.x,d.y),c&&z.scale(c,c);var A=g.style()._private.coreStyle;
-if(1==h.select[4]){var p=h.cy.zoom(),B=A["selection-box-border-width"].value/p;z.lineWidth=B,z.fillStyle="rgba("+A["selection-box-color"].value[0]+","+A["selection-box-color"].value[1]+","+A["selection-box-color"].value[2]+","+A["selection-box-opacity"].value+")",z.fillRect(h.select[0],h.select[1],h.select[2]-h.select[0],h.select[3]-h.select[1]),B>0&&(z.strokeStyle="rgba("+A["selection-box-border-color"].value[0]+","+A["selection-box-border-color"].value[1]+","+A["selection-box-border-color"].value[2]+","+A["selection-box-opacity"].value+")",z.strokeRect(h.select[0],h.select[1],h.select[2]-h.select[0],h.select[3]-h.select[1]))}if(h.bgActivePosistion){var p=h.cy.zoom(),C=h.bgActivePosistion;z.fillStyle="rgba("+A["active-bg-color"].value[0]+","+A["active-bg-color"].value[1]+","+A["active-bg-color"].value[2]+","+A["active-bg-opacity"].value+")",z.beginPath(),z.arc(C.x,C.y,A["active-bg-size"].pxValue/p,0,2*Math.PI),z.fill()}b||(h.canvasNeedsRedraw[j]=!1,h.canvasRedrawReason[j]=[])}if(e.options.showOverlay){var z=h.canvases[l].getContext("2d");z.lineJoin="round",z.font="14px helvetica",z.strokeStyle="#fff",z.lineWidth="4",z.fillStyle="#666",z.textAlign="right";{var D="cytoscape.js",E=z.canvas.width,F=z.canvas.height,G=4;z.measureText(D).width}z.clearRect(0,0,E,F),z.strokeText(D,E-G,F-G),z.fillText(D,E-G,F-G),h.overlayDrawn=!0}var H=+new Date;void 0===e.averageRedrawTime&&(e.averageRedrawTime=H-f),e.averageRedrawTime=e.averageRedrawTime/2+(H-f)/2},0)};var r={},s=9e3;b.prototype.getCachedImage=function(a,b){if(r[a]&&r[a].image)return r[a].keepTime=s,r[a].image;var c=r[a];return void 0==c&&(r[a]=new Object,r[a].image=new Image,r[a].image.onload=b,r[a].image.src=a,r[a].keepTime=s,c=r[a]),c.image},b.prototype.swapCachedImage=function(a){if(r[a]){if(r[a].image&&r[a].image.complete){var b=r[a].image,c=document.createElement("canvas");return c.width=b.width,c.height=b.height,c.getContext("2d").drawImage(b,0,0),r[a].image=c,r[a].swappedWithCanvas=!0,c}return null}return null},b.prototype.updateImageCaches=function(){for(var a in r)r[a].keepTime<=0?(void 0!=r[a].image&&(r[a].image.src=void 0,r[a].image=void 0),r[a]=void 0):r[a]-=1},b.prototype.drawImage=function(a,b,c,d,e,f,g){g.widthScale=.5,g.heightScale=.5,g.rotate=f;canvas.drawImage(g,b,c)},b.prototype.drawEdge=function(a,b,c){if(!this.hideEdgesOnViewport||!(this.dragData.didDrag||this.pinching||this.hoverData.dragging||this.data.wheel||this.swipePanning)){var d,e;if(d=b.source()[0],e=b.target()[0],"visible"==b._private.style.visibility.value&&"visible"==d._private.style.visibility.value&&"visible"==e._private.style.visibility.value){var f=b._private.style["overlay-padding"].value,g=b._private.style["overlay-opacity"].value,h=b._private.style["overlay-color"].value;if(c?(a.strokeStyle="rgba( "+h[0]+", "+h[1]+", "+h[2]+", "+g+" )",a.lineCap="round","self"==b._private.rscratch.edgeType&&(a.lineCap="butt")):a.strokeStyle="rgba("+b._private.style["line-color"].value[0]+","+b._private.style["line-color"].value[1]+","+b._private.style["line-color"].value[2]+","+b._private.style.opacity.value+")",!(b._private.style.width.value<=0)){var i=b._private.style.width.value+(c?2*f:0),j=c?"solid":b._private.style["line-style"].value;if(a.lineWidth=i,this.findEndpoints(b),"self"==b._private.rscratch.edgeType){var k=b._private.rscratch;this.drawStyledEdge(b,a,[k.startX,k.startY,k.cp2ax,k.cp2ay,k.selfEdgeMidX,k.selfEdgeMidY],j,i),this.drawStyledEdge(b,a,[k.selfEdgeMidX,k.selfEdgeMidY,k.cp2cx,k.cp2cy,k.endX,k.endY],j,i)}else if("straight"==b._private.rscratch.edgeType){var l=e._private.position.x-d._private.position.x,m=e._private.position.y-d._private.position.y,n=b._private.rscratch.endX-b._private.rscratch.startX,o=b._private.rscratch.endY-b._private.rscratch.startY;if(0>l*n+m*o)b._private.rscratch.straightEdgeTooShort=!0;else{var k=b._private.rscratch;this.drawStyledEdge(b,a,[k.startX,k.startY,k.endX,k.endY],j,i),b._private.rscratch.straightEdgeTooShort=!1}}else{var k=b._private.rscratch;this.drawStyledEdge(b,a,[k.startX,k.startY,k.cp2x,k.cp2y,k.endX,k.endY],j,i)}b._private.rscratch.noArrowPlacement!==!0&&void 0!==b._private.rscratch.startX&&this.drawArrowheads(a,b,c)}}}};var t=function(a,b){var c=Math.sqrt(Math.pow(a[4]-a[0],2)+Math.pow(a[5]-a[1],2));c+=Math.sqrt(Math.pow((a[4]+a[0])/2-a[2],2)+Math.pow((a[5]+a[1])/2-a[3],2));var d,e=Math.ceil(c/b);if(!(e>0))return null;d=new Array(2*e);for(var f=0;e>f;f++){var g=f/e;d[2*f]=a[0]*(1-g)*(1-g)+2*a[2]*(1-g)*g+a[4]*g*g,d[2*f+1]=a[1]*(1-g)*(1-g)+2*a[3]*(1-g)*g+a[5]*g*g}return d},u=function(a,b){var c,d=Math.sqrt(Math.pow(a[2]-a[0],2)+Math.pow(a[3]-a[1],2)),e=Math.ceil(d/b);if(!(e>0))return null;c=new Array(2*e);for(var f=[a[2]-a[0],a[3]-a[1]],g=0;e>g;g++){var h=g/e;c[2*g]=f[0]*h+a[0],c[2*g+1]=f[1]*h+a[1]}return c};b.prototype.createBuffer=function(a,b){var c=document.createElement("canvas");return c.width=a,c.height=b,[c,c.getContext("2d")]},b.prototype.drawStyledEdge=function(a,b,c,d,e){function f(a,b,c,d){return(1-d)*(1-d)*a+2*(1-d)*d*b+d*d*c}var g=this.data.cy,h=g.zoom();void 0===a._private.rstyle.bezierPts&&(a._private.rstyle.bezierPts=[]);var i=a._private.rstyle.bezierPts.length;a.isLoop()?i>=12&&(a._private.rstyle.bezierPts=[]):a._private.rstyle.bezierPts=[];var j=a._private.rstyle.bezierPts;if(6===c.length&&(j.push({x:f(c[0],c[2],c[4],.05),y:f(c[1],c[3],c[5],.05)}),j.push({x:f(c[0],c[2],c[4],.25),y:f(c[1],c[3],c[5],.25)}),j.push({x:f(c[0],c[2],c[4],.35),y:f(c[1],c[3],c[5],.35)}),j.push({x:f(c[0],c[2],c[4],.65),y:f(c[1],c[3],c[5],.65)}),j.push({x:f(c[0],c[2],c[4],.75),y:f(c[1],c[3],c[5],.75)}),j.push({x:f(c[0],c[2],c[4],.95),y:f(c[1],c[3],c[5],.95)})),"solid"==d)b.beginPath(),b.moveTo(c[0],c[1]),6==c.length?b.quadraticCurveTo(c[2],c[3],c[4],c[5]):b.lineTo(c[2],c[3]),b.stroke();else if("dotted"==d){var k;if(k=6==c.length?t(c,16,!0):u(c,16,!0),!k)return;var l=Math.max(1.6*e,3.4)*h,m=2*l,n=2*l;m=Math.max(m,1),n=Math.max(n,1);var o=this.createBuffer(m,n),p=o[1];p.setTransform(1,0,0,1,0,0),p.clearRect(0,0,m,n),p.fillStyle=b.strokeStyle,p.beginPath(),p.arc(m/2,n/2,.5*l,0,2*Math.PI,!1),p.fill(),b.beginPath();for(var q=0;q<k.length/2;q++)b.drawImage(o[0],k[2*q]-m/2/h,k[2*q+1]-n/2/h,m/h,n/h)}else if("dashed"==d){var k;if(k=6==c.length?t(c,14,!0):u(c,14,!0),!k)return;var m=2*e*h,n=7.8*h;m=Math.max(m,1),n=Math.max(n,1);var o=this.createBuffer(m,n),p=o[1];p.setTransform(1,0,0,1,0,0),p.clearRect(0,0,m,n),b.strokeStyle&&(p.strokeStyle=b.strokeStyle),p.lineWidth=e*g.zoom(),p.beginPath(),p.moveTo(m/2,.2*n),p.lineTo(m/2,.8*n),p.stroke();var r,s,v=!1;4==c.length?(r=[c[2]-c[0],c[3]-k[1]],s=Math.acos((0*r[0]+-1*r[1])/Math.sqrt(r[0]*r[0]+r[1]*r[1])),r[0]<0&&(s=-s+2*Math.PI)):6==c.length&&(v=!0);for(var q=0;q<k.length/2;q++){var w=q/Math.max(k.length/2-1,1);v&&(r=[2*(1-w)*(c[2]-c[0])+2*w*(c[4]-c[2]),2*(1-w)*(c[3]-c[1])+2*w*(c[5]-c[3])],s=Math.acos((0*r[0]+-1*r[1])/Math.sqrt(r[0]*r[0]+r[1]*r[1])),r[0]<0&&(s=-s+2*Math.PI)),b.translate(k[2*q],k[2*q+1]),b.rotate(s),b.translate(-m/2/h,-n/2/h),b.drawImage(o[0],0,0,m/h,n/h),b.translate(m/2/h,n/2/h),b.rotate(-s),b.translate(-k[2*q],-k[2*q+1])}}else this.drawStyledEdge(a,b,c,"solid",e)},b.prototype.drawEdgeText=function(a,b){if(!(this.hideEdgesOnViewport&&(this.dragData.didDrag||this.pinching||this.hoverData.dragging||this.data.wheel||this.swipePanning)||"visible"!=b._private.style.visibility.value)){var c=b._private.style["font-size"].pxValue*b.cy().zoom(),d=b._private.style["min-zoomed-font-size"].pxValue;if(!(d>c)){a.textAlign="center",a.textBaseline="middle";var e,f,g,h;"self"==b._private.rscratch.edgeType?(g=b._private.rscratch.selfEdgeMidX,h=b._private.rscratch.selfEdgeMidY):"straight"==b._private.rscratch.edgeType?(g=(b._private.rscratch.startX+b._private.rscratch.endX)/2,h=(b._private.rscratch.startY+b._private.rscratch.endY)/2):"bezier"==b._private.rscratch.edgeType&&(g=.25*b._private.rscratch.startX+.5*b._private.rscratch.cp2x+.25*b._private.rscratch.endX,h=Math.pow(.5,2)*b._private.rscratch.startY+.5*b._private.rscratch.cp2y+.25*b._private.rscratch.endY),e=g,f=h;var i=b._private.rstyle;i.labelX=e,i.labelY=f,this.drawText(a,b,e,f)}}},b.prototype.drawNode=function(a,b,c){var d,e;if("visible"==b._private.style.visibility.value){for(var g=1,h=b.parents(),i=0;i<h.length;i++){var j=h[i],l=j._private.style.opacity.value;if(g=l*g,0===l)return}if(d=this.getNodeWidth(b),e=this.getNodeHeight(b),a.lineWidth=b._private.style["border-width"].pxValue,void 0!==c&&c){var n=b._private.style["overlay-padding"].value,o=b._private.style["overlay-opacity"].value,p=b._private.style["overlay-color"].value;o>0&&(a.fillStyle="rgba( "+p[0]+", "+p[1]+", "+p[2]+", "+o+" )",f[this.getNodeShape(b)].draw(a,b._private.position.x,b._private.position.y,d+2*n,e+2*n))}else{a.fillStyle="rgba("+b._private.style["background-color"].value[0]+","+b._private.style["background-color"].value[1]+","+b._private.style["background-color"].value[2]+","+b._private.style["background-opacity"].value*b._private.style.opacity.value*g+")",a.strokeStyle="rgba("+b._private.style["border-color"].value[0]+","+b._private.style["border-color"].value[1]+","+b._private.style["border-color"].value[2]+","+b._private.style["border-opacity"].value*b._private.style.opacity.value*g+")";var q=b._private.style["background-image"].value[2]||b._private.style["background-image"].value[1];if(void 0!=q){var r=this,s=this.getCachedImage(q,function(){r.data.canvasNeedsRedraw[m]=!0,r.data.canvasRedrawReason[m].push("image finished load"),r.data.canvasNeedsRedraw[k]=!0,r.data.canvasRedrawReason[k].push("image finished load"),r.swapCachedImage(q),r.redraw()});0==s.complete?(f[r.getNodeShape(b)].drawPath(a,b._private.position.x,b._private.position.y,d,e),a.stroke(),a.fillStyle="#555555",a.fill()):this.drawInscribedImage(a,s,b)}else f[this.getNodeShape(b)].draw(a,b._private.position.x,b._private.position.y,d,e);b._private.style["border-width"].value>0&&a.stroke()}}},b.prototype.drawInscribedImage=function(a,b,c){var d=this,e=(this.data.cy._private.zoom,c._private.position.x),g=c._private.position.y,h=this.getNodeWidth(c),i=this.getNodeHeight(c);a.save(),f[d.getNodeShape(c)].drawPath(a,e,g,h,i),a.clip();var j=[b.width,b.height];a.drawImage(b,e-j[0]/2,g-j[1]/2,j[0],j[1]),a.restore(),c._private.style["border-width"].value>0&&a.stroke()},b.prototype.drawNodeText=function(a,b){if("visible"==b._private.style.visibility.value){var c=b._private.style["font-size"].pxValue*b.cy().zoom(),d=b._private.style["min-zoomed-font-size"].pxValue;if(!(d>c)){var e,f,g=this.getNodeWidth(b),h=this.getNodeHeight(b),i=b._private.style["text-halign"].strValue;"left"==i?(a.textAlign="right",e=b._private.position.x-g/2):"right"==i?(a.textAlign="left",e=b._private.position.x+g/2):"center"==i?(a.textAlign="center",e=b._private.position.x):(a.textAlign="center",e=b._private.position.x);var j=b._private.style["text-valign"].strValue;"top"==j?(a.textBaseline="bottom",f=b._private.position.y-h/2):"bottom"==j?(a.textBaseline="top",f=b._private.position.y+h/2):"middle"==j||"center"==j?(a.textBaseline="middle",f=b._private.position.y):(a.textBaseline="middle",f=b._private.position.y),this.drawText(a,b,e,f)}}},b.prototype.drawText=function(a,b,c,d){for(var e=1,f=b.parents(),g=0;g<f.length;g++){var h=f[g],i=h._private.style.opacity.value;if(e=i*e,0===i)return}var j=b._private.style["font-style"].strValue,k=b._private.style["font-size"].value+"px",l=b._private.style["font-family"].strValue,m=(b._private.style["font-variant"].strValue,b._private.style["font-weight"].strValue);a.font=j+" "+m+" "+k+" "+l;var n=String(b._private.style.content.value),o=b._private.style["text-transform"].value;if("none"==o||("uppercase"==o?n=n.toUpperCase():"lowercase"==o&&(n=n.toLowerCase())),a.lineJoin="round",a.fillStyle="rgba("+b._private.style.color.value[0]+","+b._private.style.color.value[1]+","+b._private.style.color.value[2]+","+b._private.style["text-opacity"].value*b._private.style.opacity.value*e+")",a.strokeStyle="rgba("+b._private.style["text-outline-color"].value[0]+","+b._private.style["text-outline-color"].value[1]+","+b._private.style["text-outline-color"].value[2]+","+b._private.style["text-opacity"].value*b._private.style.opacity.value*e+")",void 0!=n){var p=2*b._private.style["text-outline-width"].value;p>0&&(a.lineWidth=p,a.strokeText(n,c,d)),isNaN(c)&&(c=0),isNaN(d)&&(d=0),a.fillText(""+n,c,d),b._private.rstyle.labelWidth=a.measureText(n).width}},b.prototype.drawBackground=function(){},b.prototype.findEdgeControlPoints=function(a){for(var b,c={},d=this.data.cy,e=[],f=0;f<a.length;f++)b=a[f]._private.data.source>a[f]._private.data.target?a[f]._private.data.target+"-"+a[f]._private.data.source:a[f]._private.data.source+"-"+a[f]._private.data.target,void 0==c[b]&&(c[b]=[]),c[b].push(a[f]),e.push(b);for(var g,h,i=0;i<e.length;i++){b=e[i],g=d.getElementById(c[b][0]._private.data.source),h=d.getElementById(c[b][0]._private.data.target);var j,k,l=(g._private.position.x+h._private.position.x)/2,m=(g._private.position.y+h._private.position.y)/2;if(c[b].length>1){j=h._private.position.y-g._private.position.y,k=g._private.position.x-h._private.position.x;var n=Math.sqrt(j*j+k*k);j/=n,k/=n}for(var o,f=0;f<c[b].length;f++){o=c[b][f];var p=o._private.rscratch.lastEdgeIndex,q=f,r=o._private.rscratch.lastNumEdges,s=c[b].length,t=o._private.rscratch.lastSrcCtlPtX,u=g._private.position.x,v=o._private.rscratch.lastSrcCtlPtY,w=g._private.position.y,x=o._private.rscratch.lastSrcCtlPtW,y=g.outerWidth(),z=o._private.rscratch.lastSrcCtlPtH,A=g.outerHeight(),B=o._private.rscratch.lastTgtCtlPtX,C=h._private.position.x,D=o._private.rscratch.lastTgtCtlPtY,E=h._private.position.y,F=o._private.rscratch.lastTgtCtlPtW,G=h.outerWidth(),H=o._private.rscratch.lastTgtCtlPtH,I=h.outerHeight();if(t!==u||v!==w||x!==y||z!==A||B!==C||D!==E||F!==G||H!==I||p!==q||r!==s){var J=o._private.rscratch;if(J.lastSrcCtlPtX=u,J.lastSrcCtlPtY=w,J.lastSrcCtlPtW=y,J.lastSrcCtlPtH=A,J.lastTgtCtlPtX=C,J.lastTgtCtlPtY=E,J.lastTgtCtlPtW=G,J.lastTgtCtlPtH=I,J.lastEdgeIndex=q,J.lastNumEdges=s,g._private.data.id==h._private.data.id){var K=o._private.style["control-point-step-size"].pxValue;o._private.rscratch.edgeType="self",o._private.rscratch.cp2ax=g._private.position.x,o._private.rscratch.cp2ay=g._private.position.y-(1+Math.pow(this.getNodeHeight(g),1.12)/100)*K*(f/3+1),o._private.rscratch.cp2cx=g._private.position.x-(1+Math.pow(this.getNodeWidth(g),1.12)/100)*K*(f/3+1),o._private.rscratch.cp2cy=g._private.position.y,o._private.rscratch.selfEdgeMidX=(o._private.rscratch.cp2ax+o._private.rscratch.cp2cx)/2,o._private.rscratch.selfEdgeMidY=(o._private.rscratch.cp2ay+o._private.rscratch.cp2cy)/2}else if(c[b].length%2==1&&f==Math.floor(c[b].length/2))o._private.rscratch.edgeType="straight";else{var K=o._private.style["control-point-step-size"].value,L=(.5-c[b].length/2+f)*K;o._private.rscratch.edgeType="bezier",o._private.rscratch.cp2x=l+j*L,o._private.rscratch.cp2y=m+k*L}}}}return c},b.prototype.findEndpoints=function(a){var b,c=a.source()[0],d=a.target()[0],g=Math.max(this.getNodeWidth(c),this.getNodeHeight(c)),h=Math.max(this.getNodeWidth(d),this.getNodeHeight(d));g=0,h/=2;var i=[a.source().position().x,a.source().position().y],j=[a.target().position().x,a.target().position().y];if("self"==a._private.rscratch.edgeType){var k=[a._private.rscratch.cp2cx,a._private.rscratch.cp2cy];b=f[this.getNodeShape(d)].intersectLine(d._private.position.x,d._private.position.y,this.getNodeWidth(d),this.getNodeHeight(d),k[0],k[1],d._private.style["border-width"].value/2);var l=this.shortenIntersection(b,k,e[a._private.style["target-arrow-shape"].value].spacing(a)),m=this.shortenIntersection(b,k,e[a._private.style["target-arrow-shape"].value].gap(a));a._private.rscratch.endX=m[0],a._private.rscratch.endY=m[1],a._private.rscratch.arrowEndX=l[0],a._private.rscratch.arrowEndY=l[1];var k=[a._private.rscratch.cp2ax,a._private.rscratch.cp2ay];b=f[this.getNodeShape(c)].intersectLine(c._private.position.x,c._private.position.y,this.getNodeWidth(c),this.getNodeHeight(c),k[0],k[1],c._private.style["border-width"].value/2);var n=this.shortenIntersection(b,k,e[a._private.style["source-arrow-shape"].value].spacing(a)),o=this.shortenIntersection(b,k,e[a._private.style["source-arrow-shape"].value].gap(a));a._private.rscratch.startX=o[0],a._private.rscratch.startY=o[1],a._private.rscratch.arrowStartX=n[0],a._private.rscratch.arrowStartY=n[1]}else if("straight"==a._private.rscratch.edgeType){b=f[this.getNodeShape(d)].intersectLine(d._private.position.x,d._private.position.y,this.getNodeWidth(d),this.getNodeHeight(d),c.position().x,c.position().y,d._private.style["border-width"].value/2),a._private.rscratch.noArrowPlacement=0==b.length?!0:!1;var l=this.shortenIntersection(b,[c.position().x,c.position().y],e[a._private.style["target-arrow-shape"].value].spacing(a)),m=this.shortenIntersection(b,[c.position().x,c.position().y],e[a._private.style["target-arrow-shape"].value].gap(a));a._private.rscratch.endX=m[0],a._private.rscratch.endY=m[1],a._private.rscratch.arrowEndX=l[0],a._private.rscratch.arrowEndY=l[1],b=f[this.getNodeShape(c)].intersectLine(c._private.position.x,c._private.position.y,this.getNodeWidth(c),this.getNodeHeight(c),d.position().x,d.position().y,c._private.style["border-width"].value/2),a._private.rscratch.noArrowPlacement=0==b.length?!0:!1;var n=this.shortenIntersection(b,[d.position().x,d.position().y],e[a._private.style["source-arrow-shape"].value].spacing(a)),o=this.shortenIntersection(b,[d.position().x,d.position().y],e[a._private.style["source-arrow-shape"].value].gap(a));a._private.rscratch.startX=o[0],a._private.rscratch.startY=o[1],a._private.rscratch.arrowStartX=n[0],a._private.rscratch.arrowStartY=n[1]}else if("bezier"==a._private.rscratch.edgeType){{var k=[a._private.rscratch.cp2x,a._private.rscratch.cp2y];.25*i[0]+.25*j[0]+.5*k[0],.25*i[1]+.25*j[1]+.5*k[1]}b=f[this.getNodeShape(d)].intersectLine(d._private.position.x,d._private.position.y,this.getNodeWidth(d),this.getNodeHeight(d),k[0],k[1],d._private.style["border-width"].value/2);var l=this.shortenIntersection(b,k,e[a._private.style["target-arrow-shape"].value].spacing(a)),m=this.shortenIntersection(b,k,e[a._private.style["target-arrow-shape"].value].gap(a));a._private.rscratch.endX=m[0],a._private.rscratch.endY=m[1],a._private.rscratch.arrowEndX=l[0],a._private.rscratch.arrowEndY=l[1],b=f[this.getNodeShape(c)].intersectLine(c._private.position.x,c._private.position.y,this.getNodeWidth(c),this.getNodeHeight(c),k[0],k[1],c._private.style["border-width"].value/2);var n=this.shortenIntersection(b,k,e[a._private.style["source-arrow-shape"].value].spacing(a)),o=this.shortenIntersection(b,k,e[a._private.style["source-arrow-shape"].value].gap(a));a._private.rscratch.startX=o[0],a._private.rscratch.startY=o[1],a._private.rscratch.arrowStartX=n[0],a._private.rscratch.arrowStartY=n[1]}else if(a._private.rscratch.isArcEdge)return},b.prototype.findEdges=function(a){for(var b=this.getCachedEdges(),c={},d=[],e=0;e<a.length;e++)c[a[e]._private.data.id]=a[e];for(var e=0;e<b.length;e++)(c[b[e]._private.data.source]||c[b[e]._private.data.target])&&d.push(b[e]);return d},b.prototype.intersectLineEllipse=function(a,b,c,d,e,f){var g=c-a,h=d-b;g/=e,h/=f;var i=Math.sqrt(g*g+h*h),j=i-1;if(0>j)return[];var k=j/i;return[(c-a)*k+a,(d-b)*k+b]},b.prototype.dotProduct=function(a,b){if(2!=a.length||2!=b.length)throw"dot product: arguments are not vectors";return a[0]*b[0]+a[1]*b[1]},b.prototype.intersectLineCircle=function(a,b,c,d,e,f,g){var h=[c-a,d-b],i=[e,f],j=[a-e,b-f],k=h[0]*h[0]+h[1]*h[1],l=2*(j[0]*h[0]+j[1]*h[1]),i=j[0]*j[0]+j[1]*j[1]-g*g,m=l*l-4*k*i;if(0>m)return[];t1=(-l+Math.sqrt(m))/(2*k),t2=(-l-Math.sqrt(m))/(2*k);var n=Math.min(t1,t2),o=Math.max(t1,t2),p=[];if(n>=0&&1>=n&&p.push(n),o>=0&&1>=o&&p.push(o),0==p.length)return[];var q=p[0]*h[0]+a,r=p[0]*h[1]+b;if(p.length>1){if(p[0]==p[1])return[q,r];var s=p[1]*h[0]+a,t=p[1]*h[1]+b;return[q,r,s,t]}return[q,r]},b.prototype.findCircleNearPoint=function(a,b,c,d,e){var f=d-a,g=e-b,h=Math.sqrt(f*f+g*g),i=f/h,j=g/h;return[a+i*c,b+j*c]},b.prototype.findMaxSqDistanceToOrigin=function(a){for(var b,c=1e-6,d=0;d<a.length/2;d++)b=a[2*d]*a[2*d]+a[2*d+1]*a[2*d+1],b>c&&(c=b);return c},b.prototype.finiteLinesIntersect=function(a,b,c,d,e,f,g,h,i){var j=(g-e)*(b-f)-(h-f)*(a-e),k=(c-a)*(b-f)-(d-b)*(a-e),l=(h-f)*(c-a)-(g-e)*(d-b);if(0!=l){var m=j/l,n=k/l;return m>=0&&1>=m&&n>=0&&1>=n?[a+m*(c-a),b+m*(d-b)]:i?[a+m*(c-a),b+m*(d-b)]:[]}return 0==j||0==k?[a,c,g].sort()[1]==g?[g,h]:[a,c,e].sort()[1]==e?[e,f]:[e,g,c].sort()[1]==c?[c,d]:[]:[]},b.prototype.boxIntersectEllipse=function(a,b,c,d,e,f,g,h,i){if(a>c){var j=a;a=c,c=j}if(b>d){var k=b;b=d,d=k}var l=[h-f/2-e,i],m=[h+f/2+e,i],n=[h,i-g/2-e],o=[h,i+g/2+e];return c<l[0]?!1:a>m[0]?!1:b>o[1]?!1:d<n[1]?!1:a<=m[0]&&m[0]<=c&&b<=m[1]&&m[1]<=d?!0:a<=l[0]&&l[0]<=c&&b<=l[1]&&l[1]<=d?!0:a<=n[0]&&n[0]<=c&&b<=n[1]&&n[1]<=d?!0:a<=o[0]&&o[0]<=c&&b<=o[1]&&o[1]<=d?!0:(a=(a-h)/(f/2+e),c=(c-h)/(f/2+e),b=(b-i)/(g/2+e),d=(d-i)/(g/2+e),1>=a*a+b*b?!0:1>=c*c+b*b?!0:1>=c*c+d*d?!0:1>=a*a+d*d?!0:!1)},b.prototype.boxIntersectPolygon=function(a,b,c,d,e,f,g,h,i,j,k){if(a>c){var l=a;a=c,c=l}if(b>d){var m=b;b=d,d=m}var n=new Array(e.length),o=Math.asin(j[1]/Math.sqrt(j[0]*j[0]+j[1]*j[1]));j[0]<0?o+=Math.PI/2:o=-o-Math.PI/2;for(var p=Math.cos(-o),q=Math.sin(-o),r=0;r<n.length/2;r++)n[2*r]=f/2*(e[2*r]*p-e[2*r+1]*q),n[2*r+1]=g/2*(e[2*r+1]*p+e[2*r]*q),n[2*r]+=h,n[2*r+1]+=i;for(var s=n[0],t=n[0],u=n[1],v=n[1],r=1;r<n.length/2;r++)n[2*r]>t&&(t=n[2*r]),n[2*r]<s&&(s=n[2*r]),n[2*r+1]>v&&(v=n[2*r+1]),n[2*r+1]<u&&(u=n[2*r+1]);if(s-k>c)return!1;if(a>t+k)return!1;if(u-k>d)return!1;if(b>v+k)return!1;var x;if(k>0){var y=w.expandPolygon(n,-k);x=w.joinLines(y)}else x=n;for(var r=0;r<n.length/2;r++)if(a<=n[2*r]&&n[2*r]<=c&&b<=n[2*r+1]&&n[2*r+1]<=d)return!0;for(var r=0;r<x.length/2;r++){var z,A,B=x[2*r],C=x[2*r+1];if(r<x.length/2-1?(z=x[2*(r+1)],A=x[2*(r+1)+1]):(z=x[0],A=x[1]),w.finiteLinesIntersect(B,C,z,A,a,b,c,b,!1).length>0)return!0;if(w.finiteLinesIntersect(B,C,z,A,a,d,c,d,!1).length>0)return!0;if(w.finiteLinesIntersect(B,C,z,A,a,b,a,d,!1).length>0)return!0;if(w.finiteLinesIntersect(B,C,z,A,c,b,c,d,!1).length>0)return!0}return!1},b.prototype.polygonIntersectLine=function(a,b,c,d,e,f,g,h){for(var i,j=[],k=new Array(c.length),l=0;l<k.length/2;l++)k[2*l]=c[2*l]*f+d,k[2*l+1]=c[2*l+1]*g+e;var m;if(h>0){var n=w.expandPolygon(k,-h);m=w.joinLines(n)}else m=k;for(var o,p,q,r,l=0;l<m.length/2;l++)o=m[2*l],p=m[2*l+1],l<m.length/2-1?(q=m[2*(l+1)],r=m[2*(l+1)+1]):(q=m[0],r=m[1]),i=this.finiteLinesIntersect(a,b,d,e,o,p,q,r),0!=i.length&&j.push(i[0],i[1]);return j},b.prototype.shortenIntersection=function(a,b,c){var d=[a[0]-b[0],a[1]-b[1]],e=Math.sqrt(d[0]*d[0]+d[1]*d[1]),f=(e-c)/e;return 0>f?[]:[b[0]+f*d[0],b[1]+f*d[1]]},e.arrow={_points:[-.15,-.3,0,0,.15,-.3],collide:function(a,b,c,d,f,h,i,j){var k=e.arrow._points;return g.pointInsidePolygon(a,b,k,c,d,f,h,i,j)},roughCollide:function(a,b,c,d,f,h){return"undefined"==typeof e.arrow._farthestPointSqDistance&&(e.arrow._farthestPointSqDistance=g.findMaxSqDistanceToOrigin(e.arrow._points)),g.checkInBoundingCircle(a,b,e.arrow._farthestPointSqDistance,0,f,h,c,d)},draw:function(a){for(var b=e.arrow._points,c=0;c<b.length/2;c++)a.lineTo(b[2*c],b[2*c+1])},spacing:function(){return 0},gap:function(a){return 2*a._private.style.width.value}},e.triangle=e.arrow,e.none={collide:function(){return!1},roughCollide:function(){return!1},draw:function(){},spacing:function(){return 0},gap:function(){return 0}},e.circle={_baseRadius:.15,collide:function(a,b,c,d,f,g,h,i){if(f!=g){var j=Math.asin(h[1]/Math.sqrt(h[0]*h[0]+h[1]*h[1])),k=(Math.cos(-j),Math.sin(-j),(g+i)/(f+i));return b/=k,d/=k,Math.pow(c-a,2)+Math.pow(d-b,2)<=Math.pow((f+i)*e.circle._baseRadius,2)}return Math.pow(c-a,2)+Math.pow(d-b,2)<=Math.pow((f+i)*e.circle._baseRadius,2)},roughCollide:function(){return!0},draw:function(a){a.arc(0,0,e.circle._baseRadius,0,2*Math.PI,!1)},spacing:function(a){return g.getArrowWidth(a._private.style.width.value)*e.circle._baseRadius},gap:function(a){return 2*a._private.style.width.value}},e.inhibitor={_points:[-.25,0,-.25,-.1,.25,-.1,.25,0],collide:function(a,b,c,d,f,h,i,j){var k=e.inhibitor._points;return g.pointInsidePolygon(a,b,k,c,d,f,h,i,j)},roughCollide:function(a,b,c,d,f,h){return"undefined"==typeof e.inhibitor._farthestPointSqDistance&&(e.inhibitor._farthestPointSqDistance=g.findMaxSqDistanceToOrigin(e.inhibitor._points)),g.checkInBoundingCircle(a,b,e.inhibitor._farthestPointSqDistance,0,f,h,c,d)},draw:function(a){for(var b=e.inhibitor._points,c=0;c<b.length/2;c++)a.lineTo(b[2*c],b[2*c+1])},spacing:function(){return 4},gap:function(){return 4}},e.square={_points:[-.12,0,.12,0,.12,-.24,-.12,-.24],collide:function(a,b,c,d,f,h,i,j){var k=e.square._points;return g.pointInsidePolygon(a,b,k,c,d,f,h,i,j)},roughCollide:function(a,b,c,d,f,h){return"undefined"==typeof e.square._farthestPointSqDistance&&(e.square._farthestPointSqDistance=g.findMaxSqDistanceToOrigin(e.square._points)),g.checkInBoundingCircle(a,b,e.square._farthestPointSqDistance,0,f,h,c,d)},draw:function(a){for(var b=e.square._points,c=0;c<b.length/2;c++)a.lineTo(b[2*c],b[2*c+1])},spacing:function(){return 0},gap:function(a){return 2*a._private.style.width.value}},e.diamond={_points:[-.14,-.14,0,-.28,.14,-.14,0,0],collide:function(a,b,c,d,f,h,i,j){var k=e.diamond._points;return g.pointInsidePolygon(a,b,k,c,d,f,h,i,j)},roughCollide:function(a,b,c,d,f,h){return"undefined"==typeof e.diamond._farthestPointSqDistance&&(e.diamond._farthestPointSqDistance=g.findMaxSqDistanceToOrigin(e.diamond._points)),g.checkInBoundingCircle(a,b,e.diamond._farthestPointSqDistance,0,f,h,c,d)},draw:function(a){a.lineTo(-.14,-.14),a.lineTo(0,-.28),a.lineTo(.14,-.14),a.lineTo(0,0)},spacing:function(){return 0},gap:function(a){return 2*a._private.style.width.value}},e.tee=e.inhibitor,b.prototype.getArrowWidth=function(a){return Math.max(Math.pow(13.37*a,.9),29)},b.prototype.getArrowHeight=function(a){return Math.max(Math.pow(13.37*a,.9),29)},b.prototype.drawArrowheads=function(a,b,c){if(!c){var d,e,f=b._private.rscratch.arrowStartX,g=b._private.rscratch.arrowStartY;d=f-b.source().position().x,e=g-b.source().position().y,a.fillStyle="rgba("+b._private.style["source-arrow-color"].value[0]+","+b._private.style["source-arrow-color"].value[1]+","+b._private.style["source-arrow-color"].value[2]+","+b._private.style.opacity.value+")",a.lineWidth=b._private.style.width.value,this.drawArrowShape(a,b._private.style["source-arrow-shape"].value,f,g,d,e);var h=b._private.rscratch.arrowEndX,i=b._private.rscratch.arrowEndY;d=h-b.target().position().x,e=i-b.target().position().y,a.fillStyle="rgba("+b._private.style["target-arrow-color"].value[0]+","+b._private.style["target-arrow-color"].value[1]+","+b._private.style["target-arrow-color"].value[2]+","+b._private.style.opacity.value+")",a.lineWidth=b._private.style.width.value,this.drawArrowShape(a,b._private.style["target-arrow-shape"].value,h,i,d,e)}},b.prototype.drawArrowShape=function(a,b,c,d,f,g){var h=Math.asin(g/Math.sqrt(f*f+g*g));0>f?h+=Math.PI/2:h=-(Math.PI/2+h),a.translate(c,d),a.moveTo(0,0),a.rotate(-h);var i=this.getArrowWidth(a.lineWidth);a.scale(i,i),a.beginPath(),e[b].draw(a),a.closePath(),a.fill(),a.scale(1/i,1/i),a.rotate(h),a.translate(-c,-d)};var v=function(a,b){var c=1/a*2*Math.PI,d=a%2==0?Math.PI/2+c/2:Math.PI/2;d+=b;for(var e,f=new Array(2*a),g=0;a>g;g++)e=g*c+d,f[2*g]=Math.cos(e),f[2*g+1]=Math.sin(-e);for(var h=0,i=0,g=0;g<f.length/2;g++)Math.abs(f[2*g]>h)&&(h=Math.abs(f[2*g])),Math.abs(f[2*g+1]>i)&&(i=Math.abs(f[2*g+1]));for(var j=5e-4,k=Math.max(h,i),g=0;g<f.length/2;g++)k>j&&(f[2*g]*=1/k,f[2*g+1]*=1/k);return f},w=g;f.ellipse={draw:function(a,b,c,d,e){f.ellipse.drawPath(a,b,c,d,e),a.fill()},drawPath:function(a,b,c,d,e){a.beginPath(),a.translate(b,c),a.scale(d/2,e/2),a.arc(0,0,1,0,2*Math.PI*.999,!1),a.closePath(),a.scale(2/d,2/e),a.translate(-b,-c)},intersectLine:function(a,b,c,d,e,f,h){var i=g.intersectLineEllipse(e,f,a,b,c/2+h,d/2+h);return i},intersectBox:function(a,c,d,e,f,g,h,i,j){return b.prototype.boxIntersectEllipse(a,c,d,e,j,f,g,h,i)},checkPointRough:function(){return!0},checkPoint:function(a,b,c,d,e,f,g){return a-=f,b-=g,a/=d/2+c,b/=e/2+c,Math.pow(a,2)+Math.pow(b,2)<=1}},f.triangle={points:v(3,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.triangle.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.triangle.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.triangle.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.triangle.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.triangle.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.triangle.points,g,h,d,e,[0,-1],c)}},f.square={points:v(4,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.square.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.square.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.square.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.square.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.square.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.square.points,g,h,d,e,[0,-1],c)}},f.rectangle=f.square,f.octogon={},f.roundrectangle={points:v(4,0),draw:function(a,b,c,d,e){w.drawRoundRectangle(a,b,c,d,e,10)},drawPath:function(a,b,c,d,e){w.drawRoundRectanglePath(a,b,c,d,e,10)},intersectLine:function(a,b,c,d,e,f,g){return w.roundRectangleIntersectLine(e,f,a,b,c,d,g)},intersectBox:function(a,b,c,d,e,f,g,h,i){return w.roundRectangleIntersectBox(a,b,c,d,e,f,g,h,i)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.roundrectangle.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){var i=w.getRoundRectangleRadius(d,e);if(w.pointInsidePolygon(a,b,f.roundrectangle.points,g,h,d,e-2*i,[0,-1],c))return!0;if(w.pointInsidePolygon(a,b,f.roundrectangle.points,g,h,d-2*i,e,[0,-1],c))return!0;var j=function(a,b,c,d,e,f,g){return a-=c,b-=d,a/=e/2+g,b/=f/2+g,Math.pow(a,2)+Math.pow(b,2)<=1};return j(a,b,g-d/2+i,h-e/2+i,2*i,2*i,c)?!0:j(a,b,g+d/2-i,h-e/2+i,2*i,2*i,c)?!0:j(a,b,g+d/2-i,h+e/2-i,2*i,2*i,c)?!0:j(a,b,g-d/2+i,h+e/2-i,2*i,2*i,c)?!0:!1}},f.roundrectangle2={roundness:4.99,draw:function(a,b,c){2*roundness>=b||w.drawPolygon(a._private.position.x,a._private.position.y,b,c,nodeSapes.roundrectangle2.points)},intersectLine:function(a,b,c,d,e){return w.findPolygonIntersection(a,b,c,d,e,f.square.points)},intersectBox:function(){f.square.points}},f.pentagon={points:v(5,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.pentagon.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.pentagon.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.pentagon.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.pentagon.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.pentagon.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.pentagon.points,g,h,d,e,[0,-1],c)}},f.hexagon={points:v(6,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.hexagon.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.hexagon.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.hexagon.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.hexagon.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.hexagon.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.hexagon.points,g,h,d,e,[0,-1],c)}},f.heptagon={points:v(7,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.heptagon.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.heptagon.points)
-},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.heptagon.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.heptagon.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.heptagon.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.heptagon.points,g,h,d,e,[0,-1],c)}},f.octagon={points:v(8,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.octagon.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.octagon.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.octagon.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.octagon.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.octagon.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.octagon.points,g,h,d,e,[0,-1],c)}};var z=new Array(20),A=v(5,0),B=v(5,Math.PI/5),C=.5*(3-Math.sqrt(5));C*=1.57;for(var D=0;D<B.length/2;D++)B[2*D]*=C,B[2*D+1]*=C;for(var D=0;5>D;D++)z[4*D]=A[2*D],z[4*D+1]=A[2*D+1],z[4*D+2]=B[2*D],z[4*D+3]=B[2*D+1];f.star5={points:z,draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.star5.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.star5.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.star5.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.star5.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.star5.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.star5.points,g,h,d,e,[0,-1],c)}},b.prototype.expandPolygon=function(a,b){for(var c,d,e,f,g=new Array(2*a.length),h=0;h<a.length/2;h++){c=a[2*h],d=a[2*h+1],h<a.length/2-1?(e=a[2*(h+1)],f=a[2*(h+1)+1]):(e=a[0],f=a[1]);var i=f-d,j=-(e-c),k=Math.sqrt(i*i+j*j),l=i/k,m=j/k;g[4*h]=c+l*b,g[4*h+1]=d+m*b,g[4*h+2]=e+l*b,g[4*h+3]=f+m*b}return g},b.prototype.joinLines=function(a){for(var b,c,d,e,f,g,h,i,j=new Array(a.length/2),k=0;k<a.length/4;k++){b=a[4*k],c=a[4*k+1],d=a[4*k+2],e=a[4*k+3],k<a.length/4-1?(f=a[4*(k+1)],g=a[4*(k+1)+1],h=a[4*(k+1)+2],i=a[4*(k+1)+3]):(f=a[0],g=a[1],h=a[2],i=a[3]);var l=this.finiteLinesIntersect(b,c,d,e,f,g,h,i,!0);j[2*k]=l[0],j[2*k+1]=l[1]}return j},b.prototype.pointInsidePolygon=function(a,b,c,d,e,f,g,h,i){var j=new Array(c.length),k=Math.asin(h[1]/Math.sqrt(h[0]*h[0]+h[1]*h[1]));h[0]<0?k+=Math.PI/2:k=-k-Math.PI/2;for(var l=Math.cos(-k),m=Math.sin(-k),n=0;n<j.length/2;n++)j[2*n]=f/2*(c[2*n]*l-c[2*n+1]*m),j[2*n+1]=g/2*(c[2*n+1]*l+c[2*n]*m),j[2*n]+=d,j[2*n+1]+=e;var o;if(i>0){var p=w.expandPolygon(j,-i);o=w.joinLines(p)}else o=j;for(var q,r,s,t,u,v=0,x=0,n=0;n<o.length/2;n++)if(q=o[2*n],r=o[2*n+1],n+1<o.length/2?(s=o[2*(n+1)],t=o[2*(n+1)+1]):(s=o[2*(n+1-o.length/2)],t=o[2*(n+1-o.length/2)+1]),q==a&&s==a);else{if(!(q>=a&&a>=s||a>=q&&s>=a))continue;u=(a-q)/(s-q)*(t-r)+r,u>b&&v++,b>u&&x++}return v%2==0?!1:!0},b.prototype.drawPolygonPath=function(a,b,c,d,e,f){a.translate(b,c),a.scale(d/2,e/2),a.beginPath(),a.moveTo(f[0],f[1]);for(var g=1;g<f.length/2;g++)a.lineTo(f[2*g],f[2*g+1]);a.closePath(),a.scale(2/d,2/e),a.translate(-b,-c)},b.prototype.drawPolygon=function(a,b,c,d,e,f){this.drawPolygonPath(a,b,c,d,e,f),a.fill()},b.prototype.getRoundRectangleRadius=function(a,b){return Math.min(a/2,b/2,10)},b.prototype.drawRoundRectanglePath=function(a,b,c,d,e){var f=d/2,g=e/2,h=this.getRoundRectangleRadius(d,e);a.translate(b,c),a.beginPath(),a.moveTo(0,-g),a.arcTo(f,-g,f,0,h),a.arcTo(f,g,0,g,h),a.arcTo(-f,g,-f,0,h),a.arcTo(-f,-g,0,-g,h),a.lineTo(0,-g),a.closePath(),a.translate(-b,-c)},b.prototype.drawRoundRectangle=function(a,b,c,d,e,f){this.drawRoundRectanglePath(a,b,c,d,e,f),a.fill()},b.prototype.roundRectangleIntersectLine=function(a,b,c,d,e,f,g){var h,i=this.getRoundRectangleRadius(e,f),j=e/2,k=f/2,l=c-j+i-g,m=d-k-g,n=c+j-i+g,o=m;if(h=this.finiteLinesIntersect(a,b,c,d,l,m,n,o,!1),h.length>0)return h;var p=c+j+g,q=d-k+i-g,r=p,s=d+k-i+g;if(h=this.finiteLinesIntersect(a,b,c,d,p,q,r,s,!1),h.length>0)return h;var t=c-j+i-g,u=d+k+g,v=c+j-i+g,w=u;if(h=this.finiteLinesIntersect(a,b,c,d,t,u,v,w,!1),h.length>0)return h;var x=c-j-g,y=d-k+i-g,z=x,A=d+k-i+g;if(h=this.finiteLinesIntersect(a,b,c,d,x,y,z,A,!1),h.length>0)return h;var B,C=c-j+i,D=d-k+i;if(B=this.intersectLineCircle(a,b,c,d,C,D,i+g),B.length>0&&B[0]<=C&&B[1]<=D)return[B[0],B[1]];var E=c+j-i,F=d-k+i;if(B=this.intersectLineCircle(a,b,c,d,E,F,i+g),B.length>0&&B[0]>=E&&B[1]<=F)return[B[0],B[1]];var G=c+j-i,H=d+k-i;if(B=this.intersectLineCircle(a,b,c,d,G,H,i+g),B.length>0&&B[0]>=G&&B[1]>=H)return[B[0],B[1]];var I=c-j+i,J=d+k-i;return B=this.intersectLineCircle(a,b,c,d,I,J,i+g),B.length>0&&B[0]<=I&&B[1]>=J?[B[0],B[1]]:void 0},b.prototype.roundRectangleIntersectBox=function(a,b,c,d,e,f,g,h,i){var j=this.getRoundRectangleRadius(e,f),k=g-e/2-i,l=h-f/2+j-i,m=g+e/2+i,n=h+f/2-j+i,o=g-e/2+j-i,p=h-f/2-i,q=g+e/2-j+i,r=h+f/2+i,s=Math.min(a,c),t=Math.max(a,c),u=Math.min(b,d),v=Math.max(b,d);return k>t?!1:s>m?!1:p>v?!1:u>r?!1:k>=s&&t>=k&&l>=u&&v>=l?!0:m>=s&&t>=m&&l>=u&&v>=l?!0:m>=s&&t>=m&&n>=u&&v>=n?!0:k>=s&&t>=k&&n>=u&&v>=n?!0:s>=k&&m>=s&&u>=l&&n>=u?!0:t>=k&&m>=t&&u>=l&&n>=u?!0:t>=k&&m>=t&&v>=l&&n>=v?!0:s>=k&&m>=s&&v>=l&&n>=v?!0:o>=s&&t>=o&&p>=u&&v>=p?!0:q>=s&&t>=q&&p>=u&&v>=p?!0:q>=s&&t>=q&&r>=u&&v>=r?!0:o>=s&&t>=o&&r>=u&&v>=r?!0:s>=o&&q>=s&&u>=p&&r>=u?!0:t>=o&&q>=t&&u>=p&&r>=u?!0:t>=o&&q>=t&&v>=p&&r>=v?!0:s>=o&&q>=s&&v>=p&&r>=v?!0:this.boxIntersectEllipse(s,u,t,v,i,2*j,2*j,o+i,l+i)?!0:this.boxIntersectEllipse(s,u,t,v,i,2*j,2*j,q-i,l+i)?!0:this.boxIntersectEllipse(s,u,t,v,i,2*j,2*j,q-i,n-i)?!0:this.boxIntersectEllipse(s,u,t,v,i,2*j,2*j,o+i,n-i)?!0:!1},b.prototype.checkInBoundingCircle=function(a,b,c,d,e,f,g,h){return a=(a-g)/(e+d),b=(b-h)/(f+d),c>=a*a+b*b},b.prototype.checkInBoundingBox=function(a,b,c,d,e,f,g,h){for(var i=c[0],j=c[1],k=c[0],l=c[1],m=1;m<c.length/2;m++)c[2*m]<i?i=c[2*m]:c[2*m]>k&&(k=c[2*m]),c[2*m+1]<j?j=c[2*m+1]:c[2*m+1]>l&&(l=c[2*m+1]);return a-=g,b-=h,a/=e,b/=f,i>a?!1:a>k?!1:j>b?!1:b>l?!1:!0},b.prototype.boxInBezierVicinity=function(a,b,c,d,e,f,g,h,i,j,k){var l=.25*e+.5*g+.25*i,m=.25*f+.5*h+.25*j,n=Math.min(a,c)-k,o=Math.min(b,d)-k,p=Math.max(a,c)+k,q=Math.max(b,d)+k;if(e>=n&&p>=e&&f>=o&&q>=f)return 1;if(i>=n&&p>=i&&j>=o&&q>=j)return 1;if(l>=n&&p>=l&&m>=o&&q>=m)return 1;if(g>=n&&p>=g&&h>=o&&q>=h)return 1;var r=Math.min(e,l,i),s=Math.min(f,m,j),t=Math.max(e,l,i),u=Math.max(f,m,j);return r>p||n>t||s>q||o>u?0:1},b.prototype.checkBezierInBox=function(a,b,c,d,e,f,g,h,i,j){function k(a,b,c,d){return(1-d)*(1-d)*a+2*(1-d)*d*b+d*d*c}function l(l){var m=k(e,g,i,l),n=k(f,h,j,l);return m>=a&&c>=m&&n>=b&&d>=n}for(var m=0;1>=m;m+=.25)if(!l(m))return!1;return!0},b.prototype.checkStraightEdgeInBox=function(a,b,c,d,e,f,g,h){return e>=a&&c>=e&&g>=a&&c>=g&&f>=b&&d>=f&&h>=b&&d>=h},b.prototype.checkStraightEdgeCrossesBox=function(a,b,c,d,e,f,g,h,i){var j,k,l=Math.min(a,c)-i,m=Math.min(b,d)-i,n=Math.max(a,c)+i,o=Math.max(b,d)+i,p=g-e,q=e,r=h-f,s=f;if(Math.abs(p)<1e-4)return e>=l&&n>=e&&Math.min(f,h)<=m&&Math.max(f,h)>=o;var t=(l-q)/p;if(t>0&&1>=t&&(j=r*t+s,j>=m&&o>=j))return!0;var u=(n-q)/p;if(u>0&&1>=u&&(j=r*u+s,j>=m&&o>=j))return!0;var v=(m-s)/r;if(v>0&&1>=v&&(k=p*v+q,k>=l&&n>=k))return!0;var w=(o-s)/r;return w>0&&1>=w&&(k=p*w+q,k>=l&&n>=k)?!0:!1},b.prototype.checkBezierCrossesBox=function(a,b,c,d,e,f,g,h,i,j,k){var l=Math.min(a,c)-k,m=Math.min(b,d)-k,n=Math.max(a,c)+k,o=Math.max(b,d)+k;if(e>=l&&n>=e&&f>=m&&o>=f)return!0;if(i>=l&&n>=i&&j>=m&&o>=j)return!0;var p=e-2*g+i,q=-2*e+2*g,r=e,s=[];if(Math.abs(p)<1e-4){var t=(l-e)/q,u=(n-e)/q;s.push(t,u)}else{var v,w,x=q*q-4*p*(r-l);if(x>0){var y=Math.sqrt(x);v=(-q+y)/(2*p),w=(-q-y)/(2*p),s.push(v,w)}var z,A,B=q*q-4*p*(r-n);if(B>0){var y=Math.sqrt(B);z=(-q+y)/(2*p),A=(-q-y)/(2*p),s.push(z,A)}}s.sort(function(a,b){return a-b});var C=f-2*h+j,D=-2*f+2*h,E=f,F=[];if(Math.abs(C)<1e-4){var G=(m-f)/D,H=(o-f)/D;F.push(G,H)}else{var I,J,K=D*D-4*C*(E-m);if(K>0){var y=Math.sqrt(K);I=(-D+y)/(2*C),J=(-D-y)/(2*C),F.push(I,J)}var L,M,N=D*D-4*C*(E-o);if(N>0){var y=Math.sqrt(N);L=(-D+y)/(2*C),M=(-D-y)/(2*C),F.push(L,M)}}F.sort(function(a,b){return a-b});for(var O=0;O<s.length;O+=2)for(var P=1;P<F.length;P+=2)if(s[O]<F[P]&&F[P]>=0&&s[O]<=1&&s[O+1]>F[P-1]&&F[P-1]<=1&&s[O+1]>=0)return!0;return!1},b.prototype.inLineVicinity=function(a,b,c,d,e,f,g){var h=g,i=Math.min(c,e),j=Math.max(c,e),k=Math.min(d,f),l=Math.max(d,f);return a>=i-h&&j+h>=a&&b>=k-h&&l+h>=b},b.prototype.inBezierVicinity=function(a,b,c,d,e,f,g,h,i){var j=.25*c+.5*e+.25*g,k=.25*d+.5*f+.25*h,l={x1:Math.min(c,g,j),x2:Math.max(c,g,j),y1:Math.min(d,h,k),y2:Math.max(d,h,k)};if(a<l.x1||a>l.x2||b<l.y1||b>l.y2)return!1;var m,n,o=function(a,b,c,d,e,f,g,h){if(m=(f-d)*(a-c)+(c-e)*(b-d),n=m*m,sideSquared=(f-d)*(f-d)+(c-e)*(c-e),h){if(m>0)return!1}else if(0>m)return!1;return n/sideSquared>g},p=(j+e)/2,q=(k+f)/2,r=!0;return o(p,q,c,d,e,f,0,r)&&(r=!r),!o(a,b,c,d,e,f,i,r)&&!o(a,b,e,f,g,h,i,r)&&!o(a,b,g,h,c,d,i,r)},b.prototype.solveCubic=function(a,b,c,d,e){b/=a,c/=a,d/=a;var f,g,h,i,j,k,l,m;return g=(3*c-b*b)/9,h=-(27*d)+b*(9*c-2*b*b),h/=54,f=g*g*g+h*h,e[1]=0,l=b/3,f>0?(j=h+Math.sqrt(f),j=0>j?-Math.pow(-j,1/3):Math.pow(j,1/3),k=h-Math.sqrt(f),k=0>k?-Math.pow(-k,1/3):Math.pow(k,1/3),e[0]=-l+j+k,l+=(j+k)/2,e[4]=e[2]=-l,l=Math.sqrt(3)*(-k+j)/2,e[3]=l,void(e[5]=-l)):(e[5]=e[3]=0,0==f?(m=0>h?-Math.pow(-h,1/3):Math.pow(h,1/3),e[0]=-l+2*m,void(e[4]=e[2]=-(m+l))):(g=-g,i=g*g*g,i=Math.acos(h/Math.sqrt(i)),m=2*Math.sqrt(g),e[0]=-l+m*Math.cos(i/3),e[2]=-l+m*Math.cos((i+2*Math.PI)/3),void(e[4]=-l+m*Math.cos((i+4*Math.PI)/3))))},b.prototype.sqDistanceToQuadraticBezier=function(a,b,c,d,e,f,g,h){var i=1*c*c-4*c*e+2*c*g+4*e*e-4*e*g+g*g+d*d-4*d*f+2*d*h+4*f*f-4*f*h+h*h,j=9*c*e-3*c*c-3*c*g-6*e*e+3*e*g+9*d*f-3*d*d-3*d*h-6*f*f+3*f*h,k=3*c*c-6*c*e+c*g-c*a+2*e*e+2*e*a-g*a+3*d*d-6*d*f+d*h-d*b+2*f*f+2*f*b-h*b,l=1*c*e-c*c+c*a-e*a+d*f-d*d+d*b-f*b;E("coefficients: "+i/i+", "+j/i+", "+k/i+", "+l/i);var m=[];this.solveCubic(i,j,k,l,m);for(var n=1e-7,o=[],p=0;6>p;p+=2)Math.abs(m[p+1])<n&&m[p]>=0&&m[p]<=1&&o.push(m[p]);o.push(1),o.push(0);for(var q,r,s,t,u=-1,v=0;v<o.length;v++)r=Math.pow(1-o[v],2)*c+2*(1-o[v])*o[v]*e+o[v]*o[v]*g,s=Math.pow(1-o[v],2)*d+2*(1-o[v])*o[v]*f+o[v]*o[v]*h,t=Math.pow(r-a,2)+Math.pow(s-b,2),E("distance for param "+o[v]+": "+Math.sqrt(t)),u>=0?u>t&&(u=t,q=o[v]):(u=t,q=o[v]);return E("given: ( "+a+", "+b+"), ( "+c+", "+d+"), ( "+e+", "+f+"), ( "+g+", "+h+")"),E("roots: "+m),E("params: "+o),E("closest param: "+q),u},b.prototype.sqDistanceToFiniteLine=function(a,b,c,d,e,f){var g=[a-c,b-d],h=[e-c,f-d],i=h[0]*h[0]+h[1]*h[1],j=g[0]*g[0]+g[1]*g[1],k=g[0]*h[0]+g[1]*h[1],l=k*k/i;return 0>k?j:l>i?(a-e)*(a-e)+(b-f)*(b-f):j-l};var E=function(){};a("renderer","canvas",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend(!0,{},c,b)}var c={ready:function(){},stop:function(){}};b.prototype.run=function(){var a=this.options,b=a.cy;b.nodes().positions(function(){return{x:0,y:0}}),b.one("layoutready",a.ready),b.trigger("layoutready"),b.one("layoutstop",a.stop),b.trigger("layoutstop")},b.prototype.stop=function(){var a=this.options;cy.one("layoutstop",a.stop),cy.trigger("layoutstop")},a("layout","null",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend(!0,{},c,b)}var c={ready:void 0,stop:void 0,fit:!0,padding:30};b.prototype.run=function(){var a=this.options,b=a.cy,c=b.nodes(),d=(b.edges(),b.container()),e=d.clientWidth,f=d.clientHeight;c.positions(function(a,b){return b.locked()?!1:{x:Math.round(Math.random()*e),y:Math.round(Math.random()*f)}}),b.one("layoutready",a.ready),b.trigger("layoutready"),a.fit&&b.fit(a.padding),b.one("layoutstop",a.stop),b.trigger("layoutstop")},b.prototype.stop=function(){},a("layout","random",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend({},c,b)}var c={fit:!0,rows:void 0,columns:void 0,ready:void 0,stop:void 0};b.prototype.run=function(){function a(a){if(void 0==a)return Math.min(l,m);var b=Math.min(l,m);b==l?l=a:m=a}function b(a){if(void 0==a)return Math.max(l,m);var b=Math.max(l,m);b==l?l=a:m=a}var c=this.options,d=c,e=c.cy,f=e.nodes(),g=(e.edges(),e.container()),h=g.clientWidth,i=g.clientHeight;if(0==i||0==h)f.positions(function(){return{x:0,y:0}});else{var j=f.size(),k=Math.sqrt(j*i/h),l=Math.round(k),m=Math.round(h/i*k);if(null!=d.rows&&null!=d.columns)l=d.rows,m=d.columns;else if(null!=d.rows&&null==d.columns)l=d.rows,m=Math.ceil(j/l);else if(null==d.rows&&null!=d.columns)m=d.columns,l=Math.ceil(j/m);else if(m*l>j){var n=a(),o=b();(n-1)*o>=j?a(n-1):(o-1)*n>=j&&b(o-1)}else for(;j>m*l;){var n=a(),o=b();(o+1)*n>=j?b(o+1):a(n+1)}var p=h/m,q=i/l,r=0,s=0;f.positions(function(a,b){if(b.locked())return!1;var c=s*p+p/2,d=r*q+q/2;return s++,s>=m&&(s=0,r++),{x:c,y:d}})}c.fit&&e.reset(),e.one("layoutready",c.ready),e.trigger("layoutready"),e.one("layoutstop",c.stop),e.trigger("layoutstop")},b.prototype.stop=function(){},a("layout","grid",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend(!0,{},c,b)}var c={fit:!0,ready:void 0,stop:void 0,positions:void 0,zoom:void 0,pan:void 0,padding:30};b.prototype.run=function(){function a(a){return null==b.positions?null:null==b.positions[a._private.data.id]?null:b.positions[a._private.data.id]}{var b=this.options,c=b.cy,d=c.nodes();c.edges(),c.container()}d.positions(function(b,c){var d=a(c);return c.locked()||null==d?!1:d}),null!=b.pan&&c.pan(b.pan),null!=b.zoom&&c.zoom(b.zoom),c.one("layoutready",b.ready),c.trigger("layoutready"),b.fit&&c.fit(b.padding),c.one("layoutstop",b.stop),c.trigger("layoutstop")},a("layout","preset",b),a("core","presetLayout",function(){var a=this,b={},c={};return a.nodes().each(function(a,b){c[b.data("id")]=b.position()}),b.positions=c,b.name="preset",b.zoom=a.zoom(),b.pan=a.pan(),b})}(cytoscape),function(a){function b(b){this.options=a.util.extend({},c,b)}var c={liveUpdate:!0,ready:void 0,stop:void 0,maxSimulationTime:4e3,fit:!0,padding:[50,50,50,50],ungrabifyWhileSimulating:!0,repulsion:void 0,stiffness:void 0,friction:void 0,gravity:!0,fps:void 0,precision:void 0,nodeMass:void 0,edgeLength:void 0,stepSize:1,stableEnergy:function(a){var b=a;return b.max<=.5||b.mean<=.3}};b.prototype.run=function(){function b(a,b){return null==b?void 0:"function"==typeof b?b.apply(a,[a._private.data,{nodes:g.length,edges:h.length,element:a}]):b}function c(a){var b=a.x,c=a.y,d=j,e=k,f=-2,g=2,h=4;return{x:b/d*h+f,y:c/e*h+g}}function d(a){e.fit&&f.fit(),a()}var e=this.options,f=e.cy,g=f.nodes(),h=f.edges(),i=f.container(),j=i.clientWidth,k=i.clientHeight;if(f.nodes().size()<=1)return e.fit&&f.reset(),f.nodes().position({x:Math.round(j/2),y:Math.round(k/2)}),f.one("layoutstop",e.stop),f.trigger("layoutstop"),f.one("layoutstop",e.stop),void f.trigger("layoutstop");var l=this.system=arbor.ParticleSystem(e.repulsion,e.stiffness,e.friction,e.gravity,e.fps,e.dt,e.precision);this.system=l,e.liveUpdate&&e.fit&&f.reset();var m,n=250,o=!1,p=+new Date,q={init:function(){},redraw:function(){var b=l.energy();if(null!=e.stableEnergy&&null!=b&&b.n>0&&e.stableEnergy(b))return void l.stop();clearTimeout(m),m=setTimeout(t,n);var c=[];l.eachNode(function(a,b){var d=(a.name,a.data),e=d.element;if(null!=e){var f=e._private.position;e.locked()||e.grabbed()||(f.x=b.x,f.y=b.y,c.push(e))}});var d=+new Date-p>=16;e.liveUpdate&&c.length>0&&d&&(new a.Collection(f,c).rtrigger("position"),p=+new Date),o||(o=!0,f.one("layoutready",e.ready),f.trigger("layoutready"))}};l.renderer=q,l.screenSize(j,k),l.screenPadding(e.padding[0],e.padding[1],e.padding[2],e.padding[3]),l.screenStep(e.stepSize);var r=function(a){grabbed=this;var b=l.fromScreen(this.position()),c=arbor.Point(b.x,b.y);switch(this.scratch().arbor.p=c,a.type){case"grab":this.scratch().arbor.fixed=!0;break;case"dragstop":this.scratch().arbor.fixed=!1,this.scratch().arbor.tempMass=1e3}};g.bind("grab drag dragstop",r),g.each(function(a,d){var f=this._private.data.id,g=b(this,e.nodeMass),h=this._private.locked,i=c({x:d.position().x,y:d.position().y});d.locked()||(this.scratch().arbor=l.addNode(f,{element:this,mass:g,fixed:h,x:h?i.x:void 0,y:h?i.y:void 0}))}),h.each(function(){var a=(this.id(),this.source().id()),c=this.target().id(),d=b(this,e.edgeLength);this.scratch().arbor=l.addEdge(a,c,{length:d})});var s=g.filter(":grabbable");e.ungrabifyWhileSimulating&&s.ungrabify();var t=function(){function a(){e.liveUpdate||(e.fit&&f.reset(),f.nodes().rtrigger("position")),g.unbind("grab drag dragstop",r),e.ungrabifyWhileSimulating&&s.grabify(),f.one("layoutstop",e.stop),f.trigger("layoutstop")}window.isIE?d(function(){a()}):a()};l.start(),setTimeout(function(){l.stop()},e.maxSimulationTime)},b.prototype.stop=function(){null!=this.system&&system.stop()},a("layout","arbor",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend({},c,b)}var c={fit:!0,ready:void 0,stop:void 0,rStepSize:10,padding:30,startAngle:1.5*Math.PI,counterclockwise:!1};b.prototype.run=function(){function a(){var a=0,b=k,c={x:i.x+o*Math.cos(a),y:i.y+o*Math.sin(a)},d={x:i.x+o*Math.cos(b),y:i.y+o*Math.sin(b)},e=Math.sqrt((d.x-c.x)*(d.x-c.x)+(d.y-c.y)*(d.y-c.y));return e}for(var b=this.options,c=b,d=b.cy,e=d.nodes(),f=(d.edges(),d.container()),g=f.clientWidth,h=f.clientHeight,i={x:g/2,y:h/2},j=c.startAngle,k=2*Math.PI/e.length,l=0,m=0;m<e.length;m++){var n=e[m];l=Math.max(n.outerWidth(),n.outerHeight())}for(var o=g/2-l;a()<l;)o+=c.rStepSize;var m=0;e.positions(function(){var a=o*Math.cos(j),b=o*Math.sin(j),d={x:i.x+a,y:i.y+b};return m++,j=c.counterclockwise?j-k:j+k,d}),b.fit&&d.fit(c.padding),d.one("layoutready",b.ready),d.trigger("layoutready"),d.one("layoutstop",b.stop),d.trigger("layoutstop")},b.prototype.stop=function(){},a("layout","circle",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend({},c,b)}var c={fit:!0,ready:void 0,stop:void 0,directed:!0,padding:30,circle:!1,roots:void 0};b.prototype.run=function(){function b(){for(var a=0;a<p.length;a++)for(var b=p[a],c=0;c<b.length;c++){var d=b[c];d._private.scratch.BreadthFirstLayout={depth:a,index:c}}}function c(a){if(D[a.id()])return D[a.id()];for(var b=a._private.scratch.BreadthFirstLayout.depth,c=a.neighborhood().nodes(),d=0,e=0,f=0;f<c.length;f++){var g=c[f],h=(g.edgesWith(a),g._private.scratch.BreadthFirstLayout.index),i=g._private.scratch.BreadthFirstLayout.depth,j=p[i].length;(b>i||0===b)&&(d+=h/j,e++)}return e=Math.max(1,e),d/=e,0===e&&(d=void 0),D[a.id()]=d,d}var d,e=this.options,f=e,g=e.cy,h=g.nodes(),i=(g.edges(),g.container()),j=i.clientWidth,k=i.clientHeight;if(a.is.elementOrCollection(f.roots))d=f.roots;else if(a.is.array(f.roots)){for(var l=[],m=0;m<f.roots.length;m++){var n=f.roots[m],o=g.getElementById(n);d.push(o)}d=new a.Collection(g,l)}else d=h.roots();var p=[],q={},r={};d.bfs(function(a,b){var c=this[0];p[b]||(p[b]=[]),p[b].push(c),q[c.id()]=!0,r[c.id()]=b},f.directed);for(var s=[],m=0;m<h.length;m++){var o=h[m];q[o.id()]||s.push(o)}for(var t=3*s.length,u=0;0!==s.length&&t>u;){for(var v=s.shift(),w=v.neighborhood().nodes(),x=!1,m=0;m<w.length;m++){var y=r[w[m].id()];if(void 0!==y){p[y].push(v),x=!0;break}}x||s.push(v),u++}for(;0!==s.length;){for(var v=s.shift(),z=v.bfs(),x=!1,m=0;m<z.length;m++){var y=r[z[m].id()];if(void 0!==y){p[y].push(v),x=!0;break}}x||(0===p.length&&p.push([]),p[0].push(v))}b();for(var A=0,m=0;m<h.length;m++){var B=h[m].outerWidth(),C=h[m].outerHeight();A=Math.max(A,B,C)}A*=1.75;for(var D={},E=0;3>E;E++){for(var m=0;m<p.length;m++){var y=m;p[m]=p[m].sort(function(a,b){var d=c(a),e=c(b);return d-e})}b()}var F={x:j/2,y:k/2};h.positions(function(){var a=this[0],b=a._private.scratch.BreadthFirstLayout,c=b.depth,d=b.index,e=Math.max(j/(p[c].length+1),A),g=Math.max(k/(p.length+1),A),h=Math.min(j/2/p.length,k/2/p.length);if(h=Math.max(h,A),f.circle){var i=h*c+h-(p.length>0&&p[0].length<=3?h/2:0),l=2*Math.PI/p[c].length*d;return 0===c&&1===p[0].length&&(i=1),{x:F.x+i*Math.cos(l),y:F.y+i*Math.sin(l)}}return{x:(d+1)*e,y:(c+1)*g}}),e.fit&&g.fit(f.padding),g.one("layoutready",e.ready),g.trigger("layoutready"),g.one("layoutstop",e.stop),g.trigger("layoutstop")},b.prototype.stop=function(){},a("layout","breadthfirst",b)}(cytoscape);var cytoscape;!function(){var a=cytoscape=function(){return cytoscape.init.apply(cytoscape,arguments)};a.init=function(b){return void 0===b&&(b={}),a.is.plainObject(b)?new a.Core(b):a.is.string(b)?a.extension.apply(a.extension,arguments):void 0},a.fn={},"undefined"!=typeof exports&&(exports=module.exports=cytoscape),window.cytoscape=cytoscape}(),function(a){a.is={string:function(a){return null!=a&&"string"==typeof a},fn:function(a){return null!=a&&"function"==typeof a},array:function(a){return null!=a&&a instanceof Array},plainObject:function(b){return null!=b&&typeof b==typeof{}&&!a.is.array(b)&&b.constructor===Object},number:function(a){return null!=a&&"number"==typeof a&&!isNaN(a)},integer:function(b){return a.is.number(b)&&Math.floor(b)===b},color:function(a){return null!=a&&"string"==typeof a&&""!==$.Color(a).toString()},bool:function(a){return null!=a&&typeof a==typeof!0},elementOrCollection:function(b){return a.is.element(b)||a.is.collection(b)},element:function(b){return b instanceof a.Element&&b._private.single},collection:function(b){return b instanceof a.Collection&&!b._private.single},core:function(b){return b instanceof a.Core},style:function(b){return b instanceof a.Style},stylesheet:function(b){return b instanceof a.Stylesheet},event:function(b){return b instanceof a.Event},emptyString:function(b){return b?a.is.string(b)&&(""===b||b.match(/^\s+$/))?!0:!1:!0},nonemptyString:function(b){return b&&a.is.string(b)&&""!==b&&!b.match(/^\s+$/)?!0:!1},domElement:function(a){return"undefined"==typeof HTMLElement?!1:a instanceof HTMLElement}}}(cytoscape),function(a){a.util={extend:function(){var b,c,d,e,f,g,h=arguments[0]||{},i=1,j=arguments.length,k=!1;for("boolean"==typeof h&&(k=h,h=arguments[1]||{},i=2),"object"==typeof h||a.is.fn(h)||(h={}),j===i&&(h=this,--i);j>i;i++)if(null!=(b=arguments[i]))for(c in b)d=h[c],e=b[c],h!==e&&(k&&e&&(a.is.plainObject(e)||(f=a.is.array(e)))?(f?(f=!1,g=d&&a.is.array(d)?d:[]):g=d&&a.is.plainObject(d)?d:{},h[c]=a.util.extend(k,g,e)):void 0!==e&&(h[c]=e));return h},error:function(a){if(!console)throw a;if(console.error)console.error(a);else{if(!console.log)throw a;console.log(a)}},clone:function(a){var b={};for(var c in a)a.hasOwnProperty(c)&&(b[c]=a[c]);return b},copy:function(b){return null==b?b:a.is.array(b)?b.slice():a.is.plainObject(b)?a.util.clone(b):b},mapEmpty:function(a){var b=!0;if(null!=a)for(var c in a){b=!1;break}return b},pushMap:function(b){var c=a.util.getMap(b);null==c?a.util.setMap($.extend({},b,{value:[b.value]})):c.push(b.value)},setMap:function(b){for(var c,d=b.map,e=b.keys,f=e.length,g=0;f>g;g++){var c=e[g];a.is.plainObject(c)&&a.util.error("Tried to set map with object key"),g<e.length-1?(null==d[c]&&(d[c]={}),d=d[c]):d[c]=b.value}},getMap:function(b){for(var c=b.map,d=b.keys,e=d.length,f=0;e>f;f++){var g=d[f];if(a.is.plainObject(g)&&a.util.error("Tried to get map with object key"),c=c[g],null==c)return c}return c},deleteMap:function(b){for(var c=b.map,d=b.keys,e=d.length,f=b.keepChildren,g=0;e>g;g++){var h=d[g];a.is.plainObject(h)&&a.util.error("Tried to delete map with object key");var i=g===b.keys.length-1;if(i)if(f)for(var j in c)f[j]||delete c[j];else delete c[h];else c=c[h]}},capitalize:function(b){return a.is.emptyString(b)?b:b.charAt(0).toUpperCase()+b.substring(1)},camel2dash:function(a){for(var b=[],c=0;c<a.length;c++){var d=a[c],e=d.toLowerCase(),f=d!==e;f?(b.push("-"),b.push(e)):b.push(d)}var g=b.length===a.length;return g?a:b.join("")},dash2camel:function(a){for(var b=[],c=!1,d=0;d<a.length;d++){var e=a[d],f="-"===e;f?c=!0:(b.push(c?e.toUpperCase():e),c=!1)}return b.join("")},trim:function(a){var b,c;for(b=0;b<a.length&&" "===a[b];b++);for(c=a.length-1;c>b&&" "===a[c];c--);return a.substring(b,c+1)},hex2tuple:function(a){if((4===a.length||7===a.length)&&"#"===a[0]){var b,c,d,e=4===a.length,f=16;return e?(b=parseInt(a[1]+a[1],f),c=parseInt(a[2]+a[2],f),d=parseInt(a[3]+a[3],f)):(b=parseInt(a[1]+a[2],f),c=parseInt(a[3]+a[4],f),d=parseInt(a[5]+a[6],f)),[b,c,d]}},hsl2tuple:function(b){function c(a,b,c){return 0>c&&(c+=1),c>1&&(c-=1),1/6>c?a+6*(b-a)*c:.5>c?b:2/3>c?a+(b-a)*(2/3-c)*6:a}var d,e,f,g,h,i,j,k,l=(a.util.regex.number,new RegExp("^"+a.util.regex.hsla+"$").exec(b));if(l){if(e=parseInt(l[1]),0>e?e=(360- -1*e%360)%360:e>360&&(e%=360),e/=360,f=parseFloat(l[2]),0>f||f>100)return;if(f/=100,g=parseFloat(l[3]),0>g||g>100)return;if(g/=100,h=l[4],void 0!==h&&(h=parseFloat(h),0>h||h>1))return;if(0===f)i=j=k=Math.round(255*g);else{var m=.5>g?g*(1+f):g+f-g*f,n=2*g-m;i=Math.round(255*c(n,m,e+1/3)),j=Math.round(255*c(n,m,e)),k=Math.round(255*c(n,m,e-1/3))}d=[i,j,k,h]}return d},rgb2tuple:function(b){var c,d=(a.util.regex.number,new RegExp("^"+a.util.regex.rgba+"$").exec(b));if(d){c=[];for(var e=[],f=1;3>=f;f++){var g=d[f];if("%"===g[g.length-1]&&(e[f]=!0),g=parseFloat(g),e[f]&&(g=g/100*255),0>g||g>255)return;c.push(Math.floor(g))}var h=e[1]||e[2]||e[3],i=e[1]&&e[2]&&e[3];if(h&&!i)return;var j=d[4];if(void 0!==j){if(j=parseFloat(j),0>j||j>1)return;c.push(j)}}return c},colorname2tuple:function(b){return a.util.colors[b.toLowerCase()]},color2tuple:function(b){return a.util.colorname2tuple(b)||a.util.hex2tuple(b)||a.util.rgb2tuple(b)||a.util.hsl2tuple(b)},tuple2hex:function(a){function b(a){var b=a.toString(16);return 1===b.length&&(b="0"+b),b}var c=a[0],d=a[1],e=a[2];return"#"+b(c)+b(d)+b(e)},colors:{transparent:[0,0,0,0],aliceblue:[240,248,255],antiquewhite:[250,235,215],aqua:[0,255,255],aquamarine:[127,255,212],azure:[240,255,255],beige:[245,245,220],bisque:[255,228,196],black:[0,0,0],blanchedalmond:[255,235,205],blue:[0,0,255],blueviolet:[138,43,226],brown:[165,42,42],burlywood:[222,184,135],cadetblue:[95,158,160],chartreuse:[127,255,0],chocolate:[210,105,30],coral:[255,127,80],cornflowerblue:[100,149,237],cornsilk:[255,248,220],crimson:[220,20,60],cyan:[0,255,255],darkblue:[0,0,139],darkcyan:[0,139,139],darkgoldenrod:[184,134,11],darkgray:[169,169,169],darkgreen:[0,100,0],darkgrey:[169,169,169],darkkhaki:[189,183,107],darkmagenta:[139,0,139],darkolivegreen:[85,107,47],darkorange:[255,140,0],darkorchid:[153,50,204],darkred:[139,0,0],darksalmon:[233,150,122],darkseagreen:[143,188,143],darkslateblue:[72,61,139],darkslategray:[47,79,79],darkslategrey:[47,79,79],darkturquoise:[0,206,209],darkviolet:[148,0,211],deeppink:[255,20,147],deepskyblue:[0,191,255],dimgray:[105,105,105],dimgrey:[105,105,105],dodgerblue:[30,144,255],firebrick:[178,34,34],floralwhite:[255,250,240],forestgreen:[34,139,34],fuchsia:[255,0,255],gainsboro:[220,220,220],ghostwhite:[248,248,255],gold:[255,215,0],goldenrod:[218,165,32],gray:[128,128,128],grey:[128,128,128],green:[0,128,0],greenyellow:[173,255,47],honeydew:[240,255,240],hotpink:[255,105,180],indianred:[205,92,92],indigo:[75,0,130],ivory:[255,255,240],khaki:[240,230,140],lavender:[230,230,250],lavenderblush:[255,240,245],lawngreen:[124,252,0],lemonchiffon:[255,250,205],lightblue:[173,216,230],lightcoral:[240,128,128],lightcyan:[224,255,255],lightgoldenrodyellow:[250,250,210],lightgray:[211,211,211],lightgreen:[144,238,144],lightgrey:[211,211,211],lightpink:[255,182,193],lightsalmon:[255,160,122],lightseagreen:[32,178,170],lightskyblue:[135,206,250],lightslategray:[119,136,153],lightslategrey:[119,136,153],lightsteelblue:[176,196,222],lightyellow:[255,255,224],lime:[0,255,0],limegreen:[50,205,50],linen:[250,240,230],magenta:[255,0,255],maroon:[128,0,0],mediumaquamarine:[102,205,170],mediumblue:[0,0,205],mediumorchid:[186,85,211],mediumpurple:[147,112,219],mediumseagreen:[60,179,113],mediumslateblue:[123,104,238],mediumspringgreen:[0,250,154],mediumturquoise:[72,209,204],mediumvioletred:[199,21,133],midnightblue:[25,25,112],mintcream:[245,255,250],mistyrose:[255,228,225],moccasin:[255,228,181],navajowhite:[255,222,173],navy:[0,0,128],oldlace:[253,245,230],olive:[128,128,0],olivedrab:[107,142,35],orange:[255,165,0],orangered:[255,69,0],orchid:[218,112,214],palegoldenrod:[238,232,170],palegreen:[152,251,152],paleturquoise:[175,238,238],palevioletred:[219,112,147],papayawhip:[255,239,213],peachpuff:[255,218,185],peru:[205,133,63],pink:[255,192,203],plum:[221,160,221],powderblue:[176,224,230],purple:[128,0,128],red:[255,0,0],rosybrown:[188,143,143],royalblue:[65,105,225],saddlebrown:[139,69,19],salmon:[250,128,114],sandybrown:[244,164,96],seagreen:[46,139,87],seashell:[255,245,238],sienna:[160,82,45],silver:[192,192,192],skyblue:[135,206,235],slateblue:[106,90,205],slategray:[112,128,144],slategrey:[112,128,144],snow:[255,250,250],springgreen:[0,255,127],steelblue:[70,130,180],tan:[210,180,140],teal:[0,128,128],thistle:[216,191,216],tomato:[255,99,71],turquoise:[64,224,208],violet:[238,130,238],wheat:[245,222,179],white:[255,255,255],whitesmoke:[245,245,245],yellow:[255,255,0],yellowgreen:[154,205,50]}},a.util.regex={},a.util.regex.number="(?:\\d*\\.\\d+|\\d+|\\d*\\.\\d+[eE]\\d+)",a.util.regex.rgba="rgb[a]?\\(("+a.util.regex.number+"[%]?)\\s*,\\s*("+a.util.regex.number+"[%]?)\\s*,\\s*("+a.util.regex.number+"[%]?)(?:\\s*,\\s*("+a.util.regex.number+"))?\\)",a.util.regex.rgbaNoBackRefs="rgb[a]?\\((?:"+a.util.regex.number+"[%]?)\\s*,\\s*(?:"+a.util.regex.number+"[%]?)\\s*,\\s*(?:"+a.util.regex.number+"[%]?)(?:\\s*,\\s*(?:"+a.util.regex.number+"))?\\)",a.util.regex.hsla="hsl[a]?\\(("+a.util.regex.number+")\\s*,\\s*("+a.util.regex.number+"[%])\\s*,\\s*("+a.util.regex.number+"[%])(?:\\s*,\\s*("+a.util.regex.number+"))?\\)",a.util.regex.hslaNoBackRefs="hsl[a]?\\((?:"+a.util.regex.number+")\\s*,\\s*(?:"+a.util.regex.number+"[%])\\s*,\\s*(?:"+a.util.regex.number+"[%])(?:\\s*,\\s*(?:"+a.util.regex.number+"))?\\)",a.util.regex.hex3="\\#[0-9a-fA-F]{3}",a.util.regex.hex6="\\#[0-9a-fA-F]{6}"}(cytoscape),function(a){a.math={},a.math.boxInBezierVicinity=function(a,b,c,d,e,f,g,h,i,j,k){var l=Math.min(a,c)-k,m=Math.min(b,d)-k,n=Math.max(a,c)+k,o=Math.max(b,d)+k;if(e>=l&&n>=e&&f>=m&&o>=f)return 2;if(i>=l&&n>=i&&j>=m&&o>=j)return 2;if(g>=l&&n>=g&&h>=m&&o>=h)return 1;var p=Math.min(e,g,i),q=Math.min(f,h,j),r=Math.max(e,g,i),s=Math.max(f,h,j);return p>n||l>r||q>o||m>s?0:1},a.math.checkStraightEdgeCrossesBox=function(a,b,c,d,e,f,g,h,i){var j,k,l=Math.min(a,c)-i,m=Math.min(b,d)-i,n=Math.max(a,c)+i,o=Math.max(b,d)+i,p=g-e,q=e,r=h-f,s=f;if(Math.abs(p)<1e-4)return e>=l&&n>=e&&Math.min(f,h)<=m&&Math.max(f,h)>=o;var t=(l-q)/p;if(t>0&&1>=t&&(j=r*t+s,j>=m&&o>=j))return!0;var u=(n-q)/p;if(u>0&&1>=u&&(j=r*u+s,j>=m&&o>=j))return!0;var v=(m-s)/r;if(v>0&&1>=v&&(k=p*v+q,k>=l&&n>=k))return!0;var w=(o-s)/r;return w>0&&1>=w&&(k=p*w+q,k>=l&&n>=k)?!0:!1},a.math.checkBezierCrossesBox=function(a,b,c,d,e,f,g,h,i,j,k){var l=Math.min(a,c)-k,m=Math.min(b,d)-k,n=Math.max(a,c)+k,o=Math.max(b,d)+k;if(e>=l&&n>=e&&f>=m&&o>=f)return!0;if(i>=l&&n>=i&&j>=m&&o>=j)return!0;var p=e-2*g+i,q=-2*e+2*g,r=e,s=[];if(Math.abs(p)<1e-4){var t=(l-e)/q,u=(n-e)/q;s.push(t,u)}else{var v,w,x=q*q-4*p*(r-l);if(x>0){var y=Math.sqrt(x);v=(-q+y)/(2*p),w=(-q-y)/(2*p),s.push(v,w)}var z,A,B=q*q-4*p*(r-n);if(B>0){var y=Math.sqrt(B);z=(-q+y)/(2*p),A=(-q-y)/(2*p),s.push(z,A)}}s.sort(function(a,b){return a-b});var C=f-2*h+j,D=-2*f+2*h,E=f,F=[];if(Math.abs(C)<1e-4){var G=(m-f)/D,H=(o-f)/D;F.push(G,H)}else{var I,J,K=D*D-4*C*(E-m);if(K>0){var y=Math.sqrt(K);I=(-D+y)/(2*C),J=(-D-y)/(2*C),F.push(I,J)}var L,M,N=D*D-4*C*(E-o);if(N>0){var y=Math.sqrt(N);L=(-D+y)/(2*C),M=(-D-y)/(2*C),F.push(L,M)}}F.sort(function(a,b){return a-b});for(var O=0;O<s.length;O+=2)for(var P=1;P<F.length;P+=2)if(s[O]<F[P]&&F[P]>=0&&s[O]<=1&&s[O+1]>F[P-1]&&F[P-1]<=1&&s[O+1]>=0)return!0;return!1},a.math.inBezierVicinity=function(a,b,c,d,e,f,g,h,i){var j,k,l=.25*c+.5*e+.25*g,m=.25*d+.5*f+.25*h,n=function(a,b,c,d,e,f,g,h){if(j=(f-d)*(a-c)+(c-e)*(b-d),k=j*j,sideSquared=(f-d)*(f-d)+(c-e)*(c-e),h){if(j>0)return!1}else if(0>j)return!1;
-return k/sideSquared>g},o=(l+e)/2,p=(m+f)/2,q=!0;return n(o,p,c,d,e,f,0,q)&&(q=!q),!n(a,b,c,d,e,f,i,q)&&!n(a,b,e,f,g,h,i,q)&&!n(a,b,g,h,c,d,i,q)},a.math.solveCubic=function(a,b,c,d,e){b/=a,c/=a,d/=a;var f,g,h,i,j,k,l,m;return g=(3*c-b*b)/9,h=-(27*d)+b*(9*c-2*b*b),h/=54,f=g*g*g+h*h,e[1]=0,l=b/3,f>0?(j=h+Math.sqrt(f),j=0>j?-Math.pow(-j,1/3):Math.pow(j,1/3),k=h-Math.sqrt(f),k=0>k?-Math.pow(-k,1/3):Math.pow(k,1/3),e[0]=-l+j+k,l+=(j+k)/2,e[4]=e[2]=-l,l=Math.sqrt(3)*(-k+j)/2,e[3]=l,void(e[5]=-l)):(e[5]=e[3]=0,0==f?(m=0>h?-Math.pow(-h,1/3):Math.pow(h,1/3),e[0]=-l+2*m,void(e[4]=e[2]=-(m+l))):(g=-g,i=g*g*g,i=Math.acos(h/Math.sqrt(i)),m=2*Math.sqrt(g),e[0]=-l+m*Math.cos(i/3),e[2]=-l+m*Math.cos((i+2*Math.PI)/3),void(e[4]=-l+m*Math.cos((i+4*Math.PI)/3))))},a.math.sqDistanceToQuadraticBezier=function(a,c,d,e,f,g,h,i){var j=1*d*d-4*d*f+2*d*h+4*f*f-4*f*h+h*h+e*e-4*e*g+2*e*i+4*g*g-4*g*i+i*i,k=9*d*f-3*d*d-3*d*h-6*f*f+3*f*h+9*e*g-3*e*e-3*e*i-6*g*g+3*g*i,l=3*d*d-6*d*f+d*h-d*a+2*f*f+2*f*a-h*a+3*e*e-6*e*g+e*i-e*c+2*g*g+2*g*c-i*c,m=1*d*f-d*d+d*a-f*a+e*g-e*e+e*c-g*c;b("coefficients: "+j/j+", "+k/j+", "+l/j+", "+m/j);var n=[];this.solveCubic(j,k,l,m,n);for(var o=1e-7,p=[],q=0;6>q;q+=2)Math.abs(n[q+1])<o&&n[q]>=0&&n[q]<=1&&p.push(n[q]);p.push(1),p.push(0);for(var r,s,t,u,v=-1,w=0;w<p.length;w++)s=Math.pow(1-p[w],2)*d+2*(1-p[w])*p[w]*f+p[w]*p[w]*h,t=Math.pow(1-p[w],2)*e+2*(1-p[w])*p[w]*g+p[w]*p[w]*i,u=Math.pow(s-a,2)+Math.pow(t-c,2),b("distance for param "+p[w]+": "+Math.sqrt(u)),v>=0?v>u&&(v=u,r=p[w]):(v=u,r=p[w]);return b("given: ( "+a+", "+c+"), ( "+d+", "+e+"), ( "+f+", "+g+"), ( "+h+", "+i+")"),b("roots: "+n),b("params: "+p),b("closest param: "+r),v};var b=function(a){}}(cytoscape),function(a){a.instances=[],a.instanceCounter=0,a.lastInstanceTime,a.registerInstance=function(b,c){var d;a.is.core(b)?d=b:a.is.domElement(b)&&(c=b);var e=a.getRegistrationForInstance(b,c);if(e)return e.cy?a.util.error("Tried to register on a pre-existing registration"):(e.cy=b,e.domElement=c),e;var f,g=+new Date;a.lastInstanceTime&&a.lastInstanceTime!==g?++a.instanceCounter:a.instanceCounter=0,a.lastInstanceTime=g,f=a.instanceCounter;var h="cy-"+g+"-"+f,i={id:h,cy:d,domElement:c,readies:[]};return a.instances.push(i),a.instances[h]=i,i},a.removeRegistrationForInstance=function(b,c){var d;if(a.is.core(b)?d=b:a.is.domElement(b)&&(c=b),a.is.core(d)){var e=d._private.instanceId;delete a.instances[e],a.instances.splice(e,1)}else if(a.is.domElement(c))for(var f=0;f<a.instances.length;f++){var g=a.instances[f];g.domElement===c&&(delete a.instances[g.id],a.instances.splice(f,1),f--)}},a.getRegistrationForInstance=function(b,c){var d;if(a.is.core(b)?b.registered()&&(d=b):a.is.domElement(b)&&(c=b),a.is.core(d)){var e=d._private.instanceId;return a.instances[e]}if(a.is.domElement(c))for(var f=a.instances.length-1;f>=0;f--){var g=a.instances[f];if(g.domElement===c)return g}}}(cytoscape),function(a){function b(b,c,d){var e={};switch(e[c]=d,b){case"core":case"collection":a.fn[b](e)}return a.util.setMap({map:f,keys:[b,c],value:d})}function c(b,c){return a.util.getMap({map:f,keys:[b,c]})}function d(b,c,d,e,f){return a.util.setMap({map:g,keys:[b,c,d,e],value:f})}function e(b,c,d,e){return a.util.getMap({map:g,keys:[b,c,d,e]})}var f={};a.extensions=f;var g={};a.modules=g,a.extension=function(){return 2==arguments.length?c.apply(this,arguments):3==arguments.length?b.apply(this,arguments):4==arguments.length?e.apply(this,arguments):5==arguments.length?d.apply(this,arguments):void $.error("Invalid extension access syntax")}}(cytoscape),function(a,b){a&&(a.fn.cytoscape=function(c){var d=a(this);if("get"===c){var e=b.getRegistrationForInstance(d[0]);return e.cy}if(!b.is.fn(c)){if(b.is.plainObject(c))return d.each(function(){var b=a.extend({},c,{container:a(this)[0]});cytoscape(b)});for(var f=d[0],g=[],h=[],i=1;i<arguments.length;i++)h[i-1]=arguments[i];return d.each(function(){var a=b.getRegistrationForInstance(f),d=a.cy,e=c;if(d&&b.is.fn(d[e])){var i=d[e].apply(d,h);g.push(i)}}),1===g.length?g=g[0]:0==g.length&&(g=a(this)),g}var j=c,f=d[0],e=b.getRegistrationForInstance(f);e||(e=b.registerInstance(f)),e&&e.cy&&e.cy.ready()?e.cy.trigger("ready",[],j):e.readies.push(j)},a.cytoscape=cytoscape,null==a.fn.cy&&null==a.cy&&(a.fn.cy=a.fn.cytoscape,a.cy=a.cytoscape))}("undefined"!=typeof jQuery?jQuery:null,cytoscape),function(a){function b(){return!1}function c(){return!0}a.Event=function(d,e){return this instanceof a.Event?(d&&d.type?(this.originalEvent=d,this.type=d.type,this.isDefaultPrevented=d.defaultPrevented||d.returnValue===!1||d.getPreventDefault&&d.getPreventDefault()?c:b):this.type=d,e&&a.util.extend(this,e),void(this.timeStamp=d&&d.timeStamp||+new Date)):new a.Event(d,e)},a.Event.prototype={preventDefault:function(){this.isDefaultPrevented=c;var a=this.originalEvent;a&&(a.preventDefault?a.preventDefault():a.returnValue=!1)},stopPropagation:function(){this.isPropagationStopped=c;var a=this.originalEvent;a&&(a.stopPropagation&&a.stopPropagation(),a.cancelBubble=!0)},stopImmediatePropagation:function(){this.isImmediatePropagationStopped=c,this.stopPropagation()},isDefaultPrevented:b,isPropagationStopped:b,isImmediatePropagationStopped:b}}(cytoscape),function(a){a.define={data:function(b){var c={field:"data",bindingEvent:"data",allowBinding:!1,allowSetting:!1,allowGetting:!1,settingEvent:"data",settingTriggersEvent:!1,triggerFnName:"trigger",immutableKeys:{},updateMappers:!1};return b=a.util.extend({},c,b),function(c,d){var e=b,f=this,g=void 0!==f.length,h=g?f:[f],i=g?f[0]:f;if(a.is.string(c)){if(e.allowGetting&&void 0===d){var j;return i&&(j=i._private[e.field][c]),j}if(e.allowSetting&&void 0!==d){var k=!e.immutableKeys[c];if(k){for(var l=0,m=h.length;m>l;l++)h[l]._private[e.field][c]=d;e.updateMappers&&f.updateMappers(),e.settingTriggersEvent&&f[e.triggerFnName](e.settingEvent)}}}else if(e.allowSetting&&a.is.plainObject(c)){var n,o,p=c;for(n in p){o=p[n];var k=!e.immutableKeys[n];if(k)for(var l=0,m=h.length;m>l;l++)h[l]._private[e.field][n]=o}e.updateMappers&&f.updateMappers(),e.settingTriggersEvent&&f[e.triggerFnName](e.settingEvent)}else if(e.allowBinding&&a.is.fn(c)){var q=c;f.bind(e.bindingEvent,q)}else if(e.allowGetting&&void 0===c){var j;return i&&(j=i._private[e.field]),j}return f}},batchData:function(b){var c={field:"data",event:"data",triggerFnName:"trigger",immutableKeys:{},updateMappers:!1},d=b=a.util.extend({},c,b);return function(b){var c=this,e=void 0!==c.length,f=e?c:c._private.elements;if(0===f.length)return c;for(var g=e?f[0]._private.cy:c,h=0;h<f.length;h++){var i=f[h],j=i._private.data.id,k=b[j];if(void 0!==k&&null!==k){var l,m,n=k;for(l in n){m=n[l];var o=!d.immutableKeys[l];o&&(i._private[d.field][l]=m)}}}var p=new a.Collection(g,f);return d.updateMappers&&p.updateMappers(),p[d.triggerFnName](d.event),c}},removeData:function(b){var c={field:"data",event:"data",triggerFnName:"trigger",triggerEvent:!1,immutableKeys:{}};return b=a.util.extend({},c,b),function(c){{var d=b,e=this,f=void 0!==e.length,g=f?e:[e];f?e[0]:e}if(a.is.string(c)){for(var h=c.split(/\s+/),i=h.length,j=0;i>j;j++){var k=h[j];if(!a.is.emptyString(k)){var l=!d.immutableKeys[k];if(l)for(var m=0,n=g.length;n>m;m++)delete g[m]._private[d.field][k]}}d.triggerEvent&&e[d.triggerFnName](d.event)}else if(void 0===c){for(var m=0,n=g.length;n>m;m++){var o=g[m]._private[d.field];for(var k in o){var p=!d.immutableKeys[k];p&&delete o[k]}}d.triggerEvent&&e[d.triggerFnName](d.event)}return e}},event:{regex:/(\w+)(\.\w+)?/,optionalTypeRegex:/(\w+)?(\.\w+)?/,props:"altKey bubbles button cancelable charCode clientX clientY ctrlKey currentTarget data detail eventPhase metaKey offsetX offsetY originalTarget pageX pageY prevValue relatedTarget screenX screenY shiftKey target view which".split(/\s+/),aliases:"mousedown mouseup click mouseover mouseout mousemove touchstart touchmove touchend grab drag free".split(/\s+/),aliasesOn:function(b){for(var c=a.define.event.aliases,d=0;d<c.length;d++){var e=c[d];b[e]=function(b,c){return a.is.fn(c)?this.on(e,b,c):a.is.fn(b)?(c=b,this.on(e,c)):this.trigger(e),this}}},falseCallback:function(){return!1}},on:function(b){var c={unbindSelfOnTrigger:!1,unbindAllBindersOnTrigger:!1};return b=a.util.extend({},c,b),function(c,d,e,f){var g=this,h=void 0!==g.length,i=h?g:[g],j=(h?g[0]:g,a.is.string(c)),k=b;if(a.is.plainObject(d)?(f=e,e=d,d=void 0):(a.is.fn(d)||d===!1)&&(f=d,e=void 0,d=void 0),(a.is.fn(e)||e===!1)&&(f=e,e=void 0),!a.is.fn(f)&&f!==!1&&j)return g;if(j){var l={};l[c]=f,c=l}for(var m in c)if(f=c[m],f===!1&&(f=a.define.event.falseCallback),a.is.fn(f)){m=m.split(/\s+/);for(var n=0;n<m.length;n++){var o=m[n];if(!a.is.emptyString(o)){var p=o.match(a.define.event.regex);if(p)for(var q=p[1],r=p[2]?p[2]:void 0,s={callback:f,data:e,delegated:d?!0:!1,selector:d,type:q,namespace:r,unbindSelfOnTrigger:k.unbindSelfOnTrigger,unbindAllBindersOnTrigger:k.unbindAllBindersOnTrigger,binders:i},t=0;t<i.length;t++)i[t]._private.listeners.push(s)}}}return g}},off:function(b){var c={};return b=a.util.extend({},c,b),function(b,c,d){var e=this,f=void 0!==e.length,g=f?e:[e],h=(f?e[0]:e,a.is.string(b));if(0===arguments.length){for(var i=0;i<g.length;i++)g[i]._private.listeners=[];return e}if((a.is.fn(c)||c===!1)&&(d=c,c=void 0),h){var j={};j[b]=d,b=j}for(var k in b){d=b[k],d===!1&&(d=a.define.event.falseCallback),k=k.split(/\s+/);for(var l=0;l<k.length;l++){var m=k[l];if(!a.is.emptyString(m)){var n=m.match(a.define.event.optionalTypeRegex);if(n)for(var o=n[1]?n[1]:void 0,p=n[2]?n[2]:void 0,i=0;i<g.length;i++)for(var q=g[i]._private.listeners,r=0;r<q.length;r++){var s=q[r],t=!p||p===s.namespace,u=!o||s.type===o,v=!d||d===s.callback,w=t&&u&&v;w&&(q.splice(r,1),r--)}}}}return e}},trigger:function(b){var c={};return b=a.util.extend({},c,b),function(b,c,d){var e=this,f=void 0!==e.length,g=f?e:[e],h=(f?e[0]:e,a.is.string(b)),i=a.is.plainObject(b),j=a.is.event(b),k=this._private.cy||this;if(h){var l=b.split(/\s+/);b=[];for(var m=0;m<l.length;m++){var n=l[m];if(!a.is.emptyString(n)){var o=n.match(a.define.event.regex),p=o[1],q=o[2]?o[2]:void 0;b.push({type:p,namespace:q})}}}else if(i){var r=b;b=[r]}c?a.is.array(c)||(c=[c]):c=[];for(var m=0;m<b.length;m++)for(var s=b[m],t=0;t<g.length;t++){var n,u=g[t],v=u._private.listeners,w=a.is.element(u),x=w;if(j)n=s,n.cyTarget=n.cyTarget||u,n.cy=n.cy||k,n.namespace=n.namespace||s.namespace;else{n=new a.Event(s,{cyTarget:u,cy:k,namespace:s.namespace});for(var y=a.define.event.props,z=0;z<y.length;z++){var A=y[z];n[A]=s[A]}}d&&(v=[{namespace:n.namespace,type:n.type,callback:d}]);for(var z=0;z<v.length;z++){var B=v[z],C=!B.namespace||B.namespace===n.namespace,D=B.type===n.type,E=B.delegated?u!==n.cyTarget&&a.is.element(n.cyTarget)&&n.cyTarget.is(B.selector):!0,F=C&&D&&E;if(F){var G=[n];if(G=G.concat(c),n.data=B.data?B.data:void 0,(B.unbindSelfOnTrigger||B.unbindAllBindersOnTrigger)&&(v.splice(z,1),z--),B.unbindAllBindersOnTrigger)for(var H=B.binders,I=0;I<H.length;I++){var J=H[I];if(J&&J!==u)for(var K=J._private.listeners,L=0;L<K.length;L++){var M=K[L];M===B&&(K.splice(L,1),L--)}}var N=B.delegated?n.cyTarget:u,O=B.callback.apply(N,G);(O===!1||n.isPropagationStopped())&&(x=!1,O===!1&&(n.stopPropagation(),n.preventDefault()))}}if(x){var P=u.parent(),Q=0!==P.length;Q?(P=P[0],P.trigger(n)):k.trigger(n)}}return e}}}}(cytoscape),function($$,window){var isTouch="ontouchstart"in window||window.DocumentTouch&&document instanceof DocumentTouch;$$.Style=function(a){return this instanceof $$.Style?$$.is.core(a)?(this._private={cy:a,coreStyle:{}},this.length=0,void this.addDefaultStylesheet()):void $$.util.error("A style must have a core reference"):new $$.Style(a)},$$.style=$$.Style,$$.styfn=$$.Style.prototype,$$.fn.style=function(a){for(var b in a){var c=a[b];$$.Style.prototype=c}},$$.stylesheet=$$.Stylesheet=function(){return this instanceof $$.Stylesheet?void(this.length=0):new $$.Stylesheet},$$.Stylesheet.prototype.selector=function(a){var b=this.length++;return this[b]={selector:a,properties:[]},this},$$.Stylesheet.prototype.css=function(a,b){var c=this.length-1;if($$.is.string(a))this[c].properties.push({name:a,value:b});else if($$.is.plainObject(a)){map=a;for(var d=0;d<$$.style.properties.length;d++){var e=$$.style.properties[d],f=map[e.name];if(void 0===f&&(f=map[$$.util.dash2camel(e.name)]),void 0!==f){var a=e.name,b=f;this[c].properties.push({name:a,value:b})}}}return this},$$.style.fromJson=function(a,b){for(var c=new $$.Style(a),d=0;d<b.length;d++){var e=b[d],f=e.selector,g=e.css;c.selector(f);for(var h in g){var i=g[h];c.css(h,i)}}return c},$$.styfn.fromJson=function(a){var b=this;b.resetToDefault();for(var c=0;c<a.length;c++){var d=a[c],e=d.selector,f=d.css;b.selector(e);for(var g in f){var h=f[g];b.css(g,h)}}return b},$$.Stylesheet.prototype.generateStyle=function(a){for(var b=new $$.Style(a),c=0;c<this.length;c++){var d=this[c],e=d.selector,f=d.properties;b.selector(e);for(var g=0;g<f.length;g++){var h=f[g];b.css(h.name,h.value)}}return b},$$.Stylesheet.prototype.assignToStyle=function(a,b){a.clear(),(b||void 0===b)&&a.addDefaultStylesheet();for(var c=0;c<this.length;c++){var d=this[c],e=d.selector,f=d.properties;a.selector(e);for(var g=0;g<f.length;g++){var h=f[g];a.css(h.name,h.value)}}},function(){var a=$$.util.regex.number,b=$$.util.regex.rgbaNoBackRefs,c=$$.util.regex.hslaNoBackRefs,d=$$.util.regex.hex3,e=$$.util.regex.hex6;$$.style.types={zeroOneNumber:{number:!0,min:0,max:1,unitless:!0},nonNegativeInt:{number:!0,min:0,integer:!0,unitless:!0},size:{number:!0,min:0,enums:["auto"]},bgSize:{number:!0,min:0,allowPercent:!0},color:{color:!0},lineStyle:{enums:["solid","dotted","dashed"]},curveStyle:{enums:["bundled","bezier"]},fontFamily:{regex:"^([\\w- ]+(?:\\s*,\\s*[\\w- ]+)*)$"},fontVariant:{enums:["small-caps","normal"]},fontStyle:{enums:["italic","normal","oblique"]},fontWeight:{enums:["normal","bold","bolder","lighter","100","200","300","400","500","600","800","900",100,200,300,400,500,600,700,800,900]},textDecoration:{enums:["none","underline","overline","line-through"]},textTransform:{enums:["none","capitalize","uppercase","lowercase"]},nodeShape:{enums:["rectangle","roundrectangle","ellipse","triangle","square","pentagon","hexagon","heptagon","octagon"]},arrowShape:{enums:["tee","triangle","square","circle","diamond","none"]},visibility:{enums:["hidden","visible"]},valign:{enums:["top","center","bottom"]},halign:{enums:["left","center","right"]},positionx:{enums:["left","center","right"],number:!0,allowPercent:!0},positiony:{enums:["top","center","bottom"],number:!0,allowPercent:!0},bgRepeat:{enums:["repeat","repeat-x","repeat-y","no-repeat"]},cursor:{enums:["auto","crosshair","default","e-resize","n-resize","ne-resize","nw-resize","pointer","progress","s-resize","sw-resize","text","w-resize","wait","grab","grabbing"]},text:{string:!0},data:{mapping:!0,regex:"^data\\s*\\(\\s*([\\w\\.]+)\\s*\\)$"},mapData:{mapping:!0,regex:"^mapData\\(([\\w\\.]+)\\s*\\,\\s*("+a+")\\s*\\,\\s*("+a+")\\s*,\\s*("+a+"|\\w+|"+b+"|"+c+"|"+d+"|"+e+")\\s*\\,\\s*("+a+"|\\w+|"+b+"|"+c+"|"+d+"|"+e+")\\)$"},url:{regex:"^url\\s*\\(\\s*([^\\s]+)\\s*\\s*\\)|none|(.+)$"}};var f=$$.style.types;$$.style.properties=[{name:"cursor",type:f.cursor},{name:"text-valign",type:f.valign},{name:"text-halign",type:f.halign},{name:"color",type:f.color},{name:"content",type:f.text},{name:"text-outline-color",type:f.color},{name:"text-outline-width",type:f.size},{name:"text-outline-opacity",type:f.zeroOneNumber},{name:"text-opacity",type:f.zeroOneNumber},{name:"text-decoration",type:f.textDecoration},{name:"text-transform",type:f.textTransform},{name:"font-family",type:f.fontFamily},{name:"font-style",type:f.fontStyle},{name:"font-variant",type:f.fontVariant},{name:"font-weight",type:f.fontWeight},{name:"font-size",type:f.size},{name:"min-zoomed-font-size",type:f.size},{name:"visibility",type:f.visibility},{name:"opacity",type:f.zeroOneNumber},{name:"z-index",type:f.nonNegativeInt},{name:"overlay-padding",type:f.size},{name:"overlay-color",type:f.color},{name:"overlay-opacity",type:f.zeroOneNumber},{name:"background-color",type:f.color},{name:"background-opacity",type:f.zeroOneNumber},{name:"background-image",type:f.url},{name:"background-position-x",type:f.positionx},{name:"background-position-y",type:f.positiony},{name:"background-repeat",type:f.bgRepeat},{name:"background-size-x",type:f.bgSize},{name:"background-size-y",type:f.bgSize},{name:"border-color",type:f.color},{name:"border-opacity",type:f.zeroOneNumber},{name:"border-width",type:f.size},{name:"border-style",type:f.lineStyle},{name:"height",type:f.size},{name:"width",type:f.size},{name:"padding-left",type:f.size},{name:"padding-right",type:f.size},{name:"padding-top",type:f.size},{name:"padding-bottom",type:f.size},{name:"shape",type:f.nodeShape},{name:"source-arrow-shape",type:f.arrowShape},{name:"target-arrow-shape",type:f.arrowShape},{name:"source-arrow-color",type:f.color},{name:"target-arrow-color",type:f.color},{name:"line-style",type:f.lineStyle},{name:"line-color",type:f.color},{name:"control-point-step-size",type:f.size},{name:"curve-style",type:f.curveStyle},{name:"selection-box-color",type:f.color},{name:"selection-box-opacity",type:f.zeroOneNumber},{name:"selection-box-border-color",type:f.color},{name:"selection-box-border-width",type:f.size},{name:"panning-cursor",type:f.cursor},{name:"active-bg-color",type:f.color},{name:"active-bg-opacity",type:f.zeroOneNumber},{name:"active-bg-size",type:f.size}];for(var g=$$.style.properties,h=0;h<g.length;h++){var i=g[h];g[i.name]=i}}(),$$.styfn.addDefaultStylesheet=function(){var a=this.containerPropertyAsString("font-family")||"sans-serif",b=this.containerPropertyAsString("font-style")||"normal",c=this.containerPropertyAsString("font-variant")||"normal",d=this.containerPropertyAsString("font-weight")||"normal",e=this.containerPropertyAsString("color")||"#000",f=this.containerPropertyAsString("text-transform")||"none",g=(this.containerPropertyAsString("text-decoration")||"none",this.containerPropertyAsString("font-size")||12);this.selector("node, edge").css({cursor:"default","text-valign":"top","text-halign":"center",color:e,content:void 0,"text-outline-color":"#000","text-outline-width":0,"text-outline-opacity":1,"text-opacity":1,"text-decoration":"none","text-transform":f,"font-family":a,"font-style":b,"font-variant":c,"font-weight":d,"font-size":g,"min-zoomed-font-size":0,visibility:"visible",opacity:1,"z-index":0,content:"","overlay-opacity":0,"overlay-color":"#000","overlay-padding":10,"background-color":"#888","background-opacity":1,"background-image":"none","border-color":"#000","border-opacity":1,"border-width":0,"border-style":"solid",height:30,width:30,"padding-top":0,"padding-bottom":0,"padding-left":0,"padding-right":0,shape:"ellipse","source-arrow-shape":"none","target-arrow-shape":"none","source-arrow-color":"#bbb","target-arrow-color":"#bbb","line-style":"solid","line-color":"#bbb","control-point-step-size":40,"curve-style":"bezier"}).selector("$node > node").css({width:"auto",height:"auto",shape:"rectangle","background-opacity":.5,"padding-top":10,"padding-right":10,"padding-left":10,"padding-bottom":10}).selector("edge").css({width:1}).selector(":active").css({"overlay-color":"black","overlay-padding":10,"overlay-opacity":.25}).selector("core").css({"selection-box-color":"#ddd","selection-box-opacity":.65,"selection-box-border-color":"#aaa","selection-box-border-width":1,"panning-cursor":"grabbing","active-bg-color":"black","active-bg-opacity":.15,"active-bg-size":isTouch?40:15})},$$.styfn.clear=function(){this._private.newStyle=!0;for(var a=0;a<this.length;a++)delete this[a];return this.length=0,this},$$.styfn.resetToDefault=function(){return this.clear(),this.addDefaultStylesheet(),this},$$.styfn.core=function(){return this._private.coreStyle},$$.styfn.parse=function(a,b,c){a=$$.util.camel2dash(a);var d=$$.style.properties[a],e=b;if(!d)return null;if(void 0===b||null===b)return null;var f=$$.is.string(b);f&&(b=$$.util.trim(b));var g=d.type;if(!g)return null;if(c&&(""===b||null===b))return{name:a,value:b,bypass:!0,deleteBypass:!0};var h,i;if(f){if(h=new RegExp($$.style.types.data.regex).exec(b))return{name:a,value:h,strValue:b,mapped:$$.style.types.data,field:h[1],bypass:c};if(i=new RegExp($$.style.types.mapData.regex).exec(b)){if(!g.color&&!g.number)return!1;var j=this.parse(a,i[4]);if(!j||j.mapped)return!1;var k=this.parse(a,i[5]);if(!k||k.mapped)return!1;if(j.value===k.value)return!1;if(g.color){var l=j.value,m=k.value,n=!(l[0]!==m[0]||l[1]!==m[1]||l[2]!==m[2]||l[3]!==m[3]&&(null!=l[3]&&1!==l[3]||null!=m[3]&&1!==m[3]));if(n)return!1}return{name:a,value:i,strValue:b,mapped:$$.style.types.mapData,field:i[1],fieldMin:parseFloat(i[2]),fieldMax:parseFloat(i[3]),valueMin:j.value,valueMax:k.value,bypass:c}}}else;if(g.number){var o;if(!g.unitless)if(f){var p=b.match("^("+$$.util.regex.number+")(px|em"+(g.allowPercent?"|\\%":"")+")?$");if(!g.enums){if(!p)return null;b=p[1],o=p[2]||"px"}}else o="px";if(b=parseFloat(b),isNaN(b)&&void 0!==g.enums){b=e;for(var q=0;q<g.enums.length;q++){var r=g.enums[q];if(r===b)return{name:a,value:b,strValue:b,bypass:c}}return null}if(g.integer&&!$$.is.integer(b))return null;if(void 0!==g.min&&b<g.min||void 0!==g.max&&b>g.max)return null;var s={name:a,value:b,strValue:""+b+(o?o:""),units:o,bypass:c,pxValue:g.unitless||"%"===o?void 0:"px"!==o&&o?this.getEmSizeInPixels()*b:b};return s}if(g.color){var t=$$.util.color2tuple(b);return{name:a,value:t,strValue:b,bypass:c}}if(!g.enums){if(g.regex){var u=new RegExp(g.regex),v=u.exec(b);return v?{name:a,value:v,strValue:b,bypass:c}:null}return g.string?{name:a,value:b,strValue:b,bypass:c}:null}for(var q=0;q<g.enums.length;q++){var r=g.enums[q];if(r===b)return{name:a,value:b,strValue:b,bypass:c}}},$$.styfn.getEmSizeInPixels=function(){var a=this._private.cy,b=a.container();if(window&&b){var c=window.getComputedStyle(b).getPropertyValue("font-size"),d=parseFloat(c);return d}return 1},$$.styfn.containerCss=function(a){var b=this._private.cy,c=b.container();return window&&c?window.getComputedStyle(c).getPropertyValue(a):void 0},$$.styfn.containerProperty=function(a){var b=this.containerCss(a),c=this.parse(a,b);return c},$$.styfn.containerPropertyAsString=function(a){var b=this.containerProperty(a);return b?b.strValue:void 0},$$.styfn.selector=function(a){var b="core"===a?null:new $$.Selector(a),c=this.length++;return this[c]={selector:b,properties:[]},this},$$.styfn.css=function(){var a=arguments;switch(a.length){case 1:for(var b=a[0],c=0;c<$$.style.properties.length;c++){var d=$$.style.properties[c],e=b[d.name];void 0===e&&(e=b[$$.util.dash2camel(d.name)]),void 0!==e&&this.cssRule(d.name,e)}break;case 2:this.cssRule(a[0],a[1])}return this},$$.styfn.cssRule=function(a,b){var c=this.parse(a,b);if(c){var d=this.length-1;this[d].properties.push(c);var e=!this[d].selector;e&&(this._private.coreStyle[c.name]=c)}return this},$$.styfn.applyParsedProperty=function(ele,parsedProp,context){parsedProp=$$.util.clone(parsedProp);var prop=parsedProp,style=ele._private.style,fieldVal,flatProp,type=$$.style.properties[prop.name].type,propIsBypass=prop.bypass,origProp=style[prop.name],origPropIsBypass=origProp&&origProp.bypass;if(("height"===parsedProp.name||"width"===parsedProp.name)&&"auto"===parsedProp.value&&ele.isNode()&&!ele.isParent())return!1;if(propIsBypass&&prop.deleteBypass){var currentProp=style[prop.name];return currentProp?currentProp.bypass&&currentProp.bypassed?(style[prop.name]=currentProp.bypassed,!0):!1:!0}switch(prop.mapped){case $$.style.types.mapData:if(fieldVal=ele._private.data[prop.field],!$$.is.number(fieldVal))return!1;var percent=(fieldVal-prop.fieldMin)/(prop.fieldMax-prop.fieldMin);if(type.color){var r1=prop.valueMin[0],r2=prop.valueMax[0],g1=prop.valueMin[1],g2=prop.valueMax[1],b1=prop.valueMin[2],b2=prop.valueMax[2],a1=null==prop.valueMin[3]?1:prop.valueMin[3],a2=null==prop.valueMax[3]?1:prop.valueMax[3],clr=[Math.round(r1+(r2-r1)*percent),Math.round(g1+(g2-g1)*percent),Math.round(b1+(b2-b1)*percent),Math.round(a1+(a2-a1)*percent)];flatProp={bypass:prop.bypass,name:prop.name,value:clr,strValue:["rgba(",clr[0],", ",clr[1],", ",clr[2],", ",clr[3],")"].join("")}}else{if(!type.number)return!1;var calcValue=prop.valueMin+(prop.valueMax-prop.valueMin)*percent;flatProp=this.parse(prop.name,calcValue,prop.bypass)}flatProp||(flatProp=this.parse(prop.name,origProp.strValue,prop.bypass)),flatProp.mapping=prop,prop=flatProp;break;case $$.style.types.data:fieldVal=eval("ele._private.data."+prop.field),flatProp=this.parse(prop.name,fieldVal,prop.bypass),flatProp||(flatProp=this.parse(prop.name,origProp.strValue,prop.bypass)),flatProp.mapping=prop,prop=flatProp;break;case void 0:break;default:return!1}if(propIsBypass)prop.bypassed=origPropIsBypass?origProp.bypassed:origProp,style[prop.name]=prop;else{var prevProp;origPropIsBypass?(prevProp=origProp.bypassed,origProp.bypassed=prop):(prevProp=style[prop.name],style[prop.name]=prop),prevProp&&prevProp.mapping&&prop.mapping&&prevProp.context===context&&(prevProp=prevProp.prev),prevProp&&prevProp!==prop&&(prop.prev=prevProp)}return prop.context=context,!0},$$.styfn.rollBackContext=function(a,b){for(var c=0;c<b.properties.length;c++){var d=b.properties[c],e=a._private.style[d.name];e.bypassed&&(e=e.bypassed);for(var f,g=!0,h=0;e.prev;){var i=e.prev;e.context===b&&(g?a._private.style[d.name]=i:f&&(f.prev=i)),f=e,e=i,g=!1,h++}}},$$.styfn.apply=function(a){for(var b=this,c=0;c<a.length;c++){var d=a[c];b._private.newStyle&&(d._private.styleCxts=[],d._private.style={});for(var e=0;e<this.length;e++){var f=this[e],g=f.selector&&f.selector.filter(d).length>0,h=f.properties;if(g){for(var i=0;i<h.length;i++){var j=h[i];(!d._private.styleCxts[e]||j.mapped)&&this.applyParsedProperty(d,j,f)}d._private.styleCxts[e]=f}else d._private.styleCxts[e]&&this.rollBackContext(d,f),delete d._private.styleCxts[e]}}b._private.newStyle=!1},$$.styfn.update=function(){var a=this._private.cy,b=a.elements();b.updateStyle()},$$.styfn.getRenderedStyle=function(a){var a=a[0];if(a){for(var b={},c=a._private.style,d=this._private.cy,e=d.zoom(),f=0;f<$$.style.properties.length;f++){var g=$$.style.properties[f],h=c[g.name];if(h){var i=h.unitless?h.strValue:h.pxValue*e+"px";b[g.name]=i,b[$$.util.dash2camel(g.name)]=i}}return b}},$$.styfn.getRawStyle=function(a){var a=a[0];if(a){for(var b={},c=a._private.style,d=0;d<$$.style.properties.length;d++){var e=$$.style.properties[d],f=c[e.name];f&&(b[e.name]=f.strValue,b[$$.util.dash2camel(e.name)]=f.strValue)}return b}},$$.styfn.getValueStyle=function(a){var b,c;if($$.is.element(a)?(b={},c=a._private.style):(b={},c=a),c)for(var d=0;d<$$.style.properties.length;d++){var e=$$.style.properties[d],f=c[e.name]||c[$$.util.dash2camel(e.name)];if(void 0===f||$$.is.plainObject(f)||(f=this.parse(e.name,f)),f){var g=void 0===f.value?f:f.value;b[e.name]=g,b[$$.util.dash2camel(e.name)]=g}}return b},$$.styfn.updateFunctionalProperties=function(a){for(var b=0;b<a.length;b++)for(var c=a[b],d=c._private.style,e=0;e<$$.style.properties.length;e++){var f=$$.style.properties[e],g=d[f.name];if(g&&g.mapping){var h=g.mapping;this.applyParsedProperty(c,h)}}},$$.styfn.applyBypass=function(a,b,c){var d=[];if("*"===b||"**"===b){if(void 0!==c)for(var e=0;e<$$.style.properties.length;e++){var f=$$.style.properties[e],b=f.name,g=this.parse(b,c,!0);g&&d.push(g)}}else if($$.is.string(b)){var g=this.parse(b,c,!0);g&&d.push(g)}else{if(!$$.is.plainObject(b))return!1;for(var h=b,e=0;e<$$.style.properties.length;e++){var f=$$.style.properties[e],b=f.name,c=h[b];if(void 0===c&&(c=h[$$.util.dash2camel(b)]),void 0!==c){var g=this.parse(b,c,!0);g&&d.push(g)}}}if(0===d.length)return!1;for(var i=!1,e=0;e<a.length;e++)for(var j=a[e],k=0;k<d.length;k++){var f=d[k];i=this.applyParsedProperty(j,f)||i}return i},$$.styfn.removeAllBypasses=function(a){for(var b=0;b<$$.style.properties.length;b++)for(var c=$$.style.properties[b],d=c.name,e="",f=this.parse(d,e,!0),g=0;g<a.length;g++){var h=a[g];this.applyParsedProperty(h,f)}}}(cytoscape,"undefined"==typeof window?null:window),function(a){var b={showOverlay:!0,hideEdgesOnViewport:!1},c=a.util.copy(b);a.defaults=function(d){b=a.util.extend({},c,d)},a.fn.core=function(b){for(var c in b){var d=b[c];a.Core.prototype[c]=d}},a.Core=function(c){if(!(this instanceof a.Core))return new a.Core(c);var d=this;c=a.util.extend({},b,c);var e=c.container,f=a.getRegistrationForInstance(d,e);f&&f.cy&&(f.domElement.innerHTML="",f.cy.notify({type:"destroy"}),a.removeRegistrationForInstance(f.cy,f.domElement)),f=a.registerInstance(d,e);var g=f.readies,h=c;h.layout=a.util.extend({name:"undefined"==typeof window?"null":"grid"},h.layout),h.renderer=a.util.extend({name:"undefined"==typeof window?"null":"canvas"},h.renderer),this._private={ready:!1,instanceId:f.id,options:h,elements:[],id2index:{},listeners:[],aniEles:[],scratch:{},layout:null,renderer:null,notificationsEnabled:!0,minZoom:1e-50,maxZoom:1e50,zoomEnabled:void 0===h.zoomEnabled?!0:h.zoomEnabled,panEnabled:void 0===h.panEnabled?!0:h.panEnabled,boxSelectionEnabled:void 0===h.boxSelectionEnabled?!0:h.boxSelectionEnabled,zoom:a.is.number(h.zoom)?h.zoom:1,pan:{x:a.is.plainObject(h.pan)&&a.is.number(h.pan.x)?h.pan.x:0,y:a.is.plainObject(h.pan)&&a.is.number(h.pan.y)?h.pan.y:0},hasCompoundNodes:!1},a.is.number(h.minZoom)&&a.is.number(h.maxZoom)&&h.minZoom<h.maxZoom?(this._private.minZoom=h.minZoom,this._private.maxZoom=h.maxZoom):a.is.number(h.minZoom)&&void 0===h.maxZoom?this._private.minZoom=h.minZoom:a.is.number(h.maxZoom)&&void 0===h.minZoom&&(this._private.maxZoom=h.maxZoom),this._private.style=a.is.stylesheet(h.style)?h.style.generateStyle(this):a.is.array(h.style)?a.style.fromJson(this,h.style):new a.Style(d),d.initRenderer(a.util.extend({showOverlay:h.showOverlay,hideEdgesOnViewport:h.hideEdgesOnViewport},h.renderer)),d.load(h.elements,function(){d.startAnimationLoop(),d._private.ready=!0,a.is.fn(h.ready)&&d.bind("ready",h.ready);for(var b=0;b<g.length;b++){var c=g[b];d.bind("ready",c)}f.readies=[],d.trigger("ready")},h.done)},a.corefn=a.Core.prototype,a.fn.core({ready:function(){return this._private.ready},registered:function(){return this._private&&null!=this._private.instanceId?!0:!1},registeredId:function(){return this._private.instanceId},getElementById:function(b){var c=this._private.id2index[b];return void 0!==c?this._private.elements[c]:new a.Collection(this)},hasCompoundNodes:function(){return this._private.hasCompoundNodes},addToPool:function(a){for(var b=this._private.elements,c=this._private.id2index,d=0;d<a.length;d++){var e=a[d],f=e._private.data.id,g=c[f],h=void 0!==g;h||(g=b.length,b.push(e),c[f]=g,e._private.index=g)}return this},removeFromPool:function(a){for(var b=this._private.elements,c=this._private.id2index,d=0;d<a.length;d++){var e=a[d],f=e._private.data.id,g=c[f],h=void 0!==g;if(h){delete this._private.id2index[f],b.splice(g,1);for(var i=g;i<b.length;i++){var j=b[i]._private.data.id;c[j]--}}}},container:function(){return this._private.options.container},options:function(){return a.util.copy(this._private.options)},json:function(){var a={},b=this;return a.elements={},b.elements().each(function(b,c){var d=c.group();a.elements[d]||(a.elements[d]=[]),a.elements[d].push(c.json())}),a.style=b.style(),a.scratch=b.scratch(),a.zoomEnabled=b._private.zoomEnabled,a.panEnabled=b._private.panEnabled,a.layout=b._private.options.layout,a.renderer=b._private.options.renderer,a}})}(cytoscape),function(a,b){a.fn.core({add:function(b){var c,d=this;if(a.is.elementOrCollection(b)){for(var e=b,f=[],g=0;g<e.length;g++){var h=e[g];f.push(h.json())}c=new a.Collection(d,f)}else if(a.is.array(b)){var f=b;c=new a.Collection(d,f)}else if(a.is.plainObject(b)&&(a.is.array(b.nodes)||a.is.array(b.edges))){for(var i=b,f=[],j=["nodes","edges"],g=0,k=j.length;k>g;g++){var l=j[g],m=i[l];if(a.is.array(m))for(var n=0,o=m.length;o>n;n++){var p=m[n],q=a.util.extend({},p,{group:l});f.push(q)}}c=new a.Collection(d,f)}else{var p=b;c=new a.Element(d,p).collection()}return c.filter(function(){return!this.removed()})
-},remove:function(b){if(a.is.elementOrCollection(b))b=b;else if(a.is.string(b)){var c=b;b=this.$(c)}return b.remove()},load:function(b,c,d){function e(){f.one("layoutready",function(a){f.notifications(!0),f.trigger(a),f.notify({type:"load",collection:f.elements(),style:f._private.style}),f.one("load",c),f.trigger("load")}).one("layoutstop",function(){f.one("done",d),f.trigger("done")}),f.layout(f._private.options.layout)}var f=this,g=f.elements();g.length>0&&g.remove(),f.notifications(!1);return null!=b&&(a.is.plainObject(b)||a.is.array(b))&&f.add(b),setTimeout(function(){e()},30),this}})}(cytoscape,"undefined"==typeof window?null:window),function(a){a.fn.core({addToAnimationPool:function(a){for(var b=this,c=b._private.aniEles,d=[],e=0;e<c.length;e++){var f=c[e]._private.data.id;d[f]=!0}for(var e=0;e<a.length;e++){var g=a[e],f=g._private.data.id;d[f]||c.push(g)}},startAnimationLoop:function(){function b(){function a(){k(function(a){c(a),b()},l)}i?setTimeout(function(){a()},h):a()}function c(b){b=+new Date;for(var c=g._private.aniEles,e=0;e<c.length;e++){var f=c[e],h=f._private.animation.current,i=f._private.animation.queue;if(0===h.length){var j=i,k=j.length>0?j.shift():null;null!=k&&(k.callTime=+new Date,h.push(k))}for(var l=[],m=0;m<h.length;m++){var n=h[m];d(f,n,b),h[m].done&&(l.push(n),h.splice(m,1),m--)}for(var m=0;m<l.length;m++){var n=l[m],o=n.params.complete;a.is.fn(o)&&o.apply(f,[b])}}c.length>0&&g.notify({type:"draw",collection:c});for(var m=0;m<c.length;m++){var f=c[m],i=f._private.animation.queue,h=f._private.animation.current,p=h.length>0||i.length>0;p||(c.splice(m,1),m--)}}function d(b,c,d){var h,i=g._private.style,j=c.properties,k=c.params,l=c.callTime;if(h=0===c.duration?1:Math.min(1,(d-l)/c.duration),0>h?h=0:h>1&&(h=1),null==j.delay){var m=c.startPosition,n=j.position,o=b._private.position;if(n&&(e(m.x,n.x)&&(o.x=f(m.x,n.x,h)),e(m.y,n.y)&&(o.y=f(m.y,n.y,h))),j.css)for(var p=a.style.properties,q=0;q<p.length;q++){var r=p[q].name,s=j.css[r];if(void 0!==s){var t=c.startStyle[r],u=f(t,s,h);i.applyBypass(b,r,u)}}}return a.is.fn(k.step)&&k.step.apply(b,[d]),h>=1&&(c.done=!0),h}function e(b,c){return null==b||null==c?!1:a.is.number(b)&&a.is.number(c)?!0:b&&c?!0:!1}function f(b,c,d){function e(a,b){var c=b-a,e=a;return Math.round(d*c+e)}if(0>d?d=0:d>1&&(d=1),a.is.number(b)&&a.is.number(c))return b+(c-b)*d;if(a.is.number(b[0])&&a.is.number(c[0])){var f=b,g=c,h=e(f[0],g[0]),i=e(f[1],g[1]),j=e(f[2],g[2]);return"rgb("+h+", "+i+", "+j+")"}return void 0}var g=this,h=1e3/60,i=!1,j=!0;g._private.aniEles=[];var k="undefined"==typeof window?function(){}:window.requestAnimationFrame||window.mozRequestAnimationFrame||window.webkitRequestAnimationFrame||window.msRequestAnimationFrame;null!=k&&j||(k=function(a){window.setTimeout(function(){a(+new Date)},h)});var l=g.container();b()}})}(cytoscape),function(a){a.fn.core({data:a.define.data({field:"data",bindingEvent:"data",allowBinding:!0,allowSetting:!0,settingEvent:"data",settingTriggersEvent:!0,triggerFnName:"trigger",allowGetting:!0}),removeData:a.define.removeData({field:"data",event:"data",triggerFnName:"trigger",triggerEvent:!0}),batchData:a.define.batchData({field:"data",event:"data",triggerFnName:"trigger",immutableKeys:{id:!0,source:!0,target:!0,parent:!0},updateMappers:!0}),scratch:a.define.data({field:"scratch",allowBinding:!1,allowSetting:!0,settingTriggersEvent:!1,allowGetting:!0}),removeScratch:a.define.removeData({field:"scratch",triggerEvent:!1})})}(cytoscape),function(a){a.fn.core({on:a.define.on(),one:a.define.on({unbindSelfOnTrigger:!0}),once:a.define.on({unbindAllBindersOnTrigger:!0}),off:a.define.off(),trigger:a.define.trigger()}),a.corefn.bind=a.corefn.on,a.corefn.unbind=a.corefn.off,a.define.event.aliasesOn(a.corefn)}(cytoscape),function(a){a.fn.core({png:function(){var a=this._private.renderer;return a.png()}})}(cytoscape),function(a){a.fn.core({layout:function(a){var b=this;return this._private.layoutRunning?this:(null==a&&(a=this._private.options.layout),this.initLayout(a),b.trigger("layoutstart"),this._private.layoutRunning=!0,this.one("layoutstop",function(){this._private.layoutRunning=!1}),this._private.layout.run(),this)},initLayout:function(b){if(null==b)return void a.util.error("Layout options must be specified to run a layout");if(null==b.name)return void a.util.error("A `name` must be specified to run a layout");var c=b.name,d=a.extension("layout",c);return null==d?void a.util.error("Can not apply layout: No such layout `%s` found; did you include its JS file?",c):(this._private.layout=new d(a.util.extend({},b,{renderer:this._private.renderer,cy:this})),void(this._private.options.layout=b))}})}(cytoscape),function(a){a.fn.core({notify:function(b){if(this._private.notificationsEnabled){var c=this.renderer(),d=this;if(a.is.element(b.collection)){var e=b.collection;b.collection=new a.Collection(d,[e])}else if(a.is.array(b.collection)){var f=b.collection;b.collection=new a.Collection(d,f)}c.notify(b)}},notifications:function(a){var b=this._private;return void 0===a?b.notificationsEnabled:void(b.notificationsEnabled=a?!0:!1)},noNotifications:function(a){this.notifications(!1),a(),this.notifications(!0)}})}(cytoscape),function(a){a.fn.core({renderTo:function(a,b,c){var d=this._private.renderer;d.renderTo(a,b,c)},renderer:function(){return this._private.renderer},initRenderer:function(b){var c=this,d=a.extension("renderer",b.name);return null==d?void a.util.error("Can not initialise: No such renderer `%s` found; did you include its JS file?",b.name):void(this._private.renderer=new d(a.util.extend({},b,{cy:c,style:c._private.style})))}})}(cytoscape),function(a){a.fn.core({collection:function(b){return a.is.string(b)?this.$(b):a.is.elementOrCollection(b)?b.collection():new a.Collection(this)},nodes:function(a){var b=this.$("node");return a?b.filter(a):b},edges:function(a){var b=this.$("edge");return a?b.filter(a):b},$:function(b){var c=new a.Collection(this,this._private.elements);return b?c.filter(b):c}}),a.corefn.elements=a.corefn.filter=a.corefn.$}(cytoscape),function(a){a.fn.core({style:function(){return this._private.style}})}(cytoscape),function(a){a.fn.core({panningEnabled:function(a){return void 0===a?this._private.panEnabled:(this._private.panEnabled=a?!0:!1,this)},zoomingEnabled:function(a){return void 0===a?this._private.zoomEnabled:(this._private.zoomEnabled=a?!0:!1,this)},boxSelectionEnabled:function(a){return void 0===a?this._private.boxSelectionEnabled:(this._private.boxSelectionEnabled=a?!0:!1,this)},pan:function(){var b,c,d,e,f,g=arguments,h=this._private.pan;switch(g.length){case 0:return h;case 1:if(!this._private.panEnabled)return this;if(a.is.string(g[0]))return b=g[0],h[b];a.is.plainObject(g[0])&&(d=g[0],e=d.x,f=d.y,a.is.number(e)&&(h.x=e),a.is.number(f)&&(h.y=f),this.trigger("pan"));break;case 2:if(!this._private.panEnabled)return this;b=g[0],c=g[1],"x"!==b&&"y"!==b||!a.is.number(c)||(h[b]=c),this.trigger("pan")}return this.notify({type:"viewport"}),this},panBy:function(){var b,c,d,e,f,g=arguments,h=this._private.pan;if(!this._private.panEnabled)return this;switch(g.length){case 1:a.is.plainObject(g[0])&&(d=g[0],e=d.x,f=d.y,a.is.number(e)&&(h.x+=e),a.is.number(f)&&(h.y+=f),this.trigger("pan"));break;case 2:b=g[0],c=g[1],"x"!==b&&"y"!==b||!a.is.number(c)||(h[b]+=c),this.trigger("pan")}return this.notify({type:"viewport"}),this},fit:function(b,c){if(a.is.number(b)&&void 0===c&&(c=b,b=void 0),!this._private.panEnabled||!this._private.zoomEnabled)return this;if(a.is.string(b)){var d=b;b=this.$(d)}else a.is.elementOrCollection(b)||(b=this.elements());var e,f=b.boundingBox(),g=this.style(),h=parseFloat(g.containerCss("width")),i=parseFloat(g.containerCss("height"));return c=a.is.number(c)?c:0,isNaN(h)||isNaN(i)||(e=this._private.zoom=Math.min((h-2*c)/f.w,(i-2*c)/f.h),e=e>this._private.maxZoom?this._private.maxZoom:e,e=e<this._private.minZoom?this._private.minZoom:e,this._private.pan={x:(h-e*(f.x1+f.x2))/2,y:(i-e*(f.y1+f.y2))/2}),this.trigger("pan zoom"),this.notify({type:"viewport"}),this},minZoom:function(b){return void 0===b?this._private.minZoom:(a.is.number(b)&&(this._private.minZoom=b),this)},maxZoom:function(b){return void 0===b?this._private.maxZoom:(a.is.number(b)&&(this._private.maxZoom=b),this)},zoom:function(b){var c,d;if(void 0===b)return this._private.zoom;if(a.is.number(b))d=b,c={x:0,y:0};else if(a.is.plainObject(b)){if(d=b.level,b.renderedPosition){var e=b.renderedPosition,f=this._private.pan,g=this._private.zoom;c={x:(e.x-f.x)/g,y:(e.y-f.y)/g}}else b.position&&(c=b.position);if(c&&!this._private.panEnabled)return this}if(!this._private.zoomEnabled)return this;if(!a.is.number(d)||!a.is.number(c.x)||!a.is.number(c.y))return this;d=d>this._private.maxZoom?this._private.maxZoom:d,d=d<this._private.minZoom?this._private.minZoom:d;var h=this._private.pan,i=this._private.zoom,j=d,k={x:-j/i*(c.x-h.x)+c.x,y:-j/i*(c.y-h.y)+c.y};this._private.zoom=d,this._private.pan=k;var l=h.x!==k.x||h.y!==k.y;return this.trigger("zoom"+(l?" pan":"")),this.notify({type:"viewport"}),this},boundingBox:function(a){var b=this.$(a);return b.boundingBox()},center:function(b){if(!this._private.panEnabled||!this._private.zoomEnabled)return this;if(a.is.string(b)){var c=b;b=cy.elements(c)}else a.is.elementOrCollection(b)||(b=cy.elements());var d=b.boundingBox(),e=this.style(),f=parseFloat(e.containerCss("width")),g=parseFloat(e.containerCss("height")),h=this._private.zoom;return this.pan({x:(f-h*(d.x1+d.x2))/2,y:(g-h*(d.y1+d.y2))/2}),this.trigger("pan"),this.notify({type:"viewport"}),this},reset:function(){return this._private.panEnabled&&this._private.zoomEnabled?(this.pan({x:0,y:0}),this._private.maxZoom>1&&this._private.minZoom<1&&this.zoom(1),this.notify({type:"viewport"}),this):this}})}(cytoscape),function(a){a.fn.collection=a.fn.eles=function(b){for(var c in b){var d=b[c];a.Collection.prototype[c]=d}};var b={prefix:{nodes:"n",edges:"e"},id:{nodes:0,edges:0},generate:function(b,c,d){var e=a.is.element(c)?c._private:c,f=e.group,g=null!=d?d:this.prefix[f]+this.id[f];if(b.getElementById(g).empty())this.id[f]++;else for(;!b.getElementById(g).empty();)g=this.prefix[f]+ ++this.id[f];return g}};a.Element=function(b,c,d){if(!(this instanceof a.Element))return new a.Element(b,c,d);var e=this;if(d=void 0===d||d?!0:!1,void 0===b||void 0===c||!a.is.core(b))return void a.util.error("An element must have a core reference and parameters set");if("nodes"!==c.group&&"edges"!==c.group)return void a.util.error("An element must be of type `nodes` or `edges`; you specified `"+c.group+"`");if(this.length=1,this[0]=this,this._private={cy:b,single:!0,data:c.data||{},position:c.position||{},autoWidth:void 0,autoHeight:void 0,listeners:[],group:c.group,style:{},rstyle:{},styleCxts:[],removed:!0,selected:c.selected?!0:!1,selectable:void 0===c.selectable?!0:c.selectable?!0:!1,locked:c.locked?!0:!1,grabbed:!1,grabbable:void 0===c.grabbable?!0:c.grabbable?!0:!1,active:!1,classes:{},animation:{current:[],queue:[]},rscratch:{},scratch:{},edges:[],children:[]},c.renderedPosition){var f=c.renderedPosition,g=b.pan(),h=b.zoom();this._private.position={x:(f.x-g.x)/h,y:(f.y-g.y)/h}}if(a.is.string(c.classes))for(var i=c.classes.split(/\s+/),j=0,k=i.length;k>j;j++){var l=i[j];l&&""!==l&&(e._private.classes[l]=!0)}(void 0===d||d)&&this.restore()},a.Collection=function(c,d){if(!(this instanceof a.Collection))return new a.Collection(c,d);if(void 0===c||!a.is.core(c))return void a.util.error("A collection must have a reference to the core");var e={},f=[],g=!1;if(d){if(d.length>0&&a.is.plainObject(d[0])&&!a.is.element(d[0])){g=!0;for(var h=[],i={},j=0,k=d.length;k>j;j++){var l=d[j];null==l.data&&(l.data={});var m=l.data;if(null==m.id)m.id=b.generate(c,l);else if(0!=c.getElementById(m.id).length||i[m.id])continue;var n=new a.Element(c,l,!1);h.push(n),i[m.id]=!0}d=h}}else d=[];for(var j=0,k=d.length;k>j;j++){var o=d[j];if(o){var p=o._private.data.id;e[p]||(e[p]=o,f.push(o))}}for(var j=0,k=f.length;k>j;j++)this[j]=f[j];this.length=f.length,this._private={cy:c,ids:e},g&&this.restore()},a.elefn=a.elesfn=a.Element.prototype=a.Collection.prototype,a.elesfn.cy=function(){return this._private.cy},a.elesfn.element=function(){return this[0]},a.elesfn.collection=function(){return a.is.collection(this)?this:new a.Collection(this._private.cy,[this])},a.elesfn.json=function(){var b=this.element();if(null==b)return void 0;var c=b._private,d=a.util.copy({data:c.data,position:c.position,group:c.group,bypass:c.bypass,removed:c.removed,selected:c.selected,selectable:c.selectable,locked:c.locked,grabbed:c.grabbed,grabbable:c.grabbable,classes:""}),e=[];for(var f in c.classes)e.push(f);for(var g=0;g<e.length;g++){var f=e[g];d.classes+=f+(g<e.length-1?" ":"")}return d},a.elesfn.restore=function(c){var d=this,e=[],f=d.cy();void 0===c&&(c=!0);for(var g=[],h=[],i=[],j=0,k=0,l=0,m=d.length;m>l;l++){var n=d[l];n.isNode()?(h.push(n),j++):(i.push(n),k++)}g=h.concat(i);for(var l=0,m=g.length;m>l;l++){var n=g[l];if(n.removed()){var o=n._private,p=o.data;if(void 0===p.id)p.id=b.generate(f,n);else{if(a.is.emptyString(p.id)||!a.is.string(p.id))continue;if(0!=f.getElementById(p.id).length)continue}{p.id}if(n.isEdge()){for(var q=n,r=["source","target"],s=r.length,t=0;s>t;t++){var u=r[t],v=p[u];null!=v&&""!==v&&!f.getElementById(v).empty()}var w=f.getElementById(p.source),x=f.getElementById(p.target);w._private.edges.push(q),x._private.edges.push(q)}o.ids={},o.ids[p.id]=n,o.removed=!1,f.addToPool(n),e.push(n)}}for(var l=0;j>l;l++){var y=g[l],p=y._private.data,z=(p.id,y._private.data.parent),A=null!=z;if(A){var B=f.getElementById(z);if(B.empty())delete p.parent;else{for(var C=!1,D=B;!D.empty();){if(y.same(D)){C=!0,delete p.parent;break}D=D.parent()}C||(B[0]._private.children.push(y),f._private.hasCompoundNodes=!0)}}}if(e=new a.Collection(f,e),e.length>0){var E=e.add(e.connectedNodes()).add(e.parent());E.updateStyle(c),c?e.rtrigger("add"):e.trigger("add")}return d},a.elesfn.removed=function(){var a=this[0];return a&&a._private.removed},a.elesfn.inside=function(){var a=this[0];return a&&!a._private.removed},a.elesfn.remove=function(b){function c(a){for(var b=a._private.edges,c=0;c<b.length;c++)e(b[c])}function d(a){for(var b=a._private.children,c=0;c<b.length;c++)e(b[c])}function e(a){var b=k[a.id()];b||(k[a.id()]=!0,a.isNode()?(j.push(a),c(a),d(a)):j.unshift(a))}function f(a,b){for(var c=a._private.edges,d=0;d<c.length;d++){var e=c[d];if(b===e){c.splice(d,1);break}}}function g(a,b){b=b[0],a=a[0];for(var c=a._private.children,d=0;d<c.length;d++)if(c[d][0]===b[0]){c.splice(d,1);break}}var h=this,i=[],j=[],k={},l=h._private.cy;void 0===b&&(b=!0);for(var m=0,n=h.length;n>m;m++){var o=h[m];e(o)}for(var m=0;m<j.length;m++){var o=j[m];if(o._private.removed=!0,l.removeFromPool(o),i.push(o),o.isEdge()){var p=o.source()[0],q=o.target()[0];f(p,o),f(q,o)}else{var r=o.parent();0!==r.length&&g(r,o)}}var s=l._private.elements;l._private.hasCompoundNodes=!1;for(var m=0;m<s.length;m++){var o=s[m];if(o.isParent()){l._private.hasCompoundNodes=!0;break}}var t=new a.Collection(this.cy(),i);t.size()>0&&(b&&this.cy().notify({type:"remove",collection:t}),t.trigger("remove"));for(var u={},m=0;m<j.length;m++){var o=j[m],v="nodes"===o._private.group,w=o._private.data.parent;if(v&&void 0!==w&&!u[w]){u[w]=!0;var r=l.getElementById(w);r&&0!==r.length&&!r._private.removed&&0===r.children().length&&r.updateStyle()}}return this}}(cytoscape),function(a){a.fn.eles({animated:function(){var a=this[0];return a?a._private.animation.current.length>0:void 0},clearQueue:function(){for(var a=0;a<this.length;a++){var b=this[a];b._private.animation.queue=[]}return this},delay:function(a,b){return this.animate({delay:a},{duration:a,complete:b}),this},animate:function(a,b){var c,d=+new Date,e=this._private.cy,f=e.style();switch(void 0===b&&(b={}),void 0===b.duration&&(b.duration=400),b.duration){case"slow":b.duration=600;break;case"fast":b.duration=200}if(null==a||null==a.position&&null==a.css&&null==a.delay)return this;a.css&&(a.css=f.getValueStyle(a.css));for(var g=0;g<this.length;g++){var h=this[g],i=h._private.position,j={x:i.x,y:i.y},k=f.getValueStyle(h);c=h.animated()&&(void 0===b.queue||b.queue)?h._private.animation.queue:h._private.animation.current,c.push({properties:a,duration:b.duration,params:b,callTime:d,startPosition:j,startStyle:k})}return e.addToAnimationPool(this),this},stop:function(a,b){for(var c=0;c<this.length;c++){for(var d=this[c],e=d._private.animation.current,f=0;f<e.length;f++){var g=e[f];b&&(g.duration=0)}a&&(d._private.animation.queue=[])}return this.cy().notify({collection:this,type:"draw"}),this}})}(cytoscape),function(a){a.fn.eles({addClass:function(b){b=b.split(/\s+/);for(var c=this,d=[],e=0;e<b.length;e++){var f=b[e];if(!a.is.emptyString(f))for(var g=0;g<c.length;g++){var h=c[g],i=h._private.classes[f];h._private.classes[f]=!0,i||d.push(h)}}return d.length>0&&new a.Collection(this._private.cy,d).updateStyle(),c.trigger("class"),c},hasClass:function(a){var b=this[0];return null!=b&&b._private.classes[a]},toggleClass:function(b,c){for(var d=b.split(/\s+/),e=this,f=[],g=0,h=e.length;h>g;g++)for(var i=e[g],j=0;j<d.length;j++){var k=d[j];if(!a.is.emptyString(k)){var l=i._private.classes[k],m=c||void 0===c&&!l;m?(i._private.classes[k]=!0,l||f.push(i)):(i._private.classes[k]=!1,l&&f.push(i))}}return f.length>0&&new a.Collection(this._private.cy,f).updateStyle(),e.trigger("class"),e},removeClass:function(b){b=b.split(/\s+/);for(var c=this,d=[],e=0;e<c.length;e++)for(var f=c[e],g=0;g<b.length;g++){var h=b[g];if(h&&""!==h){var i=f._private.classes[h];delete f._private.classes[h],i&&d.push(f)}}return d.length>0&&new a.Collection(c._private.cy,d).updateStyle(),c.trigger("class"),c}})}(cytoscape),function(a){a.fn.eles({allAre:function(a){return this.filter(a).length===this.length},is:function(a){return this.filter(a).length>0},same:function(a){return a=this.cy().collection(a),this.length!==a.length?!1:this.intersect(a).length===this.length},anySame:function(a){return a=this.cy().collection(a),this.intersect(a).length>0},allAreNeighbors:function(a){return a=this.cy().collection(a),this.neighborhood().intersect(a).length===a.length}})}(cytoscape),function(a){var b=1.4,c=1;a.fn.eles({updateStyle:function(a){var b=this._private.cy,c=b.style();return a=a||void 0===a?!0:!1,c.apply(this),a?this.rtrigger("style"):this.trigger("style"),this},updateMappers:function(a){var b=this._private.cy,c=b.style();a=a||void 0===a?!0:!1;for(var d=0;d<this.length;d++){var e=this[d];c.apply(e)}return a?this.rtrigger("style"):this.trigger("style"),this},data:a.define.data({field:"data",bindingEvent:"data",allowBinding:!0,allowSetting:!0,settingEvent:"data",settingTriggersEvent:!0,triggerFnName:"trigger",allowGetting:!0,immutableKeys:{id:!0,source:!0,target:!0,parent:!0},updateMappers:!0}),removeData:a.define.removeData({field:"data",event:"data",triggerFnName:"trigger",triggerEvent:!0,immutableKeys:{id:!0,source:!0,target:!0,parent:!0},updateMappers:!0}),batchData:a.define.batchData({field:"data",event:"data",triggerFnName:"trigger",immutableKeys:{id:!0,source:!0,target:!0,parent:!0},updateMappers:!0}),scratch:a.define.data({field:"scratch",allowBinding:!1,allowSetting:!0,settingTriggersEvent:!1,allowGetting:!0}),removeScratch:a.define.removeData({field:"scratch",triggerEvent:!1}),rscratch:a.define.data({field:"rscratch",allowBinding:!1,allowSetting:!0,settingTriggersEvent:!1,allowGetting:!0}),removeRscratch:a.define.removeData({field:"rscratch",triggerEvent:!1}),id:function(){var a=this[0];return a?a._private.data.id:void 0},position:a.define.data({field:"position",bindingEvent:"position",allowBinding:!0,allowSetting:!0,settingEvent:"position",settingTriggersEvent:!0,triggerFnName:"rtrigger",allowGetting:!0,validKeys:["x","y"]}),positions:function(b){if(a.is.plainObject(b))this.position(b);else if(a.is.fn(b)){for(var c=b,d=0;d<this.length;d++){var e=this[d],b=c.apply(e,[d,e]);if(b&&!e.locked()){var f=e._private.position;f.x=b.x,f.y=b.y}}this.rtrigger("position")}return this},renderedPosition:function(a){var b=this[0],c=this.cy(),d=c.zoom(),e=c.pan();if(b&&b.isNode()){var f=b._private.position,g={x:f.x*d+e.x,y:f.y*d+e.y};return void 0===a?g:g[a]}},renderedCss:function(a){var b=this[0];if(b){var c=b.cy().style().getRenderedStyle(b);return void 0===a?c:c[a]}},css:function(b,c){var d=this.cy().style();if(a.is.plainObject(b)){var e=b;d.applyBypass(this,e),this.rtrigger("style")}else if(a.is.string(b)){if(void 0===c){var f=this[0];return f?f._private.style[b].strValue:void 0}d.applyBypass(this,b,c),this.rtrigger("style")}else if(void 0===b){var f=this[0];return f?d.getRawStyle(f):void 0}return this},removeCss:function(){for(var a=this.cy().style(),b=this,c=0;c<b.length;c++){var d=b[c];a.removeAllBypasses(d)}this.rtrigger("style")},show:function(){return this.css("visibility","visible"),this},hide:function(){return this.css("visibility","hidden"),this},visible:function(){var a=this[0];if(a){if("visible"!==a.css("visibility"))return!1;if(a.isNode()){for(var b=a.parents(),c=0;c<b.length;c++){var d=b[c],e=d.css("visibility");if("visible"!==e)return!1}return!0}if(a.isEdge()){var f=a.source(),g=a.target();return f.visible()&&g.visible()}}},hidden:function(){var a=this[0];return a?!this.visible():void 0},width:function(){var a=this[0];if(a){var b=this._private.style.width;return"auto"===b.strValue?a._private.autoWidth:b.pxValue}},outerWidth:function(){var a=this[0];if(a){var d=this._private.style,e="auto"===d.width.strValue?a._private.autoWidth:d.width.pxValue,f=d["border-width"]?d["border-width"].pxValue*b+c:0;return e+f}},renderedWidth:function(){var a=this[0];if(a){var b=this.width();return b*this.cy().zoom()}},renderedOuterWidth:function(){var a=this[0];if(a){var b=this.outerWidth();return b*this.cy().zoom()}},height:function(){var a=this[0];if(a&&a.isNode()){var b=this._private.style.height;return"auto"===b.strValue?a._private.autoHeight:b.pxValue}},outerHeight:function(){var a=this[0];if(a){var d=this._private.style,e="auto"===d.height.strValue?a._private.autoHeight:d.height.pxValue,f=d["border-width"]?d["border-width"].pxValue*b+c:0;return e+f}},renderedHeight:function(){var a=this[0];if(a){var b=this.height();return b*this.cy().zoom()}},renderedOuterHeight:function(){var a=this[0];if(a){var b=this.outerHeight();return b*this.cy().zoom()}},offset:function(){var a=this[0];if(a&&a.isNode()){for(var b={x:a._private.position.x,y:a._private.position.y},c=a.parents(),d=0;d<c.length;d++){var e=c[d],f=e._private.position;b.x+=f.x,b.y+=f.y}return b}},renderedOffset:function(){var a=this[0];if(a&&a.isNode()){var b=this.offset(),c=this.cy(),d=c.zoom(),e=c.pan();return{x:b.x*d+e.x,y:b.y*d+e.y}}},boundingBox:function(b){var c=this;!b||a.is.elementOrCollection(b)&&0===b.length?c=this:a.is.string(b)?c=this.filter(b):a.is.elementOrCollection(b)&&(c=b);for(var d=1/0,e=-1/0,f=1/0,g=-1/0,h=0;h<c.length;h++){var i,j,k,l,m,n,o=c[h];if(o.isNode()){var p=o._private.position;m=p.x,n=p.y;var q=o.outerWidth(),r=q/2,s=o.outerHeight(),t=s/2;i=m-r,j=m+r,k=n-t,l=n+t,d=d>i?i:d,e=j>e?j:e,f=f>k?k:f,g=l>g?l:g}else{var u=o.source()[0]._private.position,v=o.target()[0]._private.position,w=o._private.rstyle;if(m=w.labelX,n=w.labelY,i=u.x,j=v.x,k=u.y,l=v.y,i>j){var x=i;i=j,j=x}if(k>l){var x=k;k=l,l=x}d=d>i?i:d,e=j>e?j:e,f=f>k?k:f,g=l>g?l:g;for(var y=w.bezierPts||[],q=o._private.style.width.value,z=0;z<y.length;z++){var A=y[z];d=A.x-q<d?A.x-q:d,e=A.x+q>e?A.x+q:e,f=A.y-q<f?A.y-q:f,g=A.y+q>g?A.y+q:g}}var B=o._private.style,C=B.content.value,D=B["font-size"],E=B["text-halign"],F=B["text-valign"],G=o._private.rstyle.labelWidth;if(C&&D&&void 0!=G&&E&&F){var H,I,J,K,L=D.value,M=G;switch(E.value){case"left":H=i-M,I=i;break;case"center":H=m-M/2,I=m+M/2;break;case"right":H=j,I=j+M}switch(o.isEdge()&&(H=m-M/2,I=m+M/2),F.value){case"top":J=k-L,K=k;break;case"center":J=n-L/2,K=n+L/2;break;case"bottom":J=l,K=l+L}o.isEdge()&&(J=n-L/2,K=n+L/2),d=d>H?H:d,e=I>e?I:e,f=f>J?J:f,g=K>g?K:g}}return{x1:d,x2:e,y1:f,y2:g,w:e-d,h:g-f}}})}(cytoscape),function(a){function b(a){return function(){var b=this;if(0!==b.length&&b.isNode()&&!b.removed()){for(var c=0,d=b[0],e=d._private.edges,f=0;f<e.length;f++){var g=e[f];c+=a(d,g)}return c}}}function c(a,b){return function(){for(var c=void 0,d=this.nodes(),e=0;e<d.length;e++){var f=d[e],g=f[a]();void 0===g||void 0!==c&&!b(g,c)||(c=g)}return c}}a.fn.eles({degree:b(function(a,b){return b.source().same(b.target())?2:1}),indegree:b(function(a,b){return b.target().same(a)?1:0}),outdegree:b(function(a,b){return b.source().same(a)?1:0})}),a.fn.eles({minDegree:c("degree",function(a,b){return b>a}),maxDegree:c("degree",function(a,b){return a>b}),minIndegree:c("indegree",function(a,b){return b>a}),maxIndegree:c("indegree",function(a,b){return a>b}),minOutdegree:c("outdegree",function(a,b){return b>a}),maxOutdegree:c("outdegree",function(a,b){return a>b})}),a.fn.eles({totalDegree:function(){for(var a=0,b=this.nodes(),c=0;c<b.length;c++)a+=b[c].degree();return a}})}(cytoscape),function(a){a.fn.eles({on:a.define.on(),one:a.define.on({unbindSelfOnTrigger:!0}),once:a.define.on({unbindAllBindersOnTrigger:!0}),off:a.define.off(),trigger:a.define.trigger(),rtrigger:function(a,b){return this.cy().notify({type:a,collection:this.filter(function(){return!this.removed()})}),this.trigger(a,b),this}}),a.elesfn.bind=a.elesfn.on,a.elesfn.unbind=a.elesfn.off,a.define.event.aliasesOn(a.elesfn)}(cytoscape),function(a){a.fn.eles({isNode:function(){return"nodes"===this.group()},isEdge:function(){return"edges"===this.group()},isLoop:function(){return this.isEdge()&&this.source().id()===this.target().id()},group:function(){var a=this[0];return a?a._private.group:void 0}})}(cytoscape),function(a){a.fn.eles({each:function(b){if(a.is.fn(b))for(var c=0;c<this.length;c++){var d=this[c],e=b.apply(d,[c,d]);if(e===!1)break}return this},toArray:function(){for(var a=[],b=0;b<this.length;b++)a.push(this[b]);return a},slice:function(b,c){var d=[],e=this.length;null==c&&(c=e),0>b&&(b=e+b);for(var f=b;f>=0&&c>f&&e>f;f++)d.push(this[f]);return new a.Collection(this.cy(),d)},size:function(){return this.length},eq:function(a){return this[a]},empty:function(){return 0===this.length},nonempty:function(){return!this.empty()}})}(cytoscape),function(a){function b(a){return function(){var b=arguments;if(2===b.length){var c=b[0],d=b[1];this.bind(a.event,c,d)}else if(1===b.length){var d=b[0];this.bind(a.event,d)}else if(0===b.length){for(var e=0;e<this.length;e++){var f=this[e];(!a.ableField||f._private[a.ableField])&&(f._private[a.field]=a.value)}this.updateStyle(),this.trigger(a.event)}return this}}function c(c){a.elesfn[c.field]=function(){var a=this[0];return a?a._private[c.field]:void 0},a.elesfn[c.on]=b({event:c.on,field:c.field,ableField:c.ableField,value:!0}),a.elesfn[c.off]=b({event:c.off,field:c.field,ableField:c.ableField,value:!1})}c({field:"locked",on:"lock",off:"unlock"}),c({field:"grabbable",on:"grabify",off:"ungrabify"}),c({field:"selected",ableField:"selectable",on:"select",off:"unselect"}),c({field:"selectable",on:"selectify",off:"unselectify"}),a.elesfn.grabbed=function(){var a=this[0];return a?a._private.grabbed:void 0},c({field:"active",on:"activate",off:"unactivate"}),a.elesfn.inactive=function(){var a=this[0];return a?!a._private.active:void 0}}(cytoscape),function(a){function b(b){return function(c){for(var d=[],e=this.edges(),f=this._private.cy,g=0;g<e.length;g++){var h=e[g],i=h._private.data[b.attr],j=f.getElementById(i);j.length>0&&d.push(j)}return new a.Collection(f,d).filter(c)}}function c(b){return function(c){var d=[],e=this._private.cy,f=b||{};a.is.string(c)&&(c=e.$(c));for(var g=c.connectedEdges(),h=this._private.ids,i=0;i<g.length;i++){var j,k=g[i],l=k._private.data;if(f.thisIs){var m=l[f.thisIs];j=h[m]}else j=h[l.source]||h[l.target];j&&d.push(k)}return new a.Collection(e,d)}}function d(b){var c={codirected:!1};return b=a.util.extend({},c,b),function(c){for(var d=this._private.cy,e=[],f=this.edges(),g=b,h=0;h<f.length;h++)for(var i=f[h],j=i.source()[0],k=j.id(),l=i.target()[0],m=l.id(),n=j._private.edges,o=0;o<n.length;o++){var p=n[o],q=p._private.data,r=q.target,s=q.source,t=r===m&&s===k,u=k===r&&m===s;(g.codirected&&t||!g.codirected&&(t||u))&&e.push(p)}return new a.Collection(d,e).filter(c)}}a.fn.eles({nodes:function(a){return this.filter(function(a,b){return b.isNode()}).filter(a)},edges:function(a){return this.filter(function(a,b){return b.isEdge()}).filter(a)},filter:function(b){var c=this._private.cy;if(a.is.fn(b)){for(var d=[],e=0;e<this.length;e++){var f=this[e];b.apply(f,[e,f])&&d.push(f)}return new a.Collection(c,d)}return a.is.string(b)||a.is.elementOrCollection(b)?new a.Selector(b).filter(this):void 0===b?this:new a.Collection(c)},not:function(b){var c=this._private.cy;if(b){a.is.string(b)&&(b=this.filter(b));for(var d=[],e=0;e<this.length;e++){var f=this[e],g=b._private.ids[f.id()];g||d.push(f)}return new a.Collection(c,d)}return this},intersect:function(b){var c=this._private.cy;if(a.is.string(b)){var d=b;return this.filter(d)}var e=[],f=this,g=b,h=this.length<b.length,i=h?f._private.ids:g._private.ids,j=h?g._private.ids:f._private.ids;for(var k in i){var l=j[k];l&&e.push(l)}return new a.Collection(c,e)},add:function(b){function c(a){a&&(h[a.id()]||(g.push(a),h[a.id()]=!0))}var d=this,e=this._private.cy;if(!b)return this;if(a.is.string(b)){var f=b;b=e.elements(f)}for(var g=[],h={},i=0;i<d.length;i++){var j=d[i];c(j)}for(var i=0;i<b.length;i++){var j=b[i];c(j)}return new a.Collection(e,g)}}),a.fn.eles({breadthFirstSearch:function(b,c){b=b||function(){};for(var d=this._private.cy,e=this,f=[],g={},h={},i={},j=[],k=0;k<e.length;k++)e[k].isNode()&&(f.unshift(e[k]),g[e[k].id()]=!0,h[e[k].id()]=0,j.push(e[k]));for(k=0;0!==f.length;){for(var l=f.shift(),m=0,n=i[l.id()];n;)m++,n=i[n];h[l.id()]=m;var o=b.call(l,k,m);if(k++,o===!0)return new a.Collection(d,[l]);if(o===!1)break;for(var p=l.connectedEdges(c?'[source = "'+l.id()+'"]':void 0),q=0;q<p.length;q++){var r=p[q],s=r.connectedNodes('[id != "'+l.id()+'"]');0!==s.length&&(s=s[0],g[s.id()]||(g[s.id()]=!0,f.unshift(s),i[s.id()]=l.id(),j.push(s),j.push(r)))}}return new a.Collection(d,j)},depthFirstSearch:function(b,c){function d(a){var b=a.id();return i[b]||j[b]||k[b]||l[b]}b=b||function(){};for(var e=this._private.cy,f=this,g=[],h=[],i={},j={},k={},l={},m={},n=0;n<f.length;n++)f[n].isNode()&&(g.push(f[n]),h[f[n].id()]=!0);for(;0!==g.length;){var o=g[g.length-1],p=b.call(o),q=!1;if(p===!0)return new a.Collection(e,[o]);for(var r=o.connectedEdges(c?'[source = "'+o.id()+'"]':void 0),n=0;n<r.length;n++){var s=r[n];if(!d(s)){var t=s.connectedNodes('[id != "'+o.id()+'"]');if(0!==t.length){t=t[0];var u=t.id();if(!h[u]&&!m[u]){l[u]=!0,h[u]=!0,g.push(t),q=!0;break}h[u]?j[u]=!0:k[u]=!0}}}q||(m[o.id()]=!0,g.pop())}},roots:function(b){for(var c=this,d=[],e=0;e<c.length;e++){var f=c[e];if(f.isNode()){var g=f.connectedEdges('[target = "'+f.id()+'"][source != "'+f.id()+'"]').length>0;g||d.push(f)}}return new a.Collection(this._private.cy,d).filter(b)},kruskal:function(b){function c(a){for(var b=0;b<e.length;b++){var c=e[b];if(c.anySame(a))return{eles:c,index:b}}}b=b||function(){return 1};for(var d=new a.Collection(this._private.cy,[]),e=[],f=this.nodes(),g=0;g<f.length;g++)e.push(f[g].collection());for(var h=this.edges(),i=h.toArray().sort(function(a,c){var d=b.call(a),e=b.call(c);return d-e}),g=0;g<i.length;g++){var j=i[g],k=j.source()[0],l=j.target()[0],m=c(k),n=c(l);m.eles!==n.eles&&(d=d.add(j),e[m.index]=m.eles.add(n.eles),e.splice(n.index,1))}return f.add(d)},dijkstra:function(b,c,d){var e=this._private.cy;if(d=a.is.fn(c)?d:c,d=void 0===d||d,c=a.is.fn(c)?c:function(){return 1},0===this.length||!b||!a.is.elementOrCollection(b)||0===b.length)return new a.Collection(e,[]);var f=this[0];b=b[0];for(var g={},h={},i=e.nodes(),j=0;j<i.length;j++)g[i[j].id()]=1/0;g[f.id()]=0;for(var k=i,l=function(a){var b,c=1/0;for(var d in g)g[d]<c&&0!==a.$("#"+d).length&&(c=g[d],b=d);return b},m=function(a,b){for(var d,e=a.edgesWith(b),f=1/0,g=0;g<e.length;g++){var h=e[g],i=c.call(h);
-f>i&&(f=i,d=h)}return{edge:d,dist:f}};0!==k.length;){var n=l(k),o=k.filter("#"+n);if(0!==o.length){if(k=k.not(o),o.same(b))break;if(g[n]===Math.Infinite)break;for(var p=o.neighborhood().nodes(),j=0;j<p.length;j++){var q=p[j],r=q.id(),s=m(o,q),t=g[n]+s.dist;t<g[r]&&(g[r]=t,h[r]={node:q,edge:s.edge})}}}}}),a.elesfn.bfs=a.elesfn.breadthFirstSearch,a.elesfn.dfs=a.elesfn.depthFirstSearch,a.fn.eles({neighborhood:function(b){for(var c=[],d=this._private.cy,e=this.nodes(),f=0;f<e.length;f++)for(var g=e[f],h=g.connectedEdges(),i=0;i<h.length;i++){var j=h[i],k=j.connectedNodes().not(g);k.length>0&&c.push(k[0]),c.push(j[0])}return new a.Collection(d,c).filter(b)},closedNeighborhood:function(a){return this.neighborhood().add(this).filter(a)},openNeighborhood:function(a){return this.neighborhood(a)}}),a.fn.eles({source:b({attr:"source"}),target:b({attr:"target"})}),a.fn.eles({edgesWith:c(),edgesTo:c({thisIs:"source"})}),a.fn.eles({connectedEdges:function(b){for(var c=[],d=this._private.cy,e=this.nodes(),f=0;f<e.length;f++)for(var g=e[f],h=g._private.edges,i=0;i<h.length;i++){var j=h[i];c.push(j)}return new a.Collection(d,c).filter(b)},connectedNodes:function(b){for(var c=[],d=this._private.cy,e=this.edges(),f=0;f<e.length;f++){var g=e[f];c.push(g.source()[0]),c.push(g.target()[0])}return new a.Collection(d,c).filter(b)},parallelEdges:d(),codirectedEdges:d({codirected:!0}),parallelIndex:function(){var a=this[0];if(a.isEdge())for(var b=a.source()[0],c=b._private.edges,d=0,e=0;e<c.length;e++){var f=c[e],g=f===a;if(g)return d;var h=a._private.data.source===f._private.data.source&&a._private.data.target===f._private.data.target,i=a._private.data.source===f._private.data.target&&a._private.data.target===f._private.data.source,j=h||i;j&&d++}},parallelSize:function(){var a=this[0];if(a.isEdge()){for(var b=a.source()[0],c=b._private.edges,d=0,e=0;e<c.length;e++){var f=c[e],g=a._private.data.source===f._private.data.source&&a._private.data.target===f._private.data.target,h=a._private.data.source===f._private.data.target&&a._private.data.target===f._private.data.source,i=g||h;i&&d++}return d}}}),a.fn.eles({parent:function(b){for(var c=[],d=this._private.cy,e=0;e<this.length;e++){var f=this[e],g=d.getElementById(f._private.data.parent);g.size()>0&&c.push(g)}return new a.Collection(d,c).filter(b)},parents:function(b){for(var c=[],d=this.parent();d.nonempty();){for(var e=0;e<d.length;e++){var f=d[e];c.push(f)}d=d.parent()}return new a.Collection(this.cy(),c).filter(b)},children:function(b){for(var c=[],d=0;d<this.length;d++){var e=this[d];c=c.concat(e._private.children)}return new a.Collection(this.cy(),c).filter(b)},siblings:function(a){return this.parent().children().not(this).filter(a)},isParent:function(){var a=this[0];return a?0!==a._private.children.length:void 0},isChild:function(){var a=this[0];return a?void 0!==a._private.data.parent&&0!==a.parent().length:void 0},descendants:function(b){function c(a){for(var b=0;b<a.length;b++){var e=a[b];d.push(e),e.children().nonempty()&&c(e.children())}}var d=[];return c(this.children()),new a.Collection(this.cy(),d).filter(b)}})}(cytoscape),function($$){$$.fn.selector=function(a){for(var b in a){var c=a[b];$$.Selector.prototype[b]=c}},$$.Selector=function(a,b){function c(){return{classes:[],colonSelectors:[],data:[],group:null,ids:[],meta:[],collection:null,filter:null,parent:null,ancestor:null,subject:null,child:null,descendant:null}}function d(a){return a.replace(new RegExp("\\\\("+i+")","g"),"")}function e(a){for(var b,c,d,e=0;e<A.length;e++){var f=A[e],g=f.name;if(!$$.is.fn(a)||a(g,f)){var h=D.match(new RegExp("^"+f.regex));if(null!=h){c=h,b=f,d=g;var i=h[0];D=D.substring(i.length);break}}}return{expr:b,match:c,name:d}}function f(){var a=D.match(/^\s+/);if(a){var b=a[0];D=D.substring(b.length)}}if(!(this instanceof $$.Selector))return new $$.Selector(a,b);void 0===b&&void 0!==a&&(b=a,a=void 0);var g=this;if(g._private={selectorText:null,invalid:!0},!b||$$.is.string(b)&&b.match(/^\s*$/))null==a?g.length=0:(g[0]=c(),g[0].group=a,g.length=1);else if($$.is.element(b)){var h=new $$.Collection(g.cy(),[b]);g[0]=c(),g[0].collection=h,g.length=1}else if($$.is.collection(b))g[0]=c(),g[0].collection=b,g.length=1;else if($$.is.fn(b))g[0]=c(),g[0].filter=b,g.length=1;else{if(!$$.is.string(b))return void $$.util.error("A selector must be created from a string; found "+b);for(var i="[\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\`\\{\\|\\}\\~]",j="(?:[\\w-]|(?:\\\\"+i+"))+",k="=|\\!=|>|>=|<|<=|\\$=|\\^=|\\*=",l="\\?|\\!|\\^",m="\"(?:\\\\\"|[^\"])+\"|'(?:\\\\'|[^'])+'",n=$$.util.regex.number,o=m+"|"+n,p="degree|indegree|outdegree",q="\\s*,\\s*",r=j,s="\\s+",t="\\s+>\\s+",u="\\$",v=j,w=k.split("|"),x=0;x<w.length;x++){var y=w[x];k+="|@"+y}var z=null,A={group:{query:!0,regex:"(node|edge|\\*)",populate:function(a){this.group="*"==a?a:a+"s"}},state:{query:!0,regex:"(:selected|:unselected|:locked|:unlocked|:visible|:hidden|:grabbed|:free|:removed|:inside|:grabbable|:ungrabbable|:animated|:unanimated|:selectable|:unselectable|:parent|:child|:active|:inactive|:touch)",populate:function(a){this.colonSelectors.push(a)}},id:{query:!0,regex:"\\#("+v+")",populate:function(a){this.ids.push(d(a))}},className:{query:!0,regex:"\\.("+r+")",populate:function(a){this.classes.push(d(a))}},dataExists:{query:!0,regex:"\\[\\s*("+j+")\\s*\\]",populate:function(a){this.data.push({field:d(a)})}},dataCompare:{query:!0,regex:"\\[\\s*("+j+")\\s*("+k+")\\s*("+o+")\\s*\\]",populate:function(a,b,c){this.data.push({field:d(a),operator:b,value:c})}},dataBool:{query:!0,regex:"\\[\\s*("+l+")\\s*("+j+")\\s*\\]",populate:function(a,b){this.data.push({field:d(b),operator:a})}},metaCompare:{query:!0,regex:"\\{\\s*("+p+")\\s*("+k+")\\s*("+n+")\\s*\\}",populate:function(a,b,c){this.meta.push({field:d(a),operator:b,value:c})}},nextQuery:{separator:!0,regex:q,populate:function(){g[++x]=c(),z=null}},child:{separator:!0,regex:t,populate:function(){var a=c();a.parent=this,a.subject=z,g[x]=a}},descendant:{separator:!0,regex:s,populate:function(){var a=c();a.ancestor=this,a.subject=z,g[x]=a}},subject:{modifier:!0,regex:u,populate:function(){return null!=z&&this.subject!=this?($$.util.error("Redefinition of subject in selector `"+b+"`"),!1):(z=this,void(this.subject=this))}}},B=0;for(var C in A)A[B]=A[C],A[B].name=C,B++;A.length=B,g._private.selectorText=b;var D=b,x=0;for(g[0]=c(),f();;){var E=e();if(null==E.expr)return void $$.util.error("The selector `"+b+"`is invalid");for(var F=[],B=1;B<E.match.length;B++)F.push(E.match[B]);var G=E.expr.populate.apply(g[x],F);if(G===!1)return;if(D.match(/^\s*$/))break}for(g.length=x+1,B=0;B<g.length;B++){var H=g[B];if(null!=H.subject){for(;H.subject!=H;)if(null!=H.parent){var I=H.parent,t=H;t.parent=null,I.child=t,H=I}else{if(null==H.ancestor){$$.util.error("When adjusting references for the selector `"+H+"`, neither parent nor ancestor was found");break}var J=H.ancestor,s=H;s.ancestor=null,J.descendant=s,H=J}g[B]=H.subject}}if(null!=a)for(var B=0;B<g.length;B++){if(null!=g[B].group&&g[B].group!=a)return void $$.util.error("Group `"+g[B].group+"` conflicts with implicit group `"+a+"` in selector `"+b+"`");g[B].group=a}}g._private.invalid=!1},$$.selfn=$$.Selector.prototype,$$.selfn.size=function(){return this.length},$$.selfn.eq=function(a){return this[a]},$$.selfn.find=function(){},$$.selfn.filter=function(collection,addLiveFunction){var self=this,cy=collection.cy();if(self._private.invalid)return new $$.Collection(cy);var queryMatches=function(query,element){function operandsMatch(params){for(var allDataMatches=!0,k=0;k<query[params.name].length;k++){var data=query[params.name][k],operator=data.operator,value=data.value,field=data.field,matches;if(null!=operator&&null!=value){var fieldStr=""+params.fieldValue(field),valStr=""+eval(value),caseInsensitive=!1;switch("@"==operator.charAt(0)&&(fieldStr=fieldStr.toLowerCase(),valStr=valStr.toLowerCase(),operator=operator.substring(1),caseInsensitive=!0),"="==operator&&(operator="=="),operator){case"*=":matches=fieldStr.search(valStr)>=0;break;case"$=":matches=null!=new RegExp(valStr+"$").exec(fieldStr);break;case"^=":matches=null!=new RegExp("^"+valStr).exec(fieldStr);break;default:if(caseInsensitive){var expr="fieldStr "+operator+" valStr";matches=eval(expr)}else{var expr=params.fieldRef(field)+" "+operator+" "+value;matches=eval(expr)}}}else if(null!=operator)switch(operator){case"?":matches=params.fieldTruthy(field);break;case"!":matches=!params.fieldTruthy(field);break;case"^":matches=params.fieldUndefined(field)}else matches=!params.fieldUndefined(field);if(!matches){allDataMatches=!1;break}}return allDataMatches}function confirmRelations(a,b){if(null!=a){var c=!1;b=b();for(var d=0;d<b.size();d++)if(queryMatches(a,b.eq(d))){c=!0;break}return c}return!0}if(null!=query.group&&"*"!=query.group&&query.group!=element._private.group)return!1;for(var allColonSelectorsMatch=!0,k=0;k<query.colonSelectors.length;k++){var sel=query.colonSelectors[k],renderer=cy.renderer();switch(sel){case":selected":allColonSelectorsMatch=element.selected();break;case":unselected":allColonSelectorsMatch=!element.selected();break;case":selectable":allColonSelectorsMatch=element.selectable();break;case":unselectable":allColonSelectorsMatch=!element.selectable();break;case":locked":allColonSelectorsMatch=element.locked();break;case":unlocked":allColonSelectorsMatch=!element.locked();break;case":visible":allColonSelectorsMatch=element.visible();break;case":hidden":allColonSelectorsMatch=!element.visible();break;case":grabbed":allColonSelectorsMatch=element.grabbed();break;case":free":allColonSelectorsMatch=!element.grabbed();break;case":removed":allColonSelectorsMatch=element.removed();break;case":inside":allColonSelectorsMatch=!element.removed();break;case":grabbable":allColonSelectorsMatch=element.grabbable();break;case":ungrabbable":allColonSelectorsMatch=!element.grabbable();break;case":animated":allColonSelectorsMatch=element.animated();break;case":unanimated":allColonSelectorsMatch=!element.animated();break;case":parent":allColonSelectorsMatch=element.children().nonempty();break;case":child":allColonSelectorsMatch=element.parent().nonempty();break;case":active":allColonSelectorsMatch=element.active();break;case":inactive":allColonSelectorsMatch=!element.active();break;case":touch":allColonSelectorsMatch=window&&document&&("ontouchstart"in window||window.DocumentTouch&&document instanceof DocumentTouch)}if(!allColonSelectorsMatch)break}if(!allColonSelectorsMatch)return!1;for(var allIdsMatch=!0,k=0;k<query.ids.length;k++){var id=query.ids[k],actualId=element._private.data.id;if(allIdsMatch=allIdsMatch&&id==actualId,!allIdsMatch)break}if(!allIdsMatch)return!1;for(var allClassesMatch=!0,k=0;k<query.classes.length;k++){var cls=query.classes[k];if(allClassesMatch=allClassesMatch&&element.hasClass(cls),!allClassesMatch)break}if(!allClassesMatch)return!1;var allDataMatches=operandsMatch({name:"data",fieldValue:function(a){return element._private.data[a]},fieldRef:function(a){return"element._private.data."+a},fieldUndefined:function(a){return void 0===element._private.data[a]},fieldTruthy:function(a){return element._private.data[a]?!0:!1}});if(!allDataMatches)return!1;var allMetaMatches=operandsMatch({name:"meta",fieldValue:function(a){return element[a]()},fieldRef:function(a){return"element."+a+"()"},fieldUndefined:function(a){return void 0==element[a]()},fieldTruthy:function(a){return element[a]()?!0:!1}});if(!allMetaMatches)return!1;if(null!=query.collection){var matchesAny=null!=query.collection._private.ids[element.id()];if(!matchesAny)return!1}return null!=query.filter&&0==element.collection().filter(query.filter).size()?!1:confirmRelations(query.parent,function(){return element.parent()})?confirmRelations(query.ancestor,function(){return element.parents()})?confirmRelations(query.child,function(){return element.children()})?confirmRelations(query.descendant,function(){return element.descendants()})?!0:!1:!1:!1:!1},selectorFunction=function(a,b){for(var c=0;c<self.length;c++){var d=self[c];if(queryMatches(d,b))return!0}return!1};null==self._private.selectorText&&(selectorFunction=function(){return!0});var filteredCollection=collection.filter(selectorFunction);return filteredCollection},$$.selfn.toString=$$.selfn.selector=function(){function a(a){return $$.is.string(a)?a:""}function b(c){var e="",f=a(c.group);e+=f.substring(0,f.length-1);for(var g=0;g<c.data.length;g++){var h=c.data[g];e+="["+h.field+a(h.operator)+a(h.value)+"]"}for(var g=0;g<c.meta.length;g++){var i=c.meta[g];e+="{"+i.field+a(i.operator)+a(i.value)+"}"}for(var g=0;g<c.colonSelectors.length;g++){var j=c.colonSelectors[d];e+=j}for(var g=0;g<c.ids.length;g++){var j="#"+c.ids[d];e+=j}for(var g=0;g<c.classes.length;g++){var j="."+c.classes[d];e+=j}return null!=c.parent&&(e=b(c.parent)+" > "+e),null!=c.ancestor&&(e=b(c.ancestor)+" "+e),null!=c.child&&(e+=" > "+b(c.child)),null!=c.descendant&&(e+=" "+b(c.descendant)),e}for(var c="",d=0;d<this.length;d++){var e=this[d];c+=b(e),this.length>1&&d<this.length-1&&(c+=", ")}return c}}(cytoscape),function(a){function b(){}b.prototype.notify=function(){},a("renderer","null",b)}(cytoscape),function(a){function b(a){this.options=a,this.data={select:[void 0,void 0,void 0,void 0,0],renderer:this,cy:a.cy,container:a.cy.container(),canvases:new Array(i),canvasRedrawReason:new Array(i),canvasNeedsRedraw:new Array(i),bufferCanvases:new Array(o)},this.hoverData={down:null,last:null,downTime:null,triggerMode:null,dragging:!1,initialPan:[null,null],capture:!1},this.timeoutData={panTimeout:null},this.dragData={possibleDragElements:[]},this.touchData={start:null,capture:!1,startPosition:[null,null,null,null,null,null],singleTouchStartTime:null,singleTouchMoved:!0,now:[null,null,null,null,null,null],earlier:[null,null,null,null,null,null]},this.zoomData={freeToZoom:!1,lastPointerX:null},this.redraws=0,this.bindings=[],this.init();for(var b=0;i>b;b++)this.data.canvases[b]=document.createElement("canvas"),this.data.canvases[b].style.position="absolute",this.data.canvases[b].setAttribute("data-id","layer"+b),this.data.canvases[b].style.zIndex=String(i-b),this.data.container.appendChild(this.data.canvases[b]),this.data.canvasRedrawReason[b]=new Array,this.data.canvasNeedsRedraw[b]=!1;this.data.canvases[m].setAttribute("data-id","layer"+m+"-node"),this.data.canvases[j].setAttribute("data-id","layer"+j+"-selectbox"),this.data.canvases[k].setAttribute("data-id","layer"+k+"-drag"),this.data.canvases[l].setAttribute("data-id","layer"+l+"-overlay");for(var b=0;o>b;b++)this.data.bufferCanvases[b]=document.createElement("canvas"),this.data.bufferCanvases[b].style.position="absolute",this.data.bufferCanvases[b].setAttribute("data-id","buffer"+b),this.data.bufferCanvases[b].style.zIndex=String(-b-1),this.data.bufferCanvases[b].style.visibility="visible",this.data.container.appendChild(this.data.bufferCanvases[b]);var c=document.createElement("div");if(this.data.container.appendChild(c),this.data.overlay=c,c.style.position="absolute",c.style.zIndex=1e3,a.showOverlay){var d=document.createElement("a");c.appendChild(d),this.data.link=d,d.innerHTML="cytoscape.js",d.style.font="14px helvetica",d.style.position="absolute",d.style.right=0,d.style.bottom=0,d.style.padding="1px 3px",d.style.paddingLeft="5px",d.style.paddingTop="5px",d.style.opacity=0,d.style["-webkit-tap-highlight-color"]="transparent",d.style.background="red",d.href="http://cytoscape.github.io/cytoscape.js/",d.target="_blank"}this.hideEdgesOnViewport=a.hideEdgesOnViewport,this.load()}var c="ontouchstart"in window||window.DocumentTouch&&document instanceof DocumentTouch,d=function(){return Date.now()},e={},f={},g=b.prototype,h=400,i=5,j=0,k=2,l=3,m=4,o=2;b.prototype.notify=function(a){return"destroy"==a.type?void this.destroy():(("add"==a.type||"remove"==a.type||"load"==a.type)&&(this.updateNodesCache(),this.updateEdgesCache()),"viewport"==a.type&&(this.data.canvasNeedsRedraw[j]=!0,this.data.canvasRedrawReason[j].push("viewchange")),this.data.canvasNeedsRedraw[k]=!0,this.data.canvasRedrawReason[k].push("notify"),this.data.canvasNeedsRedraw[m]=!0,this.data.canvasRedrawReason[m].push("notify"),this.redraws++,void this.redraw())},b.prototype.registerBinding=function(a,b,c,d){this.bindings.push({target:a,event:b,handler:c,useCapture:d}),a.addEventListener(b,c,d)},b.prototype.destroy=function(){this.destroyed=!0;for(var a=0;a<this.bindings.length;a++){var b=this.bindings[a],c=b;c.target.removeEventListener(c.event,c.handler,c.useCapture)}},b.prototype.png=function(){var a=this.data;this.data.container.clientHeight>0&&this.data.container.clientWidth>0&&(context=a.bufferCanvases[1].getContext("2d"),context.globalCompositeOperation="copy",context.drawImage(a.canvases[4],0,0),context.globalCompositeOperation="source-over",context.drawImage(a.canvases[2],0,0),context.drawImage(a.canvases[0],0,0),context=a.bufferCanvases[0].getContext("2d"),context.globalCompositeOperation="copy",context.drawImage(a.bufferCanvases[1],0,0));var b=this.data.bufferCanvases[0];return b.toDataURL("image/png")},b.prototype.load=function(){function c(a,b,c,d){return Math.sqrt((c-a)*(c-a)+(d-b)*(d-b))}var e=this,f=function(a,b,c){if(!b)for(var d=a.parents(),e=0;e<d.size();e++)if(d[e]._private.selected)return;for(var f=a.descendants(),e=0;e<f.size();e++)if(b||!f[e]._private.selected){f[e]._private.rscratch.inDragLayer=!0,c.push(f[e]);for(var g=0;g<f[e]._private.edges.length;g++)f[e]._private.edges[g]._private.rscratch.inDragLayer=!0}},g=function(a,b){a._private.grabbed=!0,a._private.rscratch.inDragLayer=!0,b.push(a);for(var c=0;c<a._private.edges.length;c++)a._private.edges[c]._private.rscratch.inDragLayer=!0},i=function(a,b){for(var c=a;c.parent().nonempty();)c=c.parent()[0];if(c!=a||!b)for(var d=c.descendants().add(c),e=0;e<d.size();e++){d[e]._private.rscratch.inDragLayer=b;for(var f=0;f<d[e]._private.edges.length;f++)d[e]._private.edges[f]._private.rscratch.inDragLayer=b}};b.prototype.nodeIsDraggable=function(a){return 0!=a._private.style.opacity.value&&"visible"==a._private.style.visibility.value&&!a._private.locked&&a._private.grabbable?!0:!1},e.registerBinding(window,"resize",function(){e.data.canvasNeedsRedraw[m]=!0,e.data.canvasNeedsRedraw[l]=!0,e.matchCanvasSize(e.data.container),e.redraw()},!0),e.registerBinding(e.data.container,"contextmenu",function(a){a.preventDefault()}),e.registerBinding(e.data.container,"mousedown",function(b){b.preventDefault(),e.hoverData.capture=!0,e.hoverData.which=b.which;var c=e.data.cy,d=e.projectIntoViewport(b.pageX,b.pageY),k=e.data.select,l=e.findNearestElement(d[0],d[1],!0),m=(e.hoverData.down,e.dragData.possibleDragElements),n=new a.Event(b,{type:"grab"});if(3==b.which)l&&(l.activate(),l.trigger(new a.Event(b,{type:"cxttapstart"})),e.hoverData.down=l,e.hoverData.downTime=(new Date).getTime(),e.hoverData.cxtDragged=!1);else if(1==b.which){if(l&&l.activate(),null!=l&&e.nodeIsDraggable(l)){if("nodes"==l._private.group&&0==l._private.selected&&(m=e.dragData.possibleDragElements=[],g(l,m),l.trigger(n),("auto"==l._private.style.width.value||"auto"==l._private.style.height.value)&&f(l,!0,m),i(l,!0)),"nodes"==l._private.group&&1==l._private.selected){m=e.dragData.possibleDragElements=[];for(var o=!1,p=c.$("node:selected"),q=0;q<p.length;q++)e.nodeIsDraggable(p[q])&&(g(p[q],m),o||(l.trigger(n),o=!0),("auto"==p[q]._private.style.width.value||"auto"==p[q]._private.style.height.value)&&f(p[q],!1,m),i(p[q],!0))}l.trigger(new a.Event(b,{type:"mousedown"})).trigger(new a.Event(b,{type:"tapstart"})).trigger(new a.Event(b,{type:"vmousedown"}))}else null==l&&c.trigger(new a.Event(b,{type:"mousedown"})).trigger(new a.Event(b,{type:"tapstart"})).trigger(new a.Event(b,{type:"vmousedown"}));if(e.hoverData.down=l,e.hoverData.downTime=(new Date).getTime(),null==l||l.isEdge()){k[4]=1;var r=Math.max(0,h-(+new Date-e.hoverData.downTime));clearTimeout(e.bgActiveTimeout),e.bgActiveTimeout=setTimeout(function(){l&&l.unactivate(),e.data.bgActivePosistion={x:d[0],y:d[1]},e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("bgactive"),e.redraw()},r)}}k[0]=k[2]=d[0],k[1]=k[3]=d[1],e.redraw()},!1),e.registerBinding(window,"mousemove",function(b){var c=!1,d=e.hoverData.capture;if(!d){var f=e.findContainerPageCoords();if(!(b.pageX>f[0]&&b.pageX<f[0]+e.data.container.clientWidth&&b.pageY>f[1]&&b.pageY<f[1]+e.data.container.clientHeight))return}{var g=e.data.cy,i=e.projectIntoViewport(b.pageX,b.pageY),l=e.data.select,n=e.findNearestElement(i[0],i[1],!0),o=e.hoverData.last,p=e.hoverData.down,q=[i[0]-l[2],i[1]-l[3]],r=(e.getCachedNodes(),e.getCachedEdges(),e.dragData.possibleDragElements);b.shiftKey}c=!0;var s=new a.Event(b,{type:"mousemove"});if(null!=n?n.trigger(s):null==n&&g.trigger(s),3===e.hoverData.which){var t=new a.Event(b,{type:"cxtdrag"});p?p.trigger(t):g.trigger(t),e.hoverData.cxtDragged=!0}else if(e.hoverData.dragging){if(c=!0,g.panningEnabled()){var u={x:q[0]*g.zoom(),y:q[1]*g.zoom()};g.panBy(u)}i=e.projectIntoViewport(b.pageX,b.pageY)}else if(1==l[4]&&(null==p||p.isEdge())&&(!g.boxSelectionEnabled()||+new Date-e.hoverData.downTime>=h)&&Math.abs(l[3]-l[1])+Math.abs(l[2]-l[0])<4&&g.panningEnabled())e.hoverData.dragging=!0,l[4]=0;else{if(g.boxSelectionEnabled()&&Math.pow(l[2]-l[0],2)+Math.pow(l[3]-l[1],2)>7&&l[4]&&clearTimeout(e.bgActiveTimeout),p&&p.isEdge()&&p.active()&&p.unactivate(),n!=o&&(o&&o.trigger(new a.Event(b,{type:"mouseout"})),n&&n.trigger(new a.Event(b,{type:"mouseover"})),e.hoverData.last=n),p&&p.isNode()&&e.nodeIsDraggable(p)){e.dragData.didDrag=!0;for(var v=[],w=0;w<r.length;w++)"nodes"==r[w]._private.group&&e.nodeIsDraggable(r[w])&&(r[w]._private.position.x+=q[0],r[w]._private.position.y+=q[1],v.push(r[w]));new a.Collection(g,v).trigger(new a.Event(b,{type:"drag"})).trigger(new a.Event(b,{type:"position"})),l[2]==l[0]&&l[3]==l[1]&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("Node(s) and edge(s) moved to drag layer")),e.data.canvasNeedsRedraw[k]=!0,e.data.canvasRedrawReason[k].push("Nodes dragged")}g.boxSelectionEnabled()&&(e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("Mouse moved, redraw selection box")),c=!0}return l[2]=i[0],l[3]=i[1],e.redraw(),c?(b.stopPropagation&&b.stopPropagation(),b.preventDefault&&b.preventDefault(),b.cancelBubble=!0,b.returnValue=!1,!1):void 0},!1),e.registerBinding(window,"mouseup",function(b){var c=e.hoverData.capture;if(c){e.hoverData.capture=!1;var d=e.data.cy,f=e.projectIntoViewport(b.pageX,b.pageY),g=e.data.select,h=e.findNearestElement(f[0],f[1],!0),l=(e.getCachedNodes(),e.getCachedEdges(),e.dragData.possibleDragElements),n=e.hoverData.down,o=b.shiftKey;if(e.data.bgActivePosistion=void 0,clearTimeout(e.bgActiveTimeout),n&&n.unactivate(),3===e.hoverData.which){var p=new a.Event(b,{type:"cxttapend"});if(n?n.trigger(p):d.trigger(p),!e.hoverData.cxtDragged){var q=new a.Event(b,{type:"cxttap"});n?n.trigger(q):d.trigger(q)}e.hoverData.cxtDragged=!1,e.hoverData.which=null}else{if(null!=n||e.dragData.didDrag||Math.pow(g[2]-g[0],2)+Math.pow(g[3]-g[1],2)>7&&g[4]||e.hoverData.dragging||(d.$(":selected").unselect(),l.length>0&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("De-select")),e.dragData.possibleDragElements=l=[]),Math.pow(g[2]-g[0],2)+Math.pow(g[3]-g[1],2)==0&&(null!=h?h.trigger(new a.Event(b,{type:"click"})).trigger(new a.Event(b,{type:"tap"})).trigger(new a.Event(b,{type:"vclick"})):null==h&&d.trigger(new a.Event(b,{type:"click"})).trigger(new a.Event(b,{type:"tap"})).trigger(new a.Event(b,{type:"vclick"}))),null!=h?h.trigger(new a.Event(b,{type:"mouseup"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"})):null==h&&d.trigger(new a.Event(b,{type:"mouseup"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"})),h!=n||e.dragData.didDrag){if(h==n&&null!=h&&h._private.grabbed){for(var r=d.$(":grabbed"),s=0;s<r.length;s++){var t=r[s];t._private.grabbed=!1;for(var u=t._private.edges,v=0;v<u.length;v++)u[v]._private.rscratch.inDragLayer=!1;i(t,!1)}var w=new a.Event(b,{type:"free"});r.trigger(w)}}else null!=h&&h._private.selectable&&(o||d.$(":selected").unselect(),h.selected()?h.unselect():h.select(),i(h,!1),e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("sglslct"));if(d.boxSelectionEnabled()&&Math.pow(g[2]-g[0],2)+Math.pow(g[3]-g[1],2)>7&&g[4]){o||d.$(":selected").unselect();for(var x=[],y=e.getAllInBox(g[0],g[1],g[2],g[3]),s=(new a.Event(b,{type:"select"}),0);s<y.length;s++)y[s]._private.selectable&&(l.push(y[s]),x.push(y[s]));new a.Collection(d,x).select(),y.length>0&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("Selection"))}if(e.hoverData.dragging=!1,!g[4]){for(var w=new a.Event(b,{type:"free"}),s=0;s<l.length;s++)if("nodes"==l[s]._private.group){l[s]._private.rscratch.inDragLayer=!1;for(var u=l[s]._private.edges,v=0;v<u.length;v++)u[v]._private.rscratch.inDragLayer=!1;i(l[s],!1)}else"edges"==l[s]._private.group&&(l[s]._private.rscratch.inDragLayer=!1);n&&n.trigger(w),e.data.canvasNeedsRedraw[k]=!0,e.data.canvasRedrawReason[k].push("Node/nodes back from drag"),e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("Node/nodes back from drag")}}g[4]=0,e.hoverData.down=null,e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("Mouse up, selection box gone"),e.dragData.didDrag=!1,e.redraw()}},!1);var n=function(a){var b=e.data.cy,c=e.projectIntoViewport(a.pageX,a.pageY),d=[c[0]*b.zoom()+b.pan().x,c[1]*b.zoom()+b.pan().y];if(e.zoomData.freeToZoom){a.preventDefault();var f=a.wheelDeltaY/1e3||a.detail/-32;b.panningEnabled()&&b.zoomingEnabled()&&b.zoom({level:b.zoom()*Math.pow(10,f),position:{x:d[0],y:d[1]}}),e.data.wheel=!0,clearTimeout(e.data.wheelTimeout),e.data.wheelTimeout=setTimeout(function(){e.data.wheel=!1,e.data.canvasNeedsRedraw[m]=!0,e.redraw()},100)}};e.registerBinding(e.data.container,"mousewheel",n,!0),e.registerBinding(e.data.container,"DOMMouseScroll",n,!0),e.registerBinding(e.data.container,"MozMousePixelScroll",function(a){e.zoomData.freeToZoom&&a.preventDefault()},!1),e.registerBinding(e.data.container,"mousemove",function(a){e.zoomData.lastPointerX&&e.zoomData.lastPointerX!=a.pageX&&!e.zoomData.freeToZoom&&(e.zoomData.freeToZoom=!0),e.zoomData.lastPointerX=a.pageX},!1),e.registerBinding(e.data.container,"mouseout",function(){e.zoomData.freeToZoom=!1,e.zoomData.lastPointerX=null},!1),e.registerBinding(e.data.container,"mouseout",function(b){e.data.cy.trigger(new a.Event(b,{type:"mouseout"}))},!1),e.registerBinding(e.data.container,"mouseover",function(b){e.data.cy.trigger(new a.Event(b,{type:"mouseover"}))},!1);var o,p,q,r,s,t,u,v,w,x,y=e.data.container.clientWidth,z=e.data.container.clientHeight;e.registerBinding(e.data.container,"touchstart",function(b){function h(a){for(var b=0;b<a.length;b++)a[b]._private.grabbed=!1,a[b]._private.rscratch.inDragLayer=!1,a[b].active()&&a[b].unactivate()}b.target!==e.data.link&&b.preventDefault(),e.touchData.capture=!0,e.data.bgActivePosistion=void 0;var k=e.data.cy,l=e.getCachedNodes(),m=e.getCachedEdges(),n=e.touchData.now,A=e.touchData.earlier;if(b.touches[0]){var B=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);n[0]=B[0],n[1]=B[1]}if(b.touches[1]){var B=e.projectIntoViewport(b.touches[1].pageX,b.touches[1].pageY);n[2]=B[0],n[3]=B[1]}if(b.touches[2]){var B=e.projectIntoViewport(b.touches[2].pageX,b.touches[2].pageY);n[4]=B[0],n[5]=B[1]}if(b.touches[1]){h(l),h(m);var C=e.findContainerPageCoords();w=C[1],v=C[0],o=b.touches[0].pageX-v,p=b.touches[0].pageY-w,q=b.touches[1].pageX-v,r=b.touches[1].pageY-w,x=o>=0&&y>=o&&q>=0&&y>=q&&p>=0&&z>=p&&r>=0&&z>=r;var D=k.pan(),E=k.zoom();if(s=c(o,p,q,r),t=[(o+q)/2,(p+r)/2],u=[(t[0]-D.x)/E,(t[1]-D.y)/E],100>s){var F=e.findNearestElement(n[0],n[1],!0),G=e.findNearestElement(n[2],n[3],!0),H=new a.Event(b,{type:"cxttapstart"});return F&&F.isNode()?(F.activate().trigger(H),e.touchData.start=F):G&&G.isNode()?(G.activate().trigger(H),e.touchData.start=G):(k.trigger(H),e.touchData.start=null),e.touchData.start&&(e.touchData.start._private.grabbed=!1),e.touchData.cxt=!0,e.touchData.cxtDragged=!1,e.data.bgActivePosistion=void 0,void e.redraw()}}if(b.touches[2]);else if(b.touches[1]);else if(b.touches[0]){var I=e.findNearestElement(n[0],n[1],!0);if(null!=I){if(I.activate(),e.touchData.start=I,"nodes"==I._private.group&&e.nodeIsDraggable(I)){var J=e.dragData.touchDragEles=[];if(g(I,J),I.trigger(new a.Event(b,{type:"grab"})),I.selected()){J=e.dragData.touchDragEles=[];for(var K=k.$("node:selected"),L=0;L<K.length;L++){var M=K[L];if(e.nodeIsDraggable(M)){J.push(M),M._private.rscratch.inDragLayer=!0;for(var N=M._private.edges,O=0;O<N.length;O++)N[O]._private.rscratch.inDragLayer=!0;("auto"==M._private.style.width.value||"auto"==M._private.style.height.value)&&f(M,!1,J),i(M,!0)}}}else("auto"==I._private.style.width.value||"auto"==I._private.style.height.value)&&f(I,!0,J),i(I,!0)}I.trigger(new a.Event(b,{type:"touchstart"})).trigger(new a.Event(b,{type:"tapstart"})).trigger(new a.Event(b,{type:"vmousdown"}))}null==I&&(k.trigger(new a.Event(b,{type:"touchstart"})).trigger(new a.Event(b,{type:"tapstart"})).trigger(new a.Event(b,{type:"vmousedown"})),e.data.bgActivePosistion={x:B[0],y:B[1]},e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("bgactive"));for(var P=0;P<n.length;P++)A[P]=n[P],e.touchData.startPosition[P]=n[P];e.touchData.singleTouchMoved=!1,e.touchData.singleTouchStartTime=d();{setTimeout(function(){0==e.touchData.singleTouchMoved&&d()-e.touchData.singleTouchStartTime>250&&(e.touchData.start?e.touchData.start.trigger(new a.Event(b,{type:"taphold"})):(e.data.cy.trigger(new a.Event(b,{type:"taphold"})),k.$(":selected").unselect()))},1e3)}}e.redraw()},!1),e.registerBinding(window,"touchmove",function(b){var d=e.data.select,f=e.touchData.capture;f&&b.preventDefault();var g=e.data.cy,h=(e.getCachedNodes(),e.getCachedEdges(),e.touchData.now),i=e.touchData.earlier;if(b.touches[0]){var l=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);h[0]=l[0],h[1]=l[1]}if(b.touches[1]){var l=e.projectIntoViewport(b.touches[1].pageX,b.touches[1].pageY);h[2]=l[0],h[3]=l[1]}if(b.touches[2]){var l=e.projectIntoViewport(b.touches[2].pageX,b.touches[2].pageY);h[4]=l[0],h[5]=l[1]}for(var n=[],t=0;t<h.length;t++)n[t]=h[t]-i[t];if(f&&e.touchData.cxt){var y=b.touches[0].pageX-v,z=b.touches[0].pageY-w,A=b.touches[1].pageX-v,B=b.touches[1].pageY-w,C=c(y,z,A,B),D=C/s;if(D>=1.5||C>=150){e.touchData.cxt=!1,e.touchData.start&&(e.touchData.start.unactivate(),e.touchData.start=null),e.data.bgActivePosistion=void 0,e.data.canvasNeedsRedraw[j]=!0;var E=new a.Event(b,{type:"cxttapend"});e.touchData.start?e.touchData.start.trigger(E):g.trigger(E)}}if(f&&e.touchData.cxt){var E=new a.Event(b,{type:"cxtdrag"});e.data.bgActivePosistion=void 0,e.data.canvasNeedsRedraw[j]=!0,e.touchData.start?e.touchData.start.trigger(E):g.trigger(E),e.touchData.start&&(e.touchData.start._private.grabbed=!1),e.touchData.cxtDragged=!0}else if(f&&b.touches[2]&&g.boxSelectionEnabled())e.data.bgActivePosistion=void 0,clearTimeout(this.threeFingerSelectTimeout),this.lastThreeTouch=+new Date,e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("Touch moved, redraw selection box"),d&&0!==d.length&&void 0!==d[0]?(d[2]=(h[0]+h[2]+h[4])/3,d[3]=(h[1]+h[3]+h[5])/3):(d[0]=(h[0]+h[2]+h[4])/3,d[1]=(h[1]+h[3]+h[5])/3,d[2]=(h[0]+h[2]+h[4])/3+1,d[3]=(h[1]+h[3]+h[5])/3+1),d[4]=1;else if(f&&b.touches[1]&&g.zoomingEnabled()&&g.panningEnabled()){e.data.bgActivePosistion=void 0,e.data.canvasNeedsRedraw[j]=!0;var y=b.touches[0].pageX-v,z=b.touches[0].pageY-w,A=b.touches[1].pageX-v,B=b.touches[1].pageY-w,C=c(y,z,A,B),D=C/s;if(1!=D&&x){var F=y-o,G=z-p,H=A-q,I=B-r,J=(F+H)/2,K=(G+I)/2,L=g.zoom(),M=L*D,N=g.pan(),O=u[0]*L+N.x,P=u[1]*L+N.y,Q={x:-M/L*(O-N.x-J)+O,y:-M/L*(P-N.y-K)+P};g._private.zoom=M,g._private.pan=Q,g.trigger("pan zoom").notify("viewport"),s=C,o=y,p=z,q=A,r=B,e.pinching=!0}if(b.touches[0]){var l=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);
-h[0]=l[0],h[1]=l[1]}if(b.touches[1]){var l=e.projectIntoViewport(b.touches[1].pageX,b.touches[1].pageY);h[2]=l[0],h[3]=l[1]}if(b.touches[2]){var l=e.projectIntoViewport(b.touches[2].pageX,b.touches[2].pageY);h[4]=l[0],h[5]=l[1]}}else if(b.touches[0]){var R=e.touchData.start,S=e.touchData.last;if(null!=R&&"nodes"==R._private.group&&e.nodeIsDraggable(R)){for(var T=e.dragData.touchDragEles,U=0;U<T.length;U++){var V=T[U];e.nodeIsDraggable(V)&&(e.dragData.didDrag=!0,V._private.position.x+=n[0],V._private.position.y+=n[1])}new a.Collection(g,T).trigger(new a.Event(b,{type:"drag"})).trigger(new a.Event(b,{type:"position"})),e.data.canvasNeedsRedraw[k]=!0,e.data.canvasRedrawReason[k].push("touchdrag node"),e.touchData.startPosition[0]==i[0]&&e.touchData.startPosition[1]==i[1]&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("node drag started"))}if(null!=R&&R.trigger(new a.Event(b,{type:"touchmove"})),null==R){var W=e.findNearestElement(h[0],h[1],!0);null!=W&&W.trigger(new a.Event(b,{type:"touchmove"})),null==W&&g.trigger(new a.Event(b,{type:"touchmove"}))}W!=S&&(S&&S.trigger(new a.Event(b,{type:"touchout"})),W&&W.trigger(new a.Event(b,{type:"touchover"}))),e.touchData.last=W;for(var X=0;X<h.length;X++)h[X]&&e.touchData.startPosition[X]&&Math.abs(h[X]-e.touchData.startPosition[X])>4&&(e.touchData.singleTouchMoved=!0);if(f&&(null==R||R.isEdge())&&g.panningEnabled()){R&&(R.unactivate(),e.data.bgActivePosistion||(e.data.bgActivePosistion={x:h[0],y:h[1]}),e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("bgactive")),g.panBy({x:n[0]*g.zoom(),y:n[1]*g.zoom()}),e.swipePanning=!0;var l=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);h[0]=l[0],h[1]=l[1]}}for(var t=0;t<h.length;t++)i[t]=h[t];e.redraw()},!1),e.registerBinding(window,"touchend",function(b){var c=e.touchData.capture;if(c){e.touchData.capture=!1,b.preventDefault();var d=e.data.select;e.swipePanning=!1;var f=e.data.cy,g=(e.getCachedNodes(),e.getCachedEdges(),e.touchData.now),h=e.touchData.earlier,l=e.touchData.start;if(b.touches[0]){var n=e.projectIntoViewport(b.touches[0].pageX,b.touches[0].pageY);g[0]=n[0],g[1]=n[1]}if(b.touches[1]){var n=e.projectIntoViewport(b.touches[1].pageX,b.touches[1].pageY);g[2]=n[0],g[3]=n[1]}if(b.touches[2]){var n=e.projectIntoViewport(b.touches[2].pageX,b.touches[2].pageY);g[4]=n[0],g[5]=n[1]}if(e.touchData.cxt){if(ctxTapend=new a.Event(b,{type:"cxttapend"}),l?(l.unactivate(),l.trigger(ctxTapend)):f.trigger(ctxTapend),!e.touchData.cxtDragged){var o=new a.Event(b,{type:"cxttap"});l?l.trigger(o):f.trigger(o)}return e.touchData.start&&(e.touchData.start._private.grabbed=!1),e.touchData.cxt=!1,e.touchData.start=null,void e.redraw()}{+new Date}!b.touches[2]&&f.boxSelectionEnabled()&&(clearTimeout(this.threeFingerSelectTimeout),this.threeFingerSelectTimeout=setTimeout(function(){var c=[],g=e.getAllInBox(d[0],d[1],d[2],d[3]);d[0]=void 0,d[1]=void 0,d[2]=void 0,d[3]=void 0,d[4]=0,e.data.canvasNeedsRedraw[j]=!0,e.data.canvasRedrawReason[j].push("Touch moved, redraw selection box");for(var h=(new a.Event(b,{type:"select"}),0);h<g.length;h++)g[h]._private.selectable&&c.push(g[h]);new a.Collection(f,c).select(),g.length>0&&(e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("Selection"))},100)),b.touches[1]||(e.pinching=!1);var p=!1;if(null!=l&&(l._private.active=!1,p=!0,l.trigger(new a.Event(b,{type:"unactivate"}))),b.touches[2])e.data.bgActivePosistion=void 0;else if(b.touches[1]);else if(b.touches[0]);else if(!b.touches[0]){if(e.data.bgActivePosistion=void 0,null!=l){1==l._private.grabbed&&(l._private.grabbed=!1,l.trigger(new a.Event(b,{type:"free"})),l._private.rscratch.inDragLayer=!1);for(var q=l._private.edges,r=0;r<q.length;r++)q[r]._private.rscratch.inDragLayer=!1;if(i(l,!1),l.selected())for(var s=f.$("node:selected"),t=0;t<s.length;t++){var u=s[t];u._private.rscratch.inDragLayer=!1;for(var q=u._private.edges,r=0;r<q.length;r++)q[r]._private.rscratch.inDragLayer=!1;i(u,!1)}e.data.canvasNeedsRedraw[k]=!0,e.data.canvasRedrawReason[k].push("touchdrag node end"),e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("touchdrag node end"),l.trigger(new a.Event(b,{type:"touchend"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"})),e.touchData.start=null}else{var v=e.findNearestElement(g[0],g[1],!0);null!=v&&v.trigger(new a.Event(b,{type:"touchend"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"})),null==v&&f.trigger(new a.Event(b,{type:"touchend"})).trigger(new a.Event(b,{type:"tapend"})).trigger(new a.Event(b,{type:"vmouseup"}))}null!=l&&!e.dragData.didDrag&&l._private.selectable&&Math.sqrt(Math.pow(e.touchData.startPosition[0]-g[0],2)+Math.pow(e.touchData.startPosition[1]-g[1],2))<6&&(l.selected()?(l._private.selected=!1,l.trigger(new a.Event(b,{type:"unselect"}))):(l._private.selected=!0,l.trigger(new a.Event(b,{type:"select"}))),p=!0,e.data.canvasNeedsRedraw[m]=!0,e.data.canvasRedrawReason[m].push("sglslct")),0==e.touchData.singleTouchMoved&&(l?l.trigger(new a.Event(b,{type:"tap"})).trigger(new a.Event(b,{type:"vclick"})):f.trigger(new a.Event(b,{type:"tap"})).trigger(new a.Event(b,{type:"vclick"}))),e.touchData.singleTouchMoved=!0}for(var r=0;r<g.length;r++)h[r]=g[r];e.dragData.didDrag=!1,p&&l&&l.updateStyle(!1),e.redraw()}},!1)},b.prototype.init=function(){},b.prototype.getCachedNodes=function(){var a=this.data,b=this.data.cy;return void 0==a.cache&&(a.cache={}),void 0==a.cache.cachedNodes&&(a.cache.cachedNodes=b.nodes()),a.cache.cachedNodes},b.prototype.updateNodesCache=function(){var a=this.data,b=this.data.cy;void 0==a.cache&&(a.cache={}),a.cache.cachedNodes=b.nodes()},b.prototype.getCachedEdges=function(){var a=this.data,b=this.data.cy;return void 0==a.cache&&(a.cache={}),void 0==a.cache.cachedEdges&&(a.cache.cachedEdges=b.edges()),a.cache.cachedEdges},b.prototype.updateEdgesCache=function(){var a=this.data,b=this.data.cy;void 0==a.cache&&(a.cache={}),a.cache.cachedEdges=b.edges()},b.prototype.projectIntoViewport=function(a,b){n=this.data.container;var c=this.findContainerPageCoords(),d=c[0],e=c[1];return x=a-d,y=b-e,x-=this.data.cy.pan().x,y-=this.data.cy.pan().y,x/=this.data.cy.zoom(),y/=this.data.cy.zoom(),[x,y]},b.prototype.findContainerPageCoords=function(){var a,b=0,c=0;a=this.data.container;for(var d=!1;null!=a;){var e=window.getComputedStyle(a);"fixed"===e.getPropertyValue("position").toLowerCase()?(b=a.offsetLeft+window.scrollX,c=a.offsetTop+window.scrollY,a=null):"number"==typeof a.offsetLeft&&(b+=a.offsetLeft,c+=a.offsetTop,(a==document.body||a==document.header)&&(d=!0),d||(b-=a.scrollLeft,c-=a.scrollTop)),a&&(a=a.offsetParent)}return[b,c]},b.prototype.findNearestElement=function(a,b,d){for(var g=this.data,h=this.getCachedNodes(),i=this.getCachedEdges(),j=[],k=this.data.cy.zoom(),l=(c?256:32)/k,m=(c?16:0)/k,n=0;n<h.length;n++)f[this.getNodeShape(h[n])].checkPointRough(a,b,h[n]._private.style["border-width"].value/2,this.getNodeWidth(h[n])+m,this.getNodeHeight(h[n])+m,h[n]._private.position.x,h[n]._private.position.y)&&f[this.getNodeShape(h[n])].checkPoint(a,b,h[n]._private.style["border-width"].value/2,this.getNodeWidth(h[n])+m,this.getNodeHeight(h[n])+m,h[n]._private.position.x,h[n]._private.position.y)&&(d?0!=h[n]._private.style.opacity.value&&"visible"==h[n]._private.style.visibility.value&&j.push(h[n]):j.push(h[n]));for(var o,n=0;n<i.length;n++){var p=i[n],r=p._private.rscratch;if(o=!1,"self"==r.edgeType?(this.inBezierVicinity(a,b,r.startX,r.startY,r.cp2ax,r.cp2ay,r.selfEdgeMidX,r.selfEdgeMidY,Math.pow(p._private.style.width.value/2,2))&&Math.pow(i[n]._private.style.width.value/2,2)+l>this.sqDistanceToQuadraticBezier(a,b,r.startX,r.startY,r.cp2ax,r.cp2ay,r.selfEdgeMidX,r.selfEdgeMidY)||this.inBezierVicinity(a,b,r.selfEdgeMidX,r.selfEdgeMidY,r.cp2cx,r.cp2cy,r.endX,r.endY,Math.pow(i[n]._private.style.width.value/2,2))&&Math.pow(i[n]._private.style.width.value/2,2)+l>this.sqDistanceToQuadraticBezier(a,b,r.selfEdgeMidX,r.selfEdgeMidY,r.cp2cx,r.cp2cy,r.endX,r.endY))&&(o=!0):"straight"==r.edgeType?this.inLineVicinity(a,b,r.startX,r.startY,r.endX,r.endY,2*i[n]._private.style.width.value)&&Math.pow(i[n]._private.style.width.value/2,2)+l>this.sqDistanceToFiniteLine(a,b,r.startX,r.startY,r.endX,r.endY)&&(o=!0):"bezier"==r.edgeType&&this.inBezierVicinity(a,b,r.startX,r.startY,r.cp2x,r.cp2y,r.endX,r.endY,Math.pow(i[n]._private.style.width.value/2,2))&&Math.pow(i[n]._private.style.width.value/2,2)+l>this.sqDistanceToQuadraticBezier(a,b,r.startX,r.startY,r.cp2x,r.cp2y,r.endX,r.endY)&&(o=!0),j.length&&j[j.length-1]==i[n]||(e[i[n]._private.style["source-arrow-shape"].value].roughCollide(a,b,i[n]._private.rscratch.arrowStartX,i[n]._private.rscratch.arrowStartY,this.getArrowWidth(i[n]._private.style.width.value),this.getArrowHeight(i[n]._private.style.width.value),[i[n]._private.rscratch.arrowStartX-i[n].source()[0]._private.position.x,i[n]._private.rscratch.arrowStartY-i[n].source()[0]._private.position.y],0)&&e[i[n]._private.style["source-arrow-shape"].value].collide(a,b,i[n]._private.rscratch.arrowStartX,i[n]._private.rscratch.arrowStartY,this.getArrowWidth(i[n]._private.style.width.value),this.getArrowHeight(i[n]._private.style.width.value),[i[n]._private.rscratch.arrowStartX-i[n].source()[0]._private.position.x,i[n]._private.rscratch.arrowStartY-i[n].source()[0]._private.position.y],0)||e[i[n]._private.style["target-arrow-shape"].value].roughCollide(a,b,i[n]._private.rscratch.arrowEndX,i[n]._private.rscratch.arrowEndY,this.getArrowWidth(i[n]._private.style.width.value),this.getArrowHeight(i[n]._private.style.width.value),[i[n]._private.rscratch.arrowEndX-i[n].target()[0]._private.position.x,i[n]._private.rscratch.arrowEndY-i[n].target()[0]._private.position.y],0)&&e[i[n]._private.style["target-arrow-shape"].value].collide(a,b,i[n]._private.rscratch.arrowEndX,i[n]._private.rscratch.arrowEndY,this.getArrowWidth(i[n]._private.style.width.value),this.getArrowHeight(i[n]._private.style.width.value),[i[n]._private.rscratch.arrowEndX-i[n].target()[0]._private.position.x,i[n]._private.rscratch.arrowEndY-i[n].target()[0]._private.position.y],0))&&(o=!0),o)if(d){var s=g.cy.getElementById(i[n]._private.data.source),t=g.cy.getElementById(i[n]._private.data.target);0!=i[n]._private.style.opacity.value&&"visible"==i[n]._private.style.visibility.value&&0!=s._private.style.opacity.value&&"visible"==s._private.style.visibility.value&&0!=t._private.style.opacity.value&&"visible"==t._private.style.visibility.value&&j.push(i[n])}else j.push(i[n])}return j.sort(q),j.length>0?j[j.length-1]:null},b.prototype.getAllInBox=function(a,b,c,d){var e=(this.data,this.getCachedNodes()),g=this.getCachedEdges(),h=[],i=Math.min(a,c),j=Math.max(a,c),k=Math.min(b,d),l=Math.max(b,d);a=i,c=j,b=k,d=l;for(var m,n=0;n<e.length;n++)f[this.getNodeShape(e[n])].intersectBox(a,b,c,d,this.getNodeWidth(e[n]),this.getNodeHeight(e[n]),e[n]._private.position.x,e[n]._private.position.y,e[n]._private.style["border-width"].value/2)&&h.push(e[n]);for(var n=0;n<g.length;n++)"self"==g[n]._private.rscratch.edgeType&&((m=this.boxInBezierVicinity(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2ax,g[n]._private.rscratch.cp2ay,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&(2==m||1==m&&this.checkBezierInBox(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2ax,g[n]._private.rscratch.cp2ay,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))||(m=this.boxInBezierVicinity(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2cx,g[n]._private.rscratch.cp2cy,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&(2==m||1==m&&this.checkBezierInBox(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2cx,g[n]._private.rscratch.cp2cy,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value)))&&h.push(g[n]),"bezier"==g[n]._private.rscratch.edgeType&&(m=this.boxInBezierVicinity(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2x,g[n]._private.rscratch.cp2y,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&(2==m||1==m&&this.checkBezierInBox(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.cp2x,g[n]._private.rscratch.cp2y,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&h.push(g[n]),"straight"==g[n]._private.rscratch.edgeType&&(m=this.boxInBezierVicinity(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,.5*g[n]._private.rscratch.startX+.5*g[n]._private.rscratch.endX,.5*g[n]._private.rscratch.startY+.5*g[n]._private.rscratch.endY,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&(2==m||1==m&&this.checkStraightEdgeInBox(a,b,c,d,g[n]._private.rscratch.startX,g[n]._private.rscratch.startY,g[n]._private.rscratch.endX,g[n]._private.rscratch.endY,g[n]._private.style.width.value))&&h.push(g[n]);return h},b.prototype.updateAllCompounds=function(a){for(var b=a.length-1;b>=0;b--)if(a[b].isNode()&&("auto"==a[b]._private.style.width.value||"auto"==a[b]._private.style.height.value)&&a[b].children().length>0){var c=a[b],d=this.calcCompoundBounds(c);c._private.position.x=d.x,c._private.position.y=d.y,c._private.autoWidth=d.width,c._private.autoHeight=d.height}},b.prototype.calcCompoundBounds=function(a){var b=a.descendants().not(":removed"),c={x:a._private.position.x,y:a._private.position.y,width:a._private.autoWidth,height:a._private.autoHeight};if("visible"!=a._private.style.visibility.value)return c;for(var d=[],e=0;e<b.size();e++)"visible"==b[e]._private.style.visibility.value&&d.push(b[e]);if(0==d.length)return c;b=d;var f=this.borderValue(b,"left"),g=this.borderValue(b,"right"),h=this.borderValue(b,"top"),i=this.borderValue(b,"bottom"),j=this.getNodePadding(a),k=(f-j.left+g+j.right)/2,l=(h-j.top+i+j.bottom)/2,m=g-f+j.left+j.right,n=i-h+j.top+j.bottom;return c={x:k,y:l,width:m,height:n}},b.prototype.borderValue=function(a,b){var c,d,e=1/0,f=-1/0,g=this,h=function(a){var b={};return b.x=a._private.position.x,b.y=a._private.position.y,b.width=a.outerWidth(),b.height=a.outerHeight(),b},i=function(a){var b={},c=g.getNodeWidth(a),d=g.getNodeHeight(a);b.height=a._private.style["font-size"].value,b.width=b.height;var e=a._private.style["text-halign"].strValue;"left"==e?(b.x=a._private.position.x-c/2,b.left=b.x-b.width,b.right=b.x):"right"==e?(b.x=a._private.position.x+c/2,b.left=b.x,b.right=b.x+b.width):(b.x=a._private.position.x,b.left=b.x-b.width/2,b.right=b.x+b.width/2);var f=a._private.style["text-valign"].strValue;return"top"==f?(b.y=a._private.position.y-d/2,b.top=b.y-b.height,b.bottom=b.y):"bottom"==f?(b.y=a._private.position.y+d/2,b.top=b.y,b.bottom=b.y+b.height):(b.y=a._private.position.y,b.top=b.y-b.height/2,b.bottom=b.y+b.height/2),b};for(D=0;D<a.length;D++)if(c=h(a[D]),d=i(a[D]),"left"==b){var j=Math.min(c.x-c.width/2,d.left);e>j&&(e=j)}else if("right"==b){var k=Math.max(c.x+c.width/2,d.right);k>f&&(f=k)}else if("top"==b){var l=Math.min(c.y-c.height/2,d.top);e>l&&(e=l)}else if("bottom"==b){var m=Math.max(c.y+c.height/2,d.bottom);m>f&&(f=m)}return"left"==b||"top"==b?e:f},b.prototype.getNodeWidth=function(a){return"auto"==a._private.style.width.value||"auto"==a._private.style.height.value?a._private.autoWidth:a._private.style.width.value},b.prototype.getNodeHeight=function(a){return"auto"==a._private.style.width.value||"auto"==a._private.style.height.value?a._private.autoHeight:a._private.style.height.value},b.prototype.getNodeShape=function(a){var b=a._private.style.shape.value;return a.isParent()?"rectangle"===b||"roundrectangle"===b?b:"rectangle":b},b.prototype.getNodePadding=function(a){var b=a._private.style["padding-left"].value,c=a._private.style["padding-right"].value,d=a._private.style["padding-top"].value,e=a._private.style["padding-bottom"].value;return isNaN(b)&&(b=0),isNaN(c)&&(c=0),isNaN(d)&&(d=0),isNaN(e)&&(e=0),{left:b,right:c,top:d,bottom:e}},b.prototype.matchCanvasSize=function(a){var b,c=this.data,d=a.clientWidth,e=a.clientHeight,f=d,g=e;"devicePixelRatio"in window&&(f*=devicePixelRatio,g*=devicePixelRatio);for(var h=0;i>h;h++)b=c.canvases[h],(b.width!==f||b.height!==g)&&(b.width=f,b.height=g,b.style.width=d+"px",b.style.height=e+"px");for(var h=0;o>h;h++)b=c.bufferCanvases[h],(b.width!==f||b.height!==g)&&(b.width=f,b.height=g);this.data.overlay.style.width=d+"px",this.data.overlay.style.height=e+"px"};var p=function(a){return"nodes"==a._private.group?a.parents().size():"edges"==a._private.group?Math.max(a.source()[0].parents().size(),a.target()[0].parents().size()):0};b.prototype.getCachedZSortedEles=function(){var a=this.lastZOrderCachedNodes,b=this.lastZOrderCachedEdges,c=this.getCachedNodes(),d=this.getCachedEdges(),e=[];if(a&&b&&a===c&&b===d)e=this.cachedZSortedEles;else{for(var f=0;f<c.length;f++)e.push(c[f]);for(var f=0;f<d.length;f++)e.push(d[f]);e.sort(q),this.cachedZSortedEles=e}return this.lastZOrderCachedNodes=c,this.lastZOrderCachedEdges=d,e};var q=function(a,b){var c=a._private.style["z-index"].value-b._private.style["z-index"].value,d=0,e=0;return a.cy().hasCompoundNodes()&&(d=p(a),e=p(b)),d-e===0?"nodes"===a._private.group&&"edges"===b._private.group?1:"edges"===a._private.group&&"nodes"===b._private.group?-1:0===c?a._private.index-b._private.index:c:d-e};b.prototype.renderTo=function(a,b,c){this.redraw(a,!0,b,c)},b.prototype.redraw=function(a,b,c,d){var e=this;void 0===this.averageRedrawTime&&(this.averageRedrawTime=0);var f=1e3/60,g=1e3,h=this.averageRedrawTime;h=Math.max(f,h),h=Math.min(h,g),void 0===this.lastDrawTime&&(this.lastDrawTime=0);var i=+new Date,n=i-this.lastDrawTime,o=n>=h;if(!a){if(!o)return clearTimeout(this.redrawTimeout),void(this.redrawTimeout=setTimeout(function(){e.redraw()},h));this.lastDrawTime=i}setTimeout(function(){var f=i,g=e.data.cy,h=e.data,n=e.getCachedNodes(),o=e.getCachedEdges();e.matchCanvasSize(h.container);var p=g.zoom(),q=void 0!==c?c:p,r=g.pan(),s={x:r.x,y:r.y};d&&(s=d),"devicePixelRatio"in window&&(q*=devicePixelRatio,s.x*=devicePixelRatio,s.y*=devicePixelRatio);for(var t=[],u=0;u<n.length;u++)t.push(n[u]);for(var u=0;u<o.length;u++)t.push(o[u]);if(h.canvasNeedsRedraw[k]||h.canvasNeedsRedraw[m]||b){e.hideEdgesOnViewport&&(e.pinching||e.hoverData.dragging||e.data.wheel||e.swipePanning)||e.findEdgeControlPoints(o);var t=e.getCachedZSortedEles();g.hasCompoundNodes()&&e.updateAllCompounds(t)}var v,w,x;if(h.canvasNeedsRedraw[m]||b){if(!v||!w){v=[],w=[];for(var y=0;y<t.length;y++)x=t[y],x._private.rscratch.inDragLayer?v.push(x):w.push(x)}var z=a||h.canvases[m].getContext("2d");z.setTransform(1,0,0,1,0,0),z.clearRect(0,0,z.canvas.width,z.canvas.height),b||(z.translate(s.x,s.y),z.scale(q,q)),d&&z.translate(d.x,d.y),c&&z.scale(c,c);for(var y=0;y<w.length;y++)x=w[y],"nodes"==x._private.group?e.drawNode(z,x):"edges"==x._private.group&&e.drawEdge(z,x);for(var y=0;y<w.length;y++)x=w[y],"nodes"==x._private.group?e.drawNodeText(z,x):"edges"==x._private.group&&e.drawEdgeText(z,x),"nodes"==x._private.group?e.drawNode(z,x,!0):"edges"==x._private.group&&e.drawEdge(z,x,!0);b||(h.canvasNeedsRedraw[m]=!1,h.canvasRedrawReason[m]=[])}if(h.canvasNeedsRedraw[k]||b){if(!v||!w){v=[],w=[];for(var y=0;y<t.length;y++)x=t[y],x._private.rscratch.inDragLayer?v.push(x):w.push(x)}var z=a||h.canvases[k].getContext("2d");b||(z.setTransform(1,0,0,1,0,0),z.clearRect(0,0,z.canvas.width,z.canvas.height),z.translate(s.x,s.y),z.scale(q,q)),d&&z.translate(d.x,d.y),c&&z.scale(c,c);for(var x,y=0;y<v.length;y++)x=v[y],"nodes"==x._private.group?e.drawNode(z,x):"edges"==x._private.group&&e.drawEdge(z,x);for(var y=0;y<v.length;y++)x=v[y],"nodes"==x._private.group?e.drawNodeText(z,x):"edges"==x._private.group&&e.drawEdgeText(z,x),"nodes"==x._private.group?e.drawNode(z,x,!0):"edges"==x._private.group&&e.drawEdge(z,x,!0);b||(h.canvasNeedsRedraw[k]=!1,h.canvasRedrawReason[k]=[])}if(h.canvasNeedsRedraw[j]){var z=a||h.canvases[j].getContext("2d");b||(z.setTransform(1,0,0,1,0,0),z.clearRect(0,0,z.canvas.width,z.canvas.height),z.translate(s.x,s.y),z.scale(q,q)),d&&z.translate(d.x,d.y),c&&z.scale(c,c);var A=g.style()._private.coreStyle;if(1==h.select[4]){var p=h.cy.zoom(),B=A["selection-box-border-width"].value/p;z.lineWidth=B,z.fillStyle="rgba("+A["selection-box-color"].value[0]+","+A["selection-box-color"].value[1]+","+A["selection-box-color"].value[2]+","+A["selection-box-opacity"].value+")",z.fillRect(h.select[0],h.select[1],h.select[2]-h.select[0],h.select[3]-h.select[1]),B>0&&(z.strokeStyle="rgba("+A["selection-box-border-color"].value[0]+","+A["selection-box-border-color"].value[1]+","+A["selection-box-border-color"].value[2]+","+A["selection-box-opacity"].value+")",z.strokeRect(h.select[0],h.select[1],h.select[2]-h.select[0],h.select[3]-h.select[1]))}if(h.bgActivePosistion){var p=h.cy.zoom(),C=h.bgActivePosistion;z.fillStyle="rgba("+A["active-bg-color"].value[0]+","+A["active-bg-color"].value[1]+","+A["active-bg-color"].value[2]+","+A["active-bg-opacity"].value+")",z.beginPath(),z.arc(C.x,C.y,A["active-bg-size"].pxValue/p,0,2*Math.PI),z.fill()}b||(h.canvasNeedsRedraw[j]=!1,h.canvasRedrawReason[j]=[])}if(e.options.showOverlay){var z=h.canvases[l].getContext("2d");z.lineJoin="round",z.font="14px helvetica",z.strokeStyle="#fff",z.lineWidth="4",z.fillStyle="#666",z.textAlign="right";{var D="cytoscape.js",E=z.canvas.width,F=z.canvas.height,G=4;z.measureText(D).width}z.clearRect(0,0,E,F),z.strokeText(D,E-G,F-G),z.fillText(D,E-G,F-G),h.overlayDrawn=!0}var H=+new Date;void 0===e.averageRedrawTime&&(e.averageRedrawTime=H-f),e.averageRedrawTime=e.averageRedrawTime/2+(H-f)/2},0)};var r={},s=9e3;b.prototype.getCachedImage=function(a,b){if(r[a]&&r[a].image)return r[a].keepTime=s,r[a].image;var c=r[a];return void 0==c&&(r[a]=new Object,r[a].image=new Image,r[a].image.onload=b,r[a].image.src=a,r[a].keepTime=s,c=r[a]),c.image},b.prototype.swapCachedImage=function(a){if(r[a]){if(r[a].image&&r[a].image.complete){var b=r[a].image,c=document.createElement("canvas");return c.width=b.width,c.height=b.height,c.getContext("2d").drawImage(b,0,0),r[a].image=c,r[a].swappedWithCanvas=!0,c}return null}return null},b.prototype.updateImageCaches=function(){for(var a in r)r[a].keepTime<=0?(void 0!=r[a].image&&(r[a].image.src=void 0,r[a].image=void 0),r[a]=void 0):r[a]-=1},b.prototype.drawImage=function(a,b,c,d,e,f,g){g.widthScale=.5,g.heightScale=.5,g.rotate=f;canvas.drawImage(g,b,c)},b.prototype.drawEdge=function(a,b,c){if(!this.hideEdgesOnViewport||!(this.dragData.didDrag||this.pinching||this.hoverData.dragging||this.data.wheel||this.swipePanning)){var d,e;if(d=b.source()[0],e=b.target()[0],"visible"==b._private.style.visibility.value&&"visible"==d._private.style.visibility.value&&"visible"==e._private.style.visibility.value){var f=b._private.style["overlay-padding"].value,g=b._private.style["overlay-opacity"].value,h=b._private.style["overlay-color"].value;if(c?(a.strokeStyle="rgba( "+h[0]+", "+h[1]+", "+h[2]+", "+g+" )",a.lineCap="round","self"==b._private.rscratch.edgeType&&(a.lineCap="butt")):a.strokeStyle="rgba("+b._private.style["line-color"].value[0]+","+b._private.style["line-color"].value[1]+","+b._private.style["line-color"].value[2]+","+b._private.style.opacity.value+")",!(b._private.style.width.value<=0)){var i=b._private.style.width.value+(c?2*f:0),j=c?"solid":b._private.style["line-style"].value;if(a.lineWidth=i,this.findEndpoints(b),"self"==b._private.rscratch.edgeType){var k=b._private.rscratch;this.drawStyledEdge(b,a,[k.startX,k.startY,k.cp2ax,k.cp2ay,k.selfEdgeMidX,k.selfEdgeMidY],j,i),this.drawStyledEdge(b,a,[k.selfEdgeMidX,k.selfEdgeMidY,k.cp2cx,k.cp2cy,k.endX,k.endY],j,i)}else if("straight"==b._private.rscratch.edgeType){var l=e._private.position.x-d._private.position.x,m=e._private.position.y-d._private.position.y,n=b._private.rscratch.endX-b._private.rscratch.startX,o=b._private.rscratch.endY-b._private.rscratch.startY;if(0>l*n+m*o)b._private.rscratch.straightEdgeTooShort=!0;else{var k=b._private.rscratch;this.drawStyledEdge(b,a,[k.startX,k.startY,k.endX,k.endY],j,i),b._private.rscratch.straightEdgeTooShort=!1}}else{var k=b._private.rscratch;this.drawStyledEdge(b,a,[k.startX,k.startY,k.cp2x,k.cp2y,k.endX,k.endY],j,i)}b._private.rscratch.noArrowPlacement!==!0&&void 0!==b._private.rscratch.startX&&this.drawArrowheads(a,b,c)}}}};var t=function(a,b){var c=Math.sqrt(Math.pow(a[4]-a[0],2)+Math.pow(a[5]-a[1],2));c+=Math.sqrt(Math.pow((a[4]+a[0])/2-a[2],2)+Math.pow((a[5]+a[1])/2-a[3],2));var d,e=Math.ceil(c/b);if(!(e>0))return null;d=new Array(2*e);for(var f=0;e>f;f++){var g=f/e;d[2*f]=a[0]*(1-g)*(1-g)+2*a[2]*(1-g)*g+a[4]*g*g,d[2*f+1]=a[1]*(1-g)*(1-g)+2*a[3]*(1-g)*g+a[5]*g*g}return d},u=function(a,b){var c,d=Math.sqrt(Math.pow(a[2]-a[0],2)+Math.pow(a[3]-a[1],2)),e=Math.ceil(d/b);if(!(e>0))return null;c=new Array(2*e);for(var f=[a[2]-a[0],a[3]-a[1]],g=0;e>g;g++){var h=g/e;c[2*g]=f[0]*h+a[0],c[2*g+1]=f[1]*h+a[1]}return c};b.prototype.createBuffer=function(a,b){var c=document.createElement("canvas");return c.width=a,c.height=b,[c,c.getContext("2d")]},b.prototype.drawStyledEdge=function(a,b,c,d,e){function f(a,b,c,d){return(1-d)*(1-d)*a+2*(1-d)*d*b+d*d*c}var g=this.data.cy,h=g.zoom();void 0===a._private.rstyle.bezierPts&&(a._private.rstyle.bezierPts=[]);var i=a._private.rstyle.bezierPts.length;a.isLoop()?i>=12&&(a._private.rstyle.bezierPts=[]):a._private.rstyle.bezierPts=[];var j=a._private.rstyle.bezierPts;if(6===c.length&&(j.push({x:f(c[0],c[2],c[4],.05),y:f(c[1],c[3],c[5],.05)}),j.push({x:f(c[0],c[2],c[4],.25),y:f(c[1],c[3],c[5],.25)}),j.push({x:f(c[0],c[2],c[4],.35),y:f(c[1],c[3],c[5],.35)}),j.push({x:f(c[0],c[2],c[4],.65),y:f(c[1],c[3],c[5],.65)}),j.push({x:f(c[0],c[2],c[4],.75),y:f(c[1],c[3],c[5],.75)}),j.push({x:f(c[0],c[2],c[4],.95),y:f(c[1],c[3],c[5],.95)})),"solid"==d)b.beginPath(),b.moveTo(c[0],c[1]),6==c.length?b.quadraticCurveTo(c[2],c[3],c[4],c[5]):b.lineTo(c[2],c[3]),b.stroke();else if("dotted"==d){var k;if(k=6==c.length?t(c,16,!0):u(c,16,!0),!k)return;var l=Math.max(1.6*e,3.4)*h,m=2*l,n=2*l;m=Math.max(m,1),n=Math.max(n,1);var o=this.createBuffer(m,n),p=o[1];p.setTransform(1,0,0,1,0,0),p.clearRect(0,0,m,n),p.fillStyle=b.strokeStyle,p.beginPath(),p.arc(m/2,n/2,.5*l,0,2*Math.PI,!1),p.fill(),b.beginPath();for(var q=0;q<k.length/2;q++)b.drawImage(o[0],k[2*q]-m/2/h,k[2*q+1]-n/2/h,m/h,n/h)}else if("dashed"==d){var k;if(k=6==c.length?t(c,14,!0):u(c,14,!0),!k)return;var m=2*e*h,n=7.8*h;m=Math.max(m,1),n=Math.max(n,1);var o=this.createBuffer(m,n),p=o[1];p.setTransform(1,0,0,1,0,0),p.clearRect(0,0,m,n),b.strokeStyle&&(p.strokeStyle=b.strokeStyle),p.lineWidth=e*g.zoom(),p.beginPath(),p.moveTo(m/2,.2*n),p.lineTo(m/2,.8*n),p.stroke();var r,s,v=!1;4==c.length?(r=[c[2]-c[0],c[3]-k[1]],s=Math.acos((0*r[0]+-1*r[1])/Math.sqrt(r[0]*r[0]+r[1]*r[1])),r[0]<0&&(s=-s+2*Math.PI)):6==c.length&&(v=!0);for(var q=0;q<k.length/2;q++){var w=q/Math.max(k.length/2-1,1);v&&(r=[2*(1-w)*(c[2]-c[0])+2*w*(c[4]-c[2]),2*(1-w)*(c[3]-c[1])+2*w*(c[5]-c[3])],s=Math.acos((0*r[0]+-1*r[1])/Math.sqrt(r[0]*r[0]+r[1]*r[1])),r[0]<0&&(s=-s+2*Math.PI)),b.translate(k[2*q],k[2*q+1]),b.rotate(s),b.translate(-m/2/h,-n/2/h),b.drawImage(o[0],0,0,m/h,n/h),b.translate(m/2/h,n/2/h),b.rotate(-s),b.translate(-k[2*q],-k[2*q+1])}}else this.drawStyledEdge(a,b,c,"solid",e)},b.prototype.drawEdgeText=function(a,b){if(!(this.hideEdgesOnViewport&&(this.dragData.didDrag||this.pinching||this.hoverData.dragging||this.data.wheel||this.swipePanning)||"visible"!=b._private.style.visibility.value)){var c=b._private.style["font-size"].pxValue*b.cy().zoom(),d=b._private.style["min-zoomed-font-size"].pxValue;if(!(d>c)){a.textAlign="center",a.textBaseline="middle";var e,f,g,h;"self"==b._private.rscratch.edgeType?(g=b._private.rscratch.selfEdgeMidX,h=b._private.rscratch.selfEdgeMidY):"straight"==b._private.rscratch.edgeType?(g=(b._private.rscratch.startX+b._private.rscratch.endX)/2,h=(b._private.rscratch.startY+b._private.rscratch.endY)/2):"bezier"==b._private.rscratch.edgeType&&(g=.25*b._private.rscratch.startX+.5*b._private.rscratch.cp2x+.25*b._private.rscratch.endX,h=Math.pow(.5,2)*b._private.rscratch.startY+.5*b._private.rscratch.cp2y+.25*b._private.rscratch.endY),e=g,f=h;var i=b._private.rstyle;i.labelX=e,i.labelY=f,this.drawText(a,b,e,f)}}},b.prototype.drawNode=function(a,b,c){var d,e;if("visible"==b._private.style.visibility.value){for(var g=1,h=b.parents(),i=0;i<h.length;i++){var j=h[i],l=j._private.style.opacity.value;if(g=l*g,0===l)return}if(d=this.getNodeWidth(b),e=this.getNodeHeight(b),a.lineWidth=b._private.style["border-width"].pxValue,void 0!==c&&c){var n=b._private.style["overlay-padding"].value,o=b._private.style["overlay-opacity"].value,p=b._private.style["overlay-color"].value;o>0&&(a.fillStyle="rgba( "+p[0]+", "+p[1]+", "+p[2]+", "+o+" )",f[this.getNodeShape(b)].draw(a,b._private.position.x,b._private.position.y,d+2*n,e+2*n))}else{a.fillStyle="rgba("+b._private.style["background-color"].value[0]+","+b._private.style["background-color"].value[1]+","+b._private.style["background-color"].value[2]+","+b._private.style["background-opacity"].value*b._private.style.opacity.value*g+")",a.strokeStyle="rgba("+b._private.style["border-color"].value[0]+","+b._private.style["border-color"].value[1]+","+b._private.style["border-color"].value[2]+","+b._private.style["border-opacity"].value*b._private.style.opacity.value*g+")";var q=b._private.style["background-image"].value[2]||b._private.style["background-image"].value[1];if(void 0!=q){var r=this,s=this.getCachedImage(q,function(){r.data.canvasNeedsRedraw[m]=!0,r.data.canvasRedrawReason[m].push("image finished load"),r.data.canvasNeedsRedraw[k]=!0,r.data.canvasRedrawReason[k].push("image finished load"),r.swapCachedImage(q),r.redraw()});0==s.complete?(f[r.getNodeShape(b)].drawPath(a,b._private.position.x,b._private.position.y,d,e),a.stroke(),a.fillStyle="#555555",a.fill()):this.drawInscribedImage(a,s,b)}else f[this.getNodeShape(b)].draw(a,b._private.position.x,b._private.position.y,d,e);b._private.style["border-width"].value>0&&a.stroke()}}},b.prototype.drawInscribedImage=function(a,b,c){var d=this,e=(this.data.cy._private.zoom,c._private.position.x),g=c._private.position.y,h=this.getNodeWidth(c),i=this.getNodeHeight(c);a.save(),f[d.getNodeShape(c)].drawPath(a,e,g,h,i),a.clip();var j=[b.width,b.height];a.drawImage(b,e-j[0]/2,g-j[1]/2,j[0],j[1]),a.restore(),c._private.style["border-width"].value>0&&a.stroke()},b.prototype.drawNodeText=function(a,b){if("visible"==b._private.style.visibility.value){var c=b._private.style["font-size"].pxValue*b.cy().zoom(),d=b._private.style["min-zoomed-font-size"].pxValue;if(!(d>c)){var e,f,g=this.getNodeWidth(b),h=this.getNodeHeight(b),i=b._private.style["text-halign"].strValue;"left"==i?(a.textAlign="right",e=b._private.position.x-g/2):"right"==i?(a.textAlign="left",e=b._private.position.x+g/2):"center"==i?(a.textAlign="center",e=b._private.position.x):(a.textAlign="center",e=b._private.position.x);var j=b._private.style["text-valign"].strValue;"top"==j?(a.textBaseline="bottom",f=b._private.position.y-h/2):"bottom"==j?(a.textBaseline="top",f=b._private.position.y+h/2):"middle"==j||"center"==j?(a.textBaseline="middle",f=b._private.position.y):(a.textBaseline="middle",f=b._private.position.y),this.drawText(a,b,e,f)}}},b.prototype.drawText=function(a,b,c,d){for(var e=1,f=b.parents(),g=0;g<f.length;g++){var h=f[g],i=h._private.style.opacity.value;if(e=i*e,0===i)return}var j=b._private.style["font-style"].strValue,k=b._private.style["font-size"].value+"px",l=b._private.style["font-family"].strValue,m=(b._private.style["font-variant"].strValue,b._private.style["font-weight"].strValue);a.font=j+" "+m+" "+k+" "+l;var n=String(b._private.style.content.value),o=b._private.style["text-transform"].value;
-if("none"==o||("uppercase"==o?n=n.toUpperCase():"lowercase"==o&&(n=n.toLowerCase())),a.lineJoin="round",a.fillStyle="rgba("+b._private.style.color.value[0]+","+b._private.style.color.value[1]+","+b._private.style.color.value[2]+","+b._private.style["text-opacity"].value*b._private.style.opacity.value*e+")",a.strokeStyle="rgba("+b._private.style["text-outline-color"].value[0]+","+b._private.style["text-outline-color"].value[1]+","+b._private.style["text-outline-color"].value[2]+","+b._private.style["text-opacity"].value*b._private.style.opacity.value*e+")",void 0!=n){var p=2*b._private.style["text-outline-width"].value;p>0&&(a.lineWidth=p,a.strokeText(n,c,d)),isNaN(c)&&(c=0),isNaN(d)&&(d=0),a.fillText(""+n,c,d),b._private.rstyle.labelWidth=a.measureText(n).width}},b.prototype.drawBackground=function(){},b.prototype.findEdgeControlPoints=function(a){for(var b,c={},d=this.data.cy,e=[],f=0;f<a.length;f++)b=a[f]._private.data.source>a[f]._private.data.target?a[f]._private.data.target+"-"+a[f]._private.data.source:a[f]._private.data.source+"-"+a[f]._private.data.target,void 0==c[b]&&(c[b]=[]),c[b].push(a[f]),e.push(b);for(var g,h,i=0;i<e.length;i++){b=e[i],g=d.getElementById(c[b][0]._private.data.source),h=d.getElementById(c[b][0]._private.data.target);var j,k,l=(g._private.position.x+h._private.position.x)/2,m=(g._private.position.y+h._private.position.y)/2;if(c[b].length>1){j=h._private.position.y-g._private.position.y,k=g._private.position.x-h._private.position.x;var n=Math.sqrt(j*j+k*k);j/=n,k/=n}for(var o,f=0;f<c[b].length;f++){o=c[b][f];var p=o._private.rscratch.lastEdgeIndex,q=f,r=o._private.rscratch.lastNumEdges,s=c[b].length,t=o._private.rscratch.lastSrcCtlPtX,u=g._private.position.x,v=o._private.rscratch.lastSrcCtlPtY,w=g._private.position.y,x=o._private.rscratch.lastSrcCtlPtW,y=g.outerWidth(),z=o._private.rscratch.lastSrcCtlPtH,A=g.outerHeight(),B=o._private.rscratch.lastTgtCtlPtX,C=h._private.position.x,D=o._private.rscratch.lastTgtCtlPtY,E=h._private.position.y,F=o._private.rscratch.lastTgtCtlPtW,G=h.outerWidth(),H=o._private.rscratch.lastTgtCtlPtH,I=h.outerHeight();if(t!==u||v!==w||x!==y||z!==A||B!==C||D!==E||F!==G||H!==I||p!==q||r!==s){var J=o._private.rscratch;if(J.lastSrcCtlPtX=u,J.lastSrcCtlPtY=w,J.lastSrcCtlPtW=y,J.lastSrcCtlPtH=A,J.lastTgtCtlPtX=C,J.lastTgtCtlPtY=E,J.lastTgtCtlPtW=G,J.lastTgtCtlPtH=I,J.lastEdgeIndex=q,J.lastNumEdges=s,g._private.data.id==h._private.data.id){var K=o._private.style["control-point-step-size"].pxValue;o._private.rscratch.edgeType="self",o._private.rscratch.cp2ax=g._private.position.x,o._private.rscratch.cp2ay=g._private.position.y-(1+Math.pow(this.getNodeHeight(g),1.12)/100)*K*(f/3+1),o._private.rscratch.cp2cx=g._private.position.x-(1+Math.pow(this.getNodeWidth(g),1.12)/100)*K*(f/3+1),o._private.rscratch.cp2cy=g._private.position.y,o._private.rscratch.selfEdgeMidX=(o._private.rscratch.cp2ax+o._private.rscratch.cp2cx)/2,o._private.rscratch.selfEdgeMidY=(o._private.rscratch.cp2ay+o._private.rscratch.cp2cy)/2}else if(c[b].length%2==1&&f==Math.floor(c[b].length/2))o._private.rscratch.edgeType="straight";else{var K=o._private.style["control-point-step-size"].value,L=(.5-c[b].length/2+f)*K;o._private.rscratch.edgeType="bezier",o._private.rscratch.cp2x=l+j*L,o._private.rscratch.cp2y=m+k*L}}}}return c},b.prototype.findEndpoints=function(a){var b,c=a.source()[0],d=a.target()[0],g=Math.max(this.getNodeWidth(c),this.getNodeHeight(c)),h=Math.max(this.getNodeWidth(d),this.getNodeHeight(d));g=0,h/=2;var i=[a.source().position().x,a.source().position().y],j=[a.target().position().x,a.target().position().y];if("self"==a._private.rscratch.edgeType){var k=[a._private.rscratch.cp2cx,a._private.rscratch.cp2cy];b=f[this.getNodeShape(d)].intersectLine(d._private.position.x,d._private.position.y,this.getNodeWidth(d),this.getNodeHeight(d),k[0],k[1],d._private.style["border-width"].value/2);var l=this.shortenIntersection(b,k,e[a._private.style["target-arrow-shape"].value].spacing(a)),m=this.shortenIntersection(b,k,e[a._private.style["target-arrow-shape"].value].gap(a));a._private.rscratch.endX=m[0],a._private.rscratch.endY=m[1],a._private.rscratch.arrowEndX=l[0],a._private.rscratch.arrowEndY=l[1];var k=[a._private.rscratch.cp2ax,a._private.rscratch.cp2ay];b=f[this.getNodeShape(c)].intersectLine(c._private.position.x,c._private.position.y,this.getNodeWidth(c),this.getNodeHeight(c),k[0],k[1],c._private.style["border-width"].value/2);var n=this.shortenIntersection(b,k,e[a._private.style["source-arrow-shape"].value].spacing(a)),o=this.shortenIntersection(b,k,e[a._private.style["source-arrow-shape"].value].gap(a));a._private.rscratch.startX=o[0],a._private.rscratch.startY=o[1],a._private.rscratch.arrowStartX=n[0],a._private.rscratch.arrowStartY=n[1]}else if("straight"==a._private.rscratch.edgeType){b=f[this.getNodeShape(d)].intersectLine(d._private.position.x,d._private.position.y,this.getNodeWidth(d),this.getNodeHeight(d),c.position().x,c.position().y,d._private.style["border-width"].value/2),a._private.rscratch.noArrowPlacement=0==b.length?!0:!1;var l=this.shortenIntersection(b,[c.position().x,c.position().y],e[a._private.style["target-arrow-shape"].value].spacing(a)),m=this.shortenIntersection(b,[c.position().x,c.position().y],e[a._private.style["target-arrow-shape"].value].gap(a));a._private.rscratch.endX=m[0],a._private.rscratch.endY=m[1],a._private.rscratch.arrowEndX=l[0],a._private.rscratch.arrowEndY=l[1],b=f[this.getNodeShape(c)].intersectLine(c._private.position.x,c._private.position.y,this.getNodeWidth(c),this.getNodeHeight(c),d.position().x,d.position().y,c._private.style["border-width"].value/2),a._private.rscratch.noArrowPlacement=0==b.length?!0:!1;var n=this.shortenIntersection(b,[d.position().x,d.position().y],e[a._private.style["source-arrow-shape"].value].spacing(a)),o=this.shortenIntersection(b,[d.position().x,d.position().y],e[a._private.style["source-arrow-shape"].value].gap(a));a._private.rscratch.startX=o[0],a._private.rscratch.startY=o[1],a._private.rscratch.arrowStartX=n[0],a._private.rscratch.arrowStartY=n[1]}else if("bezier"==a._private.rscratch.edgeType){{var k=[a._private.rscratch.cp2x,a._private.rscratch.cp2y];.25*i[0]+.25*j[0]+.5*k[0],.25*i[1]+.25*j[1]+.5*k[1]}b=f[this.getNodeShape(d)].intersectLine(d._private.position.x,d._private.position.y,this.getNodeWidth(d),this.getNodeHeight(d),k[0],k[1],d._private.style["border-width"].value/2);var l=this.shortenIntersection(b,k,e[a._private.style["target-arrow-shape"].value].spacing(a)),m=this.shortenIntersection(b,k,e[a._private.style["target-arrow-shape"].value].gap(a));a._private.rscratch.endX=m[0],a._private.rscratch.endY=m[1],a._private.rscratch.arrowEndX=l[0],a._private.rscratch.arrowEndY=l[1],b=f[this.getNodeShape(c)].intersectLine(c._private.position.x,c._private.position.y,this.getNodeWidth(c),this.getNodeHeight(c),k[0],k[1],c._private.style["border-width"].value/2);var n=this.shortenIntersection(b,k,e[a._private.style["source-arrow-shape"].value].spacing(a)),o=this.shortenIntersection(b,k,e[a._private.style["source-arrow-shape"].value].gap(a));a._private.rscratch.startX=o[0],a._private.rscratch.startY=o[1],a._private.rscratch.arrowStartX=n[0],a._private.rscratch.arrowStartY=n[1]}else if(a._private.rscratch.isArcEdge)return},b.prototype.findEdges=function(a){for(var b=this.getCachedEdges(),c={},d=[],e=0;e<a.length;e++)c[a[e]._private.data.id]=a[e];for(var e=0;e<b.length;e++)(c[b[e]._private.data.source]||c[b[e]._private.data.target])&&d.push(b[e]);return d},b.prototype.intersectLineEllipse=function(a,b,c,d,e,f){var g=c-a,h=d-b;g/=e,h/=f;var i=Math.sqrt(g*g+h*h),j=i-1;if(0>j)return[];var k=j/i;return[(c-a)*k+a,(d-b)*k+b]},b.prototype.dotProduct=function(a,b){if(2!=a.length||2!=b.length)throw"dot product: arguments are not vectors";return a[0]*b[0]+a[1]*b[1]},b.prototype.intersectLineCircle=function(a,b,c,d,e,f,g){var h=[c-a,d-b],i=[e,f],j=[a-e,b-f],k=h[0]*h[0]+h[1]*h[1],l=2*(j[0]*h[0]+j[1]*h[1]),i=j[0]*j[0]+j[1]*j[1]-g*g,m=l*l-4*k*i;if(0>m)return[];t1=(-l+Math.sqrt(m))/(2*k),t2=(-l-Math.sqrt(m))/(2*k);var n=Math.min(t1,t2),o=Math.max(t1,t2),p=[];if(n>=0&&1>=n&&p.push(n),o>=0&&1>=o&&p.push(o),0==p.length)return[];var q=p[0]*h[0]+a,r=p[0]*h[1]+b;if(p.length>1){if(p[0]==p[1])return[q,r];var s=p[1]*h[0]+a,t=p[1]*h[1]+b;return[q,r,s,t]}return[q,r]},b.prototype.findCircleNearPoint=function(a,b,c,d,e){var f=d-a,g=e-b,h=Math.sqrt(f*f+g*g),i=f/h,j=g/h;return[a+i*c,b+j*c]},b.prototype.findMaxSqDistanceToOrigin=function(a){for(var b,c=1e-6,d=0;d<a.length/2;d++)b=a[2*d]*a[2*d]+a[2*d+1]*a[2*d+1],b>c&&(c=b);return c},b.prototype.finiteLinesIntersect=function(a,b,c,d,e,f,g,h,i){var j=(g-e)*(b-f)-(h-f)*(a-e),k=(c-a)*(b-f)-(d-b)*(a-e),l=(h-f)*(c-a)-(g-e)*(d-b);if(0!=l){var m=j/l,n=k/l;return m>=0&&1>=m&&n>=0&&1>=n?[a+m*(c-a),b+m*(d-b)]:i?[a+m*(c-a),b+m*(d-b)]:[]}return 0==j||0==k?[a,c,g].sort()[1]==g?[g,h]:[a,c,e].sort()[1]==e?[e,f]:[e,g,c].sort()[1]==c?[c,d]:[]:[]},b.prototype.boxIntersectEllipse=function(a,b,c,d,e,f,g,h,i){if(a>c){var j=a;a=c,c=j}if(b>d){var k=b;b=d,d=k}var l=[h-f/2-e,i],m=[h+f/2+e,i],n=[h,i-g/2-e],o=[h,i+g/2+e];return c<l[0]?!1:a>m[0]?!1:b>o[1]?!1:d<n[1]?!1:a<=m[0]&&m[0]<=c&&b<=m[1]&&m[1]<=d?!0:a<=l[0]&&l[0]<=c&&b<=l[1]&&l[1]<=d?!0:a<=n[0]&&n[0]<=c&&b<=n[1]&&n[1]<=d?!0:a<=o[0]&&o[0]<=c&&b<=o[1]&&o[1]<=d?!0:(a=(a-h)/(f/2+e),c=(c-h)/(f/2+e),b=(b-i)/(g/2+e),d=(d-i)/(g/2+e),1>=a*a+b*b?!0:1>=c*c+b*b?!0:1>=c*c+d*d?!0:1>=a*a+d*d?!0:!1)},b.prototype.boxIntersectPolygon=function(a,b,c,d,e,f,g,h,i,j,k){if(a>c){var l=a;a=c,c=l}if(b>d){var m=b;b=d,d=m}var n=new Array(e.length),o=Math.asin(j[1]/Math.sqrt(j[0]*j[0]+j[1]*j[1]));j[0]<0?o+=Math.PI/2:o=-o-Math.PI/2;for(var p=Math.cos(-o),q=Math.sin(-o),r=0;r<n.length/2;r++)n[2*r]=f/2*(e[2*r]*p-e[2*r+1]*q),n[2*r+1]=g/2*(e[2*r+1]*p+e[2*r]*q),n[2*r]+=h,n[2*r+1]+=i;for(var s=n[0],t=n[0],u=n[1],v=n[1],r=1;r<n.length/2;r++)n[2*r]>t&&(t=n[2*r]),n[2*r]<s&&(s=n[2*r]),n[2*r+1]>v&&(v=n[2*r+1]),n[2*r+1]<u&&(u=n[2*r+1]);if(s-k>c)return!1;if(a>t+k)return!1;if(u-k>d)return!1;if(b>v+k)return!1;var x;if(k>0){var y=w.expandPolygon(n,-k);x=w.joinLines(y)}else x=n;for(var r=0;r<n.length/2;r++)if(a<=n[2*r]&&n[2*r]<=c&&b<=n[2*r+1]&&n[2*r+1]<=d)return!0;for(var r=0;r<x.length/2;r++){var z,A,B=x[2*r],C=x[2*r+1];if(r<x.length/2-1?(z=x[2*(r+1)],A=x[2*(r+1)+1]):(z=x[0],A=x[1]),w.finiteLinesIntersect(B,C,z,A,a,b,c,b,!1).length>0)return!0;if(w.finiteLinesIntersect(B,C,z,A,a,d,c,d,!1).length>0)return!0;if(w.finiteLinesIntersect(B,C,z,A,a,b,a,d,!1).length>0)return!0;if(w.finiteLinesIntersect(B,C,z,A,c,b,c,d,!1).length>0)return!0}return!1},b.prototype.polygonIntersectLine=function(a,b,c,d,e,f,g,h){for(var i,j=[],k=new Array(c.length),l=0;l<k.length/2;l++)k[2*l]=c[2*l]*f+d,k[2*l+1]=c[2*l+1]*g+e;var m;if(h>0){var n=w.expandPolygon(k,-h);m=w.joinLines(n)}else m=k;for(var o,p,q,r,l=0;l<m.length/2;l++)o=m[2*l],p=m[2*l+1],l<m.length/2-1?(q=m[2*(l+1)],r=m[2*(l+1)+1]):(q=m[0],r=m[1]),i=this.finiteLinesIntersect(a,b,d,e,o,p,q,r),0!=i.length&&j.push(i[0],i[1]);return j},b.prototype.shortenIntersection=function(a,b,c){var d=[a[0]-b[0],a[1]-b[1]],e=Math.sqrt(d[0]*d[0]+d[1]*d[1]),f=(e-c)/e;return 0>f?[]:[b[0]+f*d[0],b[1]+f*d[1]]},e.arrow={_points:[-.15,-.3,0,0,.15,-.3],collide:function(a,b,c,d,f,h,i,j){var k=e.arrow._points;return g.pointInsidePolygon(a,b,k,c,d,f,h,i,j)},roughCollide:function(a,b,c,d,f,h){return"undefined"==typeof e.arrow._farthestPointSqDistance&&(e.arrow._farthestPointSqDistance=g.findMaxSqDistanceToOrigin(e.arrow._points)),g.checkInBoundingCircle(a,b,e.arrow._farthestPointSqDistance,0,f,h,c,d)},draw:function(a){for(var b=e.arrow._points,c=0;c<b.length/2;c++)a.lineTo(b[2*c],b[2*c+1])},spacing:function(){return 0},gap:function(a){return 2*a._private.style.width.value}},e.triangle=e.arrow,e.none={collide:function(){return!1},roughCollide:function(){return!1},draw:function(){},spacing:function(){return 0},gap:function(){return 0}},e.circle={_baseRadius:.15,collide:function(a,b,c,d,f,g,h,i){if(f!=g){var j=Math.asin(h[1]/Math.sqrt(h[0]*h[0]+h[1]*h[1])),k=(Math.cos(-j),Math.sin(-j),(g+i)/(f+i));return b/=k,d/=k,Math.pow(c-a,2)+Math.pow(d-b,2)<=Math.pow((f+i)*e.circle._baseRadius,2)}return Math.pow(c-a,2)+Math.pow(d-b,2)<=Math.pow((f+i)*e.circle._baseRadius,2)},roughCollide:function(){return!0},draw:function(a){a.arc(0,0,e.circle._baseRadius,0,2*Math.PI,!1)},spacing:function(a){return g.getArrowWidth(a._private.style.width.value)*e.circle._baseRadius},gap:function(a){return 2*a._private.style.width.value}},e.inhibitor={_points:[-.25,0,-.25,-.1,.25,-.1,.25,0],collide:function(a,b,c,d,f,h,i,j){var k=e.inhibitor._points;return g.pointInsidePolygon(a,b,k,c,d,f,h,i,j)},roughCollide:function(a,b,c,d,f,h){return"undefined"==typeof e.inhibitor._farthestPointSqDistance&&(e.inhibitor._farthestPointSqDistance=g.findMaxSqDistanceToOrigin(e.inhibitor._points)),g.checkInBoundingCircle(a,b,e.inhibitor._farthestPointSqDistance,0,f,h,c,d)},draw:function(a){for(var b=e.inhibitor._points,c=0;c<b.length/2;c++)a.lineTo(b[2*c],b[2*c+1])},spacing:function(){return 4},gap:function(){return 4}},e.square={_points:[-.12,0,.12,0,.12,-.24,-.12,-.24],collide:function(a,b,c,d,f,h,i,j){var k=e.square._points;return g.pointInsidePolygon(a,b,k,c,d,f,h,i,j)},roughCollide:function(a,b,c,d,f,h){return"undefined"==typeof e.square._farthestPointSqDistance&&(e.square._farthestPointSqDistance=g.findMaxSqDistanceToOrigin(e.square._points)),g.checkInBoundingCircle(a,b,e.square._farthestPointSqDistance,0,f,h,c,d)},draw:function(a){for(var b=e.square._points,c=0;c<b.length/2;c++)a.lineTo(b[2*c],b[2*c+1])},spacing:function(){return 0},gap:function(a){return 2*a._private.style.width.value}},e.diamond={_points:[-.14,-.14,0,-.28,.14,-.14,0,0],collide:function(a,b,c,d,f,h,i,j){var k=e.diamond._points;return g.pointInsidePolygon(a,b,k,c,d,f,h,i,j)},roughCollide:function(a,b,c,d,f,h){return"undefined"==typeof e.diamond._farthestPointSqDistance&&(e.diamond._farthestPointSqDistance=g.findMaxSqDistanceToOrigin(e.diamond._points)),g.checkInBoundingCircle(a,b,e.diamond._farthestPointSqDistance,0,f,h,c,d)},draw:function(a){a.lineTo(-.14,-.14),a.lineTo(0,-.28),a.lineTo(.14,-.14),a.lineTo(0,0)},spacing:function(){return 0},gap:function(a){return 2*a._private.style.width.value}},e.tee=e.inhibitor,b.prototype.getArrowWidth=function(a){return Math.max(Math.pow(13.37*a,.9),29)},b.prototype.getArrowHeight=function(a){return Math.max(Math.pow(13.37*a,.9),29)},b.prototype.drawArrowheads=function(a,b,c){if(!c){var d,e,f=b._private.rscratch.arrowStartX,g=b._private.rscratch.arrowStartY;d=f-b.source().position().x,e=g-b.source().position().y,a.fillStyle="rgba("+b._private.style["source-arrow-color"].value[0]+","+b._private.style["source-arrow-color"].value[1]+","+b._private.style["source-arrow-color"].value[2]+","+b._private.style.opacity.value+")",a.lineWidth=b._private.style.width.value,this.drawArrowShape(a,b._private.style["source-arrow-shape"].value,f,g,d,e);var h=b._private.rscratch.arrowEndX,i=b._private.rscratch.arrowEndY;d=h-b.target().position().x,e=i-b.target().position().y,a.fillStyle="rgba("+b._private.style["target-arrow-color"].value[0]+","+b._private.style["target-arrow-color"].value[1]+","+b._private.style["target-arrow-color"].value[2]+","+b._private.style.opacity.value+")",a.lineWidth=b._private.style.width.value,this.drawArrowShape(a,b._private.style["target-arrow-shape"].value,h,i,d,e)}},b.prototype.drawArrowShape=function(a,b,c,d,f,g){var h=Math.asin(g/Math.sqrt(f*f+g*g));0>f?h+=Math.PI/2:h=-(Math.PI/2+h),a.translate(c,d),a.moveTo(0,0),a.rotate(-h);var i=this.getArrowWidth(a.lineWidth);a.scale(i,i),a.beginPath(),e[b].draw(a),a.closePath(),a.fill(),a.scale(1/i,1/i),a.rotate(h),a.translate(-c,-d)};var v=function(a,b){var c=1/a*2*Math.PI,d=a%2==0?Math.PI/2+c/2:Math.PI/2;d+=b;for(var e,f=new Array(2*a),g=0;a>g;g++)e=g*c+d,f[2*g]=Math.cos(e),f[2*g+1]=Math.sin(-e);for(var h=0,i=0,g=0;g<f.length/2;g++)Math.abs(f[2*g]>h)&&(h=Math.abs(f[2*g])),Math.abs(f[2*g+1]>i)&&(i=Math.abs(f[2*g+1]));for(var j=5e-4,k=Math.max(h,i),g=0;g<f.length/2;g++)k>j&&(f[2*g]*=1/k,f[2*g+1]*=1/k);return f},w=g;f.ellipse={draw:function(a,b,c,d,e){f.ellipse.drawPath(a,b,c,d,e),a.fill()},drawPath:function(a,b,c,d,e){a.beginPath(),a.translate(b,c),a.scale(d/2,e/2),a.arc(0,0,1,0,2*Math.PI*.999,!1),a.closePath(),a.scale(2/d,2/e),a.translate(-b,-c)},intersectLine:function(a,b,c,d,e,f,h){var i=g.intersectLineEllipse(e,f,a,b,c/2+h,d/2+h);return i},intersectBox:function(a,c,d,e,f,g,h,i,j){return b.prototype.boxIntersectEllipse(a,c,d,e,j,f,g,h,i)},checkPointRough:function(){return!0},checkPoint:function(a,b,c,d,e,f,g){return a-=f,b-=g,a/=d/2+c,b/=e/2+c,Math.pow(a,2)+Math.pow(b,2)<=1}},f.triangle={points:v(3,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.triangle.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.triangle.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.triangle.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.triangle.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.triangle.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.triangle.points,g,h,d,e,[0,-1],c)}},f.square={points:v(4,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.square.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.square.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.square.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.square.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.square.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.square.points,g,h,d,e,[0,-1],c)}},f.rectangle=f.square,f.octogon={},f.roundrectangle={points:v(4,0),draw:function(a,b,c,d,e){w.drawRoundRectangle(a,b,c,d,e,10)},drawPath:function(a,b,c,d,e){w.drawRoundRectanglePath(a,b,c,d,e,10)},intersectLine:function(a,b,c,d,e,f,g){return w.roundRectangleIntersectLine(e,f,a,b,c,d,g)},intersectBox:function(a,b,c,d,e,f,g,h,i){return w.roundRectangleIntersectBox(a,b,c,d,e,f,g,h,i)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.roundrectangle.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){var i=w.getRoundRectangleRadius(d,e);if(w.pointInsidePolygon(a,b,f.roundrectangle.points,g,h,d,e-2*i,[0,-1],c))return!0;if(w.pointInsidePolygon(a,b,f.roundrectangle.points,g,h,d-2*i,e,[0,-1],c))return!0;var j=function(a,b,c,d,e,f,g){return a-=c,b-=d,a/=e/2+g,b/=f/2+g,Math.pow(a,2)+Math.pow(b,2)<=1};return j(a,b,g-d/2+i,h-e/2+i,2*i,2*i,c)?!0:j(a,b,g+d/2-i,h-e/2+i,2*i,2*i,c)?!0:j(a,b,g+d/2-i,h+e/2-i,2*i,2*i,c)?!0:j(a,b,g-d/2+i,h+e/2-i,2*i,2*i,c)?!0:!1}},f.roundrectangle2={roundness:4.99,draw:function(a,b,c){2*roundness>=b||w.drawPolygon(a._private.position.x,a._private.position.y,b,c,nodeSapes.roundrectangle2.points)},intersectLine:function(a,b,c,d,e){return w.findPolygonIntersection(a,b,c,d,e,f.square.points)},intersectBox:function(){f.square.points}},f.pentagon={points:v(5,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.pentagon.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.pentagon.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.pentagon.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.pentagon.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.pentagon.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.pentagon.points,g,h,d,e,[0,-1],c)}},f.hexagon={points:v(6,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.hexagon.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.hexagon.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.hexagon.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.hexagon.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.hexagon.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.hexagon.points,g,h,d,e,[0,-1],c)}},f.heptagon={points:v(7,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.heptagon.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.heptagon.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.heptagon.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.heptagon.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.heptagon.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.heptagon.points,g,h,d,e,[0,-1],c)}},f.octagon={points:v(8,0),draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.octagon.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.octagon.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.octagon.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.octagon.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.octagon.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.octagon.points,g,h,d,e,[0,-1],c)}};var z=new Array(20),A=v(5,0),B=v(5,Math.PI/5),C=.5*(3-Math.sqrt(5));C*=1.57;for(var D=0;D<B.length/2;D++)B[2*D]*=C,B[2*D+1]*=C;for(var D=0;5>D;D++)z[4*D]=A[2*D],z[4*D+1]=A[2*D+1],z[4*D+2]=B[2*D],z[4*D+3]=B[2*D+1];f.star5={points:z,draw:function(a,b,c,d,e){w.drawPolygon(a,b,c,d,e,f.star5.points)},drawPath:function(a,b,c,d,e){w.drawPolygonPath(a,b,c,d,e,f.star5.points)},intersectLine:function(a,b,c,d,e,g,h){return w.polygonIntersectLine(e,g,f.star5.points,a,b,c/2,d/2,h)},intersectBox:function(a,b,c,d,e,g,h,i,j){var k=f.star5.points;return w.boxIntersectPolygon(a,b,c,d,k,e,g,h,i,[0,-1],j)},checkPointRough:function(a,b,c,d,e,g,h){return w.checkInBoundingBox(a,b,f.star5.points,c,d,e,g,h)},checkPoint:function(a,b,c,d,e,g,h){return w.pointInsidePolygon(a,b,f.star5.points,g,h,d,e,[0,-1],c)}},b.prototype.expandPolygon=function(a,b){for(var c,d,e,f,g=new Array(2*a.length),h=0;h<a.length/2;h++){c=a[2*h],d=a[2*h+1],h<a.length/2-1?(e=a[2*(h+1)],f=a[2*(h+1)+1]):(e=a[0],f=a[1]);var i=f-d,j=-(e-c),k=Math.sqrt(i*i+j*j),l=i/k,m=j/k;g[4*h]=c+l*b,g[4*h+1]=d+m*b,g[4*h+2]=e+l*b,g[4*h+3]=f+m*b}return g},b.prototype.joinLines=function(a){for(var b,c,d,e,f,g,h,i,j=new Array(a.length/2),k=0;k<a.length/4;k++){b=a[4*k],c=a[4*k+1],d=a[4*k+2],e=a[4*k+3],k<a.length/4-1?(f=a[4*(k+1)],g=a[4*(k+1)+1],h=a[4*(k+1)+2],i=a[4*(k+1)+3]):(f=a[0],g=a[1],h=a[2],i=a[3]);var l=this.finiteLinesIntersect(b,c,d,e,f,g,h,i,!0);j[2*k]=l[0],j[2*k+1]=l[1]}return j},b.prototype.pointInsidePolygon=function(a,b,c,d,e,f,g,h,i){var j=new Array(c.length),k=Math.asin(h[1]/Math.sqrt(h[0]*h[0]+h[1]*h[1]));h[0]<0?k+=Math.PI/2:k=-k-Math.PI/2;for(var l=Math.cos(-k),m=Math.sin(-k),n=0;n<j.length/2;n++)j[2*n]=f/2*(c[2*n]*l-c[2*n+1]*m),j[2*n+1]=g/2*(c[2*n+1]*l+c[2*n]*m),j[2*n]+=d,j[2*n+1]+=e;var o;if(i>0){var p=w.expandPolygon(j,-i);o=w.joinLines(p)}else o=j;for(var q,r,s,t,u,v=0,x=0,n=0;n<o.length/2;n++)if(q=o[2*n],r=o[2*n+1],n+1<o.length/2?(s=o[2*(n+1)],t=o[2*(n+1)+1]):(s=o[2*(n+1-o.length/2)],t=o[2*(n+1-o.length/2)+1]),q==a&&s==a);else{if(!(q>=a&&a>=s||a>=q&&s>=a))continue;u=(a-q)/(s-q)*(t-r)+r,u>b&&v++,b>u&&x++}return v%2==0?!1:!0},b.prototype.drawPolygonPath=function(a,b,c,d,e,f){a.translate(b,c),a.scale(d/2,e/2),a.beginPath(),a.moveTo(f[0],f[1]);for(var g=1;g<f.length/2;g++)a.lineTo(f[2*g],f[2*g+1]);a.closePath(),a.scale(2/d,2/e),a.translate(-b,-c)},b.prototype.drawPolygon=function(a,b,c,d,e,f){this.drawPolygonPath(a,b,c,d,e,f),a.fill()},b.prototype.getRoundRectangleRadius=function(a,b){return Math.min(a/2,b/2,10)},b.prototype.drawRoundRectanglePath=function(a,b,c,d,e){var f=d/2,g=e/2,h=this.getRoundRectangleRadius(d,e);a.translate(b,c),a.beginPath(),a.moveTo(0,-g),a.arcTo(f,-g,f,0,h),a.arcTo(f,g,0,g,h),a.arcTo(-f,g,-f,0,h),a.arcTo(-f,-g,0,-g,h),a.lineTo(0,-g),a.closePath(),a.translate(-b,-c)},b.prototype.drawRoundRectangle=function(a,b,c,d,e,f){this.drawRoundRectanglePath(a,b,c,d,e,f),a.fill()},b.prototype.roundRectangleIntersectLine=function(a,b,c,d,e,f,g){var h,i=this.getRoundRectangleRadius(e,f),j=e/2,k=f/2,l=c-j+i-g,m=d-k-g,n=c+j-i+g,o=m;if(h=this.finiteLinesIntersect(a,b,c,d,l,m,n,o,!1),h.length>0)return h;var p=c+j+g,q=d-k+i-g,r=p,s=d+k-i+g;if(h=this.finiteLinesIntersect(a,b,c,d,p,q,r,s,!1),h.length>0)return h;var t=c-j+i-g,u=d+k+g,v=c+j-i+g,w=u;if(h=this.finiteLinesIntersect(a,b,c,d,t,u,v,w,!1),h.length>0)return h;var x=c-j-g,y=d-k+i-g,z=x,A=d+k-i+g;if(h=this.finiteLinesIntersect(a,b,c,d,x,y,z,A,!1),h.length>0)return h;var B,C=c-j+i,D=d-k+i;if(B=this.intersectLineCircle(a,b,c,d,C,D,i+g),B.length>0&&B[0]<=C&&B[1]<=D)return[B[0],B[1]];var E=c+j-i,F=d-k+i;if(B=this.intersectLineCircle(a,b,c,d,E,F,i+g),B.length>0&&B[0]>=E&&B[1]<=F)return[B[0],B[1]];var G=c+j-i,H=d+k-i;if(B=this.intersectLineCircle(a,b,c,d,G,H,i+g),B.length>0&&B[0]>=G&&B[1]>=H)return[B[0],B[1]];var I=c-j+i,J=d+k-i;return B=this.intersectLineCircle(a,b,c,d,I,J,i+g),B.length>0&&B[0]<=I&&B[1]>=J?[B[0],B[1]]:void 0},b.prototype.roundRectangleIntersectBox=function(a,b,c,d,e,f,g,h,i){var j=this.getRoundRectangleRadius(e,f),k=g-e/2-i,l=h-f/2+j-i,m=g+e/2+i,n=h+f/2-j+i,o=g-e/2+j-i,p=h-f/2-i,q=g+e/2-j+i,r=h+f/2+i,s=Math.min(a,c),t=Math.max(a,c),u=Math.min(b,d),v=Math.max(b,d);return k>t?!1:s>m?!1:p>v?!1:u>r?!1:k>=s&&t>=k&&l>=u&&v>=l?!0:m>=s&&t>=m&&l>=u&&v>=l?!0:m>=s&&t>=m&&n>=u&&v>=n?!0:k>=s&&t>=k&&n>=u&&v>=n?!0:s>=k&&m>=s&&u>=l&&n>=u?!0:t>=k&&m>=t&&u>=l&&n>=u?!0:t>=k&&m>=t&&v>=l&&n>=v?!0:s>=k&&m>=s&&v>=l&&n>=v?!0:o>=s&&t>=o&&p>=u&&v>=p?!0:q>=s&&t>=q&&p>=u&&v>=p?!0:q>=s&&t>=q&&r>=u&&v>=r?!0:o>=s&&t>=o&&r>=u&&v>=r?!0:s>=o&&q>=s&&u>=p&&r>=u?!0:t>=o&&q>=t&&u>=p&&r>=u?!0:t>=o&&q>=t&&v>=p&&r>=v?!0:s>=o&&q>=s&&v>=p&&r>=v?!0:this.boxIntersectEllipse(s,u,t,v,i,2*j,2*j,o+i,l+i)?!0:this.boxIntersectEllipse(s,u,t,v,i,2*j,2*j,q-i,l+i)?!0:this.boxIntersectEllipse(s,u,t,v,i,2*j,2*j,q-i,n-i)?!0:this.boxIntersectEllipse(s,u,t,v,i,2*j,2*j,o+i,n-i)?!0:!1},b.prototype.checkInBoundingCircle=function(a,b,c,d,e,f,g,h){return a=(a-g)/(e+d),b=(b-h)/(f+d),c>=a*a+b*b},b.prototype.checkInBoundingBox=function(a,b,c,d,e,f,g,h){for(var i=c[0],j=c[1],k=c[0],l=c[1],m=1;m<c.length/2;m++)c[2*m]<i?i=c[2*m]:c[2*m]>k&&(k=c[2*m]),c[2*m+1]<j?j=c[2*m+1]:c[2*m+1]>l&&(l=c[2*m+1]);return a-=g,b-=h,a/=e,b/=f,i>a?!1:a>k?!1:j>b?!1:b>l?!1:!0},b.prototype.boxInBezierVicinity=function(a,b,c,d,e,f,g,h,i,j,k){var l=.25*e+.5*g+.25*i,m=.25*f+.5*h+.25*j,n=Math.min(a,c)-k,o=Math.min(b,d)-k,p=Math.max(a,c)+k,q=Math.max(b,d)+k;if(e>=n&&p>=e&&f>=o&&q>=f)return 1;if(i>=n&&p>=i&&j>=o&&q>=j)return 1;if(l>=n&&p>=l&&m>=o&&q>=m)return 1;if(g>=n&&p>=g&&h>=o&&q>=h)return 1;var r=Math.min(e,l,i),s=Math.min(f,m,j),t=Math.max(e,l,i),u=Math.max(f,m,j);return r>p||n>t||s>q||o>u?0:1},b.prototype.checkBezierInBox=function(a,b,c,d,e,f,g,h,i,j){function k(a,b,c,d){return(1-d)*(1-d)*a+2*(1-d)*d*b+d*d*c}function l(l){var m=k(e,g,i,l),n=k(f,h,j,l);return m>=a&&c>=m&&n>=b&&d>=n}for(var m=0;1>=m;m+=.25)if(!l(m))return!1;return!0},b.prototype.checkStraightEdgeInBox=function(a,b,c,d,e,f,g,h){return e>=a&&c>=e&&g>=a&&c>=g&&f>=b&&d>=f&&h>=b&&d>=h},b.prototype.checkStraightEdgeCrossesBox=function(a,b,c,d,e,f,g,h,i){var j,k,l=Math.min(a,c)-i,m=Math.min(b,d)-i,n=Math.max(a,c)+i,o=Math.max(b,d)+i,p=g-e,q=e,r=h-f,s=f;if(Math.abs(p)<1e-4)return e>=l&&n>=e&&Math.min(f,h)<=m&&Math.max(f,h)>=o;var t=(l-q)/p;if(t>0&&1>=t&&(j=r*t+s,j>=m&&o>=j))return!0;var u=(n-q)/p;if(u>0&&1>=u&&(j=r*u+s,j>=m&&o>=j))return!0;var v=(m-s)/r;if(v>0&&1>=v&&(k=p*v+q,k>=l&&n>=k))return!0;var w=(o-s)/r;return w>0&&1>=w&&(k=p*w+q,k>=l&&n>=k)?!0:!1},b.prototype.checkBezierCrossesBox=function(a,b,c,d,e,f,g,h,i,j,k){var l=Math.min(a,c)-k,m=Math.min(b,d)-k,n=Math.max(a,c)+k,o=Math.max(b,d)+k;if(e>=l&&n>=e&&f>=m&&o>=f)return!0;if(i>=l&&n>=i&&j>=m&&o>=j)return!0;var p=e-2*g+i,q=-2*e+2*g,r=e,s=[];if(Math.abs(p)<1e-4){var t=(l-e)/q,u=(n-e)/q;s.push(t,u)}else{var v,w,x=q*q-4*p*(r-l);if(x>0){var y=Math.sqrt(x);v=(-q+y)/(2*p),w=(-q-y)/(2*p),s.push(v,w)}var z,A,B=q*q-4*p*(r-n);if(B>0){var y=Math.sqrt(B);z=(-q+y)/(2*p),A=(-q-y)/(2*p),s.push(z,A)}}s.sort(function(a,b){return a-b});var C=f-2*h+j,D=-2*f+2*h,E=f,F=[];if(Math.abs(C)<1e-4){var G=(m-f)/D,H=(o-f)/D;F.push(G,H)}else{var I,J,K=D*D-4*C*(E-m);if(K>0){var y=Math.sqrt(K);I=(-D+y)/(2*C),J=(-D-y)/(2*C),F.push(I,J)}var L,M,N=D*D-4*C*(E-o);if(N>0){var y=Math.sqrt(N);L=(-D+y)/(2*C),M=(-D-y)/(2*C),F.push(L,M)}}F.sort(function(a,b){return a-b});for(var O=0;O<s.length;O+=2)for(var P=1;P<F.length;P+=2)if(s[O]<F[P]&&F[P]>=0&&s[O]<=1&&s[O+1]>F[P-1]&&F[P-1]<=1&&s[O+1]>=0)return!0;return!1},b.prototype.inLineVicinity=function(a,b,c,d,e,f,g){var h=g,i=Math.min(c,e),j=Math.max(c,e),k=Math.min(d,f),l=Math.max(d,f);return a>=i-h&&j+h>=a&&b>=k-h&&l+h>=b},b.prototype.inBezierVicinity=function(a,b,c,d,e,f,g,h,i){var j=.25*c+.5*e+.25*g,k=.25*d+.5*f+.25*h,l={x1:Math.min(c,g,j),x2:Math.max(c,g,j),y1:Math.min(d,h,k),y2:Math.max(d,h,k)};if(a<l.x1||a>l.x2||b<l.y1||b>l.y2)return!1;var m,n,o=function(a,b,c,d,e,f,g,h){if(m=(f-d)*(a-c)+(c-e)*(b-d),n=m*m,sideSquared=(f-d)*(f-d)+(c-e)*(c-e),h){if(m>0)return!1}else if(0>m)return!1;return n/sideSquared>g},p=(j+e)/2,q=(k+f)/2,r=!0;return o(p,q,c,d,e,f,0,r)&&(r=!r),!o(a,b,c,d,e,f,i,r)&&!o(a,b,e,f,g,h,i,r)&&!o(a,b,g,h,c,d,i,r)},b.prototype.solveCubic=function(a,b,c,d,e){b/=a,c/=a,d/=a;var f,g,h,i,j,k,l,m;return g=(3*c-b*b)/9,h=-(27*d)+b*(9*c-2*b*b),h/=54,f=g*g*g+h*h,e[1]=0,l=b/3,f>0?(j=h+Math.sqrt(f),j=0>j?-Math.pow(-j,1/3):Math.pow(j,1/3),k=h-Math.sqrt(f),k=0>k?-Math.pow(-k,1/3):Math.pow(k,1/3),e[0]=-l+j+k,l+=(j+k)/2,e[4]=e[2]=-l,l=Math.sqrt(3)*(-k+j)/2,e[3]=l,void(e[5]=-l)):(e[5]=e[3]=0,0==f?(m=0>h?-Math.pow(-h,1/3):Math.pow(h,1/3),e[0]=-l+2*m,void(e[4]=e[2]=-(m+l))):(g=-g,i=g*g*g,i=Math.acos(h/Math.sqrt(i)),m=2*Math.sqrt(g),e[0]=-l+m*Math.cos(i/3),e[2]=-l+m*Math.cos((i+2*Math.PI)/3),void(e[4]=-l+m*Math.cos((i+4*Math.PI)/3))))},b.prototype.sqDistanceToQuadraticBezier=function(a,b,c,d,e,f,g,h){var i=1*c*c-4*c*e+2*c*g+4*e*e-4*e*g+g*g+d*d-4*d*f+2*d*h+4*f*f-4*f*h+h*h,j=9*c*e-3*c*c-3*c*g-6*e*e+3*e*g+9*d*f-3*d*d-3*d*h-6*f*f+3*f*h,k=3*c*c-6*c*e+c*g-c*a+2*e*e+2*e*a-g*a+3*d*d-6*d*f+d*h-d*b+2*f*f+2*f*b-h*b,l=1*c*e-c*c+c*a-e*a+d*f-d*d+d*b-f*b;E("coefficients: "+i/i+", "+j/i+", "+k/i+", "+l/i);var m=[];this.solveCubic(i,j,k,l,m);for(var n=1e-7,o=[],p=0;6>p;p+=2)Math.abs(m[p+1])<n&&m[p]>=0&&m[p]<=1&&o.push(m[p]);o.push(1),o.push(0);for(var q,r,s,t,u=-1,v=0;v<o.length;v++)r=Math.pow(1-o[v],2)*c+2*(1-o[v])*o[v]*e+o[v]*o[v]*g,s=Math.pow(1-o[v],2)*d+2*(1-o[v])*o[v]*f+o[v]*o[v]*h,t=Math.pow(r-a,2)+Math.pow(s-b,2),E("distance for param "+o[v]+": "+Math.sqrt(t)),u>=0?u>t&&(u=t,q=o[v]):(u=t,q=o[v]);return E("given: ( "+a+", "+b+"), ( "+c+", "+d+"), ( "+e+", "+f+"), ( "+g+", "+h+")"),E("roots: "+m),E("params: "+o),E("closest param: "+q),u},b.prototype.sqDistanceToFiniteLine=function(a,b,c,d,e,f){var g=[a-c,b-d],h=[e-c,f-d],i=h[0]*h[0]+h[1]*h[1],j=g[0]*g[0]+g[1]*g[1],k=g[0]*h[0]+g[1]*h[1],l=k*k/i;return 0>k?j:l>i?(a-e)*(a-e)+(b-f)*(b-f):j-l};var E=function(){};a("renderer","canvas",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend(!0,{},c,b)}var c={ready:function(){},stop:function(){}};b.prototype.run=function(){var a=this.options,b=a.cy;b.nodes().positions(function(){return{x:0,y:0}}),b.one("layoutready",a.ready),b.trigger("layoutready"),b.one("layoutstop",a.stop),b.trigger("layoutstop")},b.prototype.stop=function(){var a=this.options;cy.one("layoutstop",a.stop),cy.trigger("layoutstop")},a("layout","null",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend(!0,{},c,b)}var c={ready:void 0,stop:void 0,fit:!0,padding:30};b.prototype.run=function(){var a=this.options,b=a.cy,c=b.nodes(),d=(b.edges(),b.container()),e=d.clientWidth,f=d.clientHeight;
-c.positions(function(a,b){return b.locked()?!1:{x:Math.round(Math.random()*e),y:Math.round(Math.random()*f)}}),b.one("layoutready",a.ready),b.trigger("layoutready"),a.fit&&b.fit(a.padding),b.one("layoutstop",a.stop),b.trigger("layoutstop")},b.prototype.stop=function(){},a("layout","random",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend({},c,b)}var c={fit:!0,rows:void 0,columns:void 0,ready:void 0,stop:void 0};b.prototype.run=function(){function a(a){if(void 0==a)return Math.min(l,m);var b=Math.min(l,m);b==l?l=a:m=a}function b(a){if(void 0==a)return Math.max(l,m);var b=Math.max(l,m);b==l?l=a:m=a}var c=this.options,d=c,e=c.cy,f=e.nodes(),g=(e.edges(),e.container()),h=g.clientWidth,i=g.clientHeight;if(0==i||0==h)f.positions(function(){return{x:0,y:0}});else{var j=f.size(),k=Math.sqrt(j*i/h),l=Math.round(k),m=Math.round(h/i*k);if(null!=d.rows&&null!=d.columns)l=d.rows,m=d.columns;else if(null!=d.rows&&null==d.columns)l=d.rows,m=Math.ceil(j/l);else if(null==d.rows&&null!=d.columns)m=d.columns,l=Math.ceil(j/m);else if(m*l>j){var n=a(),o=b();(n-1)*o>=j?a(n-1):(o-1)*n>=j&&b(o-1)}else for(;j>m*l;){var n=a(),o=b();(o+1)*n>=j?b(o+1):a(n+1)}var p=h/m,q=i/l,r=0,s=0;f.positions(function(a,b){if(b.locked())return!1;var c=s*p+p/2,d=r*q+q/2;return s++,s>=m&&(s=0,r++),{x:c,y:d}})}c.fit&&e.reset(),e.one("layoutready",c.ready),e.trigger("layoutready"),e.one("layoutstop",c.stop),e.trigger("layoutstop")},b.prototype.stop=function(){},a("layout","grid",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend(!0,{},c,b)}var c={fit:!0,ready:void 0,stop:void 0,positions:void 0,zoom:void 0,pan:void 0,padding:30};b.prototype.run=function(){function a(a){return null==b.positions?null:null==b.positions[a._private.data.id]?null:b.positions[a._private.data.id]}{var b=this.options,c=b.cy,d=c.nodes();c.edges(),c.container()}d.positions(function(b,c){var d=a(c);return c.locked()||null==d?!1:d}),null!=b.pan&&c.pan(b.pan),null!=b.zoom&&c.zoom(b.zoom),c.one("layoutready",b.ready),c.trigger("layoutready"),b.fit&&c.fit(b.padding),c.one("layoutstop",b.stop),c.trigger("layoutstop")},a("layout","preset",b),a("core","presetLayout",function(){var a=this,b={},c={};return a.nodes().each(function(a,b){c[b.data("id")]=b.position()}),b.positions=c,b.name="preset",b.zoom=a.zoom(),b.pan=a.pan(),b})}(cytoscape),function(a){function b(b){this.options=a.util.extend({},c,b)}var c={liveUpdate:!0,ready:void 0,stop:void 0,maxSimulationTime:4e3,fit:!0,padding:[50,50,50,50],ungrabifyWhileSimulating:!0,repulsion:void 0,stiffness:void 0,friction:void 0,gravity:!0,fps:void 0,precision:void 0,nodeMass:void 0,edgeLength:void 0,stepSize:1,stableEnergy:function(a){var b=a;return b.max<=.5||b.mean<=.3}};b.prototype.run=function(){function b(a,b){return null==b?void 0:"function"==typeof b?b.apply(a,[a._private.data,{nodes:g.length,edges:h.length,element:a}]):b}function c(a){var b=a.x,c=a.y,d=j,e=k,f=-2,g=2,h=4;return{x:b/d*h+f,y:c/e*h+g}}function d(a){e.fit&&f.fit(),a()}var e=this.options,f=e.cy,g=f.nodes(),h=f.edges(),i=f.container(),j=i.clientWidth,k=i.clientHeight;if(f.nodes().size()<=1)return e.fit&&f.reset(),f.nodes().position({x:Math.round(j/2),y:Math.round(k/2)}),f.one("layoutstop",e.stop),f.trigger("layoutstop"),f.one("layoutstop",e.stop),void f.trigger("layoutstop");var l=this.system=arbor.ParticleSystem(e.repulsion,e.stiffness,e.friction,e.gravity,e.fps,e.dt,e.precision);this.system=l,e.liveUpdate&&e.fit&&f.reset();var m,n=250,o=!1,p=+new Date,q={init:function(){},redraw:function(){var b=l.energy();if(null!=e.stableEnergy&&null!=b&&b.n>0&&e.stableEnergy(b))return void l.stop();clearTimeout(m),m=setTimeout(t,n);var c=[];l.eachNode(function(a,b){var d=(a.name,a.data),e=d.element;if(null!=e){var f=e._private.position;e.locked()||e.grabbed()||(f.x=b.x,f.y=b.y,c.push(e))}});var d=+new Date-p>=16;e.liveUpdate&&c.length>0&&d&&(new a.Collection(f,c).rtrigger("position"),p=+new Date),o||(o=!0,f.one("layoutready",e.ready),f.trigger("layoutready"))}};l.renderer=q,l.screenSize(j,k),l.screenPadding(e.padding[0],e.padding[1],e.padding[2],e.padding[3]),l.screenStep(e.stepSize);var r=function(a){grabbed=this;var b=l.fromScreen(this.position()),c=arbor.Point(b.x,b.y);switch(this.scratch().arbor.p=c,a.type){case"grab":this.scratch().arbor.fixed=!0;break;case"dragstop":this.scratch().arbor.fixed=!1,this.scratch().arbor.tempMass=1e3}};g.bind("grab drag dragstop",r),g.each(function(a,d){var f=this._private.data.id,g=b(this,e.nodeMass),h=this._private.locked,i=c({x:d.position().x,y:d.position().y});d.locked()||(this.scratch().arbor=l.addNode(f,{element:this,mass:g,fixed:h,x:h?i.x:void 0,y:h?i.y:void 0}))}),h.each(function(){var a=(this.id(),this.source().id()),c=this.target().id(),d=b(this,e.edgeLength);this.scratch().arbor=l.addEdge(a,c,{length:d})});var s=g.filter(":grabbable");e.ungrabifyWhileSimulating&&s.ungrabify();var t=function(){function a(){e.liveUpdate||(e.fit&&f.reset(),f.nodes().rtrigger("position")),g.unbind("grab drag dragstop",r),e.ungrabifyWhileSimulating&&s.grabify(),f.one("layoutstop",e.stop),f.trigger("layoutstop")}window.isIE?d(function(){a()}):a()};l.start(),setTimeout(function(){l.stop()},e.maxSimulationTime)},b.prototype.stop=function(){null!=this.system&&system.stop()},a("layout","arbor",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend({},c,b)}var c={fit:!0,ready:void 0,stop:void 0,rStepSize:10,padding:30,startAngle:1.5*Math.PI,counterclockwise:!1};b.prototype.run=function(){function a(){var a=0,b=k,c={x:i.x+o*Math.cos(a),y:i.y+o*Math.sin(a)},d={x:i.x+o*Math.cos(b),y:i.y+o*Math.sin(b)},e=Math.sqrt((d.x-c.x)*(d.x-c.x)+(d.y-c.y)*(d.y-c.y));return e}for(var b=this.options,c=b,d=b.cy,e=d.nodes(),f=(d.edges(),d.container()),g=f.clientWidth,h=f.clientHeight,i={x:g/2,y:h/2},j=c.startAngle,k=2*Math.PI/e.length,l=0,m=0;m<e.length;m++){var n=e[m];l=Math.max(n.outerWidth(),n.outerHeight())}for(var o=g/2-l;a()<l;)o+=c.rStepSize;var m=0;e.positions(function(){var a=o*Math.cos(j),b=o*Math.sin(j),d={x:i.x+a,y:i.y+b};return m++,j=c.counterclockwise?j-k:j+k,d}),b.fit&&d.fit(c.padding),d.one("layoutready",b.ready),d.trigger("layoutready"),d.one("layoutstop",b.stop),d.trigger("layoutstop")},b.prototype.stop=function(){},a("layout","circle",b)}(cytoscape),function(a){function b(b){this.options=a.util.extend({},c,b)}var c={fit:!0,ready:void 0,stop:void 0,directed:!0,padding:30,circle:!1,roots:void 0};b.prototype.run=function(){function b(){for(var a=0;a<p.length;a++)for(var b=p[a],c=0;c<b.length;c++){var d=b[c];d._private.scratch.BreadthFirstLayout={depth:a,index:c}}}function c(a){if(D[a.id()])return D[a.id()];for(var b=a._private.scratch.BreadthFirstLayout.depth,c=a.neighborhood().nodes(),d=0,e=0,f=0;f<c.length;f++){var g=c[f],h=(g.edgesWith(a),g._private.scratch.BreadthFirstLayout.index),i=g._private.scratch.BreadthFirstLayout.depth,j=p[i].length;(b>i||0===b)&&(d+=h/j,e++)}return e=Math.max(1,e),d/=e,0===e&&(d=void 0),D[a.id()]=d,d}var d,e=this.options,f=e,g=e.cy,h=g.nodes(),i=(g.edges(),g.container()),j=i.clientWidth,k=i.clientHeight;if(a.is.elementOrCollection(f.roots))d=f.roots;else if(a.is.array(f.roots)){for(var l=[],m=0;m<f.roots.length;m++){var n=f.roots[m],o=g.getElementById(n);d.push(o)}d=new a.Collection(g,l)}else d=h.roots();var p=[],q={},r={};d.bfs(function(a,b){var c=this[0];p[b]||(p[b]=[]),p[b].push(c),q[c.id()]=!0,r[c.id()]=b},f.directed);for(var s=[],m=0;m<h.length;m++){var o=h[m];q[o.id()]||s.push(o)}for(var t=3*s.length,u=0;0!==s.length&&t>u;){for(var v=s.shift(),w=v.neighborhood().nodes(),x=!1,m=0;m<w.length;m++){var y=r[w[m].id()];if(void 0!==y){p[y].push(v),x=!0;break}}x||s.push(v),u++}for(;0!==s.length;){for(var v=s.shift(),z=v.bfs(),x=!1,m=0;m<z.length;m++){var y=r[z[m].id()];if(void 0!==y){p[y].push(v),x=!0;break}}x||(0===p.length&&p.push([]),p[0].push(v))}b();for(var A=0,m=0;m<h.length;m++){var B=h[m].outerWidth(),C=h[m].outerHeight();A=Math.max(A,B,C)}A*=1.75;for(var D={},E=0;3>E;E++){for(var m=0;m<p.length;m++){var y=m;p[m]=p[m].sort(function(a,b){var d=c(a),e=c(b);return d-e})}b()}var F={x:j/2,y:k/2};h.positions(function(){var a=this[0],b=a._private.scratch.BreadthFirstLayout,c=b.depth,d=b.index,e=Math.max(j/(p[c].length+1),A),g=Math.max(k/(p.length+1),A),h=Math.min(j/2/p.length,k/2/p.length);if(h=Math.max(h,A),f.circle){var i=h*c+h-(p.length>0&&p[0].length<=3?h/2:0),l=2*Math.PI/p[c].length*d;return 0===c&&1===p[0].length&&(i=1),{x:F.x+i*Math.cos(l),y:F.y+i*Math.sin(l)}}return{x:(d+1)*e,y:(c+1)*g}}),e.fit&&g.fit(f.padding),g.one("layoutready",e.ready),g.trigger("layoutready"),g.one("layoutstop",e.stop),g.trigger("layoutstop")},b.prototype.stop=function(){},a("layout","breadthfirst",b)}(cytoscape);
+
+/* cytoscape.js */
+
+/**
+ * This file is part of cytoscape.js 2.0.2.
+ * 
+ * Cytoscape.js is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * Cytoscape.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with
+ * cytoscape.js. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+
+// this is put as a global var in the browser
+// or it's just a global to this module if commonjs
+var cytoscape;
+
+(function(){
+
+	// the object iteself is a function that init's an instance of cytoscape
+	var $$ = cytoscape = function(){
+		return cytoscape.init.apply(cytoscape, arguments);
+	};
+	
+	// allow functional access to cytoscape.js
+	// e.g. var cyto = $.cytoscape({ selector: "#foo", ... });
+	//      var nodes = cyto.nodes();
+	$$.init = function( options ){
+		
+		// if no options specified, use default
+		if( options === undefined ){
+			options = {};
+		}
+
+		// create instance
+		if( $$.is.plainObject( options ) ){
+			return new $$.Core( options );
+		} 
+		
+		// allow for registration of extensions
+		// e.g. $.cytoscape("renderer", "svg", SvgRenderer);
+		// e.g. $.cytoscape("renderer", "svg", "nodeshape", "ellipse", SvgEllipseNodeShape);
+		// e.g. $.cytoscape("core", "doSomething", function(){ /* doSomething code */ });
+		// e.g. $.cytoscape("collection", "doSomething", function(){ /* doSomething code */ });
+		else if( $$.is.string( options ) ) {
+			return $$.extension.apply($$.extension, arguments);
+		}
+	};
+
+	// define the function namespace here, since it has members in many places
+	$$.fn = {};
+
+	// TODO test that this works:
+	if( typeof exports !== 'undefined' ){ // expose as a commonjs module
+		exports = module.exports = cytoscape;
+	}
+
+	// make sure we always register in the window just in case (e.g. w/ derbyjs)
+	window.cytoscape = cytoscape;
+	
+})();
+
+// type testing utility functions
+
+;(function($$){
+	
+	$$.is = {
+		string: function(obj){
+			return obj != null && typeof obj == typeof "";
+		},
+		
+		fn: function(obj){
+			return obj != null && typeof obj === typeof function(){};
+		},
+		
+		array: function(obj){
+			return obj != null && obj instanceof Array;
+		},
+		
+		plainObject: function(obj){
+			return obj != null && typeof obj === typeof {} && !$$.is.array(obj) && obj.constructor === Object;
+		},
+		
+		number: function(obj){
+			return obj != null && typeof obj === typeof 1 && !isNaN(obj);
+		},
+
+		integer: function( obj ){
+			return $$.is.number(obj) && Math.floor(obj) === obj;
+		},
+		
+		color: function(obj){
+			return obj != null && typeof obj === typeof "" && $.Color(obj).toString() !== "";
+		},
+		
+		bool: function(obj){
+			return obj != null && typeof obj === typeof true;
+		},
+		
+		elementOrCollection: function(obj){
+			return $$.is.element(obj) || $$.is.collection(obj);
+		},
+		
+		element: function(obj){
+			return obj instanceof $$.Element && obj._private.single;
+		},
+		
+		collection: function(obj){
+			return obj instanceof $$.Collection && !obj._private.single;
+		},
+		
+		core: function(obj){
+			return obj instanceof $$.Core;
+		},
+
+		style: function(obj){
+			return obj instanceof $$.Style;
+		},
+
+		stylesheet: function(obj){
+			return obj instanceof $$.Stylesheet;
+		},
+
+		event: function(obj){
+			return obj instanceof $$.Event;
+		},
+
+		emptyString: function(obj){
+			if( !obj ){ // null is empty
+				return true; 
+			} else if( $$.is.string(obj) ){
+				if( obj === "" || obj.match(/^\s+$/) ){
+					return true; // empty string is empty
+				}
+			}
+			
+			return false; // otherwise, we don't know what we've got
+		},
+		
+		nonemptyString: function(obj){
+			if( obj && $$.is.string(obj) && obj !== "" && !obj.match(/^\s+$/) ){
+				return true;
+			}
+
+			return false;
+		},
+
+		domElement: function(obj){
+			if( typeof HTMLElement === 'undefined' ){
+				return false; // we're not in a browser so it doesn't matter
+			} else {
+				return obj instanceof HTMLElement;
+			}
+
+			
+		}
+	};	
+	
+})( cytoscape );
+
+;(function($$){
+	
+	// utility functions only for internal use
+
+	$$.util = {
+
+		// the jquery extend() function
+		// NB: modified to use $$.is etc since we can't use jquery functions
+		extend: function() {
+			var options, name, src, copy, copyIsArray, clone,
+				target = arguments[0] || {},
+				i = 1,
+				length = arguments.length,
+				deep = false;
+
+			// Handle a deep copy situation
+			if ( typeof target === "boolean" ) {
+				deep = target;
+				target = arguments[1] || {};
+				// skip the boolean and the target
+				i = 2;
+			}
+
+			// Handle case when target is a string or something (possible in deep copy)
+			if ( typeof target !== "object" && !$$.is.fn(target) ) {
+				target = {};
+			}
+
+			// extend jQuery itself if only one argument is passed
+			if ( length === i ) {
+				target = this;
+				--i;
+			}
+
+			for ( ; i < length; i++ ) {
+				// Only deal with non-null/undefined values
+				if ( (options = arguments[ i ]) != null ) {
+					// Extend the base object
+					for ( name in options ) {
+						src = target[ name ];
+						copy = options[ name ];
+
+						// Prevent never-ending loop
+						if ( target === copy ) {
+							continue;
+						}
+
+						// Recurse if we're merging plain objects or arrays
+						if ( deep && copy && ( $$.is.plainObject(copy) || (copyIsArray = $$.is.array(copy)) ) ) {
+							if ( copyIsArray ) {
+								copyIsArray = false;
+								clone = src && $$.is.array(src) ? src : [];
+
+							} else {
+								clone = src && $$.is.plainObject(src) ? src : {};
+							}
+
+							// Never move original objects, clone them
+							target[ name ] = $$.util.extend( deep, clone, copy );
+
+						// Don't bring in undefined values
+						} else if ( copy !== undefined ) {
+							target[ name ] = copy;
+						}
+					}
+				}
+			}
+
+			// Return the modified object
+			return target;
+		},
+
+		error: function( msg ){
+			if( console ){
+				if( console.error ){
+					console.error( msg );
+				} else if( console.log ){
+					console.log( msg );
+				} else {
+					throw msg;
+				}
+			} else {
+				throw msg;
+			}
+		},		
+
+		clone: function( obj ){
+			var target = {};
+			for (var i in obj) {
+				if ( obj.hasOwnProperty(i) ) { // TODO is this hasOwnProperty() call necessary for our use?
+					target[i] = obj[i];
+				}
+			}
+			return target;
+		},
+
+		// gets a shallow copy of the argument
+		copy: function( obj ){
+			if( obj == null ){
+				return obj;
+			} if( $$.is.array(obj) ){
+				return obj.slice();
+			} else if( $$.is.plainObject(obj) ){
+				return $$.util.clone( obj );
+			} else {
+				return obj;
+			}
+		},
+		
+		// has anything been set in the map
+		mapEmpty: function( map ){
+			var empty = true;
+
+			if( map != null ){
+				for(var i in map){
+					empty = false;
+					break;
+				}
+			}
+
+			return empty;
+		},
+
+		// pushes to the array at the end of a map (map may not be built)
+		pushMap: function( options ){
+			var array = $$.util.getMap(options);
+
+			if( array == null ){ // if empty, put initial array
+				$$.util.setMap( $.extend({}, options, {
+					value: [ options.value ]
+				}) );
+			} else {
+				array.push( options.value );
+			}
+		},
+
+		// sets the value in a map (map may not be built)
+		setMap: function( options ){
+			var obj = options.map;
+			var key;
+			var keys = options.keys;
+			var l = keys.length;
+
+			for(var i = 0; i < l; i++){
+				var key = keys[i];
+
+				if( $$.is.plainObject( key ) ){
+					$$.util.error("Tried to set map with object key");
+				}
+
+				if( i < keys.length - 1 ){
+					
+					// extend the map if necessary
+					if( obj[key] == null ){
+						obj[key] = {};
+					}
+					
+					obj = obj[key];
+				} else {
+					// set the value
+					obj[key] = options.value;
+				}
+			}
+		},
+		
+		// gets the value in a map even if it's not built in places
+		getMap: function( options ){
+			var obj = options.map;
+			var keys = options.keys;
+			var l = keys.length;
+			
+			for(var i = 0; i < l; i++){
+				var key = keys[i];
+
+				if( $$.is.plainObject( key ) ){
+					$$.util.error("Tried to get map with object key");
+				}
+
+				obj = obj[key];
+				
+				if( obj == null ){
+					return obj;
+				}
+			}
+			
+			return obj;
+		},
+
+		// deletes the entry in the map
+		deleteMap: function( options ){
+			var obj = options.map;
+			var keys = options.keys;
+			var l = keys.length;
+			var keepChildren = options.keepChildren;
+			
+			for(var i = 0; i < l; i++){
+				var key = keys[i];
+
+				if( $$.is.plainObject( key ) ){
+					$$.util.error("Tried to delete map with object key");
+				}
+
+				var lastKey = i === options.keys.length - 1;
+				if( lastKey ){
+					
+					if( keepChildren ){ // then only delete child fields not in keepChildren
+						for( var child in obj ){
+							if( !keepChildren[child] ){
+								delete obj[child];
+							}
+						}
+					} else {
+						delete obj[key];
+					}
+
+				} else {
+					obj = obj[key];
+				}
+			}
+		},
+		
+		capitalize: function(str){
+			if( $$.is.emptyString(str) ){
+				return str;
+			}
+			
+			return str.charAt(0).toUpperCase() + str.substring(1);
+		},
+
+		camel2dash: function( str ){
+			var ret = [];
+
+			for( var i = 0; i < str.length; i++ ){
+				var ch = str[i];
+				var chLowerCase = ch.toLowerCase();
+				var isUpperCase = ch !== chLowerCase;
+
+				if( isUpperCase ){
+					ret.push( "-" );
+					ret.push( chLowerCase );
+				} else {
+					ret.push( ch );
+				}
+			}
+
+			var noUpperCases = ret.length === str.length;
+			if( noUpperCases ){ return str } // cheaper than .join()
+
+			return ret.join("");
+		},
+
+		dash2camel: function( str ){
+			var ret = [];
+			var nextIsUpper = false;
+
+			for( var i = 0; i < str.length; i++ ){
+				var ch = str[i];
+				var isDash = ch === "-";
+
+				if( isDash ){
+					nextIsUpper = true;
+				} else {
+					if( nextIsUpper ){
+						ret.push( ch.toUpperCase() );
+					} else {
+						ret.push( ch );
+					}
+
+					nextIsUpper = false;
+				}
+			}
+
+			return ret.join("");
+		},
+
+		// strip spaces from beginning of string and end of string
+		trim: function( str ){
+			var first, last;
+
+			// find first non-space char
+			for( first = 0; first < str.length && str[first] === " "; first++ ){}
+
+			// find last non-space char
+			for( last = str.length - 1; last > first && str[last] === " "; last-- ){}
+
+			return str.substring(first, last + 1);
+		},
+
+		// get [r, g, b] from #abc or #aabbcc
+		hex2tuple: function( hex ){
+			if( !(hex.length === 4 || hex.length === 7) || hex[0] !== "#" ){ return; }
+
+			var shortHex = hex.length === 4;
+			var r, g, b;
+			var base = 16;
+
+			if( shortHex ){
+				r = parseInt( hex[1] + hex[1], base );
+				g = parseInt( hex[2] + hex[2], base );
+				b = parseInt( hex[3] + hex[3], base );
+			} else {
+				r = parseInt( hex[1] + hex[2], base );
+				g = parseInt( hex[3] + hex[4], base );
+				b = parseInt( hex[5] + hex[6], base );
+			}
+
+			return [r, g, b];
+		},
+
+		// get [r, g, b, a] from hsl(0, 0, 0) or hsla(0, 0, 0, 0)
+		hsl2tuple: function( hsl ){
+			var ret;
+			var number = $$.util.regex.number;
+			var h, s, l, a, r, g, b;
+
+			var m = new RegExp("^" + $$.util.regex.hsla + "$").exec(hsl);
+			if( m ){
+
+				// get hue
+				h = parseInt( m[1] ); 
+				if( h < 0 ){
+					h = ( 360 - (-1*h % 360) ) % 360;
+				} else if( h > 360 ){
+					h = h % 360;
+				}
+				h /= 360; // normalise on [0, 1]
+
+				s = parseFloat( m[2] );
+				if( s < 0 || s > 100 ){ return; } // saturation is [0, 100]
+				s = s/100; // normalise on [0, 1]
+
+				l = parseFloat( m[3] );
+				if( l < 0 || l > 100 ){ return; } // lightness is [0, 100]
+				l = l/100; // normalise on [0, 1]
+
+				a = m[4];
+				if( a !== undefined ){
+					a = parseFloat( a );
+
+					if( a < 0 || a > 1 ){ return; } // alpha is [0, 1]
+				}
+
+				// now, convert to rgb
+				// code from http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+				if( s === 0 ){
+					r = g = b = Math.round(l * 255); // achromatic
+				} else {
+					function hue2rgb(p, q, t){
+						if(t < 0) t += 1;
+						if(t > 1) t -= 1;
+						if(t < 1/6) return p + (q - p) * 6 * t;
+						if(t < 1/2) return q;
+						if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+						return p;
+					}
+
+					var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+					var p = 2 * l - q;
+					r = Math.round( 255 * hue2rgb(p, q, h + 1/3) );
+					g = Math.round( 255 * hue2rgb(p, q, h) );
+					b = Math.round( 255 * hue2rgb(p, q, h - 1/3) );
+				}
+
+				ret = [r, g, b, a];
+			}
+
+			return ret;
+		},
+
+		// get [r, g, b, a] from rgb(0, 0, 0) or rgba(0, 0, 0, 0)
+		rgb2tuple: function( rgb ){
+			var ret;
+			var number = $$.util.regex.number;
+
+			var m = new RegExp("^" + $$.util.regex.rgba + "$").exec(rgb);
+			if( m ){
+				ret = [];
+
+				var isPct = [];
+				for( var i = 1; i <= 3; i++ ){
+					var channel = m[i];
+
+					if( channel[ channel.length - 1 ] === "%" ){
+						isPct[i] = true;
+					}
+					channel = parseFloat( channel );
+
+					if( isPct[i] ){
+						channel = channel/100 * 255; // normalise to [0, 255]
+					}
+
+					if( channel < 0 || channel > 255 ){ return; } // invalid channel value
+
+					ret.push( Math.floor(channel) );
+				}
+
+				var atLeastOneIsPct = isPct[1] || isPct[2] || isPct[3];
+				var allArePct = isPct[1] && isPct[2] && isPct[3];
+				if( atLeastOneIsPct && !allArePct ){ return; } // must all be percent values if one is
+
+				var alpha = m[4];
+				if( alpha !== undefined ){
+					alpha = parseFloat( alpha );
+
+					if( alpha < 0 || alpha > 1 ){ return; } // invalid alpha value
+
+					ret.push( alpha );
+				}
+			}
+
+			return ret;
+		},
+
+		colorname2tuple: function( color ){
+			return $$.util.colors[ color.toLowerCase() ];
+		},
+
+		color2tuple: function( color ){
+			return $$.util.colorname2tuple(color)
+				|| $$.util.hex2tuple(color)
+				|| $$.util.rgb2tuple(color)
+				|| $$.util.hsl2tuple(color);
+		},
+
+		tuple2hex: function( tuple ){
+			var r = tuple[0];
+			var g = tuple[1];
+			var b = tuple[2];
+
+			function ch2hex( ch ){
+				var hex = ch.toString(16);
+
+				if( hex.length === 1 ){
+					hex = '0' + hex;
+				}
+
+				return hex;
+			}
+
+			return '#' + ch2hex(r) + ch2hex(g) + ch2hex(b);
+		},
+
+		colors: {
+			// special colour names
+			transparent:			[0,0,0,0], // NB alpha === 0
+
+			// regular colours
+			aliceblue:				[240,248,255],
+			antiquewhite:			[250,235,215],
+			aqua:					[0,255,255],
+			aquamarine:				[127,255,212],
+			azure:					[240,255,255],
+			beige:					[245,245,220],
+			bisque:					[255,228,196],
+			black:					[0,0,0],
+			blanchedalmond:			[255,235,205],
+			blue:					[0,0,255],
+			blueviolet:				[138,43,226],
+			brown:					[165,42,42],
+			burlywood:				[222,184,135],
+			cadetblue:				[95,158,160],
+			chartreuse:				[127,255,0],
+			chocolate:				[210,105,30],
+			coral:					[255,127,80],
+			cornflowerblue:			[100,149,237],
+			cornsilk:				[255,248,220],
+			crimson:				[220,20,60],
+			cyan:					[0,255,255],
+			darkblue:				[0,0,139],
+			darkcyan:				[0,139,139],
+			darkgoldenrod:			[184,134,11],
+			darkgray:				[169,169,169],
+			darkgreen:				[0,100,0],
+			darkgrey:				[169,169,169],
+			darkkhaki:				[189,183,107],
+			darkmagenta:			[139,0,139],
+			darkolivegreen:			[85,107,47],
+			darkorange:				[255,140,0],
+			darkorchid:				[153,50,204],
+			darkred:				[139,0,0],
+			darksalmon:				[233,150,122],
+			darkseagreen:			[143,188,143],
+			darkslateblue:			[72,61,139],
+			darkslategray:			[47,79,79],
+			darkslategrey:			[47,79,79],
+			darkturquoise:			[0,206,209],
+			darkviolet:				[148,0,211],
+			deeppink:				[255,20,147],
+			deepskyblue:			[0,191,255],
+			dimgray:				[105,105,105],
+			dimgrey:				[105,105,105],
+			dodgerblue:				[30,144,255],
+			firebrick:				[178,34,34],
+			floralwhite:			[255,250,240],
+			forestgreen:			[34,139,34],
+			fuchsia:				[255,0,255],
+			gainsboro:				[220,220,220],
+			ghostwhite:				[248,248,255],
+			gold:					[255,215,0],
+			goldenrod:				[218,165,32],
+			gray:					[128,128,128],
+			grey:					[128,128,128],
+			green:					[0,128,0],
+			greenyellow:			[173,255,47],
+			honeydew:				[240,255,240],
+			hotpink:				[255,105,180],
+			indianred:				[205,92,92],
+			indigo:					[75,0,130],
+			ivory:					[255,255,240],
+			khaki:					[240,230,140],
+			lavender:				[230,230,250],
+			lavenderblush:			[255,240,245],
+			lawngreen:				[124,252,0],
+			lemonchiffon:			[255,250,205],
+			lightblue:				[173,216,230],
+			lightcoral:				[240,128,128],
+			lightcyan:				[224,255,255],
+			lightgoldenrodyellow:	[250,250,210],
+			lightgray:				[211,211,211],
+			lightgreen:				[144,238,144],
+			lightgrey:				[211,211,211],
+			lightpink:				[255,182,193],
+			lightsalmon:			[255,160,122],
+			lightseagreen:			[32,178,170],
+			lightskyblue:			[135,206,250],
+			lightslategray:			[119,136,153],
+			lightslategrey:			[119,136,153],
+			lightsteelblue:			[176,196,222],
+			lightyellow:			[255,255,224],
+			lime:					[0,255,0],
+			limegreen:				[50,205,50],
+			linen:					[250,240,230],
+			magenta:				[255,0,255],
+			maroon:					[128,0,0],
+			mediumaquamarine:		[102,205,170],
+			mediumblue:				[0,0,205],
+			mediumorchid:			[186,85,211],
+			mediumpurple:			[147,112,219],
+			mediumseagreen:			[60,179,113],
+			mediumslateblue:		[123,104,238],
+			mediumspringgreen:		[0,250,154],
+			mediumturquoise:		[72,209,204],
+			mediumvioletred:		[199,21,133],
+			midnightblue:			[25,25,112],
+			mintcream:				[245,255,250],
+			mistyrose:				[255,228,225],
+			moccasin:				[255,228,181],
+			navajowhite:			[255,222,173],
+			navy:					[0,0,128],
+			oldlace:				[253,245,230],
+			olive:					[128,128,0],
+			olivedrab:				[107,142,35],
+			orange:					[255,165,0],
+			orangered:				[255,69,0],
+			orchid:					[218,112,214],
+			palegoldenrod:			[238,232,170],
+			palegreen:				[152,251,152],
+			paleturquoise:			[175,238,238],
+			palevioletred:			[219,112,147],
+			papayawhip:				[255,239,213],
+			peachpuff:				[255,218,185],
+			peru:					[205,133,63],
+			pink:					[255,192,203],
+			plum:					[221,160,221],
+			powderblue:				[176,224,230],
+			purple:					[128,0,128],
+			red:					[255,0,0],
+			rosybrown:				[188,143,143],
+			royalblue:				[65,105,225],
+			saddlebrown:			[139,69,19],
+			salmon:					[250,128,114],
+			sandybrown:				[244,164,96],
+			seagreen:				[46,139,87],
+			seashell:				[255,245,238],
+			sienna:					[160,82,45],
+			silver:					[192,192,192],
+			skyblue:				[135,206,235],
+			slateblue:				[106,90,205],
+			slategray:				[112,128,144],
+			slategrey:				[112,128,144],
+			snow:					[255,250,250],
+			springgreen:			[0,255,127],
+			steelblue:				[70,130,180],
+			tan:					[210,180,140],
+			teal:					[0,128,128],
+			thistle:				[216,191,216],
+			tomato:					[255,99,71],
+			turquoise:				[64,224,208],
+			violet:					[238,130,238],
+			wheat:					[245,222,179],
+			white:					[255,255,255],
+			whitesmoke:				[245,245,245],
+			yellow:					[255,255,0],
+			yellowgreen:			[154,205,50]
+		}
+			
+	};
+
+	$$.util.regex = {};
+	
+	$$.util.regex.number = "(?:\\d*\\.\\d+|\\d+|\\d*\\.\\d+[eE]\\d+)";
+	
+	$$.util.regex.rgba = "rgb[a]?\\(("+ $$.util.regex.number +"[%]?)\\s*,\\s*("+ $$.util.regex.number +"[%]?)\\s*,\\s*("+ $$.util.regex.number +"[%]?)(?:\\s*,\\s*("+ $$.util.regex.number +"))?\\)";
+	$$.util.regex.rgbaNoBackRefs = "rgb[a]?\\((?:"+ $$.util.regex.number +"[%]?)\\s*,\\s*(?:"+ $$.util.regex.number +"[%]?)\\s*,\\s*(?:"+ $$.util.regex.number +"[%]?)(?:\\s*,\\s*(?:"+ $$.util.regex.number +"))?\\)";
+	
+	$$.util.regex.hsla = "hsl[a]?\\(("+ $$.util.regex.number +")\\s*,\\s*("+ $$.util.regex.number +"[%])\\s*,\\s*("+ $$.util.regex.number +"[%])(?:\\s*,\\s*("+ $$.util.regex.number +"))?\\)";
+	$$.util.regex.hslaNoBackRefs = "hsl[a]?\\((?:"+ $$.util.regex.number +")\\s*,\\s*(?:"+ $$.util.regex.number +"[%])\\s*,\\s*(?:"+ $$.util.regex.number +"[%])(?:\\s*,\\s*(?:"+ $$.util.regex.number +"))?\\)";
+	
+	$$.util.regex.hex3 = "\\#[0-9a-fA-F]{3}";
+	$$.util.regex.hex6 = "\\#[0-9a-fA-F]{6}";
+
+})( cytoscape );
+
+;(function($$){
+	
+	$$.math = {};
+	
+	$$.math.boxInBezierVicinity = function(
+		x1box, y1box, x2box, y2box, x1, y1, x2, y2, x3, y3, tolerance) {
+		
+		// Return values:
+		// 0 - curve is not in box
+		// 1 - curve may be in box; needs precise check
+		// 2 - curve is in box
+		
+		var boxMinX = Math.min(x1box, x2box) - tolerance;
+		var boxMinY = Math.min(y1box, y2box) - tolerance;
+		var boxMaxX = Math.max(x1box, x2box) + tolerance;
+		var boxMaxY = Math.max(y1box, y2box) + tolerance;
+		
+		if (x1 >= boxMinX && x1 <= boxMaxX && y1 >= boxMinY && y1 <= boxMaxY) {
+			return 2;
+		} else if (x3 >= boxMinX && x3 <= boxMaxX && y3 >= boxMinY && y3 <= boxMaxY) {
+			return 2;
+		} else if (x2 >= boxMinX && x2 <= boxMaxX && y2 >= boxMinY && y2 <= boxMaxY) { 
+			return 1;
+		}
+		
+		var curveMinX = Math.min(x1, x2, x3);
+		var curveMinY = Math.min(y1, y2, y3);
+		var curveMaxX = Math.max(x1, x2, x3);
+		var curveMaxY = Math.max(y1, y2, y3);
+		
+		/*
+		console.log(curveMinX + ", " + curveMinY + ", " + curveMaxX 
+			+ ", " + curveMaxY);
+		if (curveMinX == undefined) {
+			console.log("undefined curveMinX: " + x1 + ", " + x2 + ", " + x3);
+		}
+		*/
+		
+		if (curveMinX > boxMaxX
+			|| curveMaxX < boxMinX
+			|| curveMinY > boxMaxY
+			|| curveMaxY < boxMinY) {
+			
+			return 0;	
+		}
+		
+		return 1;
+	}
+	
+	$$.math.checkStraightEdgeCrossesBox = function(
+		x1box, y1box, x2box, y2box, x1, y1, x2, y2, tolerance) {
+		
+		var boxMinX = Math.min(x1box, x2box) - tolerance;
+		var boxMinY = Math.min(y1box, y2box) - tolerance;
+		var boxMaxX = Math.max(x1box, x2box) + tolerance;
+		var boxMaxY = Math.max(y1box, y2box) + tolerance;
+		
+		// Check left + right bounds
+		var aX = x2 - x1;
+		var bX = x1;
+		var yValue;
+		
+		// Top and bottom
+		var aY = y2 - y1;
+		var bY = y1;
+		var xValue;
+		
+		if (Math.abs(aX) < 0.0001) {
+			return (x1 >= boxMinX && x1 <= boxMaxX
+				&& Math.min(y1, y2) <= boxMinY
+				&& Math.max(y1, y2) >= boxMaxY);	
+		}
+		
+		var tLeft = (boxMinX - bX) / aX;
+		if (tLeft > 0 && tLeft <= 1) {
+			yValue = aY * tLeft + bY;
+			if (yValue >= boxMinY && yValue <= boxMaxY) {
+				return true;
+			} 
+		}
+		
+		var tRight = (boxMaxX - bX) / aX;
+		if (tRight > 0 && tRight <= 1) {
+			yValue = aY * tRight + bY;
+			if (yValue >= boxMinY && yValue <= boxMaxY) {
+				return true;
+			} 
+		}
+		
+		var tTop = (boxMinY - bY) / aY;
+		if (tTop > 0 && tTop <= 1) {
+			xValue = aX * tTop + bX;
+			if (xValue >= boxMinX && xValue <= boxMaxX) {
+				return true;
+			} 
+		}
+		
+		var tBottom = (boxMaxY - bY) / aY;
+		if (tBottom > 0 && tBottom <= 1) {
+			xValue = aX * tBottom + bX;
+			if (xValue >= boxMinX && xValue <= boxMaxX) {
+				return true;
+			} 
+		}
+		
+		return false;
+	}
+	
+	$$.math.checkBezierCrossesBox = function(
+		x1box, y1box, x2box, y2box, x1, y1, x2, y2, x3, y3, tolerance) {
+		
+		var boxMinX = Math.min(x1box, x2box) - tolerance;
+		var boxMinY = Math.min(y1box, y2box) - tolerance;
+		var boxMaxX = Math.max(x1box, x2box) + tolerance;
+		var boxMaxY = Math.max(y1box, y2box) + tolerance;
+		
+		if (x1 >= boxMinX && x1 <= boxMaxX && y1 >= boxMinY && y1 <= boxMaxY) {
+			return true;
+		} else if (x3 >= boxMinX && x3 <= boxMaxX && y3 >= boxMinY && y3 <= boxMaxY) {
+			return true;
+		}
+		
+		var aX = x1 - 2 * x2 + x3;
+		var bX = -2 * x1 + 2 * x2;
+		var cX = x1;
+
+		var xIntervals = [];
+		
+		if (Math.abs(aX) < 0.0001) {
+			var leftParam = (boxMinX - x1) / bX;
+			var rightParam = (boxMaxX - x1) / bX;
+			
+			xIntervals.push(leftParam, rightParam);
+		} else {
+			// Find when x coordinate of the curve crosses the left side of the box
+			var discriminantX1 = bX * bX - 4 * aX * (cX - boxMinX);
+			var tX1, tX2;
+			if (discriminantX1 > 0) {
+				var sqrt = Math.sqrt(discriminantX1);
+				tX1 = (-bX + sqrt) / (2 * aX);
+				tX2 = (-bX - sqrt) / (2 * aX);
+				
+				xIntervals.push(tX1, tX2);
+			}
+			
+			var discriminantX2 = bX * bX - 4 * aX * (cX - boxMaxX);
+			var tX3, tX4;
+			if (discriminantX2 > 0) {
+				var sqrt = Math.sqrt(discriminantX2);
+				tX3 = (-bX + sqrt) / (2 * aX);
+				tX4 = (-bX - sqrt) / (2 * aX);
+				
+				xIntervals.push(tX3, tX4);
+			}
+		}
+		
+		xIntervals.sort(function(a, b) { return a - b; });
+
+		
+		var aY = y1 - 2 * y2 + y3;
+		var bY = -2 * y1 + 2 * y2;
+		var cY = y1;
+		
+		var yIntervals = [];
+		
+		if (Math.abs(aY) < 0.0001) {
+			var topParam = (boxMinY - y1) / bY;
+			var bottomParam = (boxMaxY - y1) / bY;
+			
+			yIntervals.push(topParam, bottomParam);
+		} else {
+			var discriminantY1 = bY * bY - 4 * aY * (cY - boxMinY);
+			
+			var tY1, tY2;
+			if (discriminantY1 > 0) {
+				var sqrt = Math.sqrt(discriminantY1);
+				tY1 = (-bY + sqrt) / (2 * aY);
+				tY2 = (-bY - sqrt) / (2 * aY);
+				
+				yIntervals.push(tY1, tY2);
+			}
+	
+			var discriminantY2 = bY * bY - 4 * aY * (cY - boxMaxY);
+			
+			var tY3, tY4;
+			if (discriminantY2 > 0) {
+				var sqrt = Math.sqrt(discriminantY2);
+				tY3 = (-bY + sqrt) / (2 * aY);
+				tY4 = (-bY - sqrt) / (2 * aY);
+				
+				yIntervals.push(tY3, tY4);
+			}
+		}
+				
+		yIntervals.sort(function(a, b) { return a - b; });
+
+		for (var index = 0; index < xIntervals.length; index += 2) {
+			for (var yIndex = 1; yIndex < yIntervals.length; yIndex += 2) {
+				
+				// Check if there exists values for the Bezier curve
+				// parameter between 0 and 1 where both the curve's
+				// x and y coordinates are within the bounds specified by the box
+				if (xIntervals[index] < yIntervals[yIndex]
+					&& yIntervals[yIndex] >= 0.0
+					&& xIntervals[index] <= 1.0
+					&& xIntervals[index + 1] > yIntervals[yIndex - 1]
+					&& yIntervals[yIndex - 1] <= 1.0
+					&& xIntervals[index + 1] >= 0.0) {
+					
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	$$.math.inBezierVicinity = function(
+		x, y, x1, y1, x2, y2, x3, y3, toleranceSquared) {
+		
+		// Middle point occurs when t = 0.5, this is when the Bezier
+		// is closest to (x2, y2)
+		var middlePointX = 0.25 * x1 + 0.5 * x2 + 0.25 * x3;
+		var middlePointY = 0.25 * y1 + 0.5 * y2 + 0.25 * y3;
+		
+		var displacementX, displacementY, offsetX, offsetY;
+		var dotProduct, dotSquared, hypSquared;
+		var outside = function(x, y, startX, startY, endX, endY,
+				toleranceSquared, counterClockwise) {
+
+			dotProduct = (endY - startY) * (x - startX) + (startX - endX) * (y - startY);
+			dotSquared = dotProduct * dotProduct;
+			sideSquared = (endY - startY) * (endY - startY) 
+				+ (startX - endX) * (startX - endX);
+
+			if (counterClockwise) {
+				if (dotProduct > 0) {
+					return false;
+				}
+			} else {
+				if (dotProduct < 0) {
+					return false;
+				}
+			}
+			
+			return (dotSquared / sideSquared > toleranceSquared);
+		};
+		
+		// Used to check if the test polygon winding is clockwise or counterclockwise
+		var testPointX = (middlePointX + x2) / 2.0;
+		var testPointY = (middlePointY + y2) / 2.0;
+		
+		var counterClockwise = true;
+		
+		// The test point is always inside
+		if (outside(testPointX, testPointY, x1, y1, x2, y2, 0, counterClockwise)) {
+			counterClockwise = !counterClockwise;
+		}
+		
+		/*
+		return (!outside(x, y, x1, y1, x2, y2, toleranceSquared, counterClockwise)
+			&& !outside(x, y, x2, y2, x3, y3, toleranceSquared, counterClockwise)
+			&& !outside(x, y, x3, y3, middlePointX, middlePointY, toleranceSquared,
+				counterClockwise)
+			&& !outside(x, y, middlePointX, middlePointY, x1, y1, toleranceSquared,
+				counterClockwise)
+		);
+		*/
+		
+		return (!outside(x, y, x1, y1, x2, y2, toleranceSquared, counterClockwise)
+			&& !outside(x, y, x2, y2, x3, y3, toleranceSquared, counterClockwise)
+			&& !outside(x, y, x3, y3, x1, y1, toleranceSquared,
+				counterClockwise)
+		);
+	}
+	
+	// Solves a cubic function, returns root in form [r1, i1, r2, i2, r3, i3], where
+	// r is the real component, i is the imaginary component
+	$$.math.solveCubic = function(a, b, c, d, result) {
+
+		// An implementation of the Cardano method
+		// http://en.wikipedia.org/wiki/Cubic_function#The_nature_of_the_roots
+		// provided by http://www3.telus.net/thothworks/Quad3Deg.html
+		
+		// Get rid of a
+		b /= a;
+		c /= a;
+		d /= a;
+		
+		var discrim, q, r, dum1, s, t, term1, r13;
+
+		q = (3.0 * c - (b * b)) / 9.0;
+		r = -(27.0 * d) + b * (9.0 * c - 2.0 * (b * b));
+		r /= 54.0;
+		
+		discrim = q * q * q + r * r;
+		result[1] = 0; //The first root is always real.
+		term1 = (b / 3.0);
+		
+		if (discrim > 0) { // one root real, two are complex
+			s = r + Math.sqrt(discrim);
+			s = ((s < 0) ? -Math.pow(-s, (1.0 / 3.0)) : Math.pow(s, (1.0 / 3.0)));
+			t = r - Math.sqrt(discrim);
+			t = ((t < 0) ? -Math.pow(-t, (1.0 / 3.0)) : Math.pow(t, (1.0 / 3.0)));
+			result[0] = -term1 + s + t;
+			term1 += (s + t) / 2.0;
+			result[4] = result[2] = -term1;
+			term1 = Math.sqrt(3.0) * (-t + s) / 2;
+			result[3] = term1;
+			result[5] = -term1;
+			return;
+		} // End if (discrim > 0)
+		
+		// The remaining options are all real
+		result[5] = result[3] = 0;
+		
+		if (discrim == 0){ // All roots real, at least two are equal.
+			r13 = ((r < 0) ? -Math.pow(-r, (1.0 / 3.0)) : Math.pow(r, (1.0 / 3.0)));
+			result[0] = -term1 + 2.0 * r13;
+			result[4] = result[2] = -(r13 + term1);
+			return;
+		} // End if (discrim == 0)
+		
+		// Only option left is that all roots are real and unequal (to get here, q < 0)
+		q = -q;
+		dum1 = q * q * q;
+		dum1 = Math.acos(r / Math.sqrt(dum1));
+		r13 = 2.0 * Math.sqrt(q);
+		result[0] = -term1 + r13 * Math.cos(dum1 / 3.0);
+		result[2] = -term1 + r13 * Math.cos((dum1 + 2.0 * Math.PI) / 3.0);
+		result[4] = -term1 + r13 * Math.cos((dum1 + 4.0 * Math.PI) / 3.0);
+		return;
+	}
+
+	$$.math.sqDistanceToQuadraticBezier = function(x, y, 
+		x1, y1, x2, y2, x3, y3) {
+		
+		// Find minimum distance by using the minimum of the distance 
+		// function between the given point and the curve
+		
+		// This gives the coefficients of the resulting cubic equation
+		// whose roots tell us where a possible minimum is
+		// (Coefficients are divided by 4)
+		
+		var a = 1.0 * x1*x1 - 4*x1*x2 + 2*x1*x3 + 4*x2*x2 - 4*x2*x3 + x3*x3
+			+ y1*y1 - 4*y1*y2 + 2*y1*y3 + 4*y2*y2 - 4*y2*y3 + y3*y3;
+		
+		var b = 1.0 * 9*x1*x2 - 3*x1*x1 - 3*x1*x3 - 6*x2*x2 + 3*x2*x3
+			+ 9*y1*y2 - 3*y1*y1 - 3*y1*y3 - 6*y2*y2 + 3*y2*y3;
+		
+		var c = 1.0 * 3*x1*x1 - 6*x1*x2 + x1*x3 - x1*x + 2*x2*x2 + 2*x2*x - x3*x
+			+ 3*y1*y1 - 6*y1*y2 + y1*y3 - y1*y + 2*y2*y2 + 2*y2*y - y3*y;
+			
+		var d = 1.0 * x1*x2 - x1*x1 + x1*x - x2*x
+			+ y1*y2 - y1*y1 + y1*y - y2*y;
+		
+		debug("coefficients: " + a / a + ", " + b / a + ", " + c / a + ", " + d / a);
+		
+		var roots = [];
+		
+		// Use the cubic solving algorithm
+		this.solveCubic(a, b, c, d, roots);
+		
+		var zeroThreshold = 0.0000001;
+		
+		var params = [];
+		
+		for (var index = 0; index < 6; index += 2) {
+			if (Math.abs(roots[index + 1]) < zeroThreshold
+					&& roots[index] >= 0
+					&& roots[index] <= 1.0) {
+				params.push(roots[index]);
+			}
+		}
+		
+		params.push(1.0);
+		params.push(0.0);
+		
+		var minDistanceSquared = -1;
+		var closestParam;
+		
+		var curX, curY, distSquared;
+		for (var i = 0; i < params.length; i++) {
+			curX = Math.pow(1.0 - params[i], 2.0) * x1
+				+ 2.0 * (1 - params[i]) * params[i] * x2
+				+ params[i] * params[i] * x3;
+				
+			curY = Math.pow(1 - params[i], 2.0) * y1
+				+ 2 * (1.0 - params[i]) * params[i] * y2
+				+ params[i] * params[i] * y3;
+				
+			distSquared = Math.pow(curX - x, 2) + Math.pow(curY - y, 2);
+			debug("distance for param " + params[i] + ": " + Math.sqrt(distSquared));
+			if (minDistanceSquared >= 0) {
+				if (distSquared < minDistanceSquared) {
+					minDistanceSquared = distSquared;
+					closestParam = params[i];
+				}
+			} else {
+				minDistanceSquared = distSquared;
+				closestParam = params[i];
+			}
+		}
+		
+		/*
+		debugStats.clickX = x;
+		debugStats.clickY = y;
+		
+		debugStats.closestX = Math.pow(1.0 - closestParam, 2.0) * x1
+				+ 2.0 * (1.0 - closestParam) * closestParam * x2
+				+ closestParam * closestParam * x3;
+				
+		debugStats.closestY = Math.pow(1.0 - closestParam, 2.0) * y1
+				+ 2.0 * (1.0 - closestParam) * closestParam * y2
+				+ closestParam * closestParam * y3;
+		*/
+		
+		debug("given: " 
+			+ "( " + x + ", " + y + "), " 
+			+ "( " + x1 + ", " + y1 + "), " 
+			+ "( " + x2 + ", " + y2 + "), "
+			+ "( " + x3 + ", " + y3 + ")");
+		
+		
+		debug("roots: " + roots);
+		debug("params: " + params);
+		debug("closest param: " + closestParam);
+		return minDistanceSquared;
+	}
+	
+	var debug = function(o) {
+		if (false) {
+			console.log(o);
+		}
+	}
+	
+})( cytoscape );
+
+// type testing utility functions
+
+;(function($$){
+	
+	// list of ids with other metadata assoc'd with it
+	$$.instances = [];
+	$$.instanceCounter = 0;
+	$$.lastInstanceTime;
+
+	$$.registerInstance = function( instance, domElement ){
+		var cy;
+
+		if( $$.is.core(instance) ){
+			cy = instance;
+		} else if( $$.is.domElement(instance) ){
+			domElement = instance;
+		}
+
+		// if we have an old reg that is empty (no cy), then 
+		var oldReg = $$.getRegistrationForInstance(instance, domElement);
+		if( oldReg ){
+			if( !oldReg.cy ){
+				oldReg.cy = instance;
+				oldReg.domElement = domElement;
+			} else {
+				$$.util.error('Tried to register on a pre-existing registration');
+			}
+
+			return oldReg;
+
+		// otherwise, just make a new registration
+		} else {
+			var time = +new Date;
+			var suffix;
+
+			// add a suffix in case instances collide on the same time
+			if( !$$.lastInstanceTime || $$.lastInstanceTime === time ){
+				$$.instanceCounter = 0;
+			} else {
+				++$$.instanceCounter;
+			}
+			$$.lastInstanceTime = time;
+			suffix = $$.instanceCounter;
+
+			var id = "cy-" + time + "-" + suffix;
+
+			// create the registration object
+			var registration = {
+				id: id,
+				cy: cy,
+				domElement: domElement,
+				readies: [] // list of bound ready functions before calling init
+			};
+
+			// put the registration object in the pool
+			$$.instances.push( registration );
+			$$.instances[ id ] = registration;
+
+			return registration;
+		}
+	};
+
+	$$.removeRegistrationForInstance = function(instance, domElement){
+		var cy;
+
+		if( $$.is.core(instance) ){
+			cy = instance;
+		} else if( $$.is.domElement(instance) ){
+			domElement = instance;
+		}
+
+		if( $$.is.core(cy) ){
+			var id = cy._private.instanceId;
+			delete $$.instances[ id ];
+			$$.instances.splice(id, 1);
+
+		} else if( $$.is.domElement(domElement) ){
+			for( var i = 0; i < $$.instances.length; i++ ){
+				var reg = $$.instances[i];
+
+				if( reg.domElement === domElement ){
+					delete $$.instances[ reg.id ];
+					$$.instances.splice(i, 1);
+					i--;
+				}
+			}
+		}
+	}
+
+	$$.getRegistrationForInstance = function( instance, domElement ){
+		var cy;
+
+		if( $$.is.core(instance) ){
+			if( instance.registered() ){ // only want it if it's registered b/c if not it has no reg'd id
+				cy = instance;
+			}
+		} else if( $$.is.domElement(instance) ){
+			domElement = instance;
+		}
+
+		if( $$.is.core(cy) ){
+			var id = cy._private.instanceId;
+			return $$.instances[ id ];
+
+		} else if( $$.is.domElement(domElement) ){
+			for( var i = $$.instances.length - 1; i >= 0; i-- ){ // look backwards, since most recent is the one we want
+				var reg = $$.instances[i];
+
+				if( reg.domElement === domElement ){
+					return reg;
+				}
+			}
+		}
+	};
+	
+})( cytoscape );
+
+;(function($$){
+	
+	// registered extensions to cytoscape, indexed by name
+	var extensions = {};
+	$$.extensions = extensions;
+	
+	// registered modules for extensions, indexed by name
+	var modules = {};
+	$$.modules = modules;
+	
+	function setExtension(type, name, registrant){
+		var impl = {};
+		impl[name] = registrant;
+		
+		switch( type ){
+		case "core":
+		case "collection":
+			$$.fn[type]( impl );
+		}
+		
+		return $$.util.setMap({
+			map: extensions,
+			keys: [ type, name ],
+			value: registrant
+		});
+	}
+	
+	function getExtension(type, name){
+		return $$.util.getMap({
+			map: extensions,
+			keys: [ type, name ]
+		});
+	}
+	
+	function setModule(type, name, moduleType, moduleName, registrant){
+		return $$.util.setMap({
+			map: modules,
+			keys: [ type, name, moduleType, moduleName ],
+			value: registrant
+		});
+	}
+	
+	function getModule(type, name, moduleType, moduleName){
+		return $$.util.getMap({
+			map: modules,
+			keys: [ type, name, moduleType, moduleName ]
+		});
+	}
+	
+	$$.extension = function(){
+		// e.g. $$.extension("renderer", "svg")
+		if( arguments.length == 2 ){
+			return getExtension.apply(this, arguments);
+		}
+		
+		// e.g. $$.extension("renderer", "svg", { ... })
+		else if( arguments.length == 3 ){
+			return setExtension.apply(this, arguments);
+		}
+		
+		// e.g. $$.extension("renderer", "svg", "nodeShape", "ellipse")
+		else if( arguments.length == 4 ){
+			return getModule.apply(this, arguments);
+		}
+		
+		// e.g. $$.extension("renderer", "svg", "nodeShape", "ellipse", { ... })
+		else if( arguments.length == 5 ){
+			return setModule.apply(this, arguments);
+		}
+		
+		else {
+			$.error("Invalid extension access syntax");
+		}
+	
+	};
+	
+})( cytoscape );
+
+;(function($, $$){
+	
+	if( !$ ){ return } // no jquery => don't need this
+
+	// allow calls on a jQuery selector by proxying calls to $.cytoscape
+	// e.g. $("#foo").cytoscape(options) => $.cytoscape(options) on #foo
+	$.fn.cytoscape = function(opts){
+		var $this = $(this);
+
+		// get object
+		if( opts === "get" ){
+			var reg = $$.getRegistrationForInstance( $this[0] );
+			return reg.cy;
+		}
+		
+		// bind to ready
+		else if( $$.is.fn(opts) ){
+			//debugger;
+
+			var ready = opts;
+			var domEle = $this[0];
+			var reg = $$.getRegistrationForInstance( domEle );
+
+			if( !reg ){
+				reg = $$.registerInstance( domEle );
+			}
+			
+			if( reg && reg.cy && reg.cy.ready() ){
+				// already ready so just trigger now
+				reg.cy.trigger("ready", [], ready);
+
+			} else {
+				// not yet ready, so add to readies list
+				
+				reg.readies.push( ready );
+			} 
+			
+		}
+		
+		// proxy to create instance
+		else if( $$.is.plainObject(opts) ){
+			return $this.each(function(){
+				var options = $.extend({}, opts, {
+					container: $(this)[0]
+				});
+			
+				cytoscape(options);
+			});
+		}
+		
+		// proxy a function call
+		else {
+			var domEle = $this[0];
+			var rets = [];
+			var args = [];
+			for(var i = 1; i < arguments.length; i++){
+				args[i - 1] = arguments[i];
+			}
+			
+			$this.each(function(){
+				var reg = $$.getRegistrationForInstance( domEle );
+				var cy = reg.cy;
+				var fnName = opts;
+				
+				if( cy && $$.is.fn( cy[fnName] ) ){
+					var ret = cy[fnName].apply(cy, args);
+					rets.push(ret);
+				}
+			});
+			
+			// if only one instance, don't need to return array
+			if( rets.length === 1 ){
+				rets = rets[0];
+			} else if( rets.length == 0 ){
+				rets = $(this);
+			}
+			
+			return rets;
+		}
+
+	};
+	
+	// allow access to the global cytoscape object under jquery for legacy reasons
+	$.cytoscape = cytoscape;
+	
+	// use short alias (cy) if not already defined
+	if( $.fn.cy == null && $.cy == null ){
+		$.fn.cy = $.fn.cytoscape;
+		$.cy = $.cytoscape;
+	}
+	
+})(typeof jQuery !== 'undefined' ? jQuery : null , cytoscape);
+
+;(function($$){
+	
+	// shamelessly taken from jQuery
+	// https://github.com/jquery/jquery/blob/master/src/event.js
+
+	$$.Event = function( src, props ) {
+		// Allow instantiation without the 'new' keyword
+		if ( !(this instanceof $$.Event) ) {
+			return new $$.Event( src, props );
+		}
+
+		// Event object
+		if ( src && src.type ) {
+			this.originalEvent = src;
+			this.type = src.type;
+
+			// Events bubbling up the document may have been marked as prevented
+			// by a handler lower down the tree; reflect the correct value.
+			this.isDefaultPrevented = ( src.defaultPrevented || src.returnValue === false ||
+				src.getPreventDefault && src.getPreventDefault() ) ? returnTrue : returnFalse;
+
+		// Event type
+		} else {
+			this.type = src;
+		}
+
+		// Put explicitly provided properties onto the event object
+		if ( props ) {
+			$$.util.extend( this, props );
+		}
+
+		// Create a timestamp if incoming event doesn't have one
+		this.timeStamp = src && src.timeStamp || +new Date;
+
+		// Mark it as fixed
+		//this[ jQuery.expando ] = true;
+	};
+
+	function returnFalse() {
+		return false;
+	}
+	function returnTrue() {
+		return true;
+	}
+
+	// jQuery.Event is based on DOM3 Events as specified by the ECMAScript Language Binding
+	// http://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
+	$$.Event.prototype = {
+		preventDefault: function() {
+			this.isDefaultPrevented = returnTrue;
+
+			var e = this.originalEvent;
+			if ( !e ) {
+				return;
+			}
+
+			// if preventDefault exists run it on the original event
+			if ( e.preventDefault ) {
+				e.preventDefault();
+
+			// otherwise set the returnValue property of the original event to false (IE)
+			} else {
+				e.returnValue = false;
+			}
+		},
+		stopPropagation: function() {
+			this.isPropagationStopped = returnTrue;
+
+			var e = this.originalEvent;
+			if ( !e ) {
+				return;
+			}
+			// if stopPropagation exists run it on the original event
+			if ( e.stopPropagation ) {
+				e.stopPropagation();
+			}
+			// otherwise set the cancelBubble property of the original event to true (IE)
+			e.cancelBubble = true;
+		},
+		stopImmediatePropagation: function() {
+			this.isImmediatePropagationStopped = returnTrue;
+			this.stopPropagation();
+		},
+		isDefaultPrevented: returnFalse,
+		isPropagationStopped: returnFalse,
+		isImmediatePropagationStopped: returnFalse
+	};
+	
+	
+})( cytoscape );
+
+;(function($$){
+	
+	// metaprogramming makes me happy
+
+	// use this module to cherry pick functions into your prototype
+	// (useful for functions shared between the core and collections, for example)
+
+	// e.g.
+	// $$.fn.collection({
+	//   foo: $$.define.foo({ /* params... */ })
+	// });
+
+	$$.define = {
+
+		// access data field
+		data: function( params ){
+			var defaults = { 
+				field: "data",
+				bindingEvent: "data",
+				allowBinding: false,
+				allowSetting: false,
+				allowGetting: false,
+				settingEvent: "data",
+				settingTriggersEvent: false,
+				triggerFnName: "trigger",
+				immutableKeys: {}, // key => true if immutable
+				updateMappers: false
+			};
+			params = $$.util.extend({}, defaults, params);
+
+			return function( name, value ){
+				var p = params;
+				var self = this;
+				var selfIsArrayLike = self.length !== undefined;
+				var all = selfIsArrayLike ? self : [self]; // put in array if not array-like
+				var single = selfIsArrayLike ? self[0] : self;
+
+				// .data("foo", ...)
+				if( $$.is.string(name) ){ // set or get property
+
+					// .data("foo")
+					if( p.allowGetting && value === undefined ){ // get
+
+						var ret;
+						if( single ){
+							ret = single._private[ p.field ][ name ];
+						}
+						return ret;
+					
+					// .data("foo", "bar")
+					} else if( p.allowSetting && value !== undefined ) { // set
+						var valid = !p.immutableKeys[name];
+						if( valid ){
+
+							for( var i = 0, l = all.length; i < l; i++ ){
+								all[i]._private[ p.field ][ name ] = value;
+							}
+
+							// update mappers if asked
+							if( p.updateMappers ){ self.updateMappers(); }
+
+							if( p.settingTriggersEvent ){
+								self[ p.triggerFnName ]( p.settingEvent );
+							}
+						}
+					}
+
+				// .data({ "foo": "bar" })
+				} else if( p.allowSetting && $$.is.plainObject(name) ){ // extend
+					var obj = name;
+					var k, v;
+
+					for( k in obj ){
+						v = obj[ k ];
+
+						var valid = !p.immutableKeys[k];
+						if( valid ){
+							for( var i = 0, l = all.length; i < l; i++ ){
+								all[i]._private[ p.field ][ k ] = v;
+							}
+						}
+					}
+					
+					// update mappers if asked
+					if( p.updateMappers ){ self.updateMappers(); }
+
+					if( p.settingTriggersEvent ){
+						self[ p.triggerFnName ]( p.settingEvent );
+					}
+				
+				// .data(function(){ ... })
+				} else if( p.allowBinding && $$.is.fn(name) ){ // bind to event
+					var fn = name;
+					self.bind( p.bindingEvent, fn );
+				
+				// .data()
+				} else if( p.allowGetting && name === undefined ){ // get whole object
+					var ret;
+					if( single ){
+						ret = single._private[ p.field ];
+					}
+					return ret;
+				}
+
+				return self; // maintain chainability
+			}; // function
+		}, // data
+
+		batchData: function( params ){
+			var defaults = {
+				field: "data",
+				event: "data",
+				triggerFnName: "trigger",
+				immutableKeys: {}, // key => true if immutable
+				updateMappers: false
+			};
+			var p = params = $$.util.extend({}, defaults, params);
+
+			return function( map ){
+				var self = this;
+				var selfIsArrayLike = self.length !== undefined;
+				var eles = selfIsArrayLike ? self : self._private.elements;
+
+				if( eles.length === 0 ){ return self; }
+				var cy = selfIsArrayLike ? eles[0]._private.cy : self; // NB must have at least 1 ele to get cy
+				
+				for( var i = 0; i < eles.length; i++ ){
+					var ele = eles[i];
+					var id = ele._private.data.id;
+					var mapData = map[id];
+
+					if( mapData !== undefined && mapData !== null ){
+						var obj = mapData;
+						var k, v;
+
+						// set the (k, v) pairs from the map
+						for( k in obj ){
+							v = obj[ k ];
+
+							var valid = !p.immutableKeys[k];
+							if( valid ){
+								ele._private[ p.field ][ k ] = v;
+							}
+						}
+					} // if
+				} // for
+
+				// update mappers if asked
+				var coln = new $$.Collection(cy, eles);
+				if( p.updateMappers ){ coln.updateMappers(); }
+
+				coln[ p.triggerFnName ]( p.event );
+
+				return self; // chaining
+			};
+		},
+
+		// remove data field
+		removeData: function( params ){
+			var defaults = { 
+				field: "data",
+				event: "data",
+				triggerFnName: "trigger",
+				triggerEvent: false,
+				immutableKeys: {} // key => true if immutable
+			};
+			params = $$.util.extend({}, defaults, params);
+
+			return function( names ){
+				var p = params;
+				var self = this;
+				var selfIsArrayLike = self.length !== undefined;
+				var all = selfIsArrayLike ? self : [self]; // put in array if not array-like
+				var single = selfIsArrayLike ? self[0] : self;
+				
+				// .removeData("foo bar")
+				if( $$.is.string(names) ){ // then get the list of keys, and delete them
+					var keys = names.split(/\s+/);
+					var l = keys.length;
+
+					for( var i = 0; i < l; i++ ){ // delete each non-empty key
+						var key = keys[i];
+						if( $$.is.emptyString(key) ){ continue; }
+
+						var valid = !p.immutableKeys[ key ]; // not valid if immutable
+						if( valid ){
+							for( var i_a = 0, l_a = all.length; i_a < l_a; i_a++ ){
+								delete all[ i_a ]._private[ p.field ][ key ];
+							}
+						}
+					}
+
+					if( p.triggerEvent ){
+						self[ p.triggerFnName ]( p.event );
+					}
+
+				// .removeData()
+				} else if( names === undefined ){ // then delete all keys
+
+					for( var i_a = 0, l_a = all.length; i_a < l_a; i_a++ ){
+						var _privateFields = all[ i_a ]._private[ p.field ];
+						
+						for( var key in _privateFields ){
+							var validKeyToDelete = !p.immutableKeys[ key ];
+
+							if( validKeyToDelete ){
+								delete _privateFields[ key ];
+							}
+						}
+					}
+
+					if( p.triggerEvent ){
+						self[ p.triggerFnName ]( p.event );
+					}
+				}
+
+				return self; // maintain chaining
+			}; // function
+		}, // removeData
+
+		// event function reusable stuff
+		event: {
+			regex: /(\w+)(\.\w+)?/, // regex for matching event strings (e.g. "click.namespace")
+			optionalTypeRegex: /(\w+)?(\.\w+)?/,
+
+			// properties to copy to the event obj
+			props: "altKey bubbles button cancelable charCode clientX clientY ctrlKey currentTarget data detail eventPhase metaKey offsetX offsetY originalTarget pageX pageY prevValue relatedTarget screenX screenY shiftKey target view which".split(/\s+/),
+
+			aliases: "mousedown mouseup click mouseover mouseout mousemove touchstart touchmove touchend grab drag free".split(/\s+/),
+
+			aliasesOn: function( thisPrototype ){
+
+				var aliases = $$.define.event.aliases;
+				for( var i = 0; i < aliases.length; i++ ){
+					var eventType = aliases[i];
+
+					thisPrototype[ eventType ] = function(data, callback){
+						if( $$.is.fn(callback) ){
+							this.on(eventType, data, callback);
+
+						} else if( $$.is.fn(data) ){
+							callback = data;
+							this.on(eventType, callback);
+
+						} else {
+							this.trigger(eventType);
+						}
+
+						return this; // maintain chaining
+					};
+				}
+			},
+
+			falseCallback: function(){ return false; }
+		},
+
+		// event binding
+		on: function( params ){
+			var defaults = {
+				unbindSelfOnTrigger: false,
+				unbindAllBindersOnTrigger: false
+			};
+			params = $$.util.extend({}, defaults, params);
+			
+			return function(events, selector, data, callback){
+				var self = this;
+				var selfIsArrayLike = self.length !== undefined;
+				var all = selfIsArrayLike ? self : [self]; // put in array if not array-like
+				var single = selfIsArrayLike ? self[0] : self;
+				var eventsIsString = $$.is.string(events);
+				var p = params;
+
+				if( $$.is.plainObject(selector) ){ // selector is actually data
+					callback = data;
+					data = selector;
+					selector = undefined;
+				} else if( $$.is.fn(selector) || selector === false ){ // selector is actually callback
+					callback = selector;
+					data = undefined;
+					selector = undefined;
+				}
+
+				if( $$.is.fn(data) || data === false ){ // data is actually callback
+					callback = data;
+					data = undefined;
+				}
+
+				// if there isn't a callback, we can't really do anything
+				// (can't speak for mapped events arg version)
+				if( !($$.is.fn(callback) || callback === false) && eventsIsString ){
+					return self; // maintain chaining
+				}
+
+				if( eventsIsString ){ // then convert to map
+					var map = {};
+					map[ events ] = callback;
+					events = map;
+				}
+
+				for( var evts in events ){
+					callback = events[evts];
+					if( callback === false ){
+						callback = $$.define.event.falseCallback;
+					}
+
+					if( !$$.is.fn(callback) ){ continue; }
+
+					evts = evts.split(/\s+/);
+					for( var i = 0; i < evts.length; i++ ){
+						var evt = evts[i];
+						if( $$.is.emptyString(evt) ){ continue; }
+
+						var match = evt.match( $$.define.event.regex ); // type[.namespace]
+
+						if( match ){
+							var type = match[1];
+							var namespace = match[2] ? match[2] : undefined;
+
+							var listener = {
+								callback: callback, // callback to run
+								data: data, // extra data in eventObj.data
+								delegated: selector ? true : false, // whether the evt is delegated
+								selector: selector, // the selector to match for delegated events
+								type: type, // the event type (e.g. "click")
+								namespace: namespace, // the event namespace (e.g. ".foo")
+								unbindSelfOnTrigger: p.unbindSelfOnTrigger,
+								unbindAllBindersOnTrigger: p.unbindAllBindersOnTrigger,
+								binders: all // who bound together
+							};
+
+							for( var j = 0; j < all.length; j++ ){
+								all[j]._private.listeners.push( listener );
+							}
+						}
+					} // for events array
+				} // for events map
+				
+				return self; // maintain chaining
+			}; // function
+		}, // on
+
+		off: function( params ){
+			var defaults = {
+			};
+			params = $$.util.extend({}, defaults, params);
+			
+			return function(events, selector, callback){
+				var self = this;
+				var selfIsArrayLike = self.length !== undefined;
+				var all = selfIsArrayLike ? self : [self]; // put in array if not array-like
+				var single = selfIsArrayLike ? self[0] : self;
+				var eventsIsString = $$.is.string(events);
+				var p = params;
+
+				if( arguments.length === 0 ){ // then unbind all
+
+					for( var i = 0; i < all.length; i++ ){
+						all[i]._private.listeners = [];
+					}
+
+					return self; // maintain chaining
+				}
+
+				if( $$.is.fn(selector) || selector === false ){ // selector is actually callback
+					callback = selector;
+					selector = undefined;
+				}
+
+				if( eventsIsString ){ // then convert to map
+					var map = {};
+					map[ events ] = callback;
+					events = map;
+				}
+
+				for( var evts in events ){
+					callback = events[evts];
+
+					if( callback === false ){
+						callback = $$.define.event.falseCallback;
+					}
+
+					evts = evts.split(/\s+/);
+					for( var h = 0; h < evts.length; h++ ){
+						var evt = evts[h];
+						if( $$.is.emptyString(evt) ){ continue; }
+
+						var match = evt.match( $$.define.event.optionalTypeRegex ); // [type][.namespace]
+						if( match ){
+							var type = match[1] ? match[1] : undefined;
+							var namespace = match[2] ? match[2] : undefined;
+
+							for( var i = 0; i < all.length; i++ ){ //
+								var listeners = all[i]._private.listeners;
+
+								for( var j = 0; j < listeners.length; j++ ){
+									var listener = listeners[j];
+									var nsMatches = !namespace || namespace === listener.namespace;
+									var typeMatches = !type || listener.type === type;
+									var cbMatches = !callback || callback === listener.callback;
+									var listenerMatches = nsMatches && typeMatches && cbMatches;
+
+									// delete listener if it matches
+									if( listenerMatches ){
+										listeners.splice(j, 1);
+										j--;
+									}
+								} // for listeners
+							} // for all
+						} // if match
+					} // for events array
+
+				} // for events map
+				
+				return self; // maintain chaining
+			}; // function
+		}, // off
+
+		trigger: function( params ){
+			var defaults = {};
+			params = $$.util.extend({}, defaults, params);
+			
+			return function(events, extraParams, fnToTrigger){
+				var self = this;
+				var selfIsArrayLike = self.length !== undefined;
+				var all = selfIsArrayLike ? self : [self]; // put in array if not array-like
+				var single = selfIsArrayLike ? self[0] : self;
+				var eventsIsString = $$.is.string(events);
+				var eventsIsObject = $$.is.plainObject(events);
+				var eventsIsEvent = $$.is.event(events);
+				var p = params;
+				var cy = this._private.cy || this;
+
+				if( eventsIsString ){ // then make a plain event object for each event name
+					var evts = events.split(/\s+/);
+					events = [];
+
+					for( var i = 0; i < evts.length; i++ ){
+						var evt = evts[i];
+						if( $$.is.emptyString(evt) ){ continue; }
+
+						var match = evt.match( $$.define.event.regex ); // type[.namespace]
+						var type = match[1];
+						var namespace = match[2] ? match[2] : undefined;
+
+						events.push( {
+							type: type,
+							namespace: namespace
+						} );
+					}
+				} else if( eventsIsObject ){ // put in length 1 array
+					var eventArgObj = events;
+
+					events = [ eventArgObj ];
+				}
+
+				if( extraParams ){
+					if( !$$.is.array(extraParams) ){ // make sure extra params are in an array if specified
+						extraParams = [ extraParams ];
+					}
+				} else { // otherwise, we've got nothing
+					extraParams = [];
+				}
+
+				for( var i = 0; i < events.length; i++ ){ // trigger each event in order
+					var evtObj = events[i];
+					
+					for( var j = 0; j < all.length; j++ ){ // for each
+						var triggerer = all[j];
+						var listeners = triggerer._private.listeners;
+						var triggererIsElement = $$.is.element(triggerer);
+						var bubbleUp = triggererIsElement;
+
+						// create the event for this element from the event object
+						var evt;
+
+						if( eventsIsEvent ){ // then just get the object
+							evt = evtObj;
+							
+							evt.cyTarget = evt.cyTarget || triggerer;
+							evt.cy = evt.cy || cy;
+							evt.namespace = evt.namespace || evtObj.namespace;
+
+						} else { // then we have to make one
+							evt = new $$.Event( evtObj, {
+								cyTarget: triggerer,
+								cy: cy,
+								namespace: evtObj.namespace
+							} );
+
+							// copy properties like jQuery does
+							var props = $$.define.event.props;
+							for( var k = 0; k < props.length; k++ ){
+								var prop = props[k];
+								evt[ prop ] = evtObj[ prop ];
+							}
+						}
+
+						if( fnToTrigger ){ // then override the listeners list with just the one we specified
+							listeners = [{
+								namespace: evt.namespace,
+								type: evt.type,
+								callback: fnToTrigger
+							}];
+						}
+
+						for( var k = 0; k < listeners.length; k++ ){ // check each listener
+							var lis = listeners[k];
+							var nsMatches = !lis.namespace || lis.namespace === evt.namespace;
+							var typeMatches = lis.type === evt.type;
+							var targetMatches = lis.delegated ? ( triggerer !== evt.cyTarget && $$.is.element(evt.cyTarget) && evt.cyTarget.is(lis.selector) ) : (true); // we're not going to validate the hierarchy; that's too expensive
+							var listenerMatches = nsMatches && typeMatches && targetMatches;
+
+							if( listenerMatches ){ // then trigger it
+								var args = [ evt ];
+								args = args.concat( extraParams ); // add extra params to args list
+
+								if( lis.data ){ // add on data plugged into binding
+									evt.data = lis.data;
+								} else { // or clear it in case the event obj is reused
+									evt.data = undefined;
+								}
+
+								if( lis.unbindSelfOnTrigger || lis.unbindAllBindersOnTrigger ){ // then remove listener
+									listeners.splice(k, 1);
+									k--;
+								}
+
+								if( lis.unbindAllBindersOnTrigger ){ // then delete the listener for all binders
+									var binders = lis.binders;
+									for( var l = 0; l < binders.length; l++ ){
+										var binder = binders[l];
+										if( !binder || binder === triggerer ){ continue; } // already handled triggerer or we can't handle it
+
+										var binderListeners = binder._private.listeners;
+										for( var m = 0; m < binderListeners.length; m++ ){
+											var binderListener = binderListeners[m];
+
+											if( binderListener === lis ){ // delete listener from list
+												binderListeners.splice(m, 1);
+												m--;
+											}
+										}
+									}
+								}
+
+								// run the callback
+								var context = lis.delegated ? evt.cyTarget : triggerer;
+								var ret = lis.callback.apply( context, args );
+
+								if( ret === false || evt.isPropagationStopped() ){
+									// then don't bubble
+									bubbleUp = false;
+
+									if( ret === false ){
+										// returning false is a shorthand for stopping propagation and preventing the def. action
+										evt.stopPropagation();
+										evt.preventDefault();
+									}
+								}
+							} // if listener matches
+						} // for each listener
+
+						// bubble up event for elements
+						if( bubbleUp ){
+							var parent = triggerer.parent();
+							var hasParent = parent.length !== 0;
+
+							if( hasParent ){ // then bubble up to parent
+								parent = parent[0];
+								parent.trigger(evt);
+							} else { // otherwise, bubble up to the core
+								cy.trigger(evt);
+							}
+						}
+
+					} // for each of all
+				} // for each event
+				
+				return self; // maintain chaining
+			}; // function
+		} // trigger
+
+	}; // define
+
+	
+})( cytoscape );
+
+;(function($$, window){
+	
+	var isTouch = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
+
+	$$.Style = function( cy ){
+
+		if( !(this instanceof $$.Style) ){
+			return new $$.Style(cy);
+		}
+
+		if( !$$.is.core(cy) ){
+			$$.util.error("A style must have a core reference");
+			return;
+		}
+
+		this._private = {
+			cy: cy,
+			coreStyle: {}
+		};
+		
+		this.length = 0;
+
+		this.addDefaultStylesheet();
+	};
+
+	// nice-to-have aliases
+	$$.style = $$.Style;
+	$$.styfn = $$.Style.prototype;
+
+	// define functions in the Style prototype
+	$$.fn.style = function( fnMap, options ){
+		for( var fnName in fnMap ){
+			var fn = fnMap[ fnName ];
+			$$.Style.prototype = fn;
+		}
+	};
+
+	// a dummy stylesheet object that doesn't need a reference to the core
+	$$.stylesheet = $$.Stylesheet = function(){
+		if( !(this instanceof $$.Stylesheet) ){
+			return new $$.Stylesheet();
+		}
+
+		this.length = 0;
+	};
+
+	// just store the selector to be parsed later
+	$$.Stylesheet.prototype.selector = function( selector ){
+		var i = this.length++;
+
+		this[i] = {
+			selector: selector,
+			properties: []
+		};
+
+		return this; // chaining
+	};
+
+	// just store the property to be parsed later
+	$$.Stylesheet.prototype.css = function( name, value ){
+		var i = this.length - 1;
+
+		if( $$.is.string(name) ){
+			this[i].properties.push({
+				name: name,
+				value: value
+			});
+		} else if( $$.is.plainObject(name) ){
+			map = name;
+
+			for( var j = 0; j < $$.style.properties.length; j++ ){
+				var prop = $$.style.properties[j];
+				var mapVal = map[ prop.name ];
+
+				if( mapVal === undefined ){ // also try camel case name
+					mapVal = map[ $$.util.dash2camel(prop.name) ];
+				}
+
+				if( mapVal !== undefined ){
+					var name = prop.name;
+					var value = mapVal;
+
+					this[i].properties.push({
+						name: name,
+						value: value
+					});
+				}
+			}
+		}
+
+		return this; // chaining
+	};
+
+	// static function
+	$$.style.fromJson = function( cy, json ){
+		var style = new $$.Style(cy);
+
+		for( var i = 0; i < json.length; i++ ){
+			var context = json[i];
+			var selector = context.selector;
+			var props = context.css;
+
+			style.selector(selector); // apply selector
+
+			for( var name in props ){
+				var value = props[name];
+
+				style.css( name, value ); // apply property
+			}
+		}
+
+		return style;
+	};
+
+	$$.styfn.fromJson = function( json ){
+		var style = this;
+
+		style.resetToDefault();
+
+		for( var i = 0; i < json.length; i++ ){
+			var context = json[i];
+			var selector = context.selector;
+			var props = context.css;
+
+			style.selector(selector); // apply selector
+
+			for( var name in props ){
+				var value = props[name];
+
+				style.css( name, value ); // apply property
+			}
+		}
+
+		return style;
+	};
+
+	// generate a real style object from the dummy stylesheet
+	$$.Stylesheet.prototype.generateStyle = function( cy ){
+		var style = new $$.Style(cy);
+
+		for( var i = 0; i < this.length; i++ ){
+			var context = this[i];
+			var selector = context.selector;
+			var props = context.properties;
+
+			style.selector(selector); // apply selector
+
+			for( var j = 0; j < props.length; j++ ){
+				var prop = props[j];
+
+				style.css( prop.name, prop.value ); // apply property
+			}
+		}
+
+		return style;
+	};
+
+	$$.Stylesheet.prototype.assignToStyle = function( style, addDefaultStylesheet ){
+		style.clear();
+
+		if( addDefaultStylesheet || addDefaultStylesheet === undefined ){
+			style.addDefaultStylesheet();
+		}
+
+		for( var i = 0; i < this.length; i++ ){
+			var context = this[i];
+			var selector = context.selector;
+			var props = context.properties;
+
+			style.selector(selector); // apply selector
+
+			for( var j = 0; j < props.length; j++ ){
+				var prop = props[j];
+
+				style.css( prop.name, prop.value ); // apply property
+			}
+		}
+	};
+
+	(function(){
+		var number = $$.util.regex.number;
+		var rgba = $$.util.regex.rgbaNoBackRefs;
+		var hsla = $$.util.regex.hslaNoBackRefs;
+		var hex3 = $$.util.regex.hex3;
+		var hex6 = $$.util.regex.hex6;
+
+		// each visual style property has a type and needs to be validated according to it
+		$$.style.types = {
+			zeroOneNumber: { number: true, min: 0, max: 1, unitless: true },
+			nonNegativeInt: { number: true, min: 0, integer: true, unitless: true },
+			size: { number: true, min: 0, enums: ["auto"] },
+			bgSize: { number: true, min: 0, allowPercent: true },
+			color: { color: true },
+			lineStyle: { enums: ["solid", "dotted", "dashed"] },
+			curveStyle: { enums: ["bundled", "bezier"] },
+			fontFamily: { regex: "^([\\w- ]+(?:\\s*,\\s*[\\w- ]+)*)$" },
+			fontVariant: { enums: ["small-caps", "normal"] },
+			fontStyle: { enums: ["italic", "normal", "oblique"] },
+			fontWeight: { enums: ["normal", "bold", "bolder", "lighter", "100", "200", "300", "400", "500", "600", "800", "900", 100, 200, 300, 400, 500, 600, 700, 800, 900] },
+			textDecoration: { enums: ["none", "underline", "overline", "line-through"] },
+			textTransform: { enums: ["none", "capitalize", "uppercase", "lowercase"] },
+			nodeShape: { enums: ["rectangle", "roundrectangle", "ellipse", "triangle",
+			                     "square", "pentagon", "hexagon", "heptagon", "octagon"] },
+			arrowShape: { enums: ["tee", "triangle", "square", "circle", "diamond", "none"] },
+			visibility: { enums: ["hidden", "visible"] },
+			valign: { enums: ["top", "center", "bottom"] },
+			halign: { enums: ["left", "center", "right"] },
+			positionx: { enums: ["left", "center", "right"], number: true, allowPercent: true },
+			positiony: { enums: ["top", "center", "bottom"], number: true, allowPercent: true },
+			bgRepeat: { enums: ["repeat", "repeat-x", "repeat-y", "no-repeat"] },
+			cursor: { enums: ["auto", "crosshair", "default", "e-resize", "n-resize", "ne-resize", "nw-resize", "pointer", "progress", "s-resize", "sw-resize", "text", "w-resize", "wait", "grab", "grabbing"] },
+			text: { string: true },
+			data: { mapping: true, regex: "^data\\s*\\(\\s*([\\w\\.]+)\\s*\\)$" },
+			mapData: { mapping: true, regex: "^mapData\\(([\\w\\.]+)\\s*\\,\\s*(" + number + ")\\s*\\,\\s*(" + number + ")\\s*,\\s*(" + number + "|\\w+|" + rgba + "|" + hsla + "|" + hex3 + "|" + hex6 + ")\\s*\\,\\s*(" + number + "|\\w+|" + rgba + "|" + hsla + "|" + hex3 + "|" + hex6 + ")\\)$" },
+			url: { regex: "^url\\s*\\(\\s*([^\\s]+)\\s*\\s*\\)|none|(.+)$" }
+		};
+
+		// define visual style properties
+		var t = $$.style.types;
+		$$.style.properties = [
+			// these are for elements
+			{ name: "cursor", type: t.cursor },
+			{ name: "text-valign", type: t.valign },
+			{ name: "text-halign", type: t.halign },
+			{ name: "color", type: t.color },
+			{ name: "content", type: t.text },
+			{ name: "text-outline-color", type: t.color },
+			{ name: "text-outline-width", type: t.size },
+			{ name: "text-outline-opacity", type: t.zeroOneNumber },
+			{ name: "text-opacity", type: t.zeroOneNumber },
+			{ name: "text-decoration", type: t.textDecoration },
+			{ name: "text-transform", type: t.textTransform },
+			{ name: "font-family", type: t.fontFamily },
+			{ name: "font-style", type: t.fontStyle },
+			{ name: "font-variant", type: t.fontVariant },
+			{ name: "font-weight", type: t.fontWeight },
+			{ name: "font-size", type: t.size },
+			{ name: "min-zoomed-font-size", type: t.size },
+			{ name: "visibility", type: t.visibility },
+			{ name: "opacity", type: t.zeroOneNumber },
+			{ name: "z-index", type: t.nonNegativeInt },
+			{ name: "overlay-padding", type: t.size },
+			{ name: "overlay-color", type: t.color },
+			{ name: "overlay-opacity", type: t.zeroOneNumber },
+
+			// these are just for nodes
+			{ name: "background-color", type: t.color },
+			{ name: "background-opacity", type: t.zeroOneNumber },
+			{ name: "background-image", type: t.url },
+			{ name: "background-position-x", type: t.positionx },
+			{ name: "background-position-y", type: t.positiony },
+			{ name: "background-repeat", type: t.bgRepeat },
+			{ name: "background-size-x", type: t.bgSize },
+			{ name: "background-size-y", type: t.bgSize },
+			{ name: "border-color", type: t.color },
+			{ name: "border-opacity", type: t.zeroOneNumber },
+			{ name: "border-width", type: t.size },
+			{ name: "border-style", type: t.lineStyle },
+			{ name: "height", type: t.size },
+			{ name: "width", type: t.size },
+			{ name: "padding-left", type: t.size },
+			{ name: "padding-right", type: t.size },
+			{ name: "padding-top", type: t.size },
+			{ name: "padding-bottom", type: t.size },
+			{ name: "shape", type: t.nodeShape },
+
+			// these are just for edges
+			{ name: "source-arrow-shape", type: t.arrowShape },
+			{ name: "target-arrow-shape", type: t.arrowShape },
+			{ name: "source-arrow-color", type: t.color },
+			{ name: "target-arrow-color", type: t.color },
+			{ name: "line-style", type: t.lineStyle },
+			{ name: "line-color", type: t.color },
+			{ name: "control-point-step-size", type: t.size },
+			{ name: "curve-style", type: t.curveStyle },
+
+			// these are just for the core
+			{ name: "selection-box-color", type: t.color },
+			{ name: "selection-box-opacity", type: t.zeroOneNumber },
+			{ name: "selection-box-border-color", type: t.color },
+			{ name: "selection-box-border-width", type: t.size },
+			{ name: "panning-cursor", type: t.cursor },
+			{ name: "active-bg-color", type: t.color },
+			{ name: "active-bg-opacity", type: t.zeroOneNumber },
+			{ name: "active-bg-size", type: t.size }
+		];
+
+		// allow access of properties by name ( e.g. $$.style.properties.height )
+		var props = $$.style.properties;
+		for( var i = 0; i < props.length; i++ ){
+			var prop = props[i];
+			
+			props[ prop.name ] = prop; // allow lookup by name
+		}
+	})();
+
+	// adds the default stylesheet to the current style
+	$$.styfn.addDefaultStylesheet = function(){
+		// to be nice, we build font related style properties from the core container
+		// so that cytoscape matches the style of its container by default
+		var fontFamily = this.containerPropertyAsString("font-family") || "sans-serif";
+		var fontStyle = this.containerPropertyAsString("font-style") || "normal";
+		var fontVariant = this.containerPropertyAsString("font-variant") || "normal";
+		var fontWeight = this.containerPropertyAsString("font-weight") || "normal";
+		var color = this.containerPropertyAsString("color") || "#000";
+		var textTransform = this.containerPropertyAsString("text-transform") || "none";
+		var textDecoration = this.containerPropertyAsString("text-decoration") || "none";
+		var fontSize = this.containerPropertyAsString("font-size") || 12;
+
+		// fill the style with the default stylesheet
+		this
+			.selector("node, edge") // common properties
+				.css({
+					"cursor": "default",
+					"text-valign": "top",
+					"text-halign": "center",
+					"color": color,
+					"content": undefined, // => no label
+					"text-outline-color": "#000",
+					"text-outline-width": 0,
+					"text-outline-opacity": 1,
+					"text-opacity": 1,
+					"text-decoration": "none",
+					"text-transform": textTransform,
+					"font-family": fontFamily,
+					"font-style": fontStyle,
+					"font-variant": fontVariant,
+					"font-weight": fontWeight,
+					"font-size": fontSize,
+					"min-zoomed-font-size": 0,
+					"visibility": "visible",
+					"opacity": 1,
+					"z-index": 0,
+					"content": "",
+					"overlay-opacity": 0,
+					"overlay-color": "#000",
+					"overlay-padding": 10,
+
+					// node props
+					"background-color": "#888",
+					"background-opacity": 1,
+					"background-image": "none",
+					"border-color": "#000",
+					"border-opacity": 1,
+					"border-width": 0,
+					"border-style": "solid",
+					"height": 30,
+					"width": 30,
+					"padding-top": 0,
+					"padding-bottom": 0,
+					"padding-left": 0,
+					"padding-right": 0,
+					"shape": "ellipse",
+
+					// edge props
+					"source-arrow-shape": "none",
+					"target-arrow-shape": "none",
+					"source-arrow-color": "#bbb",
+					"target-arrow-color": "#bbb",
+					"line-style": "solid",
+					"line-color": "#bbb",
+					"control-point-step-size": 40,
+					"curve-style": "bezier"
+				})
+			.selector("$node > node") // compound (parent) node properties
+				.css({
+					"width": "auto",
+					"height": "auto",
+					"shape": "rectangle",
+					"background-opacity": 0.5,
+					"padding-top": 10,
+					"padding-right": 10,
+					"padding-left": 10,
+					"padding-bottom": 10
+				})
+			.selector("edge") // just edge properties
+				.css({
+					"width": 1,
+				})
+			.selector(":active")
+				.css({
+					"overlay-color": "black",
+					"overlay-padding": 10,
+					"overlay-opacity": 0.25
+				})
+			.selector("core") // just core properties
+				.css({
+					"selection-box-color": "#ddd",
+					"selection-box-opacity": 0.65,
+					"selection-box-border-color": "#aaa",
+					"selection-box-border-width": 1,
+					"panning-cursor": "grabbing",
+					"active-bg-color": "black",
+					"active-bg-opacity": 0.15,
+					"active-bg-size": isTouch ? 40 : 15
+				})
+		;
+	};
+
+	// remove all contexts
+	$$.styfn.clear = function(){
+		this._private.newStyle = true;
+
+		for( var i = 0; i < this.length; i++ ){
+			delete this[i];
+		}
+		this.length = 0;
+
+		return this; // chaining
+	};
+
+	$$.styfn.resetToDefault = function(){
+		this.clear();
+		this.addDefaultStylesheet();
+
+		return this;
+	};
+
+	// builds a style object for the "core" selector
+	$$.styfn.core = function(){
+		return this._private.coreStyle;
+	};
+
+	// parse a property; return null on invalid; return parsed property otherwise
+	// fields :
+	// - name : the name of the property
+	// - value : the parsed, native-typed value of the property
+	// - strValue : a string value that represents the property value in valid css
+	// - bypass : true iff the property is a bypass property
+	$$.styfn.parse = function( name, value, propIsBypass ){
+		
+		name = $$.util.camel2dash( name ); // make sure the property name is in dash form (e.g. "property-name" not "propertyName")
+		var property = $$.style.properties[ name ];
+		var passedValue = value;
+		
+		if( !property ){ return null; } // return null on property of unknown name
+		if( value === undefined || value === null ){ return null; } // can't assign null
+
+		var valueIsString = $$.is.string(value);
+		if( valueIsString ){ // trim the value to make parsing easier
+			value = $$.util.trim( value );
+		}
+
+		var type = property.type;
+		if( !type ){ return null; } // no type, no luck
+
+		// check if bypass is null or empty string (i.e. indication to delete bypass property)
+		if( propIsBypass && (value === "" || value === null) ){
+			return {
+				name: name,
+				value: value,
+				bypass: true,
+				deleteBypass: true
+			};
+		}
+
+		// check if value is mapped
+		var data, mapData;
+		if( !valueIsString ){
+			// then don't bother to do the expensive regex checks
+
+		} else if( data = new RegExp( $$.style.types.data.regex ).exec( value ) ){
+			return {
+				name: name,
+				value: data,
+				strValue: value,
+				mapped: $$.style.types.data,
+				field: data[1],
+				bypass: propIsBypass
+			};
+
+		} else if( mapData = new RegExp( $$.style.types.mapData.regex ).exec( value ) ){
+			// we can map only if the type is a colour or a number
+			if( !(type.color || type.number) ){ return false; }
+
+			var valueMin = this.parse( name, mapData[4]); // parse to validate
+			if( !valueMin || valueMin.mapped ){ return false; } // can't be invalid or mapped
+
+			var valueMax = this.parse( name, mapData[5]); // parse to validate
+			if( !valueMax || valueMax.mapped ){ return false; } // can't be invalid or mapped
+
+			// check if valueMin and valueMax are the same
+			if( valueMin.value === valueMax.value ){
+				return false; // can't make much of a mapper without a range
+			
+			} else if( type.color ){
+				var c1 = valueMin.value;
+				var c2 = valueMax.value;
+				
+				var same = c1[0] === c2[0] // red
+					&& c1[1] === c2[1] // green
+					&& c1[2] === c2[2] // blue
+					&& ( // optional alpha
+						c1[3] === c2[3] // same alpha outright
+						|| (
+							(c1[3] == null || c1[3] === 1) // full opacity for colour 1?
+							&&
+							(c2[3] == null || c2[3] === 1) // full opacity for colour 2?
+						)
+					)
+				;
+
+				if( same ){ return false; } // can't make a mapper without a range
+			}
+
+			return {
+				name: name,
+				value: mapData,
+				strValue: value,
+				mapped: $$.style.types.mapData,
+				field: mapData[1],
+				fieldMin: parseFloat( mapData[2] ), // min & max are numeric
+				fieldMax: parseFloat( mapData[3] ),
+				valueMin: valueMin.value,
+				valueMax: valueMax.value,
+				bypass: propIsBypass
+			};
+		}
+
+		// TODO check if value is inherited (i.e. "inherit")
+
+		// check the type and return the appropriate object
+		if( type.number ){
+			var units;
+			if( !type.unitless ){
+				if( valueIsString ){
+					var match = value.match( "^(" + $$.util.regex.number + ")(px|em" + (type.allowPercent ? "|\\%" : "") + ")?" + "$" );
+					
+					if( !type.enums ){
+						if( !match ){ return null; } // no match => not a number
+
+						value = match[1];
+						units = match[2] || "px";
+					}
+				} else {
+					units = "px"; // implicitly px if unspecified
+				}
+			}
+
+			value = parseFloat( value );
+
+			// check if this number type also accepts special keywords in place of numbers
+			// (i.e. `left`, `auto`, etc)
+			if( isNaN(value) && type.enums !== undefined ){
+				value = passedValue;
+
+				for( var i = 0; i < type.enums.length; i++ ){
+					var en = type.enums[i];
+
+					if( en === value ){
+						return {
+							name: name,
+							value: value,
+							strValue: value,
+							bypass: propIsBypass
+						};
+					}
+				}
+
+				return null; // failed on enum after failing on number
+			}
+
+			// check if value must be an integer
+			if( type.integer && !$$.is.integer(value) ){
+				return null;
+			}
+
+			// check value is within range
+			if( (type.min !== undefined && value < type.min) 
+			|| (type.max !== undefined && value > type.max)
+			){
+				return null;
+			}
+
+			var ret = {
+				name: name,
+				value: value,
+				strValue: "" + value + (units ? units : ""),
+				units: units,
+				bypass: propIsBypass,
+				pxValue: type.unitless || units === "%" ?
+					undefined
+					:
+					( units === "px" || !units ? (value) : (this.getEmSizeInPixels() * value) )
+			};
+
+			return ret;
+
+		} else if( type.color ){
+			var tuple = $$.util.color2tuple( value );
+
+			return {
+				name: name,
+				value: tuple,
+				strValue: value,
+				bypass: propIsBypass
+			};
+
+		} else if( type.enums ){
+			for( var i = 0; i < type.enums.length; i++ ){
+				var en = type.enums[i];
+
+				if( en === value ){
+					return {
+						name: name,
+						value: value,
+						strValue: value,
+						bypass: propIsBypass
+					};
+				}
+			}
+
+		} else if( type.regex ){
+			var regex = new RegExp( type.regex ); // make a regex from the type
+			var m = regex.exec( value );
+
+			if( m ){ // regex matches
+				return {
+					name: name,
+					value: m,
+					strValue: value,
+					bypass: propIsBypass
+				};
+			} else { // regex doesn't match
+				return null; // didn't match the regex so the value is bogus
+			}
+
+		} else if( type.string ){
+			// just return
+			return {
+				name: name,
+				value: value,
+				strValue: value,
+				bypass: propIsBypass
+			};
+
+		} else {
+			return null; // not a type we can handle
+		}
+
+	};
+
+	// gets what an em size corresponds to in pixels relative to a dom element
+	$$.styfn.getEmSizeInPixels = function(){
+		var cy = this._private.cy;
+		var domElement = cy.container();
+
+		if( window && domElement ){
+			var pxAsStr = window.getComputedStyle(domElement).getPropertyValue("font-size");
+			var px = parseFloat( pxAsStr );
+			return px;
+		} else {
+			return 1; // in case we're running outside of the browser
+		}
+	};
+
+	// gets css property from the core container
+	$$.styfn.containerCss = function( propName ){
+		var cy = this._private.cy;
+		var domElement = cy.container();
+
+		if( window && domElement ){
+			return window.getComputedStyle(domElement).getPropertyValue( propName );
+		}
+	};
+
+	$$.styfn.containerProperty = function( propName ){
+		var propStr = this.containerCss( propName );
+		var prop = this.parse( propName, propStr );
+		return prop;
+	};
+
+	$$.styfn.containerPropertyAsString = function( propName ){
+		var prop = this.containerProperty( propName );
+
+		if( prop ){
+			return prop.strValue;
+		}
+	};
+
+	// create a new context from the specified selector string and switch to that context
+	$$.styfn.selector = function( selectorStr ){
+		// "core" is a special case and does not need a selector
+		var selector = selectorStr === "core" ? null : new $$.Selector( selectorStr );
+
+		var i = this.length++; // new context means new index
+		this[i] = {
+			selector: selector,
+			properties: []
+		};
+
+		return this; // chaining
+	};
+
+	// add one or many css rules to the current context
+	$$.styfn.css = function(){
+		var args = arguments;
+
+		switch( args.length ){
+		case 1:
+			var map = args[0];
+
+			for( var i = 0; i < $$.style.properties.length; i++ ){
+				var prop = $$.style.properties[i];
+				var mapVal = map[ prop.name ];
+
+				if( mapVal === undefined ){
+					mapVal = map[ $$.util.dash2camel(prop.name) ];
+				}
+
+				if( mapVal !== undefined ){
+					this.cssRule( prop.name, mapVal );
+				}
+			}
+
+			break;
+
+		case 2:
+			this.cssRule( args[0], args[1] );
+			break;
+
+		default:
+			break; // do nothing if args are invalid
+		}
+
+		return this; // chaining
+	};
+
+	// add a single css rule to the current context
+	$$.styfn.cssRule = function( name, value ){
+		// name-value pair
+		var property = this.parse( name, value );
+
+		// add property to current context if valid
+		if( property ){
+			var i = this.length - 1;
+			this[i].properties.push( property );
+
+			// add to core style if necessary
+			var currentSelectorIsCore = !this[i].selector;
+			if( currentSelectorIsCore ){
+				this._private.coreStyle[ property.name ] = property;
+			}
+		}
+
+		return this; // chaining
+	};
+
+	// apply a property to the style (for internal use)
+	// returns whether application was successful
+	//
+	// now, this function flattens the property, and here's how:
+	//
+	// for parsedProp:{ bypass: true, deleteBypass: true }
+	// no property is generated, instead the bypass property in the
+	// element's style is replaced by what's pointed to by the `bypassed`
+	// field in the bypass property (i.e. restoring the property the
+	// bypass was overriding)
+	//
+	// for parsedProp:{ mapped: truthy }
+	// the generated flattenedProp:{ mapping: prop }
+	// 
+	// for parsedProp:{ bypass: true }
+	// the generated flattenedProp:{ bypassed: parsedProp } 
+	$$.styfn.applyParsedProperty = function( ele, parsedProp, context ){
+		parsedProp = $$.util.clone( parsedProp ); // copy b/c the same parsedProp may be applied to many elements, BUT
+		// the instances put in each element should be unique to avoid overwriting other the lists of other elements
+
+		var prop = parsedProp;
+		var style = ele._private.style;
+		var fieldVal, flatProp;
+		var type = $$.style.properties[ prop.name ].type;
+		var propIsBypass = prop.bypass;
+		var origProp = style[ prop.name ];
+		var origPropIsBypass = origProp && origProp.bypass;
+
+		// can't apply auto to width or height unless it's a parent node
+		if( (parsedProp.name === "height" || parsedProp.name === "width") && parsedProp.value === "auto" && ele.isNode() && !ele.isParent() ){
+			return false;
+		}
+
+		// check if we need to delete the current bypass
+		if( propIsBypass && prop.deleteBypass ){ // then this property is just here to indicate we need to delete
+			var currentProp = style[ prop.name ];
+
+			// can only delete if the current prop is a bypass and it points to the property it was overriding
+			if( !currentProp ){
+				return true; // property is already not defined
+			} else if( currentProp.bypass && currentProp.bypassed ){ // then replace the bypass property with the original
+				
+				// because the bypassed property was already applied (and therefore parsed), we can just replace it (no reapplying necessary)
+				style[ prop.name ] = currentProp.bypassed;
+				return true;
+			
+			} else {
+				return false; // we're unsuccessful deleting the bypass
+			}
+		}
+
+		// put the property in the style objects
+		switch( prop.mapped ){ // flatten the property if mapped
+		case $$.style.types.mapData:
+			fieldVal = ele._private.data[ prop.field ];
+			if( !$$.is.number(fieldVal) ){ return false; } // it had better be a number
+
+			var percent = (fieldVal - prop.fieldMin) / (prop.fieldMax - prop.fieldMin);
+
+			if( type.color ){
+				var r1 = prop.valueMin[0];
+				var r2 = prop.valueMax[0];
+				var g1 = prop.valueMin[1];
+				var g2 = prop.valueMax[1];
+				var b1 = prop.valueMin[2];
+				var b2 = prop.valueMax[2];
+				var a1 = prop.valueMin[3] == null ? 1 : prop.valueMin[3];
+				var a2 = prop.valueMax[3] == null ? 1 : prop.valueMax[3];
+
+				var clr = [
+					Math.round( r1 + (r2 - r1)*percent ),
+					Math.round( g1 + (g2 - g1)*percent ),
+					Math.round( b1 + (b2 - b1)*percent ),
+					Math.round( a1 + (a2 - a1)*percent )
+				];
+
+				flatProp = { // colours are simple, so just create the flat property instead of expensive string parsing
+					bypass: prop.bypass, // we're a bypass if the mapping property is a bypass
+					name: prop.name,
+					value: clr,
+					strValue: [ "rgba(", clr[0], ", ", clr[1], ", ", clr[2], ", ", clr[3] , ")" ].join("") // fake it til you make it
+				};
+			
+			} else if( type.number ){
+				var calcValue = prop.valueMin + (prop.valueMax - prop.valueMin) * percent;
+				flatProp = this.parse( prop.name, calcValue, prop.bypass );
+			
+			} else {
+				return false; // can only map to colours and numbers
+			}
+
+			if( !flatProp ){ // if we can't flatten the property, then use the origProp so we still keep the mapping itself
+				flatProp = this.parse( prop.name, origProp.strValue, prop.bypass);
+			} 
+
+			flatProp.mapping = prop; // keep a reference to the mapping
+			prop = flatProp; // the flattened (mapped) property is the one we want
+
+			break;
+
+		case $$.style.types.data: // direct mapping
+			fieldVal = eval('ele._private.data.' + prop.field );
+
+			flatProp = this.parse( prop.name, fieldVal, prop.bypass );
+			if( !flatProp ){ // if we can't flatten the property, then use the origProp so we still keep the mapping itself
+				flatProp = this.parse( prop.name, origProp.strValue, prop.bypass);
+			} 
+
+			flatProp.mapping = prop; // keep a reference to the mapping
+			prop = flatProp; // the flattened (mapped) property is the one we want
+			break;
+
+		case undefined:
+			break; // just set the property
+
+		default: 
+			return false; // danger, will robinson
+		}
+
+		// if the property is a bypass property, then link the resultant property to the original one
+		if( propIsBypass ){
+			if( origPropIsBypass ){ // then this bypass overrides the existing one
+				prop.bypassed = origProp.bypassed; // steal bypassed prop from old bypass
+			} else { // then link the orig prop to the new bypass
+				prop.bypassed = origProp;
+			}
+
+			style[ prop.name ] = prop; // and set
+		
+		} else { // prop is not bypass
+			var prevProp;
+
+			if( origPropIsBypass ){ // then keep the orig prop (since it's a bypass) and link to the new prop
+				prevProp = origProp.bypassed;
+				
+				origProp.bypassed = prop;
+			} else { // then just replace the old prop with the new one
+				prevProp = style[ prop.name ];
+
+				style[ prop.name ] = prop; 
+			}
+
+			if( prevProp && prevProp.mapping && prop.mapping && prevProp.context === context ){
+				prevProp = prevProp.prev;
+			}
+
+			if( prevProp && prevProp !== prop ){
+				prop.prev = prevProp;
+			}
+		}
+
+		prop.context = context;
+
+		return true;
+	};
+
+	$$.styfn.rollBackContext = function( ele, context ){
+		for( var j = 0; j < context.properties.length; j++ ){ // for each prop
+			var prop = context.properties[j];
+			var eleProp = ele._private.style[ prop.name ];
+
+			// because bypasses do not store prevs, look at the bypassed property
+			if( eleProp.bypassed ){
+				eleProp = eleProp.bypassed;
+			}
+
+			var first = true;
+			var lastEleProp;
+			var l = 0;
+			while( eleProp.prev ){
+				var prev = eleProp.prev;
+
+				if( eleProp.context === context ){
+
+					if( first ){
+						ele._private.style[ prop.name ] = prev;
+					} else if( lastEleProp ){
+						lastEleProp.prev = prev;
+					}
+					
+				}
+
+				lastEleProp = eleProp;
+				eleProp = prev;
+				first = false;
+				l++;
+
+				// in case we have a problematic prev list
+				// if( l >= 100 ){
+				// 	debugger;
+				// }
+			}
+		}
+	};
+
+
+	// (potentially expensive calculation)
+	// apply the style to the element based on
+	// - its bypass
+	// - what selectors match it
+	$$.styfn.apply = function( eles ){
+		var self = this;
+
+		for( var ie = 0; ie < eles.length; ie++ ){
+			var ele = eles[ie];
+
+			if( self._private.newStyle ){
+				ele._private.styleCxts = [];
+				ele._private.style = {};
+			}
+
+			// apply the styles
+			for( var i = 0; i < this.length; i++ ){
+				var context = this[i];
+				var contextSelectorMatches = context.selector && context.selector.filter( ele ).length > 0; // NB: context.selector may be null for "core"
+				var props = context.properties;
+
+				if( contextSelectorMatches ){ // then apply its properties
+
+					// apply the properties in the context
+					
+					for( var j = 0; j < props.length; j++ ){ // for each prop
+						var prop = props[j];
+
+						//if(prop.mapped) debugger;
+
+						if( !ele._private.styleCxts[i] || prop.mapped ){
+							this.applyParsedProperty( ele, prop, context );
+						}
+					}
+
+					// keep a note that this context matches
+					ele._private.styleCxts[i] = context;
+				} else {
+
+					// roll back style cxts that don't match now
+					if( ele._private.styleCxts[i] ){
+						this.rollBackContext( ele, context );
+					}
+
+					delete ele._private.styleCxts[i];
+				}
+			} // for context
+
+		} // for elements
+
+		self._private.newStyle = false;
+	};
+
+	// updates the visual style for all elements (useful for manual style modification after init)
+	$$.styfn.update = function(){
+		var cy = this._private.cy;
+		var eles = cy.elements();
+
+		eles.updateStyle();
+	};
+
+	// gets the rendered style for an element
+	$$.styfn.getRenderedStyle = function( ele ){
+		var ele = ele[0]; // insure it's an element
+
+		if( ele ){
+			var rstyle = {};
+			var style = ele._private.style;
+			var cy = this._private.cy;
+			var zoom = cy.zoom();
+
+			for( var i = 0; i < $$.style.properties.length; i++ ){
+				var prop = $$.style.properties[i];
+				var styleProp = style[ prop.name ];
+
+				if( styleProp ){
+					var val = styleProp.unitless ? styleProp.strValue : (styleProp.pxValue * zoom) + "px";
+					rstyle[ prop.name ] = val;
+					rstyle[ $$.util.dash2camel(prop.name) ] = val;
+				}
+			}
+
+			return rstyle;
+		}
+	};
+
+	// gets the raw style for an element
+	$$.styfn.getRawStyle = function( ele ){
+		var ele = ele[0]; // insure it's an element
+
+		if( ele ){
+			var rstyle = {};
+			var style = ele._private.style;
+
+			for( var i = 0; i < $$.style.properties.length; i++ ){
+				var prop = $$.style.properties[i];
+				var styleProp = style[ prop.name ];
+
+				if( styleProp ){
+					rstyle[ prop.name ] = styleProp.strValue;
+					rstyle[ $$.util.dash2camel(prop.name) ] = styleProp.strValue;
+				}
+			}
+
+			return rstyle;
+		}
+	};
+
+	// gets the value style for an element (useful for things like animations)
+	$$.styfn.getValueStyle = function( ele ){
+		var rstyle, style;
+
+		if( $$.is.element(ele) ){
+			rstyle = {};
+			style = ele._private.style;		
+		} else {
+			rstyle = {};
+			style = ele; // just passed the style itself
+		}
+
+		if( style ){
+			for( var i = 0; i < $$.style.properties.length; i++ ){
+				var prop = $$.style.properties[i];
+				var styleProp = style[ prop.name ] || style[ $$.util.dash2camel(prop.name) ];
+
+				if( styleProp !== undefined && !$$.is.plainObject( styleProp ) ){ // then make a prop of it
+					styleProp = this.parse(prop.name, styleProp);
+				}
+
+				if( styleProp ){
+					var val = styleProp.value === undefined ? styleProp : styleProp.value;
+
+					rstyle[ prop.name ] = val;
+					rstyle[ $$.util.dash2camel(prop.name) ] = val;
+				}
+			}
+		}
+
+		return rstyle;
+	};
+
+	// just update the functional properties (i.e. mappings) in the elements'
+	// styles (less expensive than recalculation)
+	$$.styfn.updateFunctionalProperties = function( eles ){
+		for( var i = 0; i < eles.length; i++ ){ // for each ele
+			var ele = eles[i];
+			var style = ele._private.style;
+
+			for( var j = 0; j < $$.style.properties.length; j++ ){ // for each prop
+				var prop = $$.style.properties[j];
+				var propInStyle = style[ prop.name ];
+
+				if( propInStyle && propInStyle.mapping ){
+					var mapping = propInStyle.mapping;
+					this.applyParsedProperty( ele, mapping ); // reapply the mapping property
+				}
+			}
+		}
+	};
+
+	// bypasses are applied to an existing style on an element, and just tacked on temporarily
+	// returns true iff application was successful for at least 1 specified property
+	$$.styfn.applyBypass = function( eles, name, value ){
+		var props = [];
+		
+		// put all the properties (can specify one or many) in an array after parsing them
+		if( name === "*" || name === "**" ){ // apply to all property names
+
+			if( value !== undefined ){
+				for( var i = 0; i < $$.style.properties.length; i++ ){
+					var prop = $$.style.properties[i];
+					var name = prop.name;
+
+					var parsedProp = this.parse(name, value, true);
+					
+					if( parsedProp ){
+						props.push( parsedProp );
+					}
+				}
+			}
+
+		} else if( $$.is.string(name) ){ // then parse the single property
+			var parsedProp = this.parse(name, value, true);
+
+			if( parsedProp ){
+				props.push( parsedProp );
+			}
+		} else if( $$.is.plainObject(name) ){ // then parse each property
+			var specifiedProps = name;
+
+			for( var i = 0; i < $$.style.properties.length; i++ ){
+				var prop = $$.style.properties[i];
+				var name = prop.name;
+				var value = specifiedProps[ name ];
+
+				if( value === undefined ){ // try camel case name too
+					value = specifiedProps[ $$.util.dash2camel(name) ];
+				}
+
+				if( value !== undefined ){
+					var parsedProp = this.parse(name, value, true);
+					
+					if( parsedProp ){
+						props.push( parsedProp );
+					}
+				}
+			}
+		} else { // can't do anything without well defined properties
+			return false;
+		}
+
+		// we've failed if there are no valid properties
+		if( props.length === 0 ){ return false; }
+
+		// now, apply the bypass properties on the elements
+		var ret = false; // return true if at least one succesful bypass applied
+		for( var i = 0; i < eles.length; i++ ){ // for each ele
+			var ele = eles[i];
+
+			for( var j = 0; j < props.length; j++ ){ // for each prop
+				var prop = props[j];
+
+				ret = this.applyParsedProperty( ele, prop ) || ret;
+			}
+		}
+
+		return ret;
+	};
+
+	$$.styfn.removeAllBypasses = function( eles ){
+		for( var i = 0; i < $$.style.properties.length; i++ ){
+			var prop = $$.style.properties[i];
+			var name = prop.name;
+			var value = ""; // empty => remove bypass
+
+			var parsedProp = this.parse(name, value, true);
+
+			for( var j = 0; j < eles.length; j++ ){
+				var ele = eles[j];
+				this.applyParsedProperty(ele, parsedProp);
+			}
+		}
+	};
+
+
+})( cytoscape, typeof window === 'undefined' ? null : window );
+
+;(function($$){
+
+	var defaults = {
+		showOverlay: true,
+		hideEdgesOnViewport: false
+	};
+	
+	var origDefaults = $$.util.copy( defaults );
+
+	$$.defaults = function( opts ){
+		defaults = $$.util.extend({}, origDefaults, opts);
+	};
+
+	$$.fn.core = function( fnMap, options ){
+		for( var name in fnMap ){
+			var fn = fnMap[name];
+			$$.Core.prototype[ name ] = fn;
+		}
+	};
+	
+	$$.Core = function( opts ){
+		if( !(this instanceof $$.Core) ){
+			return new $$.Core(opts);
+		}
+		var cy = this;
+
+		opts = $$.util.extend({}, defaults, opts);
+
+		var container = opts.container;
+		var reg = $$.getRegistrationForInstance(cy, container);
+		if( reg && reg.cy ){ 
+			reg.domElement.innerHTML = '';
+			reg.cy.notify({ type: 'destroy' }); // destroy the renderer
+
+			$$.removeRegistrationForInstance(reg.cy, reg.domElement);
+		} 
+
+		reg = $$.registerInstance( cy, container );
+		var readies = reg.readies;
+
+		var options = opts;
+		options.layout = $$.util.extend( { name: typeof window === 'undefined' ? "null" : "grid" }, options.layout );
+		options.renderer = $$.util.extend( { name: typeof window === 'undefined' ? "null" : "canvas" }, options.renderer );
+		
+		// TODO determine whether we need a check like this even though we allow running headless now
+		// 
+		// if( !$$.is.domElement(options.container) ){
+		// 	$$.util.error("Cytoscape.js must be called on an element");
+		// 	return;
+		// }
+		
+		this._private = {
+			ready: false, // whether ready has been triggered
+			instanceId: reg.id, // the registered instance id
+			options: options, // cached options
+			elements: [], // array of elements
+			id2index: {}, // element id => index in elements array
+			listeners: [], // list of listeners
+			aniEles: [], // array of elements being animated
+			scratch: {}, // scratch object for core
+			layout: null,
+			renderer: null,
+			notificationsEnabled: true, // whether notifications are sent to the renderer
+			minZoom: 1e-50,
+			maxZoom: 1e50,
+			zoomEnabled: options.zoomEnabled === undefined ? true : options.zoomEnabled,
+			panEnabled: options.panEnabled === undefined ? true : options.panEnabled,
+			boxSelectionEnabled: options.boxSelectionEnabled === undefined ? true : options.boxSelectionEnabled,
+			zoom: $$.is.number(options.zoom) ? options.zoom : 1,
+			pan: {
+				x: $$.is.plainObject(options.pan) && $$.is.number(options.pan.x) ? options.pan.x : 0,
+				y: $$.is.plainObject(options.pan) && $$.is.number(options.pan.y) ? options.pan.y : 0,
+			},
+			hasCompoundNodes: false
+		};
+
+		// init zoom bounds
+		if( $$.is.number(options.minZoom) && $$.is.number(options.maxZoom) && options.minZoom < options.maxZoom ){
+			this._private.minZoom = options.minZoom;
+			this._private.maxZoom = options.maxZoom;
+		} else if( $$.is.number(options.minZoom) && options.maxZoom === undefined ){
+			this._private.minZoom = options.minZoom;
+		} else if( $$.is.number(options.maxZoom) && options.minZoom === undefined ){
+			this._private.maxZoom = options.maxZoom;
+		}
+
+		// init style
+		this._private.style = $$.is.stylesheet(options.style) ? options.style.generateStyle(this) : ( $$.is.array(options.style) ? $$.style.fromJson(this, options.style) : new $$.Style( cy ) );
+
+		cy.initRenderer( $$.util.extend({
+			showOverlay: options.showOverlay,
+			hideEdgesOnViewport: options.hideEdgesOnViewport
+		}, options.renderer) );
+
+		// initial load
+		cy.load(options.elements, function(){ // onready
+			cy.startAnimationLoop();
+			cy._private.ready = true;
+
+			// if a ready callback is specified as an option, the bind it
+			if( $$.is.fn( options.ready ) ){
+				cy.bind("ready", options.ready);
+			}
+
+			// bind all the ready handlers registered before creating this instance
+			for( var i = 0; i < readies.length; i++ ){
+				var fn = readies[i];
+				cy.bind("ready", fn);
+			}
+			reg.readies = []; // clear b/c we've bound them all and don't want to keep it around in case a new core uses the same div etc
+			
+			cy.trigger("ready");
+		}, options.done);
+	};
+
+	$$.corefn = $$.Core.prototype; // short alias
+	
+
+	$$.fn.core({
+		ready: function(){
+			return this._private.ready;
+		},
+
+		registered: function(){
+			if( this._private && this._private.instanceId != null ){
+				return true;
+			} else {
+				return false;
+			}
+		},
+
+		registeredId: function(){
+			return this._private.instanceId;
+		},
+
+		getElementById: function( id ){
+			var index = this._private.id2index[ id ];
+			if( index !== undefined ){
+				return this._private.elements[ index ];
+			}
+
+			// worst case, return an empty collection
+			return new $$.Collection( this );
+		},
+
+		hasCompoundNodes: function(){
+			return this._private.hasCompoundNodes;
+		},
+
+		addToPool: function( eles ){
+			var elements = this._private.elements;
+			var id2index = this._private.id2index;
+
+			for( var i = 0; i < eles.length; i++ ){
+				var ele = eles[i];
+
+				var id = ele._private.data.id;
+				var index = id2index[ id ];
+				var alreadyInPool = index !== undefined;
+
+				if( !alreadyInPool ){
+					index = elements.length;
+					elements.push( ele )
+					id2index[ id ] = index;
+					ele._private.index = index;
+				}
+			}
+
+			return this; // chaining
+		},
+
+		removeFromPool: function( eles ){
+			var elements = this._private.elements;
+			var id2index = this._private.id2index;
+
+			for( var i = 0; i < eles.length; i++ ){
+				var ele = eles[i];
+
+				var id = ele._private.data.id;
+				var index = id2index[ id ];
+				var inPool = index !== undefined;
+
+				if( inPool ){
+					delete this._private.id2index[ id ];
+					elements.splice(index, 1);
+
+					// adjust the index of all elements past this index
+					for( var j = index; j < elements.length; j++ ){
+						var jid = elements[j]._private.data.id;
+						id2index[ jid ]--;
+					}
+				}
+			}
+		},
+
+		container: function(){
+			return this._private.options.container;
+		},
+
+		options: function(){
+			return $$.util.copy( this._private.options );
+		},
+		
+		json: function(params){
+			var json = {};
+			var cy = this;
+			
+			json.elements = {};
+			cy.elements().each(function(i, ele){
+				var group = ele.group();
+				
+				if( !json.elements[group] ){
+					json.elements[group] = [];
+				}
+				
+				json.elements[group].push( ele.json() );
+			});
+
+			json.style = cy.style();
+			json.scratch = cy.scratch();
+			json.zoomEnabled = cy._private.zoomEnabled;
+			json.panEnabled = cy._private.panEnabled;
+			json.layout = cy._private.options.layout;
+			json.renderer = cy._private.options.renderer;
+			
+			return json;
+		}
+		
+	});	
+	
+})( cytoscape );
+
+(function($$, window){
+	
+	$$.fn.core({
+		add: function(opts){
+			
+			var elements;
+			var cy = this;
+			
+			// add the elements
+			if( $$.is.elementOrCollection(opts) ){
+				var eles = opts;
+				var jsons = [];
+
+				for( var i = 0; i < eles.length; i++ ){
+					var ele = eles[i];
+					jsons.push( ele.json() );
+				}
+
+				elements = new $$.Collection( cy, jsons );
+			}
+			
+			// specify an array of options
+			else if( $$.is.array(opts) ){
+				var jsons = opts;
+
+				elements = new $$.Collection(cy, jsons);
+			}
+			
+			// specify via opts.nodes and opts.edges
+			else if( $$.is.plainObject(opts) && ($$.is.array(opts.nodes) || $$.is.array(opts.edges)) ){
+				var elesByGroup = opts;
+				var jsons = [];
+
+				var grs = ["nodes", "edges"];
+				for( var i = 0, il = grs.length; i < il; i++ ){
+					var group = grs[i];
+					var elesArray = elesByGroup[group];
+
+					if( $$.is.array(elesArray) ){
+
+						for( var j = 0, jl = elesArray.length; j < jl; j++ ){
+							var json = elesArray[j];
+
+							var mjson = $$.util.extend({}, json, { group: group });
+							jsons.push( mjson );
+						}
+					} 
+				}
+
+				elements = new $$.Collection(cy, jsons);
+			}
+			
+			// specify options for one element
+			else {
+				var json = opts;
+				elements = (new $$.Element( cy, json )).collection();
+			}
+			
+			return elements.filter(function(){
+				return !this.removed();
+			});
+		},
+		
+		remove: function(collection){
+			if( $$.is.elementOrCollection(collection) ){
+				collection = collection;
+			} else if( $$.is.string(collection) ){
+				var selector = collection;
+				collection = this.$( selector );
+			}
+			
+			return collection.remove();
+		},
+		
+		load: function(elements, onload, ondone){
+			var cy = this;
+			
+			// remove old elements
+			var oldEles = cy.elements();
+			if( oldEles.length > 0 ){
+				oldEles.remove();
+			}
+
+			cy.notifications(false);
+			
+			var processedElements = [];
+
+			if( elements != null ){
+				if( $$.is.plainObject(elements) || $$.is.array(elements) ){
+					cy.add( elements );
+				} 
+			}
+			
+			function callback(){				
+				cy.one("layoutready", function(e){
+					cy.notifications(true);
+					cy.trigger(e); // we missed this event by turning notifications off, so pass it on
+
+					cy.notify({
+						type: "load",
+						collection: cy.elements(),
+						style: cy._private.style
+					});
+
+					cy.one("load", onload);
+					cy.trigger("load");
+				}).one("layoutstop", function(){
+					cy.one("done", ondone);
+					cy.trigger("done");
+				});
+				
+				cy.layout( cy._private.options.layout );
+
+			}
+
+			// TODO remove timeout when chrome reports dimensions onload properly
+			// TODO investigate dimensions reporting issue (also affects safari/ios)
+			if( true || window && window.chrome ){
+				setTimeout(function(){
+					callback();
+				}, 30);
+			} else {
+				callback();
+			}
+
+			return this;
+		}
+	});
+	
+})( cytoscape, typeof window === 'undefined' ? null : window );
+
+;(function($$){
+	
+	$$.fn.core({
+		
+		addToAnimationPool: function( eles ){
+			var cy = this;
+			var aniEles = cy._private.aniEles;
+			var aniElesHas = [];
+
+			for( var i = 0; i < aniEles.length; i++ ){
+				var id = aniEles[i]._private.data.id;
+				aniElesHas[ id ] = true;
+			}
+
+			for( var i = 0; i < eles.length; i++ ){
+				var ele = eles[i];
+				var id = ele._private.data.id;
+
+				if( !aniElesHas[id] ){
+					aniEles.push( ele );
+				} 
+			}
+		},
+
+		startAnimationLoop: function(){
+			var cy = this;
+			var stepDelay = 1000/60;
+			var useTimeout = false;
+			var useRequestAnimationFrame = true;
+			
+			// initialise the list
+			cy._private.aniEles = [];
+			
+			// TODO change this when standardised
+			var requestAnimationFrame = typeof window === 'undefined' ? function(){} : ( window.requestAnimationFrame || window.mozRequestAnimationFrame ||  
+				window.webkitRequestAnimationFrame || window.msRequestAnimationFrame );
+			
+			if( requestAnimationFrame == null || !useRequestAnimationFrame ){
+				requestAnimationFrame = function(fn){
+					window.setTimeout(function(){
+						fn(+new Date);
+					}, stepDelay);
+				};
+			}
+			
+			var containerDom = cy.container();
+			
+			function globalAnimationStep(){
+				function exec(){
+					requestAnimationFrame(function(now){
+						handleElements(now);
+						globalAnimationStep();
+					}, containerDom);
+				}
+				
+				if( useTimeout ){
+					setTimeout(function(){
+						exec();
+					}, stepDelay);
+				} else {
+					exec();
+				}
+			}
+			
+			globalAnimationStep(); // first call
+			
+			function handleElements(now){
+				now = +new Date;
+
+				var eles = cy._private.aniEles;
+				for( var e = 0; e < eles.length; e++ ){
+					var ele = eles[e];
+					
+					// we might have errors if we edit animation.queue and animation.current
+					// for ele (i.e. by stopping)
+					// try{
+
+						var current = ele._private.animation.current;
+						var queue = ele._private.animation.queue;
+						
+						// if nothing currently animating, get something from the queue
+						if( current.length === 0 ){
+							var q = queue;
+							var next = q.length > 0 ? q.shift() : null;
+							
+							if( next != null ){
+								next.callTime = +new Date; // was queued, so update call time
+								current.push( next );
+							}
+						}
+						
+						// step and remove if done
+						var completes = [];
+						for(var i = 0; i < current.length; i++){
+							var ani = current[i];
+							step( ele, ani, now );
+
+							if( current[i].done ){
+								completes.push( ani );
+								
+								// remove current[i]
+								current.splice(i, 1);
+								i--;
+							}
+						}
+						
+						// call complete callbacks
+						for( var i = 0; i < completes.length; i++ ){
+							var ani = completes[i];
+							var complete = ani.params.complete;
+
+							if( $$.is.fn(complete) ){
+								complete.apply( ele, [ now ] );
+							}
+						}
+						
+					// } catch(e){
+					// 	// do nothing
+					// }
+					
+				} // each element
+				
+				
+				// notify renderer
+				if( eles.length > 0 ){
+					cy.notify({
+						type: "draw",
+						collection: eles
+					});
+				}
+				
+				// remove elements from list of currently animating if its queues are empty
+				for( var i = 0; i < eles.length; i++ ){
+					var ele = eles[i];
+					var queue = ele._private.animation.queue;
+					var current = ele._private.animation.current;
+					var keepEle = current.length > 0 || queue.length > 0;
+					
+					if( !keepEle ){ // then remove from the array
+						eles.splice(i, 1);
+						i--;
+					}
+				}
+
+			} // handleElements
+				
+			function step( self, animation, now ){
+				var style = cy._private.style;
+				var properties = animation.properties;
+				var params = animation.params;
+				var startTime = animation.callTime;
+				var percent;
+				
+				if( animation.duration === 0 ){
+					percent = 1;
+				} else {
+					percent = Math.min(1, (now - startTime)/animation.duration);
+				}
+
+				if( percent < 0 ){
+					percent = 0;
+				} else if( percent > 1 ){
+					percent = 1;
+				}
+				
+				if( properties.delay == null ){ // then update the position
+					var startPos = animation.startPosition;
+					var endPos = properties.position;
+					var pos = self._private.position;
+					if( endPos ){
+						if( valid( startPos.x, endPos.x ) ){
+							pos.x = ease( startPos.x, endPos.x, percent );
+						}
+
+						if( valid( startPos.y, endPos.y ) ){
+							pos.y = ease( startPos.y, endPos.y, percent );
+						}
+					}
+
+					if( properties.css ){
+						var props = $$.style.properties;
+						for( var i = 0; i < props.length; i++ ){
+							var name = props[i].name;
+							var end = properties.css[ name ];
+
+							if( end !== undefined ){
+								var start = animation.startStyle[ name ];
+								var easedVal = ease( start, end, percent );
+								
+								style.applyBypass( self, name, easedVal );
+							}
+						} // for props
+					} // if 
+				}
+				
+				if( $$.is.fn(params.step) ){
+					params.step.apply( self, [ now ] );
+				}
+				
+				if( percent >= 1 ){
+					animation.done = true;
+				}
+				
+				return percent;
+			}
+			
+			function valid(start, end){
+				if( start == null || end == null ){
+					return false;
+				}
+				
+				if( $$.is.number(start) && $$.is.number(end) ){
+					return true;
+				} else if( (start) && (end) ){
+					return true;
+				}
+				
+				return false;
+			}
+			
+			function ease(start, end, percent){
+				if( percent < 0 ){
+					percent = 0;
+				} else if( percent > 1 ){
+					percent = 1;
+				}
+
+				if( $$.is.number(start) && $$.is.number(end) ){
+					return start + (end - start) * percent;
+
+				} else if( $$.is.number(start[0]) && $$.is.number(end[0]) ){ // then assume a colour
+					var c1 = start;
+					var c2 = end;
+
+					function ch(ch1, ch2){
+						var diff = ch2 - ch1;
+						var min = ch1;
+						return Math.round( percent * diff + min );
+					}
+					
+					var r = ch( c1[0], c2[0] );
+					var g = ch( c1[1], c2[1] );
+					var b = ch( c1[2], c2[2] );
+					
+					return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+				}
+				
+				return undefined;
+			}
+			
+		}
+		
+	});
+	
+})( cytoscape );
+
+
+	
+		
+
+;(function($$){
+	
+	$$.fn.core({
+		data: $$.define.data({
+			field: "data",
+			bindingEvent: "data",
+			allowBinding: true,
+			allowSetting: true,
+			settingEvent: "data",
+			settingTriggersEvent: true,
+			triggerFnName: "trigger",
+			allowGetting: true
+		}),
+
+		removeData: $$.define.removeData({
+			field: "data",
+			event: "data",
+			triggerFnName: "trigger",
+			triggerEvent: true
+		}),
+
+		batchData: $$.define.batchData({
+			field: "data",
+			event: "data",
+			triggerFnName: "trigger",
+			immutableKeys: {
+				"id": true,
+				"source": true,
+				"target": true,
+				"parent": true
+			},
+			updateMappers: true
+		}),
+
+		scratch: $$.define.data({
+			field: "scratch",
+			allowBinding: false,
+			allowSetting: true,
+			settingTriggersEvent: false,
+			allowGetting: true
+		}),
+
+		removeScratch: $$.define.removeData({
+			field: "scratch",
+			triggerEvent: false
+		}),
+	});
+	
+})( cytoscape );
+
+;(function($$){
+
+	$$.fn.core({
+		on: $$.define.on(), // .on( events [, selector] [, data], handler)
+		one: $$.define.on({ unbindSelfOnTrigger: true }),
+		once: $$.define.on({ unbindAllBindersOnTrigger: true }),
+		off: $$.define.off(), // .off( events [, selector] [, handler] )
+		trigger: $$.define.trigger(), // .trigger( events [, extraParams] )
+	});
+
+	// aliases for those folks who like old stuff:
+	$$.corefn.bind = $$.corefn.on;
+	$$.corefn.unbind = $$.corefn.off;
+
+	// add event aliases like .click()
+	$$.define.event.aliasesOn( $$.corefn );
+		
+})( cytoscape );
+
+;(function($$){
+	
+	$$.fn.core({
+		
+		png: function(){
+			var cy = this;
+			var renderer = this._private.renderer;
+
+			return renderer.png();			
+		}
+		
+	});
+	
+})( cytoscape );
+
+;(function($$){
+	
+	$$.fn.core({
+		
+		layout: function( params ){
+			var cy = this;
+			
+			if( this._private.layoutRunning ){ // don't run another layout if one's already going
+				return this;
+			}
+
+			// if no params, use the previous ones
+			if( params == null ){
+				params = this._private.options.layout;
+			}
+			
+			this.initLayout( params );
+			
+			cy.trigger("layoutstart");
+			
+			this._private.layoutRunning = true;
+			this.one('layoutstop', function(){
+				this._private.layoutRunning = false;
+			});
+
+			this._private.layout.run();
+			
+			return this;
+			
+		},
+		
+		initLayout: function( options ){
+			if( options == null ){
+				$$.util.error("Layout options must be specified to run a layout");
+				return;
+			}
+			
+			if( options.name == null ){
+				$$.util.error("A `name` must be specified to run a layout");
+				return;
+			}
+			
+			var name = options.name;
+			var layoutProto = $$.extension("layout", name);
+			
+			if( layoutProto == null ){
+				$$.util.error("Can not apply layout: No such layout `%s` found; did you include its JS file?", name);
+				return;
+			}
+			
+			this._private.layout = new layoutProto( $$.util.extend({}, options, {
+				renderer: this._private.renderer,
+				cy: this
+			}) );
+			this._private.options.layout = options; // save options
+		}
+		
+	});
+	
+})( cytoscape );
+
+(function($$){
+	
+	$$.fn.core({
+		notify: function( params ){
+			if( !this._private.notificationsEnabled ){ return; } // exit on disabled
+			
+			var renderer = this.renderer();
+			var cy = this;
+			
+			// normalise params.collection 
+			if( $$.is.element(params.collection) ){ // make collection from element
+				var element = params.collection;
+				params.collection = new $$.Collection(cy, [ element ]);	
+			
+			} else if( $$.is.array(params.collection) ){ // make collection from elements array
+				var elements = params.collection;
+				params.collection = new $$.Collection(cy, elements);	
+			} 
+			
+			renderer.notify(params);
+		},
+		
+		notifications: function( bool ){
+			var p = this._private;
+			
+			if( bool === undefined ){
+				return p.notificationsEnabled;
+			} else {
+				p.notificationsEnabled = bool ? true : false;
+			}
+		},
+		
+		noNotifications: function( callback ){
+			this.notifications(false);
+			callback();
+			this.notifications(true);
+		}
+	});
+	
+})( cytoscape );
+
+;(function($$){
+	
+	$$.fn.core({
+		
+		renderTo: function( context, zoom, pan ){
+			var r = this._private.renderer;
+
+			r.renderTo( context, zoom, pan );
+		},
+
+		renderer: function(){
+			return this._private.renderer;
+		},
+		
+		initRenderer: function( options ){
+			var cy = this;
+
+			var rendererProto = $$.extension("renderer", options.name);
+			if( rendererProto == null ){
+				$$.util.error("Can not initialise: No such renderer `%s` found; did you include its JS file?", options.name);
+				return;
+			}
+			
+			this._private.renderer = new rendererProto(
+				$$.util.extend({}, options, {
+					cy: cy,
+					style: cy._private.style
+				})
+			);
+			
+			
+		}
+		
+	});	
+	
+})( cytoscape );
+
+;(function($$){
+	
+	$$.fn.core({
+
+		// get a collection
+		// - empty collection on no args
+		// - collection of elements in the graph on selector arg
+		// - guarantee a returned collection when elements or collection specified
+		collection: function( eles ){
+
+			if( $$.is.string(eles) ){
+				return this.$( eles );
+			} else if( $$.is.elementOrCollection(eles) ){
+				return eles.collection();
+			}
+
+			return new $$.Collection( this );
+		},
+		
+		nodes: function( selector ){
+			var nodes = this.$("node");
+
+			if( selector ){
+				return nodes.filter( selector );
+			} 
+
+			return nodes;
+		},
+		
+		edges: function( selector ){
+			var edges = this.$("edge");
+
+			if( selector ){
+				return edges.filter( selector );
+			}
+
+			return edges;
+		},
+			
+		// search the graph like jQuery
+		$: function( selector ){
+			var eles = new $$.Collection( this, this._private.elements );
+
+			if( selector ){
+				return eles.filter( selector );
+			}
+
+			return eles;
+		}
+		
+	});	
+
+	// aliases
+	$$.corefn.elements = $$.corefn.filter = $$.corefn.$;	
+	
+})( cytoscape );
+
+;(function($$){
+	
+	$$.fn.core({
+		
+		style: function(val){
+			return this._private.style;
+		}
+	});
+	
+})( cytoscape );
+
+
+;(function($$){
+	
+	$$.fn.core({
+		
+		panningEnabled: function( bool ){
+			if( bool !== undefined ){
+				this._private.panEnabled = bool ? true : false;
+			} else {
+				return this._private.panEnabled;
+			}
+			
+			return this; // chaining
+		},
+		
+		zoomingEnabled: function( bool ){
+			if( bool !== undefined ){
+				this._private.zoomEnabled = bool ? true : false;
+			} else {
+				return this._private.zoomEnabled;
+			}
+			
+			return this; // chaining
+		},
+
+		boxSelectionEnabled: function( bool ){
+			if( bool !== undefined ){
+				this._private.boxSelectionEnabled = bool ? true : false;
+			} else {
+				return this._private.boxSelectionEnabled;
+			}
+			
+			return this; // chaining
+		},
+		
+		pan: function(){
+			var args = arguments;
+			var pan = this._private.pan;
+			var dim, val, dims, x, y;
+
+			switch( args.length ){
+			case 0: // .pan()
+				return pan;
+
+			case 1: 
+
+				if( !this._private.panEnabled ){
+					return this;
+
+				} else if( $$.is.string( args[0] ) ){ // .pan("x")
+					dim = args[0];
+					return pan[ dim ];
+
+				} else if( $$.is.plainObject( args[0] ) ) { // .pan({ x: 0, y: 100 })
+					dims = args[0];
+					x = dims.x;
+					y = dims.y;
+
+					if( $$.is.number(x) ){
+						pan.x = x;
+					}
+
+					if( $$.is.number(y) ){
+						pan.y = y;
+					}
+
+					this.trigger("pan");
+				}
+				break;
+
+			case 2: // .pan("x", 100)
+				if( !this._private.panEnabled ){
+					return this;
+				}
+
+				dim = args[0];
+				val = args[1];
+
+				if( (dim === "x" || dim === "y") && $$.is.number(val) ){
+					pan[dim] = val;
+				}
+
+				this.trigger("pan");
+				break;
+
+			default:
+				break; // invalid
+			}
+
+			this.notify({ // notify the renderer that the viewport changed
+				type: "viewport"
+			});
+
+			return this; // chaining
+		},
+		
+		panBy: function(params){
+			var args = arguments;
+			var pan = this._private.pan;
+			var dim, val, dims, x, y;
+
+			if( !this._private.panEnabled ){
+				return this;
+			}
+
+			switch( args.length ){
+			case 1: 
+
+				if( $$.is.plainObject( args[0] ) ) { // .panBy({ x: 0, y: 100 })
+					dims = args[0];
+					x = dims.x;
+					y = dims.y;
+
+					if( $$.is.number(x) ){
+						pan.x += x;
+					}
+
+					if( $$.is.number(y) ){
+						pan.y += y;
+					}
+
+					this.trigger("pan");
+				}
+				break;
+
+			case 2: // .panBy("x", 100)
+				dim = args[0];
+				val = args[1];
+
+				if( (dim === "x" || dim === "y") && $$.is.number(val) ){
+					pan[dim] += val;
+				}
+
+				this.trigger("pan");
+				break;
+
+			default:
+				break; // invalid
+			}
+
+			this.notify({ // notify the renderer that the viewport changed
+				type: "viewport"
+			});
+
+			return this; // chaining
+		},
+		
+		fit: function( elements, padding ){
+			if( $$.is.number(elements) && padding === undefined ){ // elements is optional
+				padding = elements;
+				elements = undefined;
+			}
+
+			if( !this._private.panEnabled || !this._private.zoomEnabled ){
+				return this;
+			}
+
+			if( $$.is.string(elements) ){
+				var sel = elements;
+				elements = this.$( sel );
+			} else if( !$$.is.elementOrCollection(elements) ){
+				elements = this.elements();
+			}
+
+			var bb = elements.boundingBox();
+			var style = this.style();
+
+			var w = parseFloat( style.containerCss("width") );
+			var h = parseFloat( style.containerCss("height") );
+			var zoom;
+			padding = $$.is.number(padding) ? padding : 0;
+
+			if( !isNaN(w) && !isNaN(h) ){
+				zoom = this._private.zoom = Math.min( (w - 2*padding)/bb.w, (h - 2*padding)/bb.h );
+
+				// crop zoom
+				zoom = zoom > this._private.maxZoom ? this._private.maxZoom : zoom;
+				zoom = zoom < this._private.minZoom ? this._private.minZoom : zoom;
+
+				this._private.pan = { // now pan to middle
+					x: (w - zoom*( bb.x1 + bb.x2 ))/2,
+					y: (h - zoom*( bb.y1 + bb.y2 ))/2
+				};
+			}
+
+			this.trigger("pan zoom");
+
+			this.notify({ // notify the renderer that the viewport changed
+				type: "viewport"
+			});
+
+			return this; // chaining
+		},
+		
+		minZoom: function( zoom ){
+			if( zoom === undefined ){
+				return this._private.minZoom;
+			} else if( $$.is.number(zoom) ){
+				this._private.minZoom = zoom;
+			}
+
+			return this;
+		},
+
+		maxZoom: function( zoom ){
+			if( zoom === undefined ){
+				return this._private.maxZoom;
+			} else if( $$.is.number(zoom) ){
+				this._private.maxZoom = zoom;
+			}
+
+			return this;
+		},
+
+		zoom: function( params ){
+			var pos;
+			var zoom;
+
+			if( params === undefined ){ // then get the zoom
+				return this._private.zoom;
+
+			} else if( $$.is.number(params) ){ // then set the zoom
+				zoom = params;
+				pos = {
+					x: 0,
+					y: 0
+				};
+
+			} else if( $$.is.plainObject(params) ){ // then zoom about a point
+				zoom = params.level;
+
+				if( params.renderedPosition ){
+					var rpos = params.renderedPosition;
+					var p = this._private.pan;
+					var z = this._private.zoom;
+
+					pos = {
+						x: (rpos.x - p.x)/z,
+						y: (rpos.y - p.y)/z
+					};
+				} else if( params.position ){
+					pos = params.position;
+				}
+
+				if( pos && !this._private.panEnabled ){
+					return this; // panning disabled
+				}
+			}
+
+			if( !this._private.zoomEnabled ){
+				return this; // zooming disabled
+			}
+
+			if( !$$.is.number(zoom) || !$$.is.number(pos.x) || !$$.is.number(pos.y) ){
+				return this; // can't zoom with invalid params
+			}
+
+			// crop zoom
+			zoom = zoom > this._private.maxZoom ? this._private.maxZoom : zoom;
+			zoom = zoom < this._private.minZoom ? this._private.minZoom : zoom;
+
+			var pan1 = this._private.pan;
+			var zoom1 = this._private.zoom;
+			var zoom2 = zoom;
+			
+			var pan2 = {
+				x: -zoom2/zoom1 * (pos.x - pan1.x) + pos.x,
+				y: -zoom2/zoom1 * (pos.y - pan1.y) + pos.y
+			};
+
+			this._private.zoom = zoom;
+			this._private.pan = pan2;
+
+			var posChanged = pan1.x !== pan2.x || pan1.y !== pan2.y;
+			this.trigger("zoom" + (posChanged ? " pan" : "") );
+
+			this.notify({ // notify the renderer that the viewport changed
+				type: "viewport"
+			});
+
+			return this; // chaining
+		},
+		
+		// get the bounding box of the elements (in raw model position)
+		boundingBox: function( selector ){
+			var eles = this.$( selector );
+
+			return eles.boundingBox();
+		},
+
+		center: function(elements){
+			if( !this._private.panEnabled || !this._private.zoomEnabled ){
+				return this;
+			}
+
+			if( $$.is.string(elements) ){
+				var selector = elements;
+				elements = cy.elements( selector );
+			} else if( !$$.is.elementOrCollection(elements) ){
+				elements = cy.elements();
+			}
+
+			var bb = elements.boundingBox();
+			var style = this.style();
+			var w = parseFloat( style.containerCss("width") );
+			var h = parseFloat( style.containerCss("height") );
+			var zoom = this._private.zoom;
+
+			this.pan({ // now pan to middle
+				x: (w - zoom*( bb.x1 + bb.x2 ))/2,
+				y: (h - zoom*( bb.y1 + bb.y2 ))/2
+			});
+			
+			this.trigger("pan");
+
+			this.notify({ // notify the renderer that the viewport changed
+				type: "viewport"
+			});
+
+			return this; // chaining
+		},
+		
+		reset: function(){
+			if( !this._private.panEnabled || !this._private.zoomEnabled ){
+				return this;
+			}
+
+			this.pan({ x: 0, y: 0 });
+
+			if( this._private.maxZoom > 1 && this._private.minZoom < 1 ){
+				this.zoom(1);
+			}
+
+			this.notify({ // notify the renderer that the viewport changed
+				type: "viewport"
+			});
+			
+			return this; // chaining
+		}
+	});	
+	
+})( cytoscape );
+
+;(function($$){
+	
+	// Use this interface to define functions for collections/elements.
+	// This interface is good, because it forces you to think in terms
+	// of the collections case (more than 1 element), so we don't need
+	// notification blocking nonsense everywhere.
+	//
+	// Other collection-*.js files depend on this being defined first.
+	// It's a trade off: It simplifies the code for Collection and 
+	// Element integration so much that it's worth it to create the
+	// JS dependency.
+	//
+	// Having this integration guarantees that we can call any
+	// collection function on an element and vice versa.
+	$$.fn.collection = $$.fn.eles = function( fnMap, options ){
+		for( var name in fnMap ){
+			var fn = fnMap[name];
+
+			$$.Collection.prototype[ name ] = fn;
+		}
+	};
+	
+	// factory for generating edge ids when no id is specified for a new element
+	var idFactory = {
+		prefix: {
+			nodes: "n",
+			edges: "e"
+		},
+		id: {
+			nodes: 0,
+			edges: 0
+		},
+		generate: function(cy, element, tryThisId){
+			var json = $$.is.element( element ) ? element._private : element;
+			var group = json.group;
+			var id = tryThisId != null ? tryThisId : this.prefix[group] + this.id[group];
+			
+			if( cy.getElementById(id).empty() ){
+				this.id[group]++; // we've used the current id, so move it up
+			} else { // otherwise keep trying successive unused ids
+				while( !cy.getElementById(id).empty() ){
+					id = this.prefix[group] + ( ++this.id[group] );
+				}
+			}
+			
+			return id;
+		}
+	};
+	
+	// Element
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// represents a node or an edge
+	$$.Element = function(cy, params, restore){
+		if( !(this instanceof $$.Element) ){
+			return new $$.Element(cy, params, restore);
+		}
+
+		var self = this;
+		restore = (restore === undefined || restore ? true : false);
+		
+		if( cy === undefined || params === undefined || !$$.is.core(cy) ){
+			$$.util.error("An element must have a core reference and parameters set");
+			return;
+		}
+		
+		// validate group
+		if( params.group !== "nodes" && params.group !== "edges" ){
+			$$.util.error("An element must be of type `nodes` or `edges`; you specified `" + params.group + "`");
+			return;
+		}
+		
+		// make the element array-like, just like a collection
+		this.length = 1;
+		this[0] = this;
+		
+		// NOTE: when something is added here, add also to ele.json()
+		this._private = {
+			cy: cy,
+			single: true, // indicates this is an element
+			data: params.data || {}, // data object
+			position: params.position || {}, // fields x, y, etc (could be 3d or radial coords; renderer decides)
+			autoWidth: undefined, // width and height of nodes calculated by the renderer when set to special "auto" value
+			autoHeight: undefined, 
+			listeners: [], // array of bound listeners
+			group: params.group, // string; "nodes" or "edges"
+			style: {}, // properties as set by the style
+			rstyle: {}, // properties for style sent from the renderer to the core
+			styleCxts: [], // applied style contexts from the styler
+			removed: true, // whether it's inside the vis; true if removed (set true here since we call restore)
+			selected: params.selected ? true : false, // whether it's selected
+			selectable: params.selectable === undefined ? true : ( params.selectable ? true : false ), // whether it's selectable
+			locked: params.locked ? true : false, // whether the element is locked (cannot be moved)
+			grabbed: false, // whether the element is grabbed by the mouse; renderer sets this privately
+			grabbable: params.grabbable === undefined ? true : ( params.grabbable ? true : false ), // whether the element can be grabbed
+			active: false, // whether the element is active from user interaction
+			classes: {}, // map ( className => true )
+			animation: { // object for currently-running animations
+				current: [],
+				queue: []
+			},
+			rscratch: {}, // object in which the renderer can store information
+			scratch: {}, // scratch objects
+			edges: [], // array of connected edges
+			children: [] // array of children
+		};
+		
+		// renderedPosition overrides if specified
+		if( params.renderedPosition ){
+			var rpos = params.renderedPosition;
+			var pan = cy.pan();
+			var zoom = cy.zoom();
+
+			this._private.position = {
+				x: (rpos.x - pan.x)/zoom,
+				y: (rpos.y - pan.y)/zoom
+			};
+		}
+		
+		if( $$.is.string(params.classes) ){
+			var classes = params.classes.split(/\s+/);
+			for( var i = 0, l = classes.length; i < l; i++ ){
+				var cls = classes[i];
+				if( !cls || cls === "" ){ continue; }
+
+				self._private.classes[cls] = true;
+			}
+		}
+		
+		if( restore === undefined || restore ){
+			this.restore();
+		}
+		
+	};
+
+	
+	// Collection
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// represents a set of nodes, edges, or both together
+	$$.Collection = function(cy, elements){
+		if( !(this instanceof $$.Collection) ){
+			return new $$.Collection(cy, elements);
+		}
+
+		if( cy === undefined || !$$.is.core(cy) ){
+			$$.util.error("A collection must have a reference to the core");
+			return;
+		}
+		
+		var ids = {};
+		var uniqueElements = [];
+		var createdElements = false;
+		
+		if( !elements ){
+			elements = [];
+		} else if( elements.length > 0 && $$.is.plainObject( elements[0] ) && !$$.is.element( elements[0] ) ){
+			createdElements = true;
+
+			// make elements from json and restore all at once later
+			var eles = [];
+			var elesIds = {};
+
+			for( var i = 0, l = elements.length; i < l; i++ ){
+				var json = elements[i];
+
+				if( json.data == null ){
+					json.data = {};
+				}
+				
+				var data = json.data;
+
+				// make sure newly created elements have valid ids
+				if( data.id == null ){
+					data.id = idFactory.generate( cy, json );
+				} else if( cy.getElementById( data.id ).length != 0 || elesIds[ data.id ] ){
+					continue; // can't create element
+				}
+
+				var ele = new $$.Element( cy, json, false );
+				eles.push( ele );
+				elesIds[ data.id ] = true;
+			}
+
+			elements = eles;
+		}
+		
+		for( var i = 0, l = elements.length; i < l; i++ ){
+			var element = elements[i];
+			if( !element ){	continue; }
+			
+			var id = element._private.data.id;
+			
+			if( !ids[ id ] ){
+				ids[ id ] = element;
+				uniqueElements.push( element );
+			}
+		}
+		
+		for(var i = 0, l = uniqueElements.length; i < l; i++){
+			this[i] = uniqueElements[i];
+		}
+		this.length = uniqueElements.length;
+		
+		this._private = {
+			cy: cy,
+			ids: ids
+		};
+
+		// restore the elements if we created them from json
+		if( createdElements ){
+			this.restore();
+		}
+	};
+	
+	
+	// Functions
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// keep the prototypes in sync (an element has the same functions as a collection)
+	// and use $$.elefn and $$.elesfn as shorthands to the prototypes
+	$$.elefn = $$.elesfn = $$.Element.prototype = $$.Collection.prototype;
+
+	$$.elesfn.cy = function(){
+		return this._private.cy;
+	};
+	
+	$$.elesfn.element = function(){
+		return this[0];
+	};
+	
+	$$.elesfn.collection = function(){
+		if( $$.is.collection(this) ){
+			return this;
+		} else { // an element
+			return new $$.Collection( this._private.cy, [this] );
+		}
+	};
+
+	$$.elesfn.json = function(){
+		var ele = this.element();
+		if( ele == null ){ return undefined }
+
+		var p = ele._private;
+		
+		var json = $$.util.copy({
+			data: p.data,
+			position: p.position,
+			group: p.group,
+			bypass: p.bypass,
+			removed: p.removed,
+			selected: p.selected,
+			selectable: p.selectable,
+			locked: p.locked,
+			grabbed: p.grabbed,
+			grabbable: p.grabbable,
+			classes: ""
+		});
+		
+		var classes = [];
+		for( var cls in p.classes ){
+			classes.push(cls);
+		}
+		
+		for( var i = 0; i < classes.length; i++ ){
+			var cls = classes[i];
+			json.classes += cls + ( i < classes.length - 1 ? " " : "" );
+		}
+		
+		return json;
+	};
+
+	$$.elesfn.restore = function( notifyRenderer ){
+		var self = this;
+		var restored = [];
+		var cy = self.cy();
+		
+		if( notifyRenderer === undefined ){
+			notifyRenderer = true;
+		}
+
+		// create arrays of nodes and edges, since we need to
+		// restore the nodes first
+		var elements = [];
+		var nodes = [], edges = [];
+		var numNodes = 0;
+		var numEdges = 0;
+		for( var i = 0, l = self.length; i < l; i++ ){
+			var ele = self[i];
+			
+			// keep nodes first in the array and edges after
+			if( ele.isNode() ){ // put to front of array if node
+				nodes.push( ele );
+				numNodes++;
+			} else { // put to end of array if edge
+				edges.push( ele );
+				numEdges++;
+			}
+		}
+
+		elements = nodes.concat( edges );
+
+		// now, restore each element
+		for( var i = 0, l = elements.length; i < l; i++ ){
+			var ele = elements[i];
+
+			if( !ele.removed() ){
+				// don't need to do anything
+				continue;
+			}
+			
+			var _private = ele._private;
+			var data = _private.data;
+			
+			// set id and validate
+			if( data.id === undefined ){
+				data.id = idFactory.generate( cy, ele );
+			} else if( $$.is.emptyString(data.id) || !$$.is.string(data.id) ){
+				// can't create element if it has empty string as id or non-string id
+				continue;
+			} else if( cy.getElementById( data.id ).length != 0 ){
+				// can't create element if one already has that id
+				continue;
+			}
+
+			var id = data.id; // id is finalised, now let's keep a ref
+			
+			if( ele.isEdge() ){ // extra checks for edges
+				
+				var edge = ele;
+				var fields = ["source", "target"];
+				var fieldsLength = fields.length;
+				for(var j = 0; j < fieldsLength; j++){
+					
+					var field = fields[j];
+					var val = data[field];
+					
+					if( val == null || val === "" ){
+						// can't create if source or target is not defined properly
+						continue;
+					} else if( cy.getElementById(val).empty() ){ 
+						// can't create edge if one of its nodes doesn't exist
+						continue;
+					}
+				}
+				
+				var src = cy.getElementById( data.source );
+				var tgt = cy.getElementById( data.target );
+
+				src._private.edges.push( edge );
+				tgt._private.edges.push( edge );
+
+			} // if is edge
+			 
+			// create mock ids map for element so it can be used like collections
+			_private.ids = {};
+			_private.ids[ data.id ] = ele;
+
+			_private.removed = false;
+			cy.addToPool( ele );
+			
+			restored.push( ele );
+		} // for each element
+
+		// do compound node sanity checks
+		for( var i = 0; i < numNodes; i++ ){ // each node 
+			var node = elements[i];
+			var data = node._private.data;
+			var id = data.id;
+
+			var parentId = node._private.data.parent;
+			var specifiedParent = parentId != null;
+
+			if( specifiedParent ){
+				var parent = cy.getElementById( parentId );
+
+				if( parent.empty() ){
+					// non-existant parent; just remove it
+					delete data.parent;
+				} else {
+					var selfAsParent = false;
+					var ancestor = parent;
+					while( !ancestor.empty() ){
+						if( node.same(ancestor) ){
+							// mark self as parent and remove from data
+							selfAsParent = true;
+							delete data.parent; // remove parent reference
+
+							// exit or we loop forever
+							break;
+						}
+
+						ancestor = ancestor.parent();
+					}
+
+					if( !selfAsParent ){
+						// connect with children
+						parent[0]._private.children.push( node );
+
+						// let the core know we have a compound graph
+						cy._private.hasCompoundNodes = true;
+					}
+				} // else
+			} // if specified parent
+		} // for each node
+		
+		restored = new $$.Collection( cy, restored );
+		if( restored.length > 0 ){
+
+			var toUpdateStyle = restored.add( restored.connectedNodes() ).add( restored.parent() );
+			toUpdateStyle.updateStyle( notifyRenderer );
+
+			if( notifyRenderer ){
+				restored.rtrigger("add");
+			} else {
+				restored.trigger("add");
+			}
+		}
+		
+		return self; // chainability
+	};
+	
+	$$.elesfn.removed = function(){
+		var ele = this[0];
+		return ele && ele._private.removed;
+	};
+
+	$$.elesfn.inside = function(){
+		var ele = this[0];
+		return ele && !ele._private.removed;
+	};
+
+	$$.elesfn.remove = function( notifyRenderer ){
+		var self = this;
+		var removed = [];
+		var elesToRemove = [];
+		var elesToRemoveIds = {};
+		var cy = self._private.cy;
+		
+		if( notifyRenderer === undefined ){
+			notifyRenderer = true;
+		}
+		
+		// add connected edges
+		function addConnectedEdges(node){
+			var edges = node._private.edges; 
+			for( var i = 0; i < edges.length; i++ ){
+				add( edges[i] );
+			}
+		}
+		
+
+		// add descendant nodes
+		function addChildren(node){
+			var children = node._private.children;
+			
+			for( var i = 0; i < children.length; i++ ){
+				add( children[i] );
+			}
+		}
+
+		function add( ele ){
+			var alreadyAdded =  elesToRemoveIds[ ele.id() ];
+			if( alreadyAdded ){
+				return;
+			} else {
+				elesToRemoveIds[ ele.id() ] = true;
+			}
+
+			if( ele.isNode() ){
+				elesToRemove.push( ele ); // nodes are removed last
+
+				addConnectedEdges( ele );
+				addChildren( ele );
+			} else {
+				elesToRemove.unshift( ele ); // edges are removed first
+			}
+		}
+
+		// make the list of elements to remove
+		// (may be removing more than specified due to connected edges etc)
+
+		for( var i = 0, l = self.length; i < l; i++ ){
+			var ele = self[i];
+
+			add( ele );
+		}
+		
+		function removeEdgeRef(node, edge){
+			var connectedEdges = node._private.edges;
+			for( var j = 0; j < connectedEdges.length; j++ ){
+				var connectedEdge = connectedEdges[j];
+				
+				if( edge === connectedEdge ){
+					connectedEdges.splice( j, 1 );
+					break;
+				}
+			}
+		}
+
+		function removeChildRef(parent, ele){
+			ele = ele[0];
+			parent = parent[0];
+			var children = parent._private.children;
+
+			for( var j = 0; j < children.length; j++ ){
+				if( children[j][0] === ele[0] ){
+					children.splice(j, 1);
+					break;
+				}
+			}
+		}
+
+		for( var i = 0; i < elesToRemove.length; i++ ){
+			var ele = elesToRemove[i];
+
+			// mark as removed
+			ele._private.removed = true;
+
+			// remove from core pool
+			cy.removeFromPool( ele );
+
+			// add to list of removed elements
+			removed.push( ele );
+
+			if( ele.isEdge() ){ // remove references to this edge in its connected nodes
+				var src = ele.source()[0];
+				var tgt = ele.target()[0];
+
+				removeEdgeRef( src, ele );
+				removeEdgeRef( tgt, ele );
+
+			} else { // remove reference to parent 
+				var parent = ele.parent();
+
+				if( parent.length !== 0 ){
+					removeChildRef(parent, ele);
+				}
+			}
+		}
+
+		// check to see if we have a compound graph or not
+		var elesStillInside = cy._private.elements;
+		cy._private.hasCompoundNodes = false;
+		for( var i = 0; i < elesStillInside.length; i++ ){
+			var ele = elesStillInside[i];
+
+			if( ele.isParent() ){
+				cy._private.hasCompoundNodes = true;
+				break;
+			}
+		}
+
+		var removedElements = new $$.Collection( this.cy(), removed );
+		if( removedElements.size() > 0 ){
+			// must manually notify since trigger won't do this automatically once removed
+			
+			if( notifyRenderer ){
+				this.cy().notify({
+					type: "remove",
+					collection: removedElements
+				});
+			}
+			
+			removedElements.trigger("remove");
+		}
+
+		// check for empty remaining parent nodes
+		var checkedParentId = {};
+		for( var i = 0; i < elesToRemove.length; i++ ){
+			var ele = elesToRemove[i];
+			var isNode = ele._private.group === "nodes";
+			var parentId = ele._private.data.parent;
+
+			if( isNode && parentId !== undefined && !checkedParentId[ parentId ] ){
+				checkedParentId[ parentId ] = true;
+				var parent = cy.getElementById( parentId );
+
+				if( parent && parent.length !== 0 && !parent._private.removed && parent.children().length === 0 ){
+					parent.updateStyle();
+				}
+			}
+		}
+
+		return this;
+	};
+	
+})( cytoscape );
+
+
+;(function( $$ ){
+
+	$$.fn.eles({
+		animated: function(){
+			var ele = this[0];
+
+			if( ele ){
+				return ele._private.animation.current.length > 0;
+			}
+		},
+
+		clearQueue: function(){
+			for( var i = 0; i < this.length; i++ ){
+				var ele = this[i];
+				ele._private.animation.queue = [];
+			}
+
+			return this;
+		},
+
+		delay: function( time, complete ){
+			this.animate({
+				delay: time
+			}, {
+				duration: time,
+				complete: complete
+			});
+
+			return this;
+		},
+
+		animate: function( properties, params ){
+			var callTime = +new Date;
+			var cy = this._private.cy;
+			var style = cy.style();
+			var q;
+			
+			if( params === undefined ){
+				params = {};
+			}
+
+			if( params.duration === undefined ){
+				params.duration = 400;
+			}
+			
+			switch( params.duration ){
+			case "slow":
+				params.duration = 600;
+				break;
+			case "fast":
+				params.duration = 200;
+				break;
+			}
+			
+			if( properties == null || (properties.position == null && properties.css == null && properties.delay == null) ){
+				return this; // nothing to animate
+			}
+
+			if( properties.css ){
+				properties.css = style.getValueStyle( properties.css );
+			}
+
+			for( var i = 0; i < this.length; i++ ){
+				var self = this[i];
+
+				var pos = self._private.position;
+				var startPosition = {
+					x: pos.x,
+					y: pos.y
+				};
+				var startStyle = style.getValueStyle( self );
+				
+				if( self.animated() && (params.queue === undefined || params.queue) ){
+					q = self._private.animation.queue;
+				} else {
+					q = self._private.animation.current;
+				}
+
+				q.push({
+					properties: properties,
+					duration: params.duration,
+					params: params,
+					callTime: callTime,
+					startPosition: startPosition,
+					startStyle: startStyle
+				});
+			}
+
+			cy.addToAnimationPool( this );
+
+			return this; // chaining
+		}, // animate
+
+		stop: function(clearQueue, jumpToEnd){
+			for( var i = 0; i < this.length; i++ ){
+				var self = this[i];
+				var anis = self._private.animation.current;
+
+				for( var j = 0; j < anis.length; j++ ){
+					var animation = anis[j];		
+					if( jumpToEnd ){
+						// next iteration of the animation loop, the animation
+						// will go straight to the end and be removed
+						animation.duration = 0; 
+					}
+				}
+				
+				// clear the queue of future animations
+				if( clearQueue ){
+					self._private.animation.queue = [];
+				}
+			}
+			
+			// we have to notify (the animation loop doesn't do it for us on `stop`)
+			this.cy().notify({
+				collection: this,
+				type: "draw"
+			});
+			
+			return this;
+		}
+	});
+	
+})( cytoscape );	
+
+;(function( $$ ){
+	
+	$$.fn.eles({
+		addClass: function(classes){
+			classes = classes.split(/\s+/);
+			var self = this;
+			var changed = [];
+			
+			for( var i = 0; i < classes.length; i++ ){
+				var cls = classes[i];
+				if( $$.is.emptyString(cls) ){ continue; }
+				
+				for( var j = 0; j < self.length; j++ ){
+					var ele = self[j];
+					var hasClass = ele._private.classes[cls];
+					ele._private.classes[cls] = true;
+
+					if( !hasClass ){ // if didn't already have, add to list of changed
+						changed.push( ele );
+					}
+				}
+			}
+			
+			// trigger update style on those eles that had class changes
+			if( changed.length > 0 ){
+				new $$.Collection(this._private.cy, changed).updateStyle();
+			}
+
+			self.trigger("class");
+			return self;
+		},
+
+		hasClass: function(className){
+			var ele = this[0];
+			return ele != null && ele._private.classes[className];
+		},
+
+		toggleClass: function(classesStr, toggle){
+			var classes = classesStr.split(/\s+/);
+			var self = this;
+			var changed = []; // eles who had classes changed
+			
+			for( var i = 0, il = self.length; i < il; i++ ){
+				var ele = self[i];
+
+				for( var j = 0; j < classes.length; j++ ){
+					var cls = classes[j];
+
+					if( $$.is.emptyString(cls) ){ continue; }
+					
+					var hasClass = ele._private.classes[cls];
+					var shouldAdd = toggle || (toggle === undefined && !hasClass);
+
+					if( shouldAdd ){
+						ele._private.classes[cls] = true;
+
+						if( !hasClass ){ changed.push(ele); }
+					} else { // then remove
+						ele._private.classes[cls] = false;
+
+						if( hasClass ){ changed.push(ele); }
+					}
+
+				} // for j classes
+			} // for i eles
+			
+			// trigger update style on those eles that had class changes
+			if( changed.length > 0 ){
+				new $$.Collection(this._private.cy, changed).updateStyle();
+			}
+
+			self.trigger("class");
+			return self;
+		},
+
+		removeClass: function(classes){
+			classes = classes.split(/\s+/);
+			var self = this;
+			var changed = [];
+
+			for( var i = 0; i < self.length; i++ ){
+				var ele = self[i];
+
+				for( var j = 0; j < classes.length; j++ ){
+					var cls = classes[j];
+					if( !cls || cls === "" ){ continue; }
+
+					var hasClass = ele._private.classes[cls];
+					delete ele._private.classes[cls];
+
+					if( hasClass ){ // then we changed its set of classes
+						changed.push( ele );
+					}
+				}
+			}
+			
+			// trigger update style on those eles that had class changes
+			if( changed.length > 0 ){
+				new $$.Collection(self._private.cy, changed).updateStyle();
+			}
+
+			self.trigger("class");
+			return self;
+		}
+	});
+	
+})( cytoscape );
+
+;(function($$){
+
+	$$.fn.eles({
+		allAre: function(selector){
+			return this.filter(selector).length === this.length;
+		},
+
+		is: function(selector){
+			return this.filter(selector).length > 0;
+		},
+
+		same: function( collection ){
+			collection = this.cy().collection( collection );
+
+			// cheap extra check
+			if( this.length !== collection.length ){
+				return false;
+			}
+
+			return this.intersect( collection ).length === this.length;
+		},
+
+		anySame: function(collection){
+			collection = this.cy().collection( collection );
+
+			return this.intersect( collection ).length > 0;
+		},
+
+		allAreNeighbors: function(collection){
+			collection = this.cy().collection( collection );
+
+			return this.neighborhood().intersect( collection ).length === collection.length;
+		}
+	});
+	
+})( cytoscape );
+
+;(function($$){
+	
+	var borderWidthMultiplier = 1.4;
+	var borderWidthAdjustment = 1;
+
+	$$.fn.eles({
+
+		// fully updates (recalculates) the style for the elements
+		updateStyle: function( notifyRenderer ){
+			var cy = this._private.cy;
+			var style = cy.style();
+			notifyRenderer = notifyRenderer || notifyRenderer === undefined ? true : false;
+
+			style.apply( this );
+
+			if( notifyRenderer ){
+				this.rtrigger("style"); // let renderer know we changed style
+			} else {
+				this.trigger("style"); // just fire the event
+			}
+			return this; // chaining
+		},
+
+		// just update the mappers in the elements' styles; cheaper than eles.updateStyle()
+		updateMappers: function( notifyRenderer ){
+			var cy = this._private.cy;
+			var style = cy.style();
+			notifyRenderer = notifyRenderer || notifyRenderer === undefined ? true : false;
+
+			for( var i = 0; i < this.length; i++ ){
+				var ele = this[i];
+				style.apply( ele );
+			}
+
+			if( notifyRenderer ){
+				this.rtrigger("style"); // let renderer know we changed style
+			} else {
+				this.trigger("style"); // just fire the event
+			}
+			return this; // chaining
+		},
+
+		data: $$.define.data({
+			field: "data",
+			bindingEvent: "data",
+			allowBinding: true,
+			allowSetting: true,
+			settingEvent: "data",
+			settingTriggersEvent: true,
+			triggerFnName: "trigger",
+			allowGetting: true,
+			immutableKeys: {
+				"id": true,
+				"source": true,
+				"target": true,
+				"parent": true
+			},
+			updateMappers: true
+		}),
+
+		removeData: $$.define.removeData({
+			field: "data",
+			event: "data",
+			triggerFnName: "trigger",
+			triggerEvent: true,
+			immutableKeys: {
+				"id": true,
+				"source": true,
+				"target": true,
+				"parent": true
+			},
+			updateMappers: true
+		}),
+
+		batchData: $$.define.batchData({
+			field: "data",
+			event: "data",
+			triggerFnName: "trigger",
+			immutableKeys: {
+				"id": true,
+				"source": true,
+				"target": true,
+				"parent": true
+			},
+			updateMappers: true
+		}),
+
+		scratch: $$.define.data({
+			field: "scratch",
+			allowBinding: false,
+			allowSetting: true,
+			settingTriggersEvent: false,
+			allowGetting: true
+		}),
+
+		removeScratch: $$.define.removeData({
+			field: "scratch",
+			triggerEvent: false
+		}),
+
+		rscratch: $$.define.data({
+			field: "rscratch",
+			allowBinding: false,
+			allowSetting: true,
+			settingTriggersEvent: false,
+			allowGetting: true
+		}),
+
+		removeRscratch: $$.define.removeData({
+			field: "rscratch",
+			triggerEvent: false
+		}),
+
+		id: function(){
+			var ele = this[0];
+
+			if( ele ){
+				return ele._private.data.id;
+			}
+		},
+
+		position: $$.define.data({
+			field: "position",
+			bindingEvent: "position",
+			allowBinding: true,
+			allowSetting: true,
+			settingEvent: "position",
+			settingTriggersEvent: true,
+			triggerFnName: "rtrigger",
+			allowGetting: true,
+			validKeys: ["x", "y"]
+		}),
+
+		positions: function( pos ){
+			if( $$.is.plainObject(pos) ){
+				this.position(pos);
+				
+			} else if( $$.is.fn(pos) ){
+				var fn = pos;
+				
+				for( var i = 0; i < this.length; i++ ){
+					var ele = this[i];
+
+					var pos = fn.apply(ele, [i, ele]);
+
+					if( pos && !ele.locked() ){
+						var elePos = ele._private.position;
+						elePos.x = pos.x;
+						elePos.y = pos.y;
+					}
+				}
+				
+				this.rtrigger("position");
+			}
+
+			return this; // chaining
+		},
+
+		// get the rendered (i.e. on screen) positon of the element
+		// TODO allow setting
+		renderedPosition: function( dim ){
+			var ele = this[0];
+			var cy = this.cy();
+			var zoom = cy.zoom();
+			var pan = cy.pan();
+
+			if( ele && ele.isNode() ){ // must have an element and must be a node to return position
+				var pos = ele._private.position;
+				var rpos = {
+					x: pos.x * zoom + pan.x,
+					y: pos.y * zoom + pan.y
+				};
+
+				if( dim === undefined ){ // then return the whole rendered position
+					return rpos;
+				} else { // then return the specified dimension
+					return rpos[ dim ];
+				}
+			}
+		},
+
+		// get the specified css property as a rendered value (i.e. on-screen value)
+		// or get the whole rendered style if no property specified (NB doesn't allow setting)
+		renderedCss: function( property ){
+			var ele = this[0];
+
+			if( ele ){
+				var renstyle = ele.cy().style().getRenderedStyle( ele );
+
+				if( property === undefined ){
+					return renstyle;
+				} else {
+					return renstyle[ property ];
+				}
+			}
+		},
+
+		// read the calculated css style of the element or override the style (via a bypass)
+		css: function( name, value ){
+			var style = this.cy().style();
+
+			if( $$.is.plainObject(name) ){ // then extend the bypass
+				var props = name;
+				style.applyBypass( this, props );
+				this.rtrigger("style"); // let the renderer know we've updated style
+
+			} else if( $$.is.string(name) ){
+	
+				if( value === undefined ){ // then get the property from the style
+					var ele = this[0];
+
+					if( ele ){
+						return ele._private.style[ name ].strValue;
+					} else { // empty collection => can't get any value
+						return;
+					}
+
+				} else { // then set the bypass with the property value
+					style.applyBypass( this, name, value );
+					this.rtrigger("style"); // let the renderer know we've updated style
+				}
+
+			} else if( name === undefined ){
+				var ele = this[0];
+
+				if( ele ){
+					return style.getRawStyle( ele );
+				} else { // empty collection => can't get any value
+					return;
+				}
+			}
+
+			return this; // chaining
+		},
+
+		removeCss: function(){
+			var style = this.cy().style();
+			var eles = this;
+
+			for( var i = 0; i < eles.length; i++ ){
+				var ele = eles[i];
+
+				style.removeAllBypasses( ele );
+			}
+
+			this.rtrigger('style');
+		},
+
+		show: function(){
+			this.css("visibility", "visible");
+			return this; // chaining
+		},
+
+		hide: function(){
+			this.css("visibility", "hidden");
+			return this; // chaining
+		},
+
+		visible: function(){
+			var ele = this[0];
+
+			if( ele ){
+				if( ele.css("visibility") !== "visible" ){
+					return false;
+				}
+				
+				if( ele.isNode() ){
+					var parents = ele.parents();
+					for( var i = 0; i < parents.length; i++ ){
+						var parent = parents[i];
+						var parentVisibility = parent.css("visibility");
+
+						if( parentVisibility !== "visible" ){
+							return false;
+						}
+					}
+
+					return true;
+				} else if( ele.isEdge() ){
+					var src = ele.source();
+					var tgt = ele.target();
+
+					return src.visible() && tgt.visible();
+				}
+
+			}
+		},
+
+		hidden: function(){
+			var ele = this[0];
+
+			if( ele ){
+				return !this.visible();
+			}
+		},
+
+		// convenience function to get a numerical value for the width of the node/edge
+		width: function(){
+			var ele = this[0];
+
+			if( ele ){
+				var w = this._private.style.width;
+				return w.strValue === "auto" ? ele._private.autoWidth : w.pxValue;
+			}
+		},
+
+		outerWidth: function(){
+			var ele = this[0];
+
+			if( ele ){
+				var style = this._private.style;
+				var width = style.width.strValue === "auto" ? ele._private.autoWidth : style.width.pxValue;;
+				var border = style["border-width"] ? style["border-width"].pxValue * borderWidthMultiplier + borderWidthAdjustment : 0;
+
+				return width + border;
+			}
+		},
+
+		renderedWidth: function(){
+			var ele = this[0];
+
+			if( ele ){
+				var width = this.width();
+				return width * this.cy().zoom();
+			}
+		},
+
+		renderedOuterWidth: function(){
+			var ele = this[0];
+
+			if( ele ){
+				var owidth = this.outerWidth();
+				return owidth * this.cy().zoom();
+			}
+		},
+
+		// convenience function to get a numerical value for the height of the node
+		height: function(){
+			var ele = this[0];
+
+			if( ele && ele.isNode() ){
+				var h = this._private.style.height;
+				return h.strValue === "auto" ? ele._private.autoHeight : h.pxValue;
+			}
+		},
+
+		outerHeight: function(){
+			var ele = this[0];
+
+			if( ele ){
+				var style = this._private.style;
+				var height = style.height.strValue === "auto" ? ele._private.autoHeight : style.height.pxValue;
+				var border = style["border-width"] ? style["border-width"].pxValue * borderWidthMultiplier + borderWidthAdjustment : 0;
+
+				return height + border;
+			}
+		},
+
+		renderedHeight: function(){
+			var ele = this[0];
+
+			if( ele ){
+				var height = this.height();
+				return height * this.cy().zoom();
+			}
+		},
+
+		renderedOuterHeight: function(){
+			var ele = this[0];
+
+			if( ele ){
+				var oheight = this.outerHeight();
+				return oheight * this.cy().zoom();
+			}
+		},
+
+		// get the position of the element relative to the container (i.e. not relative to parent node)
+		offset: function(){
+			var ele = this[0];
+
+			if( ele && ele.isNode() ){
+				var offset = {
+					x: ele._private.position.x,
+					y: ele._private.position.y
+				};
+
+				var parents = ele.parents();
+				for( var i = 0; i < parents.length; i++ ){
+					var parent = parents[i];
+					var parentPos = parent._private.position;
+
+					offset.x += parentPos.x;
+					offset.y += parentPos.y;
+				}
+
+				return offset;
+			}
+		},
+
+		renderedOffset: function(){
+			var ele = this[0];
+
+			if( ele && ele.isNode() ){
+				var offset = this.offset();
+				var cy = this.cy();
+				var zoom = cy.zoom();
+				var pan = cy.pan();
+
+				return {
+					x: offset.x * zoom + pan.x,
+					y: offset.y * zoom + pan.y
+				};
+			}
+		},
+
+		// get the bounding box of the elements (in raw model position)
+		boundingBox: function( selector ){
+			var eles = this;
+
+			if( !selector || ( $$.is.elementOrCollection(selector) && selector.length === 0 ) ){
+				eles = this;
+			} else if( $$.is.string(selector) ){
+				eles = this.filter( selector );
+			} else if( $$.is.elementOrCollection(selector) ){
+				eles = selector;
+			}
+
+			var x1 = Infinity;
+			var x2 = -Infinity;
+			var y1 = Infinity;
+			var y2 = -Infinity;
+
+			// find bounds of elements
+			for( var i = 0; i < eles.length; i++ ){
+				var ele = eles[i];
+				var ex1, ex2, ey1, ey2, x, y;				
+
+				if( ele.isNode() ){
+					var pos = ele._private.position;
+					x = pos.x;
+					y = pos.y;
+					var w = ele.outerWidth();
+					var halfW = w/2;
+					var h = ele.outerHeight();
+					var halfH = h/2;
+
+					// handle node dimensions
+					/////////////////////////
+
+					ex1 = x - halfW;
+					ex2 = x + halfW;
+					ey1 = y - halfH;
+					ey2 = y + halfH;
+
+					x1 = ex1 < x1 ? ex1 : x1;
+					x2 = ex2 > x2 ? ex2 : x2;
+					y1 = ey1 < y1 ? ey1 : y1;
+					y2 = ey2 > y2 ? ey2 : y2;
+
+				} else { // is edge
+					var n1pos = ele.source()[0]._private.position;
+					var n2pos = ele.target()[0]._private.position;
+
+					// handle edge dimensions (rough box estimate)
+					//////////////////////////////////////////////
+
+					var rstyle = ele._private.rstyle;
+					x = rstyle.labelX;
+					y = rstyle.labelY;
+
+					ex1 = n1pos.x;
+					ex2 = n2pos.x;
+					ey1 = n1pos.y;
+					ey2 = n2pos.y;
+
+					if( ex1 > ex2 ){
+						var temp = ex1;
+						ex1 = ex2;
+						ex2 = temp;
+					}
+
+					if( ey1 > ey2 ){
+						var temp = ey1;
+						ey1 = ey2;
+						ey2 = temp;
+					}
+
+					x1 = ex1 < x1 ? ex1 : x1;
+					x2 = ex2 > x2 ? ex2 : x2;
+					y1 = ey1 < y1 ? ey1 : y1;
+					y2 = ey2 > y2 ? ey2 : y2;
+
+					// handle points along edge (sanity check)
+					//////////////////////////////////////////
+
+					var bpts = rstyle.bezierPts || [];
+					var w = ele._private.style['width'].value;
+					for( var j = 0; j < bpts.length; j++ ){
+						var bpt = bpts[j];
+
+						x1 = bpt.x - w < x1 ? bpt.x - w : x1;
+						x2 = bpt.x + w > x2 ? bpt.x + w : x2;
+						y1 = bpt.y - w < y1 ? bpt.y - w : y1;
+						y2 = bpt.y + w > y2 ? bpt.y + w : y2;
+					}
+
+				}
+
+				// handle label dimensions
+				//////////////////////////
+
+				var style = ele._private.style;
+				var label = style['content'].value;
+				var fontSize = style['font-size'];
+				var halign = style['text-halign'];
+				var valign = style['text-valign'];
+				var labelWidth = ele._private.rstyle.labelWidth;
+
+				if( label && fontSize && labelWidth != undefined && halign && valign ){
+					var lh = fontSize.value;
+					var lw = labelWidth;
+					var lx1, lx2, ly1, ly2;
+
+					switch( halign.value ){
+						case "left":
+							lx1 = ex1 - lw;
+							lx2 = ex1;
+							break;
+
+						case "center":
+							lx1 = x - lw/2;
+							lx2 = x + lw/2;
+							break;
+
+						case "right":
+							lx1 = ex2;
+							lx2 = ex2 + lw;
+							break;
+					}
+
+					if( ele.isEdge() ){ // force center case
+						lx1 = x - lw/2;
+						lx2 = x + lw/2;
+					}
+
+					switch( valign.value ){
+						case "top":
+							ly1 = ey1 - lh;
+							ly2 = ey1;
+							break;
+
+						case "center":
+							ly1 = y - lh/2;
+							ly2 = y + lh/2;
+							break;
+
+						case "bottom":
+							ly1 = ey2;
+							ly2 = ey2 + lh;
+							break;
+					}
+
+					if( ele.isEdge() ){ // force center case
+						ly1 = y - lh/2;
+						ly2 = y + lh/2;
+					}
+
+					x1 = lx1 < x1 ? lx1 : x1;
+					x2 = lx2 > x2 ? lx2 : x2;
+					y1 = ly1 < y1 ? ly1 : y1;
+					y2 = ly2 > y2 ? ly2 : y2;
+				}
+			} // for
+
+			// testing on debug page
+			// $('#bb').remove();
+			// $('#cytoscape').css('position', 'relative').append('<div id="bb"></div>');
+			// $('#bb').css({
+			// 	'position': 'absolute',
+			// 	'left': x1,
+			// 	'top': y1,
+			// 	'width': x2 - x1,
+			// 	'height': y2 - y1,
+			// 	'background': 'rgba(255, 0, 0, 0.5)'
+			// })
+
+			return {
+				x1: x1,
+				x2: x2,
+				y1: y1,
+				y2: y2,
+				w: x2 - x1,
+				h: y2 - y1
+			};
+		}
+	});
+
+	
+})( cytoscape );
+
+;(function( $$ ){
+	
+	// Regular degree functions (works on single element)
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	function defineDegreeFunction(callback){
+		return function(){
+			var self = this;
+			
+			if( self.length === 0 ){ return; }
+
+			if( self.isNode() && !self.removed() ){
+				var degree = 0;
+				var node = self[0];
+				var connectedEdges = node._private.edges;
+
+				for( var i = 0; i < connectedEdges.length; i++ ){
+					var edge = connectedEdges[i];
+					degree += callback( node, edge );
+				}
+				
+				return degree;
+			} else {
+				return;
+			}
+		};
+	}
+	
+	$$.fn.eles({
+		degree: defineDegreeFunction(function(node, edge){
+			if( edge.source().same( edge.target() ) ){
+				return 2;
+			} else {
+				return 1;
+			}
+		}),
+
+		indegree: defineDegreeFunction(function(node, edge){
+			if( edge.target().same(node) ){
+				return 1;
+			} else {
+				return 0;
+			}
+		}),
+
+		outdegree: defineDegreeFunction(function(node, edge){
+			if( edge.source().same(node) ){
+				return 1;
+			} else {
+				return 0;
+			}
+		})
+	});
+	
+	
+	// Collection degree stats
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	function defineDegreeBoundsFunction(degreeFn, callback){
+		return function(){
+			var ret = undefined;
+			var nodes = this.nodes();
+
+			for( var i = 0; i < nodes.length; i++ ){
+				var ele = nodes[i];
+				var degree = ele[degreeFn]();
+				if( degree !== undefined && (ret === undefined || callback(degree, ret)) ){
+					ret = degree;
+				}
+			}
+			
+			return ret;
+		};
+	}
+	
+	$$.fn.eles({
+		minDegree: defineDegreeBoundsFunction("degree", function(degree, min){
+			return degree < min;
+		}),
+
+		maxDegree: defineDegreeBoundsFunction("degree", function(degree, max){
+			return degree > max;
+		}),
+
+		minIndegree: defineDegreeBoundsFunction("indegree", function(degree, min){
+			return degree < min;
+		}),
+
+		maxIndegree: defineDegreeBoundsFunction("indegree", function(degree, max){
+			return degree > max;
+		}),
+
+		minOutdegree: defineDegreeBoundsFunction("outdegree", function(degree, min){
+			return degree < min;
+		}),
+
+		maxOutdegree: defineDegreeBoundsFunction("outdegree", function(degree, max){
+			return degree > max;
+		})
+	});
+	
+	$$.fn.eles({
+		totalDegree: function(){
+			var total = 0;
+			var nodes = this.nodes();
+
+			for( var i = 0; i < nodes.length; i++ ){
+				total += nodes[i].degree();
+			}
+
+			return total;
+		}
+	});
+	
+})( cytoscape );
+
+	
+
+;(function($$){
+	
+	// Functions for binding & triggering events
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	$$.fn.eles({
+		on: $$.define.on(), // .on( events [, selector] [, data], handler)
+		one: $$.define.on({ unbindSelfOnTrigger: true }),
+		once: $$.define.on({ unbindAllBindersOnTrigger: true }),
+		off: $$.define.off(), // .off( events [, selector] [, handler] )
+		trigger: $$.define.trigger(), // .trigger( events [, extraParams] )
+
+		rtrigger: function(event, extraParams){ // for internal use only
+			// notify renderer unless removed
+			this.cy().notify({
+				type: event,
+				collection: this.filter(function(){
+					return !this.removed();
+				})
+			});
+			
+			this.trigger(event, extraParams);
+			return this;
+		}
+	});
+
+	// aliases for those folks who like old stuff:
+	$$.elesfn.bind = $$.elesfn.on;
+	$$.elesfn.unbind = $$.elesfn.off;
+
+	// add event aliases like .click()
+	$$.define.event.aliasesOn( $$.elesfn );
+	
+})( cytoscape );
+
+;(function($$){
+
+	$$.fn.eles({
+		isNode: function(){
+			return this.group() === "nodes";
+		},
+
+		isEdge: function(){
+			return this.group() === "edges";
+		},
+
+		isLoop: function(){
+			return this.isEdge() && this.source().id() === this.target().id();
+		},
+
+		group: function(){
+			var ele = this[0];
+
+			if( ele ){
+				return ele._private.group;
+			}
+		}
+	});
+
+	
+})( cytoscape );
+
+;(function($$){
+	
+	// Functions for iterating over collections
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	$$.fn.eles({
+		each: function(fn){
+			if( $$.is.fn(fn) ){
+				for(var i = 0; i < this.length; i++){
+					var ele = this[i];
+					var ret = fn.apply( ele, [ i, ele ] );
+
+					if( ret === false ){ break; } // exit each early on return false
+				}
+			}
+			return this;
+		},
+
+		toArray: function(){
+			var array = [];
+			
+			for(var i = 0; i < this.length; i++){
+				array.push( this[i] );
+			}
+			
+			return array;
+		},
+
+		slice: function(start, end){
+			var array = [];
+			var thisSize = this.length;
+			
+			if( end == null ){
+				end = thisSize;
+			}
+			
+			if( start < 0 ){
+				start = thisSize + start;
+			}
+			
+			for(var i = start; i >= 0 && i < end && i < thisSize; i++){
+				array.push( this[i] );
+			}
+			
+			return new $$.Collection(this.cy(), array);
+		},
+
+		size: function(){
+			return this.length;
+		},
+
+		eq: function(i){
+			return this[i];
+		},
+
+		empty: function(){
+			return this.length === 0;
+		},
+
+		nonempty: function(){
+			return !this.empty();
+		}
+	});
+	
+})( cytoscape );
+
+;(function($$){
+	
+	// Collection functions that toggle a boolean value
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	function defineSwitchFunction(params){
+		return function(){
+			var args = arguments;
+			
+			// e.g. cy.nodes().select( data, handler )
+			if( args.length === 2 ){
+				var data = args[0];
+				var handler = args[1];
+				this.bind( params.event, data, handler );
+			} 
+			
+			// e.g. cy.nodes().select( handler )
+			else if( args.length === 1 ){
+				var handler = args[0];
+				this.bind( params.event, handler );
+			}
+			
+			// e.g. cy.nodes().select()
+			else if( args.length === 0 ){
+				for( var i = 0; i < this.length; i++ ){
+					var ele = this[i];
+
+					if( !params.ableField || ele._private[params.ableField] ){
+						ele._private[params.field] = params.value;
+					}
+				}
+				this.updateStyle(); // change of state => possible change of style
+				this.trigger(params.event);
+			}
+
+			return this;
+		};
+	}
+	
+	function defineSwitchSet( params ){
+		$$.elesfn[ params.field ] = function(){
+			var ele = this[0];
+			if( ele ){
+				return ele._private[ params.field ];
+			}
+		};
+		
+		$$.elesfn[ params.on ] = defineSwitchFunction({
+			event: params.on,
+			field: params.field,
+			ableField: params.ableField,
+			value: true
+		});
+
+		$$.elesfn[ params.off ] = defineSwitchFunction({
+			event: params.off,
+			field: params.field,
+			ableField: params.ableField,
+			value: false
+		});
+	}
+	
+	defineSwitchSet({
+		field: "locked",
+		on: "lock",
+		off: "unlock"
+	});
+	
+	defineSwitchSet({
+		field: "grabbable",
+		on: "grabify",
+		off: "ungrabify"
+	});
+	
+	defineSwitchSet({
+		field: "selected",
+		ableField: "selectable",
+		on: "select",
+		off: "unselect"
+	});
+	
+	defineSwitchSet({
+		field: "selectable",
+		on: "selectify",
+		off: "unselectify"
+	});
+	
+	$$.elesfn.grabbed = function(){
+		var ele = this[0];
+		if( ele ){
+			return ele._private.grabbed;
+		}
+	};
+
+	defineSwitchSet({
+		field: "active",
+		on: "activate",
+		off: "unactivate"
+	});
+
+	$$.elesfn.inactive = function(){
+		var ele = this[0];
+		if( ele ){
+			return !ele._private.active;
+		}
+	};
+	
+})( cytoscape );
+
+;(function($$){
+	
+	$$.fn.eles({
+		nodes: function(selector){
+			return this.filter(function(i, element){
+				return element.isNode();
+			}).filter(selector);
+		},
+
+		edges: function(selector){
+			return this.filter(function(i, element){
+				return element.isEdge();
+			}).filter(selector);
+		},
+
+		filter: function(filter){
+			var cy = this._private.cy;
+			
+			if( $$.is.fn(filter) ){
+				var elements = [];
+
+				for( var i = 0; i < this.length; i++ ){
+					var ele = this[i];
+
+					if( filter.apply(ele, [i, ele]) ){
+						elements.push(ele);
+					}
+				}
+				
+				return new $$.Collection(cy, elements);
+			
+			} else if( $$.is.string(filter) || $$.is.elementOrCollection(filter) ){
+				return new $$.Selector(filter).filter(this);
+			
+			} else if( filter === undefined ){
+				return this;
+			}
+
+			return new $$.Collection( cy ); // if not handled by above, give 'em an empty collection
+		},
+
+		not: function(toRemove){
+			var cy = this._private.cy;
+
+			if( !toRemove ){
+				return this;
+			} else {
+			
+				if( $$.is.string( toRemove ) ){
+					toRemove = this.filter( toRemove );
+				}
+				
+				var elements = [];
+				
+				for( var i = 0; i < this.length; i++ ){
+					var element = this[i];
+
+					var remove = toRemove._private.ids[ element.id() ];
+					if( !remove ){
+						elements.push( element );
+					}
+				}
+				
+				return new $$.Collection( cy, elements );
+			}
+			
+		},
+
+		intersect: function( other ){
+			var self = this;
+			var cy = this._private.cy;
+			
+			// if a selector is specified, then filter by it
+			if( $$.is.string(other) ){
+				var selector = other;
+				return this.filter( selector );
+			}
+			
+			var elements = [];
+			var col1 = this;
+			var col2 = other;
+			var col1Smaller = this.length < other.length;
+			var ids1 = col1Smaller ? col1._private.ids : col2._private.ids;
+			var ids2 = col1Smaller ? col2._private.ids : col1._private.ids;
+			
+			for( var id in ids1 ){
+				var ele = ids2[ id ];
+
+				if( ele ){
+					elements.push( ele );
+				}
+			}
+			
+			return new $$.Collection( cy, elements );
+		},
+
+		add: function(toAdd){
+			var self = this;
+			var cy = this._private.cy;		
+			
+			if( !toAdd ){
+				return this;
+			}
+			
+			if( $$.is.string(toAdd) ){
+				var selector = toAdd;
+				toAdd = cy.elements(selector);
+			}
+			
+			var elements = [];
+			var ids = {};
+		
+			function add(element){
+				if( !element ){
+					return;
+				}
+				
+				if( !ids[ element.id() ] ){
+					elements.push( element );
+					ids[ element.id() ] = true;
+				}
+			}
+			
+			// add own
+			for( var i = 0; i < self.length; i++ ){
+				var element = self[i];
+				add(element);
+			}
+			
+			// add toAdd
+			for( var i = 0; i < toAdd.length; i++ ){
+				var element = toAdd[i];
+				add(element);
+			}
+			
+			return new $$.Collection(cy, elements);
+		}
+	});
+
+	$$.fn.eles({
+		// do a breadth first search from the nodes in the collection
+		// from pseudocode on wikipedia
+		breadthFirstSearch: function( fn, directed ){
+			fn = fn || function(){};
+			var cy = this._private.cy;
+			var v = this;
+			var Q = [];
+			var marked = {};
+			var id2depth = {};
+			var connectedFrom = {};
+			var connectedEles = [];
+
+			// enqueue v
+			for( var i = 0; i < v.length; i++ ){
+				if( v[i].isNode() ){
+					Q.unshift( v[i] );
+
+					// and mark v
+					marked[ v[i].id() ] = true;
+
+					id2depth[ v[i].id() ] = 0;
+
+					connectedEles.push( v[i] );
+				}
+			}
+
+			i = 0;
+			while( Q.length !== 0 ){ // while Q not empty
+				var t = Q.shift();
+				var depth = 0;
+
+				var fromNodeId = connectedFrom[ t.id() ];
+				while( fromNodeId ){
+					depth++;
+					fromNodeId = connectedFrom[ fromNodeId ];
+				}
+
+				id2depth[ t.id() ] = depth;
+				var ret = fn.call(t, i, depth);
+				i++;
+
+				// on return true, return the result
+				if( ret === true ){
+					return new $$.Collection( cy, [ t ] );
+				} 
+
+				// on return false, stop iteration
+				else if( ret === false ){
+					break;
+				}
+
+				var adjacentEdges = t.connectedEdges(directed ? '[source = "' + t.id() + '"]' : undefined);
+
+				for( var j = 0; j < adjacentEdges.length; j++ ){
+					var e = adjacentEdges[j];
+					var u = e.connectedNodes('[id != "' + t.id() + '"]');
+
+					if( u.length !== 0 ){
+						u = u[0];
+
+						if( !marked[ u.id() ] ){
+							marked[ u.id() ] = true; // mark u
+							Q.unshift( u ); // enqueue u onto Q
+							
+							connectedFrom[ u.id() ] = t.id();
+							
+							connectedEles.push( u );
+							connectedEles.push( e );
+						}
+					}
+				}
+			}
+
+			return new $$.Collection( cy, connectedEles ); // return none
+		},
+
+		// do a depth first search on the nodes in the collection
+		// from pseudocode on wikipedia (iterative impl)
+		depthFirstSearch: function( fn, directed ){
+			fn = fn || function(){};
+			var cy = this._private.cy;
+			var v = this;
+			var S = [];
+			var discovered = [];
+			var forwardEdge = {};
+			var backEdge = {};
+			var crossEdge = {};
+			var treeEdge = {};
+			var explored = {};
+
+			function labelled(e){
+				var id = e.id();
+				return forwardEdge[id] || backEdge[id] || crossEdge[id] || treeEdge[id];
+			}
+
+			// push v
+			for( var i = 0; i < v.length; i++ ){
+				if( v[i].isNode() ){
+					S.push( v[i] );
+
+					// and mark discovered
+					discovered[ v[i].id() ] = true;
+				}
+			}
+
+			while( S.length !== 0 ){
+				var t = S[ S.length - 1 ];
+				var ret = fn.call(t);
+				var breaked = false;
+
+				if( ret === true ){
+					return new $$.Collection( cy, [t] );
+				}
+
+				var adjacentEdges = t.connectedEdges(directed ? '[source = "' + t.id() + '"]' : undefined);
+				for( var i = 0; i < adjacentEdges.length; i++ ){
+					var e = adjacentEdges[i];
+
+					if( labelled(e) ){
+						continue;
+					}
+
+					var w = e.connectedNodes('[id != "' + t.id() + '"]');
+					if( w.length !== 0 ){
+						w = w[0];
+						var wid = w.id();
+
+						if( !discovered[wid] && !explored[wid] ){
+							treeEdge[wid] = true;
+							discovered[wid] = true;
+							S.push(w);
+							breaked = true;
+							break;
+						} else if( discovered[wid] ){
+							backEdge[wid] = true;
+						} else {
+							crossEdge[wid] = true;
+						}	
+					}
+				}
+
+				if( !breaked ){
+					explored[ t.id() ] = true;
+					S.pop();
+				}
+			}
+		},
+
+		// get the root nodes in the DAG
+		roots: function( selector ){
+			var eles = this;
+			var roots = [];
+			for( var i = 0; i < eles.length; i++ ){
+				var ele = eles[i];
+				if( !ele.isNode() ){
+					continue;
+				}
+
+				var hasEdgesPointingIn = ele.connectedEdges('[target = "' + ele.id() + '"][source != "' + ele.id() + '"]').length > 0;
+
+				if( !hasEdgesPointingIn ){
+					roots.push( ele );
+				}
+			}
+
+			return new $$.Collection( this._private.cy, roots ).filter( selector );
+		},
+
+		// kruskal's algorithm (finds min spanning tree, assuming undirected graph)
+		// implemented from pseudocode from wikipedia
+		kruskal: function( weightFn ){
+			weightFn = weightFn || function(){ return 1; }; // if not specified, assume each edge has equal weight (1)
+
+			function findSet(ele){
+				for( var i = 0; i < forest.length; i++ ){
+					var eles = forest[i];
+
+					if( eles.anySame(ele) ){
+						return {
+							eles: eles,
+							index: i
+						};
+					}
+				}
+			}
+
+			var A = new $$.Collection(this._private.cy, []);
+			var forest = [];
+			var nodes = this.nodes();
+
+			for( var i = 0; i < nodes.length; i++ ){
+				forest.push( nodes[i].collection() );
+			}
+
+			var edges = this.edges();
+			var S = edges.toArray().sort(function(a, b){
+				var weightA = weightFn.call(a);
+				var weightB = weightFn.call(b);
+
+				return weightA - weightB;
+			});
+
+			for(var i = 0; i < S.length; i++){
+				var edge = S[i];
+				var u = edge.source()[0];
+				var v = edge.target()[0];
+				var setU = findSet(u);
+				var setV = findSet(v);
+
+				if( setU.eles !== setV.eles ){
+					A = A.add( edge );
+
+					forest[ setU.index ] = setU.eles.add( setV.eles );
+					forest.splice( setV.index, 1 );
+				}
+			}
+
+			return nodes.add( A );
+
+		},
+
+		dijkstra: function( target, weightFn, directed ){
+			var cy = this._private.cy;
+			directed = !$$.is.fn(weightFn) ? weightFn : directed;
+			directed = directed === undefined || directed;
+			weightFn = $$.is.fn(weightFn) ? weightFn : function(){ return 1; }; // if not specified, assume each edge has equal weight (1)
+
+			if( this.length === 0 || !target || !$$.is.elementOrCollection(target) || target.length === 0 ){
+				return new $$.Collection(cy, []);
+			}
+
+			var source = this[0];
+			target = target[0];
+			var dist = {};
+			var prev = {};
+
+			var nodes = cy.nodes();
+			for( var i = 0; i < nodes.length; i++ ){
+				dist[ nodes[i].id() ] = Infinity;
+			}
+
+			dist[ source.id() ] = 0;
+			var Q = nodes;
+
+			var smallestDist = function(Q){
+				var smallest = Infinity;
+				var index;
+				for(var i in dist){
+					if( dist[i] < smallest && Q.$('#' + i).length !== 0 ){
+						smallest = dist[i];
+						index = i;
+					}
+				}
+
+				return index;
+			};
+
+			var distBetween = function(u, v){
+				var edges = u.edgesWith(v);
+				var smallestDistance = Infinity;
+				var smallestEdge;
+
+				for( var i = 0; i < edges.length; i++ ){
+					var edge = edges[i];
+					var weight = weightFn.call(edge);
+
+					if( weight < smallestDistance ){
+						smallestDistance = weight;
+						smallestEdge = edge;
+					}
+				}
+
+				return {
+					edge: smallestEdge,
+					dist: smallestDistance
+				};
+			};
+
+			while( Q.length !== 0 ){
+				var uid = smallestDist(Q);
+				var u = Q.filter('#' + uid);
+
+				if( u.length === 0 ){
+					continue;
+				}
+
+				//debugger;
+
+				Q = Q.not( u );
+
+				if( u.same(target) ){
+					break;
+				}
+
+				if( dist[uid] === Math.Infinite ){
+					break;
+				}
+
+				var neighbors = u.neighborhood().nodes();
+				for( var i = 0; i < neighbors.length; i++ ){
+					var v = neighbors[i];
+					var vid = v.id()
+
+					var duv = distBetween(u, v);
+					var alt = dist[uid] + duv.dist;
+					if( alt < dist[vid] ){
+						dist[vid] = alt;
+						prev[vid] = {
+							node: v,
+							edge: duv.edge
+						};
+						// TODO decrease-key v in Q
+					}
+				}
+			}
+		}  
+	});
+
+	// nice, short mathemathical alias
+	$$.elesfn.bfs = $$.elesfn.breadthFirstSearch;
+	$$.elesfn.dfs = $$.elesfn.depthFirstSearch;
+
+
+
+	// Neighbourhood functions
+	//////////////////////////
+
+	$$.fn.eles({
+		neighborhood: function(selector){
+			var elements = [];
+			var cy = this._private.cy;
+			var nodes = this.nodes();
+
+			for( var i = 0; i < nodes.length; i++ ){ // for all nodes
+				var node = nodes[i];
+				var connectedEdges = node.connectedEdges();
+
+				// for each connected edge, add the edge and the other node
+				for( var j = 0; j < connectedEdges.length; j++ ){
+					var edge = connectedEdges[j];
+					var otherNode = edge.connectedNodes().not(node);
+
+					// need check in case of loop
+					if( otherNode.length > 0 ){
+						elements.push( otherNode[0] ); // add node 1 hop away
+					}
+					
+					// add connected edge
+					elements.push( edge[0] );
+				}
+
+			}
+			
+			return ( new $$.Collection( cy, elements ) ).filter( selector );
+		},
+
+		closedNeighborhood: function(selector){
+			return this.neighborhood().add(this).filter(selector);
+		},
+
+		openNeighborhood: function(selector){
+			return this.neighborhood(selector);
+		}
+	});	
+
+
+	// Edge functions
+	/////////////////
+
+	$$.fn.eles({
+		source: defineSourceFunction({
+			attr: "source"
+		}),
+
+		target: defineSourceFunction({
+			attr: "target"
+		})
+	});
+	
+	function defineSourceFunction( params ){
+		return function( selector ){
+			var sources = [];
+			var edges = this.edges();
+			var cy = this._private.cy;
+
+			for( var i = 0; i < edges.length; i++ ){
+				var edge = edges[i];
+				var id = edge._private.data[params.attr];
+				var src = cy.getElementById( id );
+
+				if( src.length > 0 ){
+					sources.push( src );
+				}
+			}
+			
+			return new $$.Collection( cy, sources ).filter( selector );
+		}
+	}
+
+	$$.fn.eles({
+		edgesWith: defineEdgesWithFunction(),
+
+		edgesTo: defineEdgesWithFunction({
+			thisIs: "source"
+		})
+	});
+	
+	function defineEdgesWithFunction( params ){
+		
+		return function(otherNodes){
+			var elements = [];
+			var cy = this._private.cy;
+			var p = params || {};
+
+			// get elements if a selector is specified
+			if( $$.is.string(otherNodes) ){
+				otherNodes = cy.$( otherNodes );
+			}
+			
+			var edges = otherNodes.connectedEdges();
+			var thisIds = this._private.ids;
+			
+			for( var i = 0; i < edges.length; i++ ){
+				var edge = edges[i];
+				var foundId;
+				var edgeData = edge._private.data;
+
+				if( p.thisIs ){
+					var idToFind = edgeData[ p.thisIs ];
+					foundId = thisIds[ idToFind ];
+				} else {
+					foundId = thisIds[ edgeData.source ] || thisIds[ edgeData.target ];
+				}
+				
+				if( foundId ){
+					elements.push( edge );
+				}
+			}
+			
+			return new $$.Collection( cy, elements );
+		};
+	}
+	
+	$$.fn.eles({
+		connectedEdges: function( selector ){
+			var elements = [];
+			var cy = this._private.cy;
+			
+			var nodes = this.nodes();
+			for( var i = 0; i < nodes.length; i++ ){
+				var node = nodes[i];
+				var edges = node._private.edges;
+
+				for( var j = 0; j < edges.length; j++ ){
+					var edge = edges[j];					
+					elements.push( edge );
+				}
+			}
+			
+			return new $$.Collection( cy, elements ).filter( selector );
+		},
+
+		connectedNodes: function( selector ){
+			var elements = [];
+			var cy = this._private.cy;
+
+			var edges = this.edges();
+			for( var i = 0; i < edges.length; i++ ){
+				var edge = edges[i];
+
+				elements.push( edge.source()[0] );
+				elements.push( edge.target()[0] );
+			}
+
+			return new $$.Collection( cy, elements ).filter( selector );
+		},
+
+		parallelEdges: defineParallelEdgesFunction(),
+
+		codirectedEdges: defineParallelEdgesFunction({
+			codirected: true
+		}),
+
+		parallelIndex: function(){
+			var edge = this[0];
+
+			if( edge.isEdge() ){
+				var src = edge.source()[0];
+				var srcEdges = src._private.edges;
+				var index = 0;
+
+				for( var i = 0; i < srcEdges.length; i++ ){
+					var srcEdge = srcEdges[i];
+					var thisIsTheIndex = srcEdge === edge;
+
+					if( thisIsTheIndex ){
+						return index;
+					}
+
+					var codirected = edge._private.data.source === srcEdge._private.data.source
+						&& edge._private.data.target === srcEdge._private.data.target;
+					var opdirected = edge._private.data.source === srcEdge._private.data.target
+						&& edge._private.data.target === srcEdge._private.data.source;
+					var parallel = codirected || opdirected;
+
+					if( parallel ){ // then increase the count
+						index++;
+					}
+				}
+			}
+		},
+
+		parallelSize: function(){
+			var edge = this[0];
+
+			if( edge.isEdge() ){
+				var src = edge.source()[0];
+				var srcEdges = src._private.edges;
+				var numEdges = 0;
+
+				for( var i = 0; i < srcEdges.length; i++ ){
+					var srcEdge = srcEdges[i];
+					var codirected = edge._private.data.source === srcEdge._private.data.source
+						&& edge._private.data.target === srcEdge._private.data.target;
+					var opdirected = edge._private.data.source === srcEdge._private.data.target
+						&& edge._private.data.target === srcEdge._private.data.source;
+					var parallel = codirected || opdirected;
+
+					if( parallel ){ // then increase the count
+						numEdges++;
+					}
+				}
+
+				return numEdges;
+			}
+		}
+	});
+	
+	function defineParallelEdgesFunction(params){
+		var defaults = {
+			codirected: false
+		};
+		params = $$.util.extend({}, defaults, params);
+		
+		return function( selector ){
+			var cy = this._private.cy;
+			var elements = [];
+			var edges = this.edges();
+			var p = params;
+
+			// look at all the edges in the collection
+			for( var i = 0; i < edges.length; i++ ){
+				var edge1 = edges[i];
+				var src1 = edge1.source()[0];
+				var srcid1 = src1.id();
+				var tgt1 = edge1.target()[0];
+				var tgtid1 = tgt1.id();
+				var srcEdges1 = src1._private.edges;
+
+				// look at edges connected to the src node of this edge
+				for( var j = 0; j < srcEdges1.length; j++ ){
+					var edge2 = srcEdges1[j];
+					var edge2data = edge2._private.data;
+					var tgtid2 = edge2data.target;
+					var srcid2 = edge2data.source;
+
+					var codirected = tgtid2 === tgtid1 && srcid2 === srcid1;
+					var oppdirected = srcid1 === tgtid2 && tgtid1 === srcid2;
+					
+					if( (p.codirected && codirected)
+					|| (!p.codirected && (codirected || oppdirected)) ){
+						elements.push( edge2 );
+					}
+				}
+			}
+			
+			return new $$.Collection( cy, elements ).filter( selector );
+		};
+	
+	}
+
+
+	// Compound functions
+	/////////////////////
+
+	$$.fn.eles({
+		parent: function( selector ){
+			var parents = [];
+			var cy = this._private.cy;
+
+			for( var i = 0; i < this.length; i++ ){
+				var ele = this[i];
+				var parent = cy.getElementById( ele._private.data.parent );
+
+				if( parent.size() > 0 ){
+					parents.push( parent );
+				}
+			}
+			
+			return new $$.Collection( cy, parents ).filter( selector );
+		},
+
+		parents: function( selector ){
+			var parents = [];
+
+			var eles = this.parent();
+			while( eles.nonempty() ){
+				for( var i = 0; i < eles.length; i++ ){
+					var ele = eles[i];
+					parents.push( ele );
+				}
+
+				eles = eles.parent();
+			}
+
+			return new $$.Collection( this.cy(), parents ).filter( selector );
+		},
+
+		children: function( selector ){
+			var children = [];
+
+			for( var i = 0; i < this.length; i++ ){
+				var ele = this[i];
+				children = children.concat( ele._private.children );
+			}
+
+			return new $$.Collection( this.cy(), children ).filter( selector );
+		},
+
+		siblings: function( selector ){
+			return this.parent().children().not( this ).filter( selector );
+		},
+
+		isParent: function(){
+			var ele = this[0];
+
+			if( ele ){
+				return ele._private.children.length !== 0;
+			}
+		},
+
+		isChild: function(){
+			var ele = this[0];
+
+			if( ele ){
+				return ele._private.data.parent !== undefined && ele.parent().length !== 0;
+			}
+		},
+
+		descendants: function( selector ){
+			var elements = [];
+
+			function add( eles ){
+				for( var i = 0; i < eles.length; i++ ){
+					var ele = eles[i];
+
+					elements.push( ele );
+
+					if( ele.children().nonempty() ){
+						add( ele.children() );
+					}
+				}
+			}
+
+			add( this.children() );
+
+			return new $$.Collection( this.cy(), elements ).filter( selector );
+		}
+	});
+
+	
+})( cytoscape );
+
+;(function($$){
+		
+
+	$$.fn.selector = function(map, options){
+		for( var name in map ){
+			var fn = map[name];
+			$$.Selector.prototype[ name ] = fn;
+		}
+	};
+
+	$$.Selector = function(onlyThisGroup, selector){
+		
+		if( !(this instanceof $$.Selector) ){
+			return new $$.Selector(onlyThisGroup, selector);
+		}
+	
+		if( selector === undefined && onlyThisGroup !== undefined ){
+			selector = onlyThisGroup;
+			onlyThisGroup = undefined;
+		}
+		
+		var self = this;
+		
+		self._private = {
+			selectorText: null,
+			invalid: true
+		}
+	
+		// storage for parsed queries
+		// when you add something here, also add to Selector.toString()
+		function newQuery(){
+			return {
+				classes: [], 
+				colonSelectors: [],
+				data: [],
+				group: null,
+				ids: [],
+				meta: [],
+
+				// fake selectors
+				collection: null, // a collection to match against
+				filter: null, // filter function
+
+				// these are defined in the upward direction rather than down (e.g. child)
+				// because we need to go up in Selector.filter()
+				parent: null, // parent query obj
+				ancestor: null, // ancestor query obj
+				subject: null, // defines subject in compound query (subject query obj; points to self if subject)
+
+				// use these only when subject has been defined
+				child: null,
+				descendant: null
+			};
+		}
+		
+		if( !selector || ( $$.is.string(selector) && selector.match(/^\s*$/) ) ){
+			
+			if( onlyThisGroup == null ){
+				// ignore
+				self.length = 0;
+			} else {
+				self[0] = newQuery();
+				self[0].group = onlyThisGroup;
+				self.length = 1;
+			}
+							
+		} else if( $$.is.element( selector ) ){
+			var collection = new $$.Collection(self.cy(), [ selector ]);
+			
+			self[0] = newQuery();
+			self[0].collection = collection;
+			self.length = 1;
+			
+		} else if( $$.is.collection( selector ) ){
+			self[0] = newQuery();
+			self[0].collection = selector;
+			self.length = 1;
+			
+		} else if( $$.is.fn( selector ) ) {
+			self[0] = newQuery();
+			self[0].filter = selector;
+			self.length = 1;
+			
+		} else if( $$.is.string( selector ) ){
+		
+			// these are the actual tokens in the query language
+			var metaChar = "[\\!\\\"\\#\\$\\%\\&\\\'\\(\\)\\*\\+\\,\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\`\\{\\|\\}\\~]"; // chars we need to escape in var names, etc
+			var variable = "(?:[\\w-]|(?:\\\\"+ metaChar +"))+"; // a variable name
+			var comparatorOp = "=|\\!=|>|>=|<|<=|\\$=|\\^=|\\*="; // binary comparison op (used in data selectors)
+			var boolOp = "\\?|\\!|\\^"; // boolean (unary) operators (used in data selectors)
+			var string = '"(?:\\\\"|[^"])+"' + "|" + "'(?:\\\\'|[^'])+'"; // string literals (used in data selectors) -- doublequotes | singlequotes
+			var number = $$.util.regex.number; // number literal (used in data selectors) --- e.g. 0.1234, 1234, 12e123
+			var value = string + "|" + number; // a value literal, either a string or number
+			var meta = "degree|indegree|outdegree"; // allowed metadata fields (i.e. allowed functions to use from $$.Collection)
+			var separator = "\\s*,\\s*"; // queries are separated by commas; e.g. edge[foo = "bar"], node.someClass
+			var className = variable; // a class name (follows variable conventions)
+			var descendant = "\\s+";
+			var child = "\\s+>\\s+";
+			var subject = "\\$";
+			var id = variable; // an element id (follows variable conventions)
+			
+			// when a token like a variable has escaped meta characters, we need to clean the backslashes out
+			// so that values get compared properly in Selector.filter()
+			function cleanMetaChars(str){
+				return str.replace(new RegExp("\\\\(" + metaChar + ")", "g"), "\1");
+			}
+			
+			// add @ variants to comparatorOp
+			var ops = comparatorOp.split("|");
+			for( var i = 0; i < ops.length; i++ ){
+				var op = ops[i];
+				comparatorOp += "|@" + op;
+			}
+
+			// the current subject in the query
+			var currentSubject = null;
+			
+			// NOTE: add new expression syntax here to have it recognised by the parser;
+			// a query contains all adjacent (i.e. no separator in between) expressions;
+			// the current query is stored in self[i] --- you can use the reference to `this` in the populate function;
+			// you need to check the query objects in Selector.filter() for it actually filter properly, but that's pretty straight forward
+			var exprs = {
+				group: {
+					query: true,
+					regex: "(node|edge|\\*)",
+					populate: function( group ){
+						this.group = group == "*" ? group : group + "s";
+					}
+				},
+				
+				state: {
+					query: true,
+					regex: "(:selected|:unselected|:locked|:unlocked|:visible|:hidden|:grabbed|:free|:removed|:inside|:grabbable|:ungrabbable|:animated|:unanimated|:selectable|:unselectable|:parent|:child|:active|:inactive|:touch)",
+					populate: function( state ){
+						this.colonSelectors.push( state );
+					}
+				},
+				
+				id: {
+					query: true,
+					regex: "\\#("+ id +")",
+					populate: function( id ){
+						this.ids.push( cleanMetaChars(id) );
+					}
+				},
+				
+				className: {
+					query: true,
+					regex: "\\.("+ className +")",
+					populate: function( className ){
+						this.classes.push( cleanMetaChars(className) );
+					}
+				},
+				
+				dataExists: {
+					query: true,
+					regex: "\\[\\s*("+ variable +")\\s*\\]",
+					populate: function( variable ){
+						this.data.push({
+							field: cleanMetaChars(variable)
+						});
+					}
+				},
+				
+				dataCompare: {
+					query: true,
+					regex: "\\[\\s*("+ variable +")\\s*("+ comparatorOp +")\\s*("+ value +")\\s*\\]",
+					populate: function( variable, comparatorOp, value ){
+						this.data.push({
+							field: cleanMetaChars(variable),
+							operator: comparatorOp,
+							value: value
+						});
+					}
+				},
+				
+				dataBool: {
+					query: true,
+					regex: "\\[\\s*("+ boolOp +")\\s*("+ variable +")\\s*\\]",
+					populate: function( boolOp, variable ){
+						this.data.push({
+							field: cleanMetaChars(variable),
+							operator: boolOp
+						});
+					}
+				},
+				
+				metaCompare: {
+					query: true,
+					regex: "\\{\\s*("+ meta +")\\s*("+ comparatorOp +")\\s*("+ number +")\\s*\\}",
+					populate: function( meta, comparatorOp, number ){
+						this.meta.push({
+							field: cleanMetaChars(meta),
+							operator: comparatorOp,
+							value: number
+						});
+					}
+				},
+
+				nextQuery: {
+					separator: true,
+					regex: separator,
+					populate: function(){
+						// go on to next query
+						self[++i] = newQuery();
+						currentSubject = null;
+					}
+				},
+
+				child: {
+					separator: true,
+					regex: child,
+					populate: function(){
+						// this query is the parent of the following query
+						var childQuery = newQuery();
+						childQuery.parent = this;
+						childQuery.subject = currentSubject;
+
+						// we're now populating the child query with expressions that follow
+						self[i] = childQuery;
+					}
+				},
+
+				descendant: {
+					separator: true,
+					regex: descendant,
+					populate: function(){
+						// this query is the ancestor of the following query
+						var descendantQuery = newQuery();
+						descendantQuery.ancestor = this;
+						descendantQuery.subject = currentSubject;
+
+						// we're now populating the descendant query with expressions that follow
+						self[i] = descendantQuery;
+					}
+				},
+
+				subject: {
+					modifier: true,
+					regex: subject,
+					populate: function(){
+						if( currentSubject != null && this.subject != this ){
+							$$.util.error("Redefinition of subject in selector `" + selector + "`");
+							return false;
+						}
+
+						currentSubject = this;
+						this.subject = this;
+					},
+
+				}
+			};
+
+			var j = 0;
+			for( var name in exprs ){
+				exprs[j] = exprs[name];
+				exprs[j].name = name;
+
+				j++;
+			}
+			exprs.length = j;
+
+			self._private.selectorText = selector;
+			var remaining = selector;
+			var i = 0;
+			
+			// of all the expressions, find the first match in the remaining text
+			function consumeExpr( expectation ){
+				var expr;
+				var match;
+				var name;
+				
+				for( var j = 0; j < exprs.length; j++ ){
+					var e = exprs[j];
+					var n = e.name;
+
+					// ignore this expression if it doesn't meet the expectation function
+					if( $$.is.fn( expectation ) && !expectation(n, e) ){ continue }
+
+					var m = remaining.match(new RegExp( "^" + e.regex ));
+					
+					if( m != null ){
+						match = m;
+						expr = e;
+						name = n;
+						
+						var consumed = m[0];
+						remaining = remaining.substring( consumed.length );								
+						
+						break; // we've consumed one expr, so we can return now
+					}
+				}
+				
+				return {
+					expr: expr,
+					match: match,
+					name: name
+				};
+			}
+			
+			// consume all leading whitespace
+			function consumeWhitespace(){
+				var match = remaining.match(/^\s+/);
+				
+				if( match ){
+					var consumed = match[0];
+					remaining = remaining.substring( consumed.length );
+				}
+			}
+			
+			self[0] = newQuery(); // get started
+
+			consumeWhitespace(); // get rid of leading whitespace
+			for(;;){				
+				var check = consumeExpr();
+				
+				if( check.expr == null ){
+					$$.util.error("The selector `"+ selector +"`is invalid");
+					return;
+				} else {
+					var args = [];
+					for(var j = 1; j < check.match.length; j++){
+						args.push( check.match[j] );
+					}
+					
+					// let the token populate the selector object (i.e. in self[i])
+					var ret = check.expr.populate.apply( self[i], args );
+
+					if( ret === false ){ return } // exit if population failed
+				}
+				
+				// we're done when there's nothing left to parse
+				if( remaining.match(/^\s*$/) ){
+					break;
+				}
+			}
+			
+			self.length = i + 1;
+
+			// adjust references for subject
+			for(j = 0; j < self.length; j++){
+				var query = self[j];
+
+				if( query.subject != null ){
+					// go up the tree until we reach the subject
+					for(;;){
+						if( query.subject == query ){ break } // done if subject is self
+
+						if( query.parent != null ){ // swap parent/child reference
+							var parent = query.parent;
+							var child = query;
+
+							child.parent = null;
+							parent.child = child;
+
+							query = parent; // go up the tree
+						} else if( query.ancestor != null ){ // swap ancestor/descendant
+							var ancestor = query.ancestor;
+							var descendant = query;
+
+							descendant.ancestor = null;
+							ancestor.descendant = descendant;
+
+							query = ancestor; // go up the tree
+						} else {
+							$$.util.error("When adjusting references for the selector `"+ query +"`, neither parent nor ancestor was found");
+							break;
+						}
+					} // for
+
+					self[j] = query.subject; // subject should be the root query
+				} // if
+			} // for
+
+			// make sure for each query that the subject group matches the implicit group if any
+			if( onlyThisGroup != null ){
+				for(var j = 0; j < self.length; j++){
+					if( self[j].group != null && self[j].group != onlyThisGroup ){
+						$$.util.error("Group `"+ self[j].group +"` conflicts with implicit group `"+ onlyThisGroup +"` in selector `"+ selector +"`");
+						return;
+					}
+
+					self[j].group = onlyThisGroup; // set to implicit group
+				}
+			}
+			
+		} else {
+			$$.util.error("A selector must be created from a string; found " + selector);
+			return;
+		}
+
+		self._private.invalid = false;
+		
+	};
+
+	$$.selfn = $$.Selector.prototype;
+	
+	$$.selfn.size = function(){
+		return this.length;
+	};
+	
+	$$.selfn.eq = function(i){
+		return this[i];
+	};
+	
+	// get elements from the core and then filter them
+	$$.selfn.find = function(){
+		// TODO impl if we decide to use a DB for storing elements
+	};
+	
+	// filter an existing collection
+	$$.selfn.filter = function(collection, addLiveFunction){
+		var self = this;
+		var cy = collection.cy();
+		
+		// don't bother trying if it's invalid
+		if( self._private.invalid ){
+			return new $$.Collection( cy );
+		}
+		
+		var queryMatches = function(query, element){
+			// check group
+			if( query.group != null && query.group != "*" && query.group != element._private.group ){
+				return false;
+			}
+			
+			// check colon selectors
+			var allColonSelectorsMatch = true;
+			for(var k = 0; k < query.colonSelectors.length; k++){
+				var sel = query.colonSelectors[k];
+				var renderer = cy.renderer(); // TODO remove reference after refactoring
+				
+				switch(sel){
+				case ":selected":
+					allColonSelectorsMatch = element.selected();
+					break;
+				case ":unselected":
+					allColonSelectorsMatch = !element.selected();
+					break;
+				case ":selectable":
+					allColonSelectorsMatch = element.selectable();
+					break;
+				case ":unselectable":
+					allColonSelectorsMatch = !element.selectable();
+					break;
+				case ":locked":
+					allColonSelectorsMatch = element.locked();
+					break;
+				case ":unlocked":
+					allColonSelectorsMatch = !element.locked();
+					break;
+				case ":visible":
+					allColonSelectorsMatch = element.visible();
+					break;
+				case ":hidden":
+					allColonSelectorsMatch = !element.visible();
+					break;
+				case ":grabbed":
+					allColonSelectorsMatch = element.grabbed();
+					break;
+				case ":free":
+					allColonSelectorsMatch = !element.grabbed();
+					break;
+				case ":removed":
+					allColonSelectorsMatch = element.removed();
+					break;
+				case ":inside":
+					allColonSelectorsMatch = !element.removed();
+					break;
+				case ":grabbable":
+					allColonSelectorsMatch = element.grabbable();
+					break;
+				case ":ungrabbable":
+					allColonSelectorsMatch = !element.grabbable();
+					break;
+				case ":animated":
+					allColonSelectorsMatch = element.animated();
+					break;
+				case ":unanimated":
+					allColonSelectorsMatch = !element.animated();
+					break;
+				case ":parent":
+					allColonSelectorsMatch = element.children().nonempty();
+					break;
+				case ":child":
+					allColonSelectorsMatch = element.parent().nonempty();
+					break;
+				case ":active":
+					allColonSelectorsMatch = element.active();
+					break;
+				case ":inactive":
+					allColonSelectorsMatch = !element.active();
+					break;
+				case ":touch":
+					allColonSelectorsMatch = window && document && (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
+					break;
+				}
+				
+				if( !allColonSelectorsMatch ) break;
+			}
+			if( !allColonSelectorsMatch ) return false;
+			
+			// check id
+			var allIdsMatch = true;
+			for(var k = 0; k < query.ids.length; k++){
+				var id = query.ids[k];
+				var actualId = element._private.data.id;
+				
+				allIdsMatch = allIdsMatch && (id == actualId);
+				
+				if( !allIdsMatch ) break;
+			}
+			if( !allIdsMatch ) return false;
+			
+			// check classes
+			var allClassesMatch = true;
+			for(var k = 0; k < query.classes.length; k++){
+				var cls = query.classes[k];
+				
+				allClassesMatch = allClassesMatch && element.hasClass(cls);
+				
+				if( !allClassesMatch ) break;
+			}
+			if( !allClassesMatch ) return false;
+			
+			// generic checking for data/metadata
+			function operandsMatch(params){
+				var allDataMatches = true;
+				for(var k = 0; k < query[params.name].length; k++){
+					var data = query[params.name][k];
+					var operator = data.operator;
+					var value = data.value;
+					var field = data.field;
+					var matches;
+					
+					if( operator != null && value != null ){
+						
+						var fieldStr = "" + params.fieldValue(field);
+						var valStr = "" + eval(value);
+						
+						var caseInsensitive = false;
+						if( operator.charAt(0) == "@" ){
+							fieldStr = fieldStr.toLowerCase();
+							valStr = valStr.toLowerCase();
+							
+							operator = operator.substring(1);
+							caseInsensitive = true;
+						}
+						
+						if( operator == "=" ){
+							operator = "==";
+						}
+						
+						switch(operator){
+						case "*=":
+							matches = fieldStr.search(valStr) >= 0;
+							break;
+						case "$=":
+							matches = new RegExp(valStr + "$").exec(fieldStr) != null;
+							break;
+						case "^=":
+							matches = new RegExp("^" + valStr).exec(fieldStr) != null;
+							break;
+						default:
+							// if we're doing a case insensitive comparison, then we're using a STRING comparison
+							// even if we're comparing numbers
+							if( caseInsensitive ){
+								// eval with lower case strings
+								var expr = "fieldStr " + operator + " valStr";
+								matches = eval(expr);
+							} else {
+								// just eval as normal
+								var expr = params.fieldRef(field) + " " + operator + " " + value;
+								matches = eval(expr);
+							}
+							
+						}
+					} else if( operator != null ){
+						switch(operator){
+						case "?":
+							matches = params.fieldTruthy(field);
+							break;
+						case "!":
+							matches = !params.fieldTruthy(field);
+							break;
+						case "^":
+							matches = params.fieldUndefined(field);
+							break;
+						}
+					} else { 	
+						matches = !params.fieldUndefined(field);
+					}
+					
+					if( !matches ){
+						allDataMatches = false;
+						break;
+					}
+				} // for
+				
+				return allDataMatches;
+			} // operandsMatch
+			
+			// check data matches
+			var allDataMatches = operandsMatch({
+				name: "data",
+				fieldValue: function(field){
+					return element._private.data[field];
+				},
+				fieldRef: function(field){
+					return "element._private.data." + field;
+				},
+				fieldUndefined: function(field){
+					return element._private.data[field] === undefined;
+				},
+				fieldTruthy: function(field){
+					if( element._private.data[field] ){
+						return true;
+					}
+					return false;
+				}
+			});
+			
+			if( !allDataMatches ){
+				return false;
+			}
+			
+			// check metadata matches
+			var allMetaMatches = operandsMatch({
+				name: "meta",
+				fieldValue: function(field){
+					return element[field]();
+				},
+				fieldRef: function(field){
+					return "element." + field + "()";
+				},
+				fieldUndefined: function(field){
+					return element[field]() == undefined;
+				},
+				fieldTruthy: function(field){
+					if( element[field]() ){
+						return true;
+					}
+					return false;
+				}
+			});
+			
+			if( !allMetaMatches ){
+				return false;
+			}
+			
+			// check collection
+			if( query.collection != null ){
+				var matchesAny = query.collection._private.ids[ element.id() ] != null;
+				
+				if( !matchesAny ){
+					return false;
+				}
+			}
+			
+			// check filter function
+			if( query.filter != null && element.collection().filter( query.filter ).size() == 0 ){
+				return false;
+			}
+			
+
+			// check parent/child relations
+			function confirmRelations( query, elements ){
+				if( query != null ){
+					var matches = false;
+					elements = elements(); // make elements functional so we save cycles if query == null
+
+					// query must match for at least one element (may be recursive)
+					for(var i = 0; i < elements.size(); i++){
+						if( queryMatches( query, elements.eq(i) ) ){
+							matches = true;
+							break;
+						}
+					}
+
+					return matches;
+				} else {
+					return true;
+				}
+			}
+
+			if (! confirmRelations(query.parent, function(){
+				return element.parent()
+			}) ){ return false }
+
+			if (! confirmRelations(query.ancestor, function(){
+				return element.parents()
+			}) ){ return false }
+
+			if (! confirmRelations(query.child, function(){
+				return element.children()
+			}) ){ return false }
+
+			if (! confirmRelations(query.descendant, function(){
+				return element.descendants()
+			}) ){ return false }
+
+			// we've reached the end, so we've matched everything for this query
+			return true;
+		}; // queryMatches
+
+		var selectorFunction = function(i, element){
+			for(var j = 0; j < self.length; j++){
+				var query = self[j];
+				
+				if( queryMatches(query, element) ){
+					return true;
+				}
+			}
+			
+			return false;
+		};
+		
+		if( self._private.selectorText == null ){
+			selectorFunction = function(){ return true; };
+		}
+		
+		var filteredCollection = collection.filter( selectorFunction );
+		
+		return filteredCollection;
+	}; // filter
+	
+	// ith query to string
+	$$.selfn.toString = $$.selfn.selector = function(){
+		
+		var str = "";
+		
+		function clean(obj){
+			if( $$.is.string(obj) ){
+				return obj;
+			} 
+			return "";
+		}
+		
+		function queryToString(query){
+			var str = "";
+
+			var group = clean(query.group);
+			str += group.substring(0, group.length - 1);
+			
+			for(var j = 0; j < query.data.length; j++){
+				var data = query.data[j];
+				str += "[" + data.field + clean(data.operator) + clean(data.value) + "]"
+			}
+
+			for(var j = 0; j < query.meta.length; j++){
+				var meta = query.meta[j];
+				str += "{" + meta.field + clean(meta.operator) + clean(meta.value) + "}"
+			}
+			
+			for(var j = 0; j < query.colonSelectors.length; j++){
+				var sel = query.colonSelectors[i];
+				str += sel;
+			}
+			
+			for(var j = 0; j < query.ids.length; j++){
+				var sel = "#" + query.ids[i];
+				str += sel;
+			}
+			
+			for(var j = 0; j < query.classes.length; j++){
+				var sel = "." + query.classes[i];
+				str += sel;
+			}
+
+			if( query.parent != null ){
+				str = queryToString( query.parent ) + " > " + str; 
+			}
+
+			if( query.ancestor != null ){
+				str = queryToString( query.ancestor ) + " " + str; 
+			}
+
+			if( query.child != null ){
+				str += " > " + queryToString( query.child ); 
+			}
+
+			if( query.descendant != null ){
+				str += " " + queryToString( query.descendant ); 
+			}
+
+			return str;
+		}
+
+		for(var i = 0; i < this.length; i++){
+			var query = this[i];
+			
+			str += queryToString( query );
+			
+			if( this.length > 1 && i < this.length - 1 ){
+				str += ", ";
+			}
+		}
+		
+		return str;
+	};
+	
+})( cytoscape );
+
+;(function($$){
+		
+	function NullRenderer(options){
+	}
+	
+	NullRenderer.prototype.notify = function(params){
+	};
+	
+	$$("renderer", "null", NullRenderer);
+	
+})( cytoscape );
+
+(function($$) {
+
+	var isTouch = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
+	var time = function() { return Date.now(); } ; 
+	var arrowShapes = {}; var nodeShapes = {}; 
+	var rendFunc = CanvasRenderer.prototype;
+	var panOrBoxSelectDelay = 400;
+
+	// Canvas layer constants
+	var CANVAS_LAYERS = 5, SELECT_BOX = 0, DRAG = 2, OVERLAY = 3, NODE = 4, BUFFER_COUNT = 2;
+	
+	function CanvasRenderer(options) {
+		
+		this.options = options;
+
+		this.data = {
+				
+			select: [undefined, undefined, undefined, undefined, 0], // Coordinates for selection box, plus enabled flag 
+			renderer: this, cy: options.cy, container: options.cy.container(),
+			
+			canvases: new Array(CANVAS_LAYERS),
+			canvasRedrawReason: new Array(CANVAS_LAYERS),
+			canvasNeedsRedraw: new Array(CANVAS_LAYERS),
+			
+			bufferCanvases: new Array(BUFFER_COUNT)
+
+		};
+		
+		//--Pointer-related data
+		this.hoverData = {down: null, last: null, 
+				downTime: null, triggerMode: null, 
+				dragging: false, 
+				initialPan: [null, null], capture: false};
+		
+		this.timeoutData = {panTimeout: null};
+		
+		this.dragData = {possibleDragElements: []};
+		
+		this.touchData = {start: null, capture: false,
+				// These 3 fields related to tap, taphold events
+				startPosition: [null, null, null, null, null, null],
+				singleTouchStartTime: null,
+				singleTouchMoved: true,
+				
+				
+				now: [null, null, null, null, null, null], 
+				earlier: [null, null, null, null, null, null] };
+		//--
+		
+		//--Wheel-related data 
+		this.zoomData = {freeToZoom: false, lastPointerX: null};
+		//--
+		
+		this.redraws = 0;
+
+		this.bindings = [];
+		
+		this.init();
+		
+		for (var i = 0; i < CANVAS_LAYERS; i++) {
+			this.data.canvases[i] = document.createElement("canvas");
+			this.data.canvases[i].style.position = "absolute";
+			this.data.canvases[i].setAttribute("data-id", "layer" + i);
+			this.data.canvases[i].style.zIndex = String(CANVAS_LAYERS - i);
+			this.data.container.appendChild(this.data.canvases[i]);
+			
+			this.data.canvasRedrawReason[i] = new Array();
+			this.data.canvasNeedsRedraw[i] = false;
+		}
+
+		this.data.canvases[NODE].setAttribute("data-id", "layer" + NODE + '-node');
+		this.data.canvases[SELECT_BOX].setAttribute("data-id", "layer" + SELECT_BOX + '-selectbox');
+		this.data.canvases[DRAG].setAttribute("data-id", "layer" + DRAG + '-drag');
+		this.data.canvases[OVERLAY].setAttribute("data-id", "layer" + OVERLAY + '-overlay');
+		
+		for (var i = 0; i < BUFFER_COUNT; i++) {
+			this.data.bufferCanvases[i] = document.createElement("canvas");
+			this.data.bufferCanvases[i].style.position = "absolute";
+			this.data.bufferCanvases[i].setAttribute("data-id", "buffer" + i);
+			this.data.bufferCanvases[i].style.zIndex = String(-i - 1);
+			this.data.bufferCanvases[i].style.visibility = "visible";
+			this.data.container.appendChild(this.data.bufferCanvases[i]);
+		}
+
+		var overlay = document.createElement('div');
+		this.data.container.appendChild( overlay );
+		this.data.overlay = overlay;
+		overlay.style.position = 'absolute';
+		overlay.style.zIndex = 1000;
+
+		if( options.showOverlay ){
+
+			var link = document.createElement('a');
+			overlay.appendChild( link );
+			this.data.link = link;
+
+			link.innerHTML = 'cytoscape.js';
+			link.style.font = '14px helvetica';
+			link.style.position = 'absolute';
+			link.style.right = 0;
+			link.style.bottom = 0;
+			link.style.padding = '1px 3px';
+			link.style.paddingLeft = '5px';
+			link.style.paddingTop = '5px';
+			link.style.opacity = 0;
+			link.style['-webkit-tap-highlight-color'] = 'transparent';
+			link.style.background = 'red';
+
+			link.href = 'http://cytoscape.github.io/cytoscape.js/';
+			link.target = '_blank';
+
+		}
+
+		this.hideEdgesOnViewport = options.hideEdgesOnViewport;
+
+		this.load();
+	}
+
+	CanvasRenderer.prototype.notify = function(params) {
+		if ( params.type == "destroy" ){
+			this.destroy();
+			return;
+
+		} else if (params.type == "add"
+			|| params.type == "remove"
+			|| params.type == "load"
+		) {
+			
+			this.updateNodesCache();
+			this.updateEdgesCache();
+		}
+
+		if (params.type == "viewport") {
+			this.data.canvasNeedsRedraw[SELECT_BOX] = true;
+			this.data.canvasRedrawReason[SELECT_BOX].push("viewchange");
+		}
+		
+		this.data.canvasNeedsRedraw[DRAG] = true; this.data.canvasRedrawReason[DRAG].push("notify");
+		this.data.canvasNeedsRedraw[NODE] = true; this.data.canvasRedrawReason[NODE].push("notify");
+
+		this.redraws++;
+		this.redraw();
+	};
+
+	CanvasRenderer.prototype.registerBinding = function(target, event, handler, useCapture){
+		this.bindings.push({
+			target: target,
+			event: event,
+			handler: handler,
+			useCapture: useCapture
+		});
+
+		target.addEventListener(event, handler, useCapture);
+	};
+
+	CanvasRenderer.prototype.destroy = function(){
+		this.destroyed = true;
+
+		for( var i = 0; i < this.bindings.length; i++ ){
+			var binding = this.bindings[i];
+			var b = binding;
+
+			b.target.removeEventListener(b.event, b.handler, b.useCapture);
+		}
+	};
+	
+	
+	CanvasRenderer.prototype.png = function(){
+		var data = this.data;
+
+		// Rasterize the layers, but only if container has nonzero size
+		if (this.data.container.clientHeight > 0
+				&& this.data.container.clientWidth > 0) {
+			
+			context = data.bufferCanvases[1].getContext("2d");
+			context.globalCompositeOperation = "copy";
+			context.drawImage(data.canvases[4], 0, 0);
+			context.globalCompositeOperation = "source-over";
+			context.drawImage(data.canvases[2], 0, 0);
+			context.drawImage(data.canvases[0], 0, 0);
+			
+			context = data.bufferCanvases[0].getContext("2d");
+			context.globalCompositeOperation = "copy";
+			context.drawImage(data.bufferCanvases[1], 0, 0);
+		}
+
+		var canvas = this.data.bufferCanvases[0];
+
+		return canvas.toDataURL("image/png");
+	};
+
+	// @O Initialization functions
+	{
+	CanvasRenderer.prototype.load = function() {
+		var r = this;
+
+		// helper function to determine which child nodes and inner edges
+		// of a compound node to be dragged as well as the grabbed and selected nodes
+		var addDescendantsToDrag = function(node, addSelected, dragElements) {
+			if (!addSelected)
+			{
+				var parents = node.parents();
+
+				// do not process descendants for this node,
+				// because those will be handled for the topmost selected parent
+				for (var i=0; i < parents.size(); i++)
+				{
+				    if (parents[i]._private.selected)
+				    {
+					    return;
+				    }
+				}
+			}
+
+			var innerNodes = node.descendants();
+
+			function hasNonAutoParent(ele){
+				while( ele.parent().nonempty() && ele.parent().id() !== node.id() ){
+					parent = ele.parent()[0];
+					var pstyle = parent._private.style;
+
+					if( pstyle.width.value !== 'auto' || pstyle.height.value !== 'auto' ){
+						return true;
+					}
+
+					ele = ele.parent();
+				}
+
+				return false;
+			}
+
+			// TODO do not drag hidden children & children of hidden children?
+			for (var i=0; i < innerNodes.size(); i++)
+			{
+				// if addSelected is true, then add node in any case,
+				// if not, then add only non-selected nodes
+				if ( (addSelected || !innerNodes[i]._private.selected) )
+				{
+					innerNodes[i]._private.rscratch.inDragLayer = true;
+					//innerNodes[i].trigger(new $$.Event(e, {type: "grab"}));
+					//innerNodes[i].trigger(event);
+					dragElements.push(innerNodes[i]);
+
+					for (var j=0; j < innerNodes[i]._private.edges.length; j++)
+					{
+						innerNodes[i]._private.edges[j]._private.rscratch.inDragLayer = true;
+					}
+				}
+			}
+		};
+
+		// adds the given nodes, and its edges to the drag layer
+		var addNodeToDrag = function(node, dragElements) {
+			node._private.grabbed = true;
+			node._private.rscratch.inDragLayer = true;
+
+			dragElements.push(node);
+
+			for (var i=0;i<node._private.edges.length;i++) {
+				node._private.edges[i]._private.rscratch.inDragLayer = true;
+			}
+
+			//node.trigger(new $$.Event(e, {type: "grab"}));
+		};
+
+		// helper function to determine which ancestor nodes and edges should go
+		// to the drag layer (or should be removed from drag layer).
+		var updateAncestorsInDragLayer = function(node, inDragLayer) {
+			// find top-level parent
+			var parent = node;
+
+			while (parent.parent().nonempty())
+			{
+				parent = parent.parent()[0];
+
+				// var pstyle = parent._private.style;
+				// if( pstyle.width.value !== 'auto' || pstyle.height.value !== 'auto' ){
+				// 	parent = node;
+				// 	break;
+				// }
+			}
+
+			// no parent node: no node to add to the drag layer
+			if (parent == node && inDragLayer)
+			{
+				return;
+			}
+
+			var nodes = parent.descendants().add(parent);
+
+			for (var i=0; i < nodes.size(); i++)
+			{
+
+				nodes[i]._private.rscratch.inDragLayer = inDragLayer;
+
+				// TODO when calling this function for a set of nodes, we visit same edges over and over again,
+				// instead of adding edges for each node, it may be better to iterate all edges at once
+				// or another solution is to find out the common ancestors and process only those nodes for edges
+				for (var j=0; j<nodes[i]._private.edges.length; j++) {
+					nodes[i]._private.edges[j]._private.rscratch.inDragLayer = inDragLayer;
+				}
+			}
+		};
+
+		CanvasRenderer.prototype.nodeIsDraggable = function(node) {
+			if (node._private.style["opacity"].value != 0
+				&& node._private.style["visibility"].value == "visible"
+				&& !node._private.locked
+				&& node._private.grabbable) {
+	
+				return true;
+			}
+			
+			return false;
+		}
+
+		// auto resize
+		r.registerBinding(window, "resize", function(e) { 
+			r.data.canvasNeedsRedraw[NODE] = true;
+			r.data.canvasNeedsRedraw[OVERLAY] = true;
+			r.matchCanvasSize( r.data.container );
+			r.redraw();
+		}, true);
+
+		// stop right click menu from appearing on cy
+		r.registerBinding(r.data.container, "contextmenu", function(e){
+			e.preventDefault();
+		});
+
+		// Primary key
+		r.registerBinding(r.data.container, "mousedown", function(e) { 
+			e.preventDefault();
+			r.hoverData.capture = true;
+			r.hoverData.which = e.which;
+			
+			var cy = r.data.cy; var pos = r.projectIntoViewport(e.pageX, e.pageY);
+			var select = r.data.select;
+			var near = r.findNearestElement(pos[0], pos[1], true);
+			var down = r.hoverData.down;
+			var draggedElements = r.dragData.possibleDragElements;
+			var grabEvent = new $$.Event(e, {type: "grab"});
+
+			// Right click button
+			if( e.which == 3 ){
+
+				if( near ){
+					near.activate();
+					near.trigger( new $$.Event(e, {type: "cxttapstart"}) );
+
+					r.hoverData.down = near;
+					r.hoverData.downTime = (new Date()).getTime();
+					r.hoverData.cxtDragged = false;
+				}
+
+			// Primary button
+			} else if (e.which == 1) {
+				
+				if( near ){
+					near.activate();
+				}
+
+				// Element dragging
+				{
+					// If something is under the cursor and it is draggable, prepare to grab it
+					if (near != null && r.nodeIsDraggable(near)) {
+						if (near._private.group == "nodes" && near._private.selected == false) {
+
+							draggedElements = r.dragData.possibleDragElements = [ ];
+							addNodeToDrag(near, draggedElements);
+							near.trigger(grabEvent);
+
+							// add descendant nodes only if the compound size is set to auto
+							if (near._private.style["width"].value == "auto" ||
+							    near._private.style["height"].value == "auto")
+							{
+								addDescendantsToDrag(near,
+									true,
+									draggedElements);
+							}
+
+							// also add nodes and edges related to the topmost ancestor
+							updateAncestorsInDragLayer(near, true);
+						}
+								
+						if (near._private.group == "nodes" && near._private.selected == true) {
+							draggedElements = r.dragData.possibleDragElements = [  ];
+
+							var triggeredGrab = false;
+							var selectedNodes = cy.$('node:selected');
+							for( var i = 0; i < selectedNodes.length; i++ ){
+								//r.dragData.possibleDragElements.push( selectedNodes[i] );
+								
+								// Only add this selected node to drag if it is draggable, eg. has nonzero opacity
+								if (r.nodeIsDraggable(selectedNodes[i]))
+								{
+									addNodeToDrag(selectedNodes[i], draggedElements);
+									
+									// only trigger for grabbed node once
+									if( !triggeredGrab ){
+										near.trigger(grabEvent);
+										triggeredGrab = true;
+									}
+
+									if (selectedNodes[i]._private.style["width"].value == "auto" ||
+										selectedNodes[i]._private.style["height"].value == "auto")
+									{
+										addDescendantsToDrag(selectedNodes[i],
+											false,
+											draggedElements);
+									}
+
+									// also add nodes and edges related to the topmost ancestor
+									updateAncestorsInDragLayer(selectedNodes[i], true);
+								}
+							}
+						}
+						
+						near
+							.trigger(new $$.Event(e, {type: "mousedown"}))
+							.trigger(new $$.Event(e, {type: "tapstart"}))
+							.trigger(new $$.Event(e, {type: "vmousedown"}))
+						;
+						
+						// r.data.canvasNeedsRedraw[DRAG] = true; r.data.canvasRedrawReason[DRAG].push("Single node moved to drag layer"); 
+						// r.data.canvasNeedsRedraw[NODE] = true; r.data.canvasRedrawReason[NODE].push("Single node moved to drag layer");
+						
+					} else if (near == null) {
+						cy
+							.trigger(new $$.Event(e, {type: "mousedown"}))
+							.trigger(new $$.Event(e, {type: "tapstart"}))
+							.trigger(new $$.Event(e, {type: "vmousedown"}))
+						;
+					}
+					
+					r.hoverData.down = near;
+					r.hoverData.downTime = (new Date()).getTime();
+
+				}
+			
+				// Selection box
+				if ( near == null || near.isEdge() ) {
+					select[4] = 1;
+					var timeUntilActive = Math.max( 0, panOrBoxSelectDelay - (+new Date - r.hoverData.downTime) );
+
+					clearTimeout( r.bgActiveTimeout );
+					r.bgActiveTimeout = setTimeout(function(){
+						if( near ){
+							near.unactivate();
+						}
+
+						r.data.bgActivePosistion = {
+							x: pos[0],
+							y: pos[1]
+						};
+
+						r.data.canvasNeedsRedraw[SELECT_BOX] = true;
+						r.data.canvasRedrawReason[SELECT_BOX].push("bgactive");
+
+						r.redraw();
+					}, timeUntilActive);
+					
+				}
+			
+			} 
+			
+			// Initialize selection box coordinates
+			select[0] = select[2] = pos[0];
+			select[1] = select[3] = pos[1];
+			
+			r.redraw();
+			
+		}, false);
+		
+		r.registerBinding(window, "mousemove", function(e) {
+			var preventDefault = false;
+			var capture = r.hoverData.capture;
+
+			if (!capture) {
+				
+				var containerPageCoords = r.findContainerPageCoords();
+				
+				if (e.pageX > containerPageCoords[0] && e.pageX < containerPageCoords[0] + r.data.container.clientWidth
+					&& e.pageY > containerPageCoords[1] && e.pageY < containerPageCoords[1] + r.data.container.clientHeight) {
+					
+				} else {
+					return;
+				}
+			}
+
+			var cy = r.data.cy;
+			var pos = r.projectIntoViewport(e.pageX, e.pageY);
+			var select = r.data.select;
+			
+			var near = r.findNearestElement(pos[0], pos[1], true);
+			var last = r.hoverData.last;
+			var down = r.hoverData.down;
+			
+			var disp = [pos[0] - select[2], pos[1] - select[3]];
+			var nodes = r.getCachedNodes();
+			var edges = r.getCachedEdges();
+		
+			var draggedElements = r.dragData.possibleDragElements;
+		
+
+			var shiftDown = e.shiftKey;
+			
+
+			preventDefault = true;
+
+			// Mousemove event
+			{
+				var event = new $$.Event(e, {type: "mousemove"});
+				
+				if (near != null) {
+					near.trigger(event);
+					
+				} else if (near == null) {
+					cy.trigger(event);
+				}
+
+			}
+			
+			
+			// trigger context drag if rmouse down
+			if( r.hoverData.which === 3 ){
+				var cxtEvt = new $$.Event(e, {type: "cxtdrag"});
+
+				if( down ){
+					down.trigger( cxtEvt );
+				} else {
+					cy.trigger( cxtEvt );
+				}
+
+				r.hoverData.cxtDragged = true;
+
+			// Check if we are drag panning the entire graph
+			} else if (r.hoverData.dragging) {
+				preventDefault = true;
+
+				if( cy.panningEnabled() ){
+					var deltaP = {x: disp[0] * cy.zoom(), y: disp[1] * cy.zoom()};
+
+					cy.panBy( deltaP );
+				}
+				
+				// Needs reproject due to pan changing viewport
+				pos = r.projectIntoViewport(e.pageX, e.pageY);
+
+			// Checks primary button down & out of time & mouse not moved much
+			} else if (select[4] == 1 && (down == null || down.isEdge())
+					&& ( !cy.boxSelectionEnabled() || +new Date - r.hoverData.downTime >= panOrBoxSelectDelay )
+					&& (Math.abs(select[3] - select[1]) + Math.abs(select[2] - select[0]) < 4)
+					&& cy.panningEnabled() ) {
+				
+				r.hoverData.dragging = true;
+				select[4] = 0;
+
+			} else {
+				// deactivate bg on box selection
+				if (cy.boxSelectionEnabled() && Math.pow(select[2] - select[0], 2) + Math.pow(select[3] - select[1], 2) > 7 && select[4]){
+					clearTimeout( r.bgActiveTimeout );
+				}
+				
+				if( down && down.isEdge() && down.active() ){ down.unactivate(); }
+
+				if (near != last) {
+					
+					if (last) { last.trigger(new $$.Event(e, {type: "mouseout"})); }
+					if (near) { near.trigger(new $$.Event(e, {type: "mouseover"})); }
+					
+					r.hoverData.last = near;
+				}
+				
+				if ( down && down.isNode() && r.nodeIsDraggable(down) ) {
+					r.dragData.didDrag = true; // indicate that we actually did drag the node
+
+					var toTrigger = [];
+					for (var i=0; i<draggedElements.length; i++) {
+
+						// Locked nodes not draggable, as well as non-visible nodes
+						if (draggedElements[i]._private.group == "nodes"
+							&& r.nodeIsDraggable(draggedElements[i])) {
+							
+							draggedElements[i]._private.position.x += disp[0];
+							draggedElements[i]._private.position.y += disp[1];
+
+							toTrigger.push( draggedElements[i] );
+						}
+					}
+					
+					(new $$.Collection(cy, toTrigger))
+						.trigger( new $$.Event(e, {type: "drag"}) )
+						.trigger( new $$.Event(e, {type: "position"}) )
+					;
+
+					if (select[2] == select[0] && select[3] == select[1]) {
+						r.data.canvasNeedsRedraw[NODE] = true;
+						r.data.canvasRedrawReason[NODE].push("Node(s) and edge(s) moved to drag layer");
+					}
+					
+					r.data.canvasNeedsRedraw[DRAG] = true;
+					r.data.canvasRedrawReason[DRAG].push("Nodes dragged");
+				}
+				
+				if( cy.boxSelectionEnabled() ){
+					r.data.canvasNeedsRedraw[SELECT_BOX] = true;
+					r.data.canvasRedrawReason[SELECT_BOX].push("Mouse moved, redraw selection box");
+				}
+
+				// prevent the dragging from triggering text selection on the page
+				preventDefault = true;
+			}
+			
+			select[2] = pos[0]; select[3] = pos[1];
+			
+			r.redraw();
+			
+			if( preventDefault ){ 
+				if(e.stopPropagation) e.stopPropagation();
+    			if(e.preventDefault) e.preventDefault();
+   				e.cancelBubble=true;
+    			e.returnValue=false;
+    			return false;
+    		}
+		}, false);
+		
+		r.registerBinding(window, "mouseup", function(e) {
+			// console.log('--\nmouseup', e)
+
+			var capture = r.hoverData.capture; if (!capture) { return; }; r.hoverData.capture = false;
+		
+			var cy = r.data.cy; var pos = r.projectIntoViewport(e.pageX, e.pageY); var select = r.data.select;
+			var near = r.findNearestElement(pos[0], pos[1], true);
+			var nodes = r.getCachedNodes(); var edges = r.getCachedEdges(); 
+			var draggedElements = r.dragData.possibleDragElements; var down = r.hoverData.down;
+			var shiftDown = e.shiftKey;
+			
+			r.data.bgActivePosistion = undefined; // not active bg now
+			clearTimeout( r.bgActiveTimeout );
+
+			if( down ){
+				down.unactivate();
+			}
+
+			if( r.hoverData.which === 3 ){
+				var cxtEvt = new $$.Event(e, {type: "cxttapend"});
+
+				if( down ){
+					down.trigger( cxtEvt );
+				} else {
+					cy.trigger( cxtEvt );
+				}
+
+				if( !r.hoverData.cxtDragged ){
+					var cxtTap = new $$.Event(e, {type: "cxttap"});
+
+					if( down ){
+						down.trigger( cxtTap );
+					} else {
+						cy.trigger( cxtTap );
+					}
+				}
+
+				r.hoverData.cxtDragged = false;
+				r.hoverData.which = null;
+
+			// if not right mouse
+			} else {
+
+				// Deselect all elements if nothing is currently under the mouse cursor and we aren't dragging something
+				if ( (down == null) // not mousedown on node
+					&& !r.dragData.didDrag // didn't move the node around
+					&& !(Math.pow(select[2] - select[0], 2) + Math.pow(select[3] - select[1], 2) > 7 && select[4]) // not box selection
+					&& !r.hoverData.dragging // not panning
+				) {
+
+					// console.log('unselect all from bg');
+
+	//++clock+unselect
+	//				var a = time();
+					cy.$(':selected').unselect();
+					
+	//++clock+unselect
+	//				console.log("unselect", time() - a);
+					
+					if (draggedElements.length > 0) {
+						r.data.canvasNeedsRedraw[NODE] = true; r.data.canvasRedrawReason[NODE].push("De-select");
+					}
+					
+					r.dragData.possibleDragElements = draggedElements = [];
+				}
+				
+				// Click event
+				{
+					// console.log('trigger click et al');
+
+					if (Math.pow(select[2] - select[0], 2) + Math.pow(select[3] - select[1], 2) == 0) {
+						if (near != null) {
+							near
+								.trigger( new $$.Event(e, {type: "click"}) )
+								.trigger( new $$.Event(e, {type: "tap"}) )
+								.trigger( new $$.Event(e, {type: "vclick"}) )
+							;
+						} else if (near == null) {
+							cy
+								.trigger( new $$.Event(e, {type: "click"}) )
+								.trigger( new $$.Event(e, {type: "tap"}) )
+								.trigger( new $$.Event(e, {type: "vclick"}) )
+							;
+						}
+					}
+				}
+				
+				// Mouseup event
+				{
+					// console.log('trigger mouseup et al');
+
+					if (near != null) {
+						near
+							.trigger(new $$.Event(e, {type: "mouseup"}))
+							.trigger(new $$.Event(e, {type: "tapend"}))
+							.trigger(new $$.Event(e, {type: "vmouseup"}))
+						;
+					} else if (near == null) {
+						cy
+							.trigger(new $$.Event(e, {type: "mouseup"}))
+							.trigger(new $$.Event(e, {type: "tapend"}))
+							.trigger(new $$.Event(e, {type: "vmouseup"}))
+						;
+					}
+				}
+				
+				// Single selection
+				if (near == down && !r.dragData.didDrag) {
+					if (near != null && near._private.selectable) {
+						
+						// console.log('single selection')
+
+						if( !shiftDown ){
+							cy.$(':selected').unselect();
+						}
+
+						if( near.selected() ){
+							near.unselect();
+						} else {
+							near.select();
+						}
+
+						updateAncestorsInDragLayer(near, false);
+						
+						r.data.canvasNeedsRedraw[NODE] = true; r.data.canvasRedrawReason[NODE].push("sglslct");
+						
+					}
+				// Ungrab single drag
+				} else if (near == down) {
+					if (near != null && near._private.grabbed) {
+						// console.log('ungrab single drag')
+
+						var grabbedEles = cy.$(':grabbed');
+
+						for(var i = 0; i < grabbedEles.length; i++){
+							var ele = grabbedEles[i];
+
+							ele._private.grabbed = false;
+							
+							var sEdges = ele._private.edges;
+							for (var j=0;j<sEdges.length;j++) { sEdges[j]._private.rscratch.inDragLayer = false; }
+
+							// for compound nodes, also remove related nodes and edges from the drag layer
+							updateAncestorsInDragLayer(ele, false);
+						}
+
+						var freeEvent = new $$.Event(e, {type: "free"});
+						grabbedEles.trigger(freeEvent);
+					}
+				}
+				
+				if ( cy.boxSelectionEnabled() &&  Math.pow(select[2] - select[0], 2) + Math.pow(select[3] - select[1], 2) > 7 && select[4] ) {
+					// console.log("box selection");
+					
+					if( !shiftDown ){
+						cy.$(':selected').unselect();
+					}
+
+					var newlySelected = [];
+					var box = r.getAllInBox(select[0], select[1], select[2], select[3]);
+					// console.log(box);
+					var event = new $$.Event(e, {type: "select"});
+					for (var i=0;i<box.length;i++) { 
+						if (box[i]._private.selectable) {
+							draggedElements.push( box[i] ); 
+							newlySelected.push( box[i] );
+						}
+					}
+
+					(new $$.Collection( cy, newlySelected )).select();
+					
+					if (box.length > 0) { 
+						r.data.canvasNeedsRedraw[NODE] = true; r.data.canvasRedrawReason[NODE].push("Selection");
+					}
+				}
+				
+				// Cancel drag pan
+				r.hoverData.dragging = false;
+				
+				if (!select[4]) {
+					// console.log('free at end', draggedElements)
+					var freeEvent = new $$.Event(e, {type: "free"}); 
+					
+					for (var i=0;i<draggedElements.length;i++) {
+						
+						if (draggedElements[i]._private.group == "nodes") { 
+							draggedElements[i]._private.rscratch.inDragLayer = false;
+						  
+							var sEdges = draggedElements[i]._private.edges;
+							for (var j=0;j<sEdges.length;j++) { sEdges[j]._private.rscratch.inDragLayer = false; }
+
+							// for compound nodes, also remove related nodes and edges from the drag layer
+							updateAncestorsInDragLayer(draggedElements[i], false);
+							
+						} else if (draggedElements[i]._private.group == "edges") {
+							draggedElements[i]._private.rscratch.inDragLayer = false;
+						}
+						
+					}
+
+					if( down){ down.trigger(freeEvent); }
+
+	//				draggedElements = r.dragData.possibleDragElements = [];
+					r.data.canvasNeedsRedraw[DRAG] = true; r.data.canvasRedrawReason[DRAG].push("Node/nodes back from drag");
+					r.data.canvasNeedsRedraw[NODE] = true; r.data.canvasRedrawReason[NODE].push("Node/nodes back from drag");
+				}
+			
+			} // else not right mouse
+
+			select[4] = 0; r.hoverData.down = null;
+			
+			r.data.canvasNeedsRedraw[SELECT_BOX] = true; r.data.canvasRedrawReason[SELECT_BOX].push("Mouse up, selection box gone");
+			
+//			console.log("mu", pos[0], pos[1]);
+//			console.log("ss", select);
+			
+			r.dragData.didDrag = false;
+
+			r.redraw();
+			
+		}, false);
+		
+		var wheelHandler = function(e) {
+			var cy = r.data.cy; var pos = r.projectIntoViewport(e.pageX, e.pageY);
+			
+			var unpos = [pos[0] * cy.zoom() + cy.pan().x,
+			              pos[1] * cy.zoom() + cy.pan().y];
+			
+			if (r.zoomData.freeToZoom) {
+				e.preventDefault();
+				
+				var diff = e.wheelDeltaY / 1000 || e.detail / -32;
+				
+				if( cy.panningEnabled() && cy.zoomingEnabled() ){
+					cy.zoom({level: cy.zoom() * Math.pow(10, diff), position: {x: unpos[0], y: unpos[1]}});
+				}
+
+				r.data.wheel = true;
+				clearTimeout(r.data.wheelTimeout);
+				r.data.wheelTimeout = setTimeout(function(){
+					r.data.wheel = false;
+					r.data.canvasNeedsRedraw[NODE] = true;
+					r.redraw();
+				}, 100);
+			}
+
+		}
+		
+		// Functions to help with whether mouse wheel should trigger zooming
+		// --
+		r.registerBinding(r.data.container, "mousewheel", wheelHandler, true);
+		r.registerBinding(r.data.container, "DOMMouseScroll", wheelHandler, true);
+		r.registerBinding(r.data.container, "MozMousePixelScroll", function(e){
+			if (r.zoomData.freeToZoom) {
+				e.preventDefault();
+			}
+		}, false);
+		
+		r.registerBinding(r.data.container, "mousemove", function(e) { 
+			if (r.zoomData.lastPointerX && r.zoomData.lastPointerX != e.pageX && !r.zoomData.freeToZoom) 
+				{ r.zoomData.freeToZoom = true; } r.zoomData.lastPointerX = e.pageX; 
+		}, false);
+		
+		r.registerBinding(r.data.container, "mouseout", function(e) { 
+			r.zoomData.freeToZoom = false; r.zoomData.lastPointerX = null 
+		}, false);
+		// --
+		
+		// Functions to help with handling mouseout/mouseover on the Cytoscape container
+					// Handle mouseout on Cytoscape container
+		r.registerBinding(r.data.container, "mouseout", function(e) { 
+			r.data.cy.trigger(new $$.Event(e, {type: "mouseout"}));
+		}, false);
+		
+		r.registerBinding(r.data.container, "mouseover", function(e) { 
+			r.data.cy.trigger(new $$.Event(e, {type: "mouseover"}));
+		}, false);
+		
+		var f1x1, f1y1, f2x1, f2y1; // starting points for pinch-to-zoom
+		var distance1; // initial distance between finger 1 and finger 2 for pinch-to-zoom
+		var center1, modelCenter1; // center point on start pinch to zoom
+		var offsetLeft, offsetTop;
+		var containerWidth = r.data.container.clientWidth, containerHeight = r.data.container.clientHeight;
+		var twoFingersStartInside;
+
+		function distance(x1, y1, x2, y2){
+			return Math.sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
+		}
+
+		r.registerBinding(r.data.container, "touchstart", function(e) {
+
+			if( e.target !== r.data.link ){
+				e.preventDefault();
+			}
+		
+			r.touchData.capture = true;
+			r.data.bgActivePosistion = undefined;
+
+			var cy = r.data.cy; 
+			var nodes = r.getCachedNodes(); var edges = r.getCachedEdges();
+			var now = r.touchData.now; var earlier = r.touchData.earlier;
+			
+			if (e.touches[0]) { var pos = r.projectIntoViewport(e.touches[0].pageX, e.touches[0].pageY); now[0] = pos[0]; now[1] = pos[1]; }
+			if (e.touches[1]) { var pos = r.projectIntoViewport(e.touches[1].pageX, e.touches[1].pageY); now[2] = pos[0]; now[3] = pos[1]; }
+			if (e.touches[2]) { var pos = r.projectIntoViewport(e.touches[2].pageX, e.touches[2].pageY); now[4] = pos[0]; now[5] = pos[1]; }
+			
+			// record starting points for pinch-to-zoom
+			if( e.touches[1] ){
+
+				// anything in the set of dragged eles should be released
+				function release( eles ){
+					for( var i = 0; i < eles.length; i++ ){
+						eles[i]._private.grabbed = false;
+						eles[i]._private.rscratch.inDragLayer = false;
+						if( eles[i].active() ){ eles[i].unactivate(); }
+					}
+				}
+				release(nodes);
+				release(edges);
+
+				var offsets = r.findContainerPageCoords();
+				offsetTop = offsets[1];
+				offsetLeft = offsets[0];
+
+				f1x1 = e.touches[0].pageX - offsetLeft;
+				f1y1 = e.touches[0].pageY - offsetTop;
+				
+				f2x1 = e.touches[1].pageX - offsetLeft;
+				f2y1 = e.touches[1].pageY - offsetTop;
+
+				twoFingersStartInside = 
+					   0 <= f1x1 && f1x1 <= containerWidth
+					&& 0 <= f2x1 && f2x1 <= containerWidth
+					&& 0 <= f1y1 && f1y1 <= containerHeight
+					&& 0 <= f2y1 && f2y1 <= containerHeight
+				;
+
+				var pan = cy.pan();
+				var zoom = cy.zoom();
+
+				distance1 = distance( f1x1, f1y1, f2x1, f2y1 );
+				center1 = [ (f1x1 + f2x1)/2, (f1y1 + f2y1)/2 ];
+				modelCenter1 = [ 
+					(center1[0] - pan.x) / zoom,
+					(center1[1] - pan.y) / zoom
+				];
+
+				// consider context tap
+				if( distance1 < 100 ){
+
+					var near1 = r.findNearestElement(now[0], now[1], true);
+					var near2 = r.findNearestElement(now[2], now[3], true);
+					var cxtEvt = new $$.Event(e, {type: "cxttapstart"});
+
+					//console.log(distance1)
+
+					if( near1 && near1.isNode() ){
+						near1.activate().trigger( cxtEvt );
+						r.touchData.start = near1;
+					
+					} else if( near2 && near2.isNode() ){
+						near2.activate().trigger( cxtEvt );
+						r.touchData.start = near2;
+					
+					} else {
+						cy.trigger( cxtEvt );
+						r.touchData.start = null;
+					} 
+
+					if( r.touchData.start ){ r.touchData.start._private.grabbed = false; }
+					r.touchData.cxt = true;
+					r.touchData.cxtDragged = false;
+					r.data.bgActivePosistion = undefined;
+
+					//console.log('cxttapstart')
+
+					r.redraw();
+					return;
+					
+				}
+
+				// console.log(center1);
+				// console.log('touchstart ptz');
+				// console.log(offsetLeft, offsetTop);
+				// console.log(f1x1, f1y1);
+				// console.log(f2x1, f2y1);
+				// console.log(distance1);
+				// console.log(center1);
+			}
+
+			// console.log('another tapstart')
+			
+			
+			if (e.touches[2]) {
+			
+			} else if (e.touches[1]) {
+				
+			} else if (e.touches[0]) {
+				var near = r.findNearestElement(now[0], now[1], true);
+
+				if (near != null) {
+					near.activate();
+
+					r.touchData.start = near;
+					
+					if (near._private.group == "nodes" && r.nodeIsDraggable(near))
+					{
+
+						var draggedEles = r.dragData.touchDragEles = [];
+						addNodeToDrag(near, draggedEles);
+						near.trigger(new $$.Event(e, {type: "grab"}));
+
+						if( near.selected() ){
+							// reset drag elements, since near will be added again
+							draggedEles = r.dragData.touchDragEles = [];
+
+							var selectedNodes = cy.$('node:selected');
+
+							for( var k = 0; k < selectedNodes.length; k++ ){
+
+								var selectedNode = selectedNodes[k];
+								if (r.nodeIsDraggable(selectedNode)) {
+									draggedEles.push( selectedNode );
+									selectedNode._private.rscratch.inDragLayer = true;
+
+									var sEdges = selectedNode._private.edges;
+									for (var j=0; j<sEdges.length; j++) {
+									  sEdges[j]._private.rscratch.inDragLayer = true;
+									}
+
+									if (selectedNode._private.style["width"].value == "auto" ||
+									    selectedNode._private.style["height"].value == "auto")
+									{
+										addDescendantsToDrag(selectedNode,
+											false,
+											draggedEles);
+									}
+
+									// also add nodes and edges related to the topmost ancestor
+									updateAncestorsInDragLayer(selectedNode, true);
+								}
+							}
+						} else {
+							//draggedEles.push( near );
+
+							// add descendant nodes only if the compound size is set to auto
+							if (near._private.style["width"].value == "auto" ||
+							    near._private.style["height"].value == "auto")
+							{
+								addDescendantsToDrag(near,
+									true,
+									draggedEles);
+							}
+
+							// also add nodes and edges related to the topmost ancestor
+							updateAncestorsInDragLayer(near, true);
+						}
+					}
+					
+					near
+						.trigger(new $$.Event(e, {type: "touchstart"}))
+						.trigger(new $$.Event(e, {type: "tapstart"}))
+						.trigger(new $$.Event(e, {type: "vmousdown"}))
+					;
+				} if (near == null) {
+					cy
+						.trigger(new $$.Event(e, {type: "touchstart"}))
+						.trigger(new $$.Event(e, {type: "tapstart"}))
+						.trigger(new $$.Event(e, {type: "vmousedown"}))
+					;
+
+					r.data.bgActivePosistion = {
+						x: pos[0],
+						y: pos[1]
+					};
+
+					r.data.canvasNeedsRedraw[SELECT_BOX] = true;
+					r.data.canvasRedrawReason[SELECT_BOX].push("bgactive");
+
+				}
+				
+				
+				// Tap, taphold
+				// -----
+				
+				for (var i=0;i<now.length;i++) {
+					earlier[i] = now[i];
+					r.touchData.startPosition[i] = now[i];
+				};
+				
+				r.touchData.singleTouchMoved = false;
+				r.touchData.singleTouchStartTime = time();
+				
+				var tapHoldTimeout = setTimeout(function() {
+					if (r.touchData.singleTouchMoved == false
+							// This time double constraint prevents multiple quick taps
+							// followed by a taphold triggering multiple taphold events
+							&& time() - r.touchData.singleTouchStartTime > 250) {
+						if (r.touchData.start) {
+							r.touchData.start.trigger(new $$.Event(e, {type: "taphold"}));
+						} else {
+							r.data.cy.trigger(new $$.Event(e, {type: "taphold"}));
+
+							cy.$(':selected').unselect();
+						}
+
+//						console.log("taphold");
+					}
+				}, 1000);
+			}
+			
+			r.redraw();
+			
+		}, false);
+		
+// console.log = function(m){ $('#console').append('<div>'+m+'</div>'); };
+
+		r.registerBinding(window, "touchmove", function(e) {
+		
+			var select = r.data.select;
+			var capture = r.touchData.capture; //if (!capture) { return; }; 
+			capture && e.preventDefault();
+		
+			var cy = r.data.cy; 
+			var nodes = r.getCachedNodes(); var edges = r.getCachedEdges();
+			var now = r.touchData.now; var earlier = r.touchData.earlier;
+			
+			if (e.touches[0]) { var pos = r.projectIntoViewport(e.touches[0].pageX, e.touches[0].pageY); now[0] = pos[0]; now[1] = pos[1]; }
+			if (e.touches[1]) { var pos = r.projectIntoViewport(e.touches[1].pageX, e.touches[1].pageY); now[2] = pos[0]; now[3] = pos[1]; }
+			if (e.touches[2]) { var pos = r.projectIntoViewport(e.touches[2].pageX, e.touches[2].pageY); now[4] = pos[0]; now[5] = pos[1]; }
+			var disp = []; for (var j=0;j<now.length;j++) { disp[j] = now[j] - earlier[j]; }
+			
+
+			if( capture && r.touchData.cxt ){
+				var f1x2 = e.touches[0].pageX - offsetLeft, f1y2 = e.touches[0].pageY - offsetTop;
+				var f2x2 = e.touches[1].pageX - offsetLeft, f2y2 = e.touches[1].pageY - offsetTop;
+				var distance2 = distance( f1x2, f1y2, f2x2, f2y2 );
+				var factor = distance2 / distance1;
+
+				//console.log(factor, distance2)
+
+				// cancel ctx gestures if the distance b/t the fingers increases
+				if( factor >= 1.5 || distance2 >= 150 ){
+					r.touchData.cxt = false;
+					if( r.touchData.start ){ r.touchData.start.unactivate(); r.touchData.start = null; }
+					r.data.bgActivePosistion = undefined;
+					r.data.canvasNeedsRedraw[SELECT_BOX] = true;
+
+					var cxtEvt = new $$.Event(e, {type: "cxttapend"});
+					if( r.touchData.start ){
+						r.touchData.start.trigger( cxtEvt );
+					} else {
+						cy.trigger( cxtEvt );
+					}
+				}
+
+			}  
+
+			if( capture && r.touchData.cxt ){
+				var cxtEvt = new $$.Event(e, {type: "cxtdrag"});
+				r.data.bgActivePosistion = undefined;
+				r.data.canvasNeedsRedraw[SELECT_BOX] = true;
+
+				if( r.touchData.start ){
+					r.touchData.start.trigger( cxtEvt );
+				} else {
+					cy.trigger( cxtEvt );
+				}
+
+				if( r.touchData.start ){ r.touchData.start._private.grabbed = false; }
+				r.touchData.cxtDragged = true;
+
+				//console.log('cxtdrag')
+
+			} else if( capture && e.touches[2] && cy.boxSelectionEnabled() ){
+				r.data.bgActivePosistion = undefined;
+				clearTimeout( this.threeFingerSelectTimeout );
+				this.lastThreeTouch = +new Date;
+
+				r.data.canvasNeedsRedraw[SELECT_BOX] = true;
+				r.data.canvasRedrawReason[SELECT_BOX].push("Touch moved, redraw selection box");
+
+				if( !select || select.length === 0 || select[0] === undefined ){
+					select[0] = (now[0] + now[2] + now[4])/3;
+					select[1] = (now[1] + now[3] + now[5])/3;
+					select[2] = (now[0] + now[2] + now[4])/3 + 1;
+					select[3] = (now[1] + now[3] + now[5])/3 + 1;
+				} else {
+					select[2] = (now[0] + now[2] + now[4])/3;
+					select[3] = (now[1] + now[3] + now[5])/3;
+				}
+
+				select[4] = 1;
+
+			} else if ( capture && e.touches[1] && cy.zoomingEnabled() && cy.panningEnabled() ) { // two fingers => pinch to zoom
+				r.data.bgActivePosistion = undefined;
+				r.data.canvasNeedsRedraw[SELECT_BOX] = true;
+
+				// console.log('touchmove ptz');
+
+				// (x2, y2) for fingers 1 and 2
+				var f1x2 = e.touches[0].pageX - offsetLeft, f1y2 = e.touches[0].pageY - offsetTop;
+				var f2x2 = e.touches[1].pageX - offsetLeft, f2y2 = e.touches[1].pageY - offsetTop;
+
+				// console.log( f1x2, f1y2 )
+				// console.log( f2x2, f2y2 )
+
+				var distance2 = distance( f1x2, f1y2, f2x2, f2y2 );
+				var factor = distance2 / distance1;
+
+				// console.log(distance2)
+				// console.log(factor)
+
+				if( factor != 1 && twoFingersStartInside){
+
+					// console.log(factor)
+					// console.log(distance2 + ' / ' + distance1);
+					// console.log('--');
+
+					// delta finger1
+					var df1x = f1x2 - f1x1;
+					var df1y = f1y2 - f1y1;
+
+					// delta finger 2
+					var df2x = f2x2 - f2x1;
+					var df2y = f2y2 - f2y1;
+
+					// translation is the normalised vector of the two fingers movement
+					// i.e. so pinching cancels out and moving together pans
+					var tx = (df1x + df2x)/2;
+					var ty = (df1y + df2y)/2;
+
+					// adjust factor by the speed multiplier
+					// var speed = 1.5;
+					// if( factor > 1 ){
+					// 	factor = (factor - 1) * speed + 1;
+					// } else {
+					// 	factor = 1 - (1 - factor) * speed;
+					// }
+
+					// now calculate the zoom
+					var zoom1 = cy.zoom();
+					var zoom2 = zoom1 * factor;
+					var pan1 = cy.pan();
+
+					// the model center point converted to the current rendered pos
+					var ctrx = modelCenter1[0] * zoom1 + pan1.x;
+					var ctry = modelCenter1[1] * zoom1 + pan1.y;
+
+					var pan2 = {
+						x: -zoom2/zoom1 * (ctrx - pan1.x - tx) + ctrx,
+						y: -zoom2/zoom1 * (ctry - pan1.y - ty) + ctry
+					};
+
+					// console.log(pan2);
+					// console.log(zoom2);
+
+					cy._private.zoom = zoom2;
+					cy._private.pan = pan2;
+					cy
+						.trigger('pan zoom')
+						.notify('viewport')
+					;
+
+					distance1 = distance2;	
+					f1x1 = f1x2;
+					f1y1 = f1y2;
+					f2x1 = f2x2;
+					f2y1 = f2y2;
+
+					r.pinching = true;
+				}
+				
+				// Re-project
+				if (e.touches[0]) { var pos = r.projectIntoViewport(e.touches[0].pageX, e.touches[0].pageY); now[0] = pos[0]; now[1] = pos[1]; }
+				if (e.touches[1]) { var pos = r.projectIntoViewport(e.touches[1].pageX, e.touches[1].pageY); now[2] = pos[0]; now[3] = pos[1]; }
+				if (e.touches[2]) { var pos = r.projectIntoViewport(e.touches[2].pageX, e.touches[2].pageY); now[4] = pos[0]; now[5] = pos[1]; }
+
+			} else if (e.touches[0]) {
+				var start = r.touchData.start;
+				var last = r.touchData.last;
+				
+				if ( start != null && start._private.group == "nodes" && r.nodeIsDraggable(start)) {
+					var draggedEles = r.dragData.touchDragEles;
+
+					for( var k = 0; k < draggedEles.length; k++ ){
+						var draggedEle = draggedEles[k];
+
+						if( r.nodeIsDraggable(draggedEle) ){
+							r.dragData.didDrag = true;
+
+							draggedEle._private.position.x += disp[0];
+							draggedEle._private.position.y += disp[1];
+			
+						}
+					}
+
+					( new $$.Collection(cy, draggedEles) )
+						.trigger( new $$.Event(e, {type: "drag"}) )
+						.trigger( new $$.Event(e, {type: "position"}) )
+					;
+					
+					r.data.canvasNeedsRedraw[DRAG] = true;
+					r.data.canvasRedrawReason[DRAG].push("touchdrag node");
+
+					if (r.touchData.startPosition[0] == earlier[0]
+						&& r.touchData.startPosition[1] == earlier[1]) {
+						
+						r.data.canvasNeedsRedraw[NODE] = true;
+						r.data.canvasRedrawReason[NODE].push("node drag started");
+					}
+					
+				}
+				
+				// Touchmove event
+				{
+					if (start != null) { start.trigger(new $$.Event(e, {type: "touchmove"})); }
+					
+					if (start == null) { 
+						var near = r.findNearestElement(now[0], now[1], true);
+						if (near != null) { near.trigger(new $$.Event(e, {type: "touchmove"})); }
+						if (near == null) {   cy.trigger(new $$.Event(e, {type: "touchmove"})); }
+					}
+
+					if (near != last) {
+						if (last) { last.trigger(new $$.Event(e, {type: "touchout"})); }
+						if (near) { near.trigger(new $$.Event(e, {type: "touchover"})); }
+					}
+
+					r.touchData.last = near;
+				}
+				
+				// Check to cancel taphold
+				for (var i=0;i<now.length;i++) {
+					if (now[i] 
+						&& r.touchData.startPosition[i]
+						&& Math.abs(now[i] - r.touchData.startPosition[i]) > 4) {
+						
+						r.touchData.singleTouchMoved = true;
+					}
+				}
+				
+				if ( capture && (start == null || start.isEdge()) && cy.panningEnabled() ) {
+					if( start ){
+						start.unactivate();
+
+						if( !r.data.bgActivePosistion ){
+							r.data.bgActivePosistion = {
+								x: now[0],
+								y: now[1]
+							};
+						}
+
+						r.data.canvasNeedsRedraw[SELECT_BOX] = true;
+						r.data.canvasRedrawReason[SELECT_BOX].push("bgactive");
+					}
+
+					cy.panBy({x: disp[0] * cy.zoom(), y: disp[1] * cy.zoom()});
+					r.swipePanning = true;
+					
+					// Re-project
+					var pos = r.projectIntoViewport(e.touches[0].pageX, e.touches[0].pageY);
+					now[0] = pos[0]; now[1] = pos[1];
+				}
+			}
+
+			for (var j=0;j<now.length;j++) { earlier[j] = now[j]; };
+			r.redraw();
+			
+		}, false);
+		
+		r.registerBinding(window, "touchend", function(e) {
+			
+			var capture = r.touchData.capture; if (!capture) { return; }; r.touchData.capture = false;
+			e.preventDefault();
+			var select = r.data.select;
+
+			r.swipePanning = false;
+			
+			var cy = r.data.cy; 
+			var nodes = r.getCachedNodes(); var edges = r.getCachedEdges();
+			var now = r.touchData.now; var earlier = r.touchData.earlier;
+			var start = r.touchData.start;
+
+			if (e.touches[0]) { var pos = r.projectIntoViewport(e.touches[0].pageX, e.touches[0].pageY); now[0] = pos[0]; now[1] = pos[1]; }
+			if (e.touches[1]) { var pos = r.projectIntoViewport(e.touches[1].pageX, e.touches[1].pageY); now[2] = pos[0]; now[3] = pos[1]; }
+			if (e.touches[2]) { var pos = r.projectIntoViewport(e.touches[2].pageX, e.touches[2].pageY); now[4] = pos[0]; now[5] = pos[1]; }
+			
+			if( r.touchData.cxt ){
+				ctxTapend = new $$.Event(e, { type: 'cxttapend' });
+
+				if( start ){
+					start.unactivate();
+					start.trigger( ctxTapend );
+				} else {
+					cy.trigger( ctxTapend );
+				}
+
+				//console.log('cxttapend')
+
+				if( !r.touchData.cxtDragged ){
+					var ctxTap = new $$.Event(e, { type: 'cxttap' });
+
+					if( start ){
+						start.trigger( ctxTap );
+					} else {
+						cy.trigger( ctxTap );
+					}
+
+					//console.log('cxttap')
+				}
+
+				if( r.touchData.start ){ r.touchData.start._private.grabbed = false; }
+				r.touchData.cxt = false;
+				r.touchData.start = null;
+
+				r.redraw();
+				return;
+			}
+
+			var nowTime = +new Date;
+			// no more box selection if we don't have three fingers
+			if( !e.touches[2] && cy.boxSelectionEnabled() ){
+				clearTimeout( this.threeFingerSelectTimeout );
+				this.threeFingerSelectTimeout = setTimeout(function(){
+					var newlySelected = [];
+					var box = r.getAllInBox(select[0], select[1], select[2], select[3]);
+
+					select[0] = undefined;
+					select[1] = undefined;
+					select[2] = undefined;
+					select[3] = undefined;
+					select[4] = 0;
+
+					r.data.canvasNeedsRedraw[SELECT_BOX] = true;
+					r.data.canvasRedrawReason[SELECT_BOX].push("Touch moved, redraw selection box");
+
+					// console.log(box);
+					var event = new $$.Event(e, {type: "select"});
+					for (var i=0;i<box.length;i++) { 
+						if (box[i]._private.selectable) {
+							newlySelected.push( box[i] );
+						}
+					}
+
+					(new $$.Collection( cy, newlySelected )).select();
+					
+					if (box.length > 0) { 
+						r.data.canvasNeedsRedraw[NODE] = true; r.data.canvasRedrawReason[NODE].push("Selection");
+					}
+
+				}, 100);
+			}
+
+			if( !e.touches[1] ){
+				r.pinching = false;
+			}
+
+			var updateStartStyle = false;
+
+			if( start != null ){
+				start._private.active = false;
+				updateStartStyle = true;
+				start.trigger( new $$.Event(e, {type: "unactivate"}) );
+			}
+
+			if (e.touches[2]) {
+				r.data.bgActivePosistion = undefined;
+			} else if (e.touches[1]) {
+				
+			} else if (e.touches[0]) {
+			
+			// Last touch released
+			} else if (!e.touches[0]) {
+				
+				r.data.bgActivePosistion = undefined;
+
+				if (start != null ) {
+
+					if (start._private.grabbed == true) {
+						start._private.grabbed = false;
+						start.trigger(new $$.Event(e, {type: "free"}));
+						start._private.rscratch.inDragLayer = false;
+					}
+					
+					var sEdges = start._private.edges;
+					for (var j=0;j<sEdges.length;j++) { sEdges[j]._private.rscratch.inDragLayer = false; }
+					updateAncestorsInDragLayer(start, false);
+					
+					if( start.selected() ){
+						var selectedNodes = cy.$('node:selected');
+
+						for( var k = 0; k < selectedNodes.length; k++ ){
+
+							var selectedNode = selectedNodes[k];
+							selectedNode._private.rscratch.inDragLayer = false;
+
+							var sEdges = selectedNode._private.edges;
+							for (var j=0; j<sEdges.length; j++) {
+							  sEdges[j]._private.rscratch.inDragLayer = false;
+							}
+
+							updateAncestorsInDragLayer(selectedNode, false);
+						}
+					}
+
+					r.data.canvasNeedsRedraw[DRAG] = true; r.data.canvasRedrawReason[DRAG].push("touchdrag node end");
+					r.data.canvasNeedsRedraw[NODE] = true; r.data.canvasRedrawReason[NODE].push("touchdrag node end");
+					
+					start
+						.trigger(new $$.Event(e, {type: "touchend"}))
+						.trigger(new $$.Event(e, {type: "tapend"}))
+						.trigger(new $$.Event(e, {type: "vmouseup"}))
+					;
+					
+					r.touchData.start = null;
+					
+				} else {
+					var near = r.findNearestElement(now[0], now[1], true);
+				
+					if (near != null) { 
+						near
+							.trigger(new $$.Event(e, {type: "touchend"}))
+							.trigger(new $$.Event(e, {type: "tapend"}))
+							.trigger(new $$.Event(e, {type: "vmouseup"}))
+						;
+					}
+
+					if (near == null) { 
+						cy
+							.trigger(new $$.Event(e, {type: "touchend"}))
+							.trigger(new $$.Event(e, {type: "tapend"}))
+							.trigger(new $$.Event(e, {type: "vmouseup"}))
+						;
+					}
+				}
+				
+				// Prepare to select the currently touched node, only if it hasn't been dragged past a certain distance
+				if (start != null 
+						&& !r.dragData.didDrag // didn't drag nodes around
+						&& start._private.selectable 
+						&& (Math.sqrt(Math.pow(r.touchData.startPosition[0] - now[0], 2) + Math.pow(r.touchData.startPosition[1] - now[1], 2))) < 6) {
+
+					if( start.selected() ){
+						start._private.selected = false;
+						start.trigger( new $$.Event(e, {type: "unselect"}) );
+					} else {
+						start._private.selected = true;
+						start.trigger( new $$.Event(e, {type: "select"}) );
+					}
+
+					updateStartStyle = true;
+
+					
+					r.data.canvasNeedsRedraw[NODE] = true; r.data.canvasRedrawReason[NODE].push("sglslct");
+				}
+				
+				// Tap event, roughly same as mouse click event for touch
+				if (r.touchData.singleTouchMoved == false) {
+
+					if (start) {
+						start
+							.trigger(new $$.Event(e, {type: "tap"}))
+							.trigger(new $$.Event(e, {type: "vclick"}))
+						;
+					} else {
+						cy
+							.trigger(new $$.Event(e, {type: "tap"}))
+							.trigger(new $$.Event(e, {type: "vclick"}))
+						;
+					}
+					
+//					console.log("tap");
+				}
+				
+				r.touchData.singleTouchMoved = true;
+			}
+			
+			for (var j=0;j<now.length;j++) { earlier[j] = now[j]; };
+
+			r.dragData.didDrag = false; // reset for next mousedown
+
+			if( updateStartStyle && start ){
+				start.updateStyle(false);
+			}
+
+			r.redraw();
+			
+		}, false);
+	};
+	
+	CanvasRenderer.prototype.init = function() { };
+	}
+	
+	// @O Caching functions
+	{
+	CanvasRenderer.prototype.getCachedNodes = function() {
+		var data = this.data; var cy = this.data.cy;
+		
+		if (data.cache == undefined) {
+			data.cache = {};
+		}
+		
+		if (data.cache.cachedNodes == undefined) {
+			data.cache.cachedNodes = cy.nodes();
+		}
+		
+		return data.cache.cachedNodes;
+	}
+	
+	CanvasRenderer.prototype.updateNodesCache = function() {
+		var data = this.data; var cy = this.data.cy;
+		
+		if (data.cache == undefined) {
+			data.cache = {};
+		}
+		
+		data.cache.cachedNodes = cy.nodes();
+	}
+	
+	CanvasRenderer.prototype.getCachedEdges = function() {
+		var data = this.data; var cy = this.data.cy;
+		
+		if (data.cache == undefined) {
+			data.cache = {};
+		}
+		
+		if (data.cache.cachedEdges == undefined) {
+			data.cache.cachedEdges = cy.edges();
+		}
+		
+		return data.cache.cachedEdges;
+	}
+	
+	CanvasRenderer.prototype.updateEdgesCache = function() {
+		var data = this.data; var cy = this.data.cy;
+		
+		if (data.cache == undefined) {
+			data.cache = {};
+		}
+		
+		data.cache.cachedEdges = cy.edges();
+	}
+	}
+	
+	// @O High-level collision application functions
+
+	// Project mouse
+	CanvasRenderer.prototype.projectIntoViewport = function(pageX, pageY) {
+		
+		n = this.data.container;
+		
+		// Stop checking scroll past the level of the DOM tree containing document.body. At this point, scroll values do not have the same impact on pageX/pageY.
+		var stopCheckingScroll = false;
+		
+		var offsets = this.findContainerPageCoords();
+		var offsetLeft = offsets[0];
+		var offsetTop = offsets[1];
+		
+//		console.log("calce");
+		
+		// By here, offsetLeft and offsetTop represent the "pageX/pageY" of the top-left corner of the div. So, do subtraction to find relative position.
+		x = pageX - offsetLeft; y = pageY - offsetTop;
+		
+		x -= this.data.cy.pan().x; y -= this.data.cy.pan().y; x /= this.data.cy.zoom(); y /= this.data.cy.zoom();
+		return [x, y];
+	}
+	
+	CanvasRenderer.prototype.findContainerPageCoords = function() {
+		var x, y; var offsetLeft = 0; var offsetTop = 0; var n; n = this.data.container;
+		
+		// Stop checking scroll past the level of the DOM tree containing document.body. At this point, scroll values do not have the same impact on pageX/pageY.
+		var stopCheckingScroll = false;
+		
+		while (n != null) {
+			var style = window.getComputedStyle(n); 
+			if( style.getPropertyValue('position').toLowerCase() === 'fixed' ){
+				offsetLeft = n.offsetLeft + window.scrollX;
+				offsetTop = n.offsetTop + window.scrollY;
+				n = null; // don't want to check any more parents after position:fixed
+			
+
+			} else if (typeof(n.offsetLeft) == "number") {
+				// The idea is to add offsetLeft/offsetTop, subtract scrollLeft/scrollTop, ignoring scroll values for elements in DOM tree levels 2 and higher.
+				offsetLeft += n.offsetLeft; offsetTop += n.offsetTop;
+				
+				if (n == document.body || n == document.header) { stopCheckingScroll = true; }
+				if (!stopCheckingScroll) { offsetLeft -= n.scrollLeft; offsetTop -= n.scrollTop; }
+			}
+
+			if( n ){ n = n.offsetParent };
+		}
+		
+		// By here, offsetLeft and offsetTop represent the "pageX/pageY" of the top-left corner of the div.
+		return [offsetLeft, offsetTop];
+	}
+	
+	// Find nearest element
+	CanvasRenderer.prototype.findNearestElement = function(x, y, visibleElementsOnly) {
+		var data = this.data; var nodes = this.getCachedNodes(); var edges = this.getCachedEdges(); var near = [];
+		
+		var zoom = this.data.cy.zoom();
+		var edgeThreshold = (isTouch ? 256 : 32) / zoom;
+		var nodeThreshold = (isTouch ? 16 : 0) /  zoom;
+		
+		// Check nodes
+		for (var i = 0; i < nodes.length; i++) {
+			if (nodeShapes[this.getNodeShape(nodes[i])].checkPointRough(x, y,
+					nodes[i]._private.style["border-width"].value / 2,
+					//nodes[i]._private.style["width"].value, nodes[i]._private.style["height"].value,
+					this.getNodeWidth(nodes[i]) + nodeThreshold, this.getNodeHeight(nodes[i]) + nodeThreshold,
+					nodes[i]._private.position.x, nodes[i]._private.position.y)
+				&&
+				nodeShapes[this.getNodeShape(nodes[i])].checkPoint(x, y,
+					nodes[i]._private.style["border-width"].value / 2,
+					//nodes[i]._private.style["width"].value / 2, nodes[i]._private.style["height"].value / 2,
+					(this.getNodeWidth(nodes[i]) + nodeThreshold), (this.getNodeHeight(nodes[i]) + nodeThreshold),
+					nodes[i]._private.position.x, nodes[i]._private.position.y)) {
+				
+				if (visibleElementsOnly) {
+					if (nodes[i]._private.style["opacity"].value != 0
+						&& nodes[i]._private.style["visibility"].value == "visible") {
+						
+						near.push(nodes[i]);	
+					}
+				} else {
+					near.push(nodes[i]);
+				}
+			}
+		}
+		
+		// Check edges
+		var addCurrentEdge;
+		for (var i = 0; i < edges.length; i++) {
+			var edge = edges[i];
+			var rs = edge._private.rscratch;
+
+			addCurrentEdge = false;
+
+			if (rs.edgeType == "self") {
+				if ((this.inBezierVicinity(x, y,
+						rs.startX,
+						rs.startY,
+						rs.cp2ax,
+						rs.cp2ay,
+						rs.selfEdgeMidX,
+						rs.selfEdgeMidY,
+						Math.pow(edge._private.style["width"].value/2, 2))
+							&&
+					(Math.pow(edges[i]._private.style["width"].value/2, 2) + edgeThreshold > 
+						this.sqDistanceToQuadraticBezier(x, y,
+							rs.startX,
+							rs.startY,
+							rs.cp2ax,
+							rs.cp2ay,
+							rs.selfEdgeMidX,
+							rs.selfEdgeMidY)))
+					||
+					(this.inBezierVicinity(x, y,
+						rs.selfEdgeMidX,
+						rs.selfEdgeMidY,
+						rs.cp2cx,
+						rs.cp2cy,
+						rs.endX,
+						rs.endY,
+						Math.pow(edges[i]._private.style["width"].value/2, 2))
+							&&
+					(Math.pow(edges[i]._private.style["width"].value/2, 2) + edgeThreshold > 
+						this.sqDistanceToQuadraticBezier(x, y,
+							rs.selfEdgeMidX,
+							rs.selfEdgeMidY,
+							rs.cp2cx,
+							rs.cp2cy,
+							rs.endX,
+							rs.endY))))
+					 { addCurrentEdge = true; }
+			
+			} else if (rs.edgeType == "straight") {
+				if (this.inLineVicinity(x, y, rs.startX, rs.startY, rs.endX, rs.endY, edges[i]._private.style["width"].value * 2)
+						&&
+					Math.pow(edges[i]._private.style["width"].value / 2, 2) + edgeThreshold >
+					this.sqDistanceToFiniteLine(x, y,
+						rs.startX,
+						rs.startY,
+						rs.endX,
+						rs.endY))
+					{ addCurrentEdge = true; }
+			
+			} else if (rs.edgeType == "bezier") {
+				if (this.inBezierVicinity(x, y,
+					rs.startX,
+					rs.startY,
+					rs.cp2x,
+					rs.cp2y,
+					rs.endX,
+					rs.endY,
+					Math.pow(edges[i]._private.style["width"].value / 2, 2))
+						&&
+					(Math.pow(edges[i]._private.style["width"].value / 2 , 2) + edgeThreshold >
+						this.sqDistanceToQuadraticBezier(x, y,
+							rs.startX,
+							rs.startY,
+							rs.cp2x,
+							rs.cp2y,
+							rs.endX,
+							rs.endY)))
+					{ addCurrentEdge = true; }
+			}
+			
+			if (!near.length || near[near.length - 1] != edges[i]) {
+				if ((arrowShapes[edges[i]._private.style["source-arrow-shape"].value].roughCollide(x, y,
+						edges[i]._private.rscratch.arrowStartX, edges[i]._private.rscratch.arrowStartY,
+						this.getArrowWidth(edges[i]._private.style["width"].value),
+						this.getArrowHeight(edges[i]._private.style["width"].value),
+						[edges[i]._private.rscratch.arrowStartX - edges[i].source()[0]._private.position.x,
+							edges[i]._private.rscratch.arrowStartY - edges[i].source()[0]._private.position.y], 0)
+						&&
+					arrowShapes[edges[i]._private.style["source-arrow-shape"].value].collide(x, y,
+						edges[i]._private.rscratch.arrowStartX, edges[i]._private.rscratch.arrowStartY,
+						this.getArrowWidth(edges[i]._private.style["width"].value),
+						this.getArrowHeight(edges[i]._private.style["width"].value),
+						[edges[i]._private.rscratch.arrowStartX - edges[i].source()[0]._private.position.x,
+							edges[i]._private.rscratch.arrowStartY - edges[i].source()[0]._private.position.y], 0))
+					||
+					(arrowShapes[edges[i]._private.style["target-arrow-shape"].value].roughCollide(x, y,
+						edges[i]._private.rscratch.arrowEndX, edges[i]._private.rscratch.arrowEndY,
+						this.getArrowWidth(edges[i]._private.style["width"].value),
+						this.getArrowHeight(edges[i]._private.style["width"].value),
+						[edges[i]._private.rscratch.arrowEndX - edges[i].target()[0]._private.position.x,
+							edges[i]._private.rscratch.arrowEndY - edges[i].target()[0]._private.position.y], 0)
+						&&
+					arrowShapes[edges[i]._private.style["target-arrow-shape"].value].collide(x, y,
+						edges[i]._private.rscratch.arrowEndX, edges[i]._private.rscratch.arrowEndY,
+						this.getArrowWidth(edges[i]._private.style["width"].value),
+						this.getArrowHeight(edges[i]._private.style["width"].value),
+						[edges[i]._private.rscratch.arrowEndX - edges[i].target()[0]._private.position.x,
+							edges[i]._private.rscratch.arrowEndY - edges[i].target()[0]._private.position.y], 0)))
+					{ addCurrentEdge = true; }
+			}
+			
+			if (addCurrentEdge) {
+				if (visibleElementsOnly) {
+					// For edges, make sure the edge is visible/has nonzero opacity,
+					// then also make sure both source and target nodes are visible/have
+					// nonzero opacity
+					var source = data.cy.getElementById(edges[i]._private.data.source)
+					var target = data.cy.getElementById(edges[i]._private.data.target)
+					
+					if (edges[i]._private.style["opacity"].value != 0
+						&& edges[i]._private.style["visibility"].value == "visible"
+						&& source._private.style["opacity"].value != 0
+						&& source._private.style["visibility"].value == "visible"
+						&& target._private.style["opacity"].value != 0
+						&& target._private.style["visibility"].value == "visible") {
+						
+						near.push(edges[i]);	
+					}
+				} else {
+					near.push(edges[i]);
+				}
+			}
+		} 
+		
+		near.sort( zOrderSort );
+		
+		if (near.length > 0) { return near[ near.length - 1 ]; } else { return null; }
+	}
+	
+	// "Give me everything from this box"
+	CanvasRenderer.prototype.getAllInBox = function(x1, y1, x2, y2) {
+		var data = this.data; var nodes = this.getCachedNodes(); var edges = this.getCachedEdges(); var box = [];
+		
+		var x1c = Math.min(x1, x2); var x2c = Math.max(x1, x2); var y1c = Math.min(y1, y2); var y2c = Math.max(y1, y2); x1 = x1c; x2 = x2c; y1 = y1c; y2 = y2c; var heur;
+		
+		for (var i=0;i<nodes.length;i++) {
+			if (nodeShapes[this.getNodeShape(nodes[i])].intersectBox(x1, y1, x2, y2,
+				//nodes[i]._private.style["width"].value, nodes[i]._private.style["height"].value,
+				this.getNodeWidth(nodes[i]), this.getNodeHeight(nodes[i]),
+				nodes[i]._private.position.x, nodes[i]._private.position.y, nodes[i]._private.style["border-width"].value / 2))
+			{ box.push(nodes[i]); }
+		}
+		
+		for (var i=0;i<edges.length;i++) {
+			if (edges[i]._private.rscratch.edgeType == "self") {
+				if ((heur = this.boxInBezierVicinity(x1, y1, x2, y2,
+						edges[i]._private.rscratch.startX, edges[i]._private.rscratch.startY,
+						edges[i]._private.rscratch.cp2ax, edges[i]._private.rscratch.cp2ay,
+						edges[i]._private.rscratch.endX, edges[i]._private.rscratch.endY, edges[i]._private.style["width"].value))
+							&&
+						(heur == 2 || (heur == 1 && this.checkBezierInBox(x1, y1, x2, y2,
+							edges[i]._private.rscratch.startX, edges[i]._private.rscratch.startY,
+							edges[i]._private.rscratch.cp2ax, edges[i]._private.rscratch.cp2ay,
+							edges[i]._private.rscratch.endX, edges[i]._private.rscratch.endY, edges[i]._private.style["width"].value)))
+								||
+					(heur = this.boxInBezierVicinity(x1, y1, x2, y2,
+						edges[i]._private.rscratch.startX, edges[i]._private.rscratch.startY,
+						edges[i]._private.rscratch.cp2cx, edges[i]._private.rscratch.cp2cy,
+						edges[i]._private.rscratch.endX, edges[i]._private.rscratch.endY, edges[i]._private.style["width"].value))
+							&&
+						(heur == 2 || (heur == 1 && this.checkBezierInBox(x1, y1, x2, y2,
+							edges[i]._private.rscratch.startX, edges[i]._private.rscratch.startY,
+							edges[i]._private.rscratch.cp2cx, edges[i]._private.rscratch.cp2cy,
+							edges[i]._private.rscratch.endX, edges[i]._private.rscratch.endY, edges[i]._private.style["width"].value)))
+					)
+				{ box.push(edges[i]); }
+			}
+			
+			if (edges[i]._private.rscratch.edgeType == "bezier" &&
+				(heur = this.boxInBezierVicinity(x1, y1, x2, y2,
+						edges[i]._private.rscratch.startX, edges[i]._private.rscratch.startY,
+						edges[i]._private.rscratch.cp2x, edges[i]._private.rscratch.cp2y,
+						edges[i]._private.rscratch.endX, edges[i]._private.rscratch.endY, edges[i]._private.style["width"].value))
+							&&
+						(heur == 2 || (heur == 1 && this.checkBezierInBox(x1, y1, x2, y2,
+							edges[i]._private.rscratch.startX, edges[i]._private.rscratch.startY,
+							edges[i]._private.rscratch.cp2x, edges[i]._private.rscratch.cp2y,
+							edges[i]._private.rscratch.endX, edges[i]._private.rscratch.endY, edges[i]._private.style["width"].value))))
+				{ box.push(edges[i]); }
+		
+			if (edges[i]._private.rscratch.edgeType == "straight" &&
+				(heur = this.boxInBezierVicinity(x1, y1, x2, y2,
+						edges[i]._private.rscratch.startX, edges[i]._private.rscratch.startY,
+						edges[i]._private.rscratch.startX * 0.5 + edges[i]._private.rscratch.endX * 0.5, 
+						edges[i]._private.rscratch.startY * 0.5 + edges[i]._private.rscratch.endY * 0.5, 
+						edges[i]._private.rscratch.endX, edges[i]._private.rscratch.endY, edges[i]._private.style["width"].value))
+							&& /* console.log("test", heur) == undefined && */
+						(heur == 2 || (heur == 1 && this.checkStraightEdgeInBox(x1, y1, x2, y2,
+							edges[i]._private.rscratch.startX, edges[i]._private.rscratch.startY,
+							edges[i]._private.rscratch.endX, edges[i]._private.rscratch.endY, edges[i]._private.style["width"].value))))
+				{ box.push(edges[i]); }
+			
+		}
+		
+		return box;
+	}
+
+	/**
+	 * Updates bounds of all compounds in the given element list.
+	 * Assuming the nodes are sorted top down, i.e. a parent node
+	 * always has a lower index than its all children.
+	 *
+	 * @param elements  set of elements containing both nodes and edges
+	 */
+	CanvasRenderer.prototype.updateAllCompounds = function(elements)
+	{
+		// traverse in reverse order, since rendering is top-down,
+		// but we need to calculate bounds bottom-up
+		for(var i = elements.length - 1; i >= 0; i--)
+		{
+			if (elements[i].isNode() &&
+			    (elements[i]._private.style["width"].value == "auto" ||
+			     elements[i]._private.style["height"].value == "auto") &&
+			    elements[i].children().length > 0)
+			{
+				var node = elements[i];
+				var bounds = this.calcCompoundBounds(node);
+
+				//console.log("%s : %o", node._private.data.id, bounds);
+				node._private.position.x = bounds.x;
+				node._private.position.y = bounds.y;
+				node._private.autoWidth = bounds.width;
+				node._private.autoHeight = bounds.height;
+			}
+		}
+
+	};
+
+	/**
+	 * Calculates rectangular bounds of a given compound node.
+	 * If the node is hidden, or none of its children is visible,
+	 * then instead of calculating the bounds, returns the last
+	 * calculated value.
+	 *
+	 * @param node  a node with children (compound node)
+	 * @return {{x: number, y: number, width: number, height: number}}
+	 */
+	CanvasRenderer.prototype.calcCompoundBounds = function(node)
+	{
+		// TODO assuming rectangular compounds, we may add support for other shapes in the future
+
+		// this selection doesn't work if parent is invisible
+		//var children = node.children(":visible").not(":removed");
+
+		// consider only not removed children
+		var children = node.descendants().not(":removed");
+
+		// TODO instead of last calculated width & height define a default compound node size?
+		// last calculated bounds
+		var bounds = {x: node._private.position.x,
+			y: node._private.position.y,
+			width: node._private.autoWidth,
+			height: node._private.autoHeight};
+
+		// check node visibility
+		if (node._private.style["visibility"].value != "visible")
+		{
+			// do not calculate bounds for invisible compounds,
+			// just return last calculated values
+			return bounds;
+		}
+
+		var visibleChildren = [];
+
+		// find out visible children
+		for (var i=0; i < children.size(); i++)
+		{
+			if (children[i]._private.style["visibility"].value == "visible")
+			{
+				visibleChildren.push(children[i]);
+			}
+		}
+
+		if (visibleChildren.length == 0)
+		{
+			// no visible children, just return last calculated values
+			return bounds;
+		}
+
+		// process only visible children
+		children = visibleChildren;
+
+		// find the leftmost, rightmost, topmost, and bottommost child node positions
+		var leftBorder = this.borderValue(children, "left");
+		var rightBorder = this.borderValue(children, "right");
+		var topBorder = this.borderValue(children, "top");
+		var bottomBorder = this.borderValue(children, "bottom");
+
+		// take padding values into account in addition to border values
+		var padding = this.getNodePadding(node);
+		var x = (leftBorder - padding.left + rightBorder + padding.right) / 2;
+		var y = (topBorder - padding.top + bottomBorder + padding.bottom) / 2;
+		var width = (rightBorder - leftBorder) + padding.left + padding.right;
+		var height = (bottomBorder - topBorder) + padding.top + padding.bottom;
+
+		// it is not possible to use the function boundingBox() before
+		// actually rendering the graph
+//		var bBox = children.boundingBox();
+//
+//		var x = (bBox.x1 + bBox.x2) / 2;
+//		var y = (bBox.y1 + bBox.y2) / 2;
+//		var width = bBox.width;
+//		var height = bBox.height;
+
+		bounds = {x: x,
+			y: y,
+			width: width,
+			height: height};
+
+		return bounds;
+	};
+
+	/**
+	 * Calculates the leftmost, rightmost, topmost or bottommost point for the given
+	 * set of nodes. If the type parameter is "left" (or "right"), then the min (or
+	 * the max) x-coordinate value will be returned. If the type is "top" (or "bottom")
+	 * then the min (or the max) y-coordinate value will be returned.
+	 *
+	 * This function is designed to help determining the bounds (bounding box) of
+	 * compound nodes.
+	 *
+	 * @param nodes         set of nodes
+	 * @param type          "left", "right", "top", "bottom"
+	 * @return {number}     border value for the specified type
+	 */
+	CanvasRenderer.prototype.borderValue = function(nodes, type)
+	{
+		var nodeVals, labelVals;
+		var minValue = 1/0, maxValue = -1/0;
+		var r = this;
+
+		// helper function to determine node position and dimensions
+		var calcNodePosAndDim = function(node) {
+			var values = {};
+
+			values.x = node._private.position.x;
+			values.y = node._private.position.y;
+			//values.width = r.getNodeWidth(node);
+			//values.height = r.getNodeHeight(node);
+			values.width = node.outerWidth();
+			values.height = node.outerHeight();
+
+			return values;
+		};
+
+		// helper function to determine label width
+		var getLabelWidth = function(node)
+		{
+			var text = String(node._private.style["content"].value);
+			var textTransform = node._private.style["text-transform"].value;
+
+			if (textTransform == "none") {
+			} else if (textTransform == "uppercase") {
+				text = text.toUpperCase();
+			} else if (textTransform == "lowercase") {
+				text = text.toLowerCase();
+			}
+
+			// TODO width doesn't measure correctly without actually rendering
+			var context = r.data.canvases[4].getContext("2d");
+			return context.measureText(text).width;
+		};
+
+		// helper function to determine label position and dimensions
+		var calcLabelPosAndDim = function(node) {
+
+			var values = {};
+			var nodeWidth = r.getNodeWidth(node);
+			var nodeHeight = r.getNodeHeight(node);
+
+
+			values.height = node._private.style["font-size"].value;
+
+			// TODO ignoring label width for now, it may be a good idea to do so,
+			// since longer label texts may increase the node size unnecessarily
+			//values.width = getLabelWidth(node);
+			values.width = values.height;
+
+			var textHalign = node._private.style["text-halign"].strValue;
+
+			if (textHalign == "left") {
+				values.x = node._private.position.x - nodeWidth / 2;
+				values.left = values.x - values.width;
+				values.right = values.x;
+			} else if (textHalign == "right") {
+				values.x = node._private.position.x + nodeWidth / 2;
+				values.left = values.x;
+				values.right = values.x + values.width;
+			} else { //if (textHalign == "center")
+				values.x = node._private.position.x;
+				values.left = values.x - values.width / 2;
+				values.right = values.x + values.width / 2;
+			}
+
+			var textValign = node._private.style["text-valign"].strValue;
+
+			if (textValign == "top") {
+				values.y = node._private.position.y - nodeHeight / 2;
+				values.top = values.y - values.height;
+				values.bottom = values.y;
+			} else if (textValign == "bottom") {
+				values.y = node._private.position.y + nodeHeight / 2;
+				values.top = values.y;
+				values.bottom = values.y + values.height;
+			} else { // if (textValign == "middle" || textValign == "center")
+				values.y = node._private.position.y;
+				values.top = values.y - values.height / 2;
+				values.bottom = values.y + values.height / 2;
+			}
+
+			return values;
+		};
+
+
+
+		// find out border values by iterating given nodes
+
+		for (i = 0; i < nodes.length; i++)
+		{
+			nodeVals = calcNodePosAndDim(nodes[i]);
+			labelVals = calcLabelPosAndDim(nodes[i]);
+
+			if (type == "left")
+			{
+				var leftBorder = Math.min(nodeVals.x - nodeVals.width / 2,
+					labelVals.left);
+
+				if (leftBorder < minValue)
+				{
+					minValue = leftBorder;
+				}
+			}
+			else if (type == "right")
+			{
+				var rightBorder = Math.max(nodeVals.x + nodeVals.width / 2,
+					labelVals.right);
+
+				if (rightBorder > maxValue)
+				{
+					maxValue = rightBorder;
+				}
+			}
+			else if (type == "top")
+			{
+				var topBorder = Math.min(nodeVals.y - nodeVals.height / 2,
+					labelVals.top);
+
+				if (topBorder < minValue)
+				{
+					minValue = topBorder;
+				}
+			}
+			else if (type == "bottom")
+			{
+				var bottomBorder = Math.max(nodeVals.y + nodeVals.height / 2,
+					labelVals.bottom);
+
+				if (bottomBorder > maxValue)
+				{
+					maxValue = bottomBorder;
+				}
+			}
+		}
+
+		// return the border value according to the type
+
+		if ((type == "left") || (type == "top"))
+		{
+			return minValue;
+		}
+		else
+		{
+			return maxValue;
+		}
+	};
+
+	/**
+	 * Returns the width of the given node. If the width is set to auto,
+	 * returns the value of the autoWidth field.
+	 *
+	 * @param node          a node
+	 * @return {number}     width of the node
+	 */
+	CanvasRenderer.prototype.getNodeWidth = function(node)
+	{
+		if (node._private.style["width"].value == "auto" ||
+		    node._private.style["height"].value == "auto")
+		{
+			return node._private.autoWidth;
+		}
+		else
+		{
+			return node._private.style["width"].value;
+		}
+	};
+
+	/**
+	 * Returns the height of the given node. If the height is set to auto,
+	 * returns the value of the autoHeight field.
+	 *
+	 * @param node          a node
+	 * @return {number}     width of the node
+	 */
+	CanvasRenderer.prototype.getNodeHeight = function(node)
+	{
+		if (node._private.style["width"].value == "auto" ||
+		    node._private.style["height"].value == "auto")
+		{
+			return node._private.autoHeight;
+		}
+		else
+		{
+			return node._private.style["height"].value;
+		}
+	};
+
+	/**
+	 * Returns the shape of the given node. If the height or width of the given node
+	 * is set to auto, the node is considered to be a compound.
+	 *
+	 * @param node          a node
+	 * @return {String}     shape of the node
+	 */
+	CanvasRenderer.prototype.getNodeShape = function(node)
+	{
+		// TODO only allow rectangle for a compound node?
+//		if (node._private.style["width"].value == "auto" ||
+//		    node._private.style["height"].value == "auto")
+//		{
+//			return "rectangle";
+//		}
+
+		var shape = node._private.style["shape"].value;
+
+		if( node.isParent() ){
+			if( shape === 'rectangle' || shape === 'roundrectangle' ){
+				return shape;
+			} else {
+				return 'rectangle';
+			}
+		}
+
+		return shape;
+	};
+
+	CanvasRenderer.prototype.getNodePadding = function(node)
+	{
+		var left = node._private.style["padding-left"].value;
+		var right = node._private.style["padding-right"].value;
+		var top = node._private.style["padding-top"].value;
+		var bottom = node._private.style["padding-bottom"].value;
+
+		if (isNaN(left))
+		{
+			left = 0;
+		}
+
+		if (isNaN(right))
+		{
+			right = 0;
+		}
+
+		if (isNaN(top))
+		{
+			top = 0;
+		}
+
+		if (isNaN(bottom))
+		{
+			bottom = 0;
+		}
+
+		return {left : left,
+			right : right,
+			top : top,
+			bottom : bottom};
+	};
+
+	// @O Keyboard functions
+	{
+	}
+	
+	// @O Drawing functions
+	{
+	
+	// Resize canvas
+	CanvasRenderer.prototype.matchCanvasSize = function(container) {
+		var data = this.data; var width = container.clientWidth; var height = container.clientHeight;
+		
+		var canvas, canvasWidth = width, canvasHeight = height;
+
+		if ('devicePixelRatio' in window) {
+			canvasWidth *= devicePixelRatio;
+			canvasHeight *= devicePixelRatio;
+		}
+
+		for (var i = 0; i < CANVAS_LAYERS; i++) {
+
+			canvas = data.canvases[i];
+			
+			if (canvas.width !== canvasWidth || canvas.height !== canvasHeight) {
+				
+				canvas.width = canvasWidth;
+				canvas.height = canvasHeight;
+
+				canvas.style.width = width + 'px';
+				canvas.style.height = height + 'px';
+			}
+		}
+		
+		for (var i = 0; i < BUFFER_COUNT; i++) {
+			
+			canvas = data.bufferCanvases[i];
+			
+			if (canvas.width !== canvasWidth || canvas.height !== canvasHeight) {
+				
+				canvas.width = canvasWidth;
+				canvas.height = canvasHeight;
+			}
+		}
+
+		this.data.overlay.style.width = width + 'px';
+		this.data.overlay.style.height = height + 'px';
+	}
+
+
+	// helper function for the sort operation
+	var elementDepth = function(ele) {
+		if (ele._private.group == "nodes")
+		{
+			return ele.parents().size();
+		}
+		else if (ele._private.group == "edges")
+		{
+			return Math.max(ele.source()[0].parents().size(),
+			                ele.target()[0].parents().size());
+		}
+		else
+		{
+			return 0;
+		}
+	};
+
+
+	CanvasRenderer.prototype.getCachedZSortedEles = function(){
+		var lastNodes = this.lastZOrderCachedNodes;
+		var lastEdges = this.lastZOrderCachedEdges;
+		var nodes = this.getCachedNodes();
+		var edges = this.getCachedEdges();
+		var eles = [];
+
+		if( !lastNodes || !lastEdges || lastNodes !== nodes || lastEdges !== edges ){ 
+			//console.time('cachezorder')
+			
+			for( var i = 0; i < nodes.length; i++ ){
+				eles.push( nodes[i] );
+			}
+
+			for( var i = 0; i < edges.length; i++ ){
+				eles.push( edges[i] );
+			}
+
+			eles.sort( zOrderSort );
+			this.cachedZSortedEles = eles;
+			//console.log('make cache')
+
+			//console.timeEnd('cachezorder')
+		} else {
+			eles = this.cachedZSortedEles;
+			//console.log('read cache')
+		}
+
+		this.lastZOrderCachedNodes = nodes;
+		this.lastZOrderCachedEdges = edges;
+
+		return eles;
+	};
+
+
+	var zOrderSort = function(a, b) {
+		var result = a._private.style["z-index"].value
+			- b._private.style["z-index"].value;
+
+		var depthA = 0;
+		var depthB = 0;
+
+		// no need to calculate element depth if there is no compound node
+		if ( a.cy().hasCompoundNodes() )
+		{
+			depthA = elementDepth(a);
+			depthB = elementDepth(b);
+		}
+
+		// if both elements has same depth,
+		// then edges should be drawn first
+		if (depthA - depthB === 0)
+		{
+			// "a" is a node, it should be drawn later
+			if (a._private.group === "nodes"
+				&& b._private.group === "edges")
+			{
+				return 1;
+			}
+			
+			// "a" is an edge, it should be drawn first
+			else if (a._private.group === "edges"
+				&& b._private.group === "nodes")
+			{
+				return -1;
+			}
+
+			// both nodes or both edges
+			else
+			{
+				if( result === 0 ){ // same z-index => compare indices in the core (order added to graph w/ last on top)
+					return a._private.index - b._private.index;
+				} else {
+					return result;
+				}
+			}
+		}
+
+		// elements on different level
+		else
+		{
+			// deeper element should be drawn later
+			return depthA - depthB;
+		}
+
+		// return zero if z-index values are not the same
+		return 0;
+	};
+
+	CanvasRenderer.prototype.renderTo = function( cxt, zoom, pan ){
+		this.redraw( cxt, true, zoom, pan );
+	};
+
+	// Redraw frame
+	CanvasRenderer.prototype.redraw = function( forcedContext, drawAll, forcedZoom, forcedPan ) {
+		var r = this;
+		
+		if( this.averageRedrawTime === undefined ){ this.averageRedrawTime = 0; }
+
+		var minRedrawLimit = 1000/60; // people can't see much better than 60fps
+		var maxRedrawLimit = 1000; // don't cap max b/c it's more important to be responsive than smooth
+
+		var redrawLimit = this.averageRedrawTime; // estimate the ideal redraw limit based on how fast we can draw
+
+		redrawLimit = Math.max(minRedrawLimit, redrawLimit);
+		redrawLimit = Math.min(redrawLimit, maxRedrawLimit);
+
+		//console.log('--\nideal: %i; effective: %i', this.averageRedrawTime, redrawLimit);
+
+		if( this.lastDrawTime === undefined ){ this.lastDrawTime = 0; }
+
+		var nowTime = +new Date;
+		var timeElapsed = nowTime - this.lastDrawTime;
+		var callAfterLimit = timeElapsed >= redrawLimit;
+
+		if( !forcedContext ){
+			if( !callAfterLimit ){
+				clearTimeout( this.redrawTimeout );
+				this.redrawTimeout = setTimeout(function(){
+					r.redraw();
+				}, redrawLimit);
+
+				return;
+			}
+
+			this.lastDrawTime = nowTime;
+		}
+
+
+		// start on thread ready
+		setTimeout(function(){
+
+		var startTime = nowTime;
+
+		var looperMax = 100;
+		//console.log('-- redraw --')
+
+		// console.time('init'); for( var looper = 0; looper <= looperMax; looper++ ){
+		
+		var cy = r.data.cy; var data = r.data; 
+		var nodes = r.getCachedNodes(); var edges = r.getCachedEdges();
+		r.matchCanvasSize(data.container);
+
+		var zoom = cy.zoom();
+		var effectiveZoom = forcedZoom !== undefined ? forcedZoom : zoom;
+		var pan = cy.pan();
+		var effectivePan = {
+			x: pan.x,
+			y: pan.y
+		};
+
+		if( forcedPan ){
+			effectivePan = forcedPan;
+		}
+
+		if( 'devicePixelRatio' in window ){
+			effectiveZoom *= devicePixelRatio;
+			effectivePan.x *= devicePixelRatio;
+			effectivePan.y *= devicePixelRatio;
+		}
+		
+		var elements = [];
+		for( var i = 0; i < nodes.length; i++ ){
+			elements.push( nodes[i] );
+		}
+		for( var i = 0; i < edges.length; i++ ){
+			elements.push( edges[i] );
+		}
+
+		// } console.timeEnd('init')
+
+	
+
+		if (data.canvasNeedsRedraw[DRAG] || data.canvasNeedsRedraw[NODE] || drawAll) {
+			//NB : VERY EXPENSIVE
+			//console.time('edgectlpts'); for( var looper = 0; looper <= looperMax; looper++ ){
+
+			if( r.hideEdgesOnViewport && (r.pinching || r.hoverData.dragging || r.data.wheel || r.swipePanning) ){ 
+			} else {
+				r.findEdgeControlPoints(edges);
+			}
+
+			//} console.timeEnd('edgectlpts')
+
+		
+
+			// console.time('sort'); for( var looper = 0; looper <= looperMax; looper++ ){
+			var elements = r.getCachedZSortedEles();
+			// } console.timeEnd('sort')
+
+			// console.time('updatecompounds'); for( var looper = 0; looper <= looperMax; looper++ ){
+			// no need to update graph if there is no compound node
+			if ( cy.hasCompoundNodes() )
+			{
+				r.updateAllCompounds(elements);
+			}
+			// } console.timeEnd('updatecompounds')
+		}
+		
+		var elesInDragLayer;
+		var elesNotInDragLayer;
+		var element;
+
+
+		// console.time('drawing'); for( var looper = 0; looper <= looperMax; looper++ ){
+		if (data.canvasNeedsRedraw[NODE] || drawAll) {
+			// console.log("redrawing node layer", data.canvasRedrawReason[NODE]);
+		  
+		  	if( !elesInDragLayer || !elesNotInDragLayer ){
+				elesInDragLayer = [];
+				elesNotInDragLayer = [];
+
+				for (var index = 0; index < elements.length; index++) {
+					element = elements[index];
+
+					if ( element._private.rscratch.inDragLayer ) {
+						elesInDragLayer.push( element );
+					} else {
+						elesNotInDragLayer.push( element );
+					}
+				}
+			}	
+
+			var context = forcedContext || data.canvases[NODE].getContext("2d");
+
+			context.setTransform(1, 0, 0, 1, 0, 0);
+			context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+			
+			if( !drawAll ){
+				context.translate(effectivePan.x, effectivePan.y);
+				context.scale(effectiveZoom, effectiveZoom);
+			}
+			if( forcedPan ){
+				context.translate(forcedPan.x, forcedPan.y);
+			} 
+			if( forcedZoom ){
+				context.scale(forcedZoom, forcedZoom);
+			}
+			
+			for (var index = 0; index < elesNotInDragLayer.length; index++) {
+				element = elesNotInDragLayer[index];
+				
+				if (element._private.group == "nodes") {
+					r.drawNode(context, element);
+					
+				} else if (element._private.group == "edges") {
+					r.drawEdge(context, element);
+				}
+			}
+			
+			for (var index = 0; index < elesNotInDragLayer.length; index++) {
+				element = elesNotInDragLayer[index];
+				
+				if (element._private.group == "nodes") {
+					r.drawNodeText(context, element);
+				} else if (element._private.group == "edges") {
+					r.drawEdgeText(context, element);
+				}
+
+				// draw the overlay
+				if (element._private.group == "nodes") {
+					r.drawNode(context, element, true);
+				} else if (element._private.group == "edges") {
+					r.drawEdge(context, element, true);
+				}
+			}
+			
+			if( !drawAll ){
+				data.canvasNeedsRedraw[NODE] = false; data.canvasRedrawReason[NODE] = [];
+			}
+		}
+		
+		if (data.canvasNeedsRedraw[DRAG] || drawAll) {
+			// console.log("redrawing drag layer", data.canvasRedrawReason[DRAG]);
+		  
+			if( !elesInDragLayer || !elesNotInDragLayer ){
+				elesInDragLayer = [];
+				elesNotInDragLayer = [];
+
+				for (var index = 0; index < elements.length; index++) {
+					element = elements[index];
+
+					if ( element._private.rscratch.inDragLayer ) {
+						elesInDragLayer.push( element );
+					} else {
+						elesNotInDragLayer.push( element );
+					}
+				}
+			}
+
+			var context = forcedContext || data.canvases[DRAG].getContext("2d");
+			
+			if( !drawAll ){
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+				
+				context.translate(effectivePan.x, effectivePan.y);
+				context.scale(effectiveZoom, effectiveZoom);
+			} 
+			if( forcedPan ){
+				context.translate(forcedPan.x, forcedPan.y);
+			} 
+			if( forcedZoom ){
+				context.scale(forcedZoom, forcedZoom);
+			}
+			
+			var element;
+
+			for (var index = 0; index < elesInDragLayer.length; index++) {
+				element = elesInDragLayer[index];
+				
+				if (element._private.group == "nodes") {
+					r.drawNode(context, element);
+				} else if (element._private.group == "edges") {
+					r.drawEdge(context, element);
+				}
+			}
+			
+			for (var index = 0; index < elesInDragLayer.length; index++) {
+				element = elesInDragLayer[index];
+				
+				if (element._private.group == "nodes") {
+					r.drawNodeText(context, element);
+				} else if (element._private.group == "edges") {
+					r.drawEdgeText(context, element);
+				}
+
+				// draw the overlay
+				if (element._private.group == "nodes") {
+					r.drawNode(context, element, true);
+				} else if (element._private.group == "edges") {
+					r.drawEdge(context, element, true);
+				}
+			}
+			
+			if( !drawAll ){
+				data.canvasNeedsRedraw[DRAG] = false; data.canvasRedrawReason[DRAG] = [];
+			}
+		}
+		
+		if (data.canvasNeedsRedraw[SELECT_BOX]) {
+			// console.log("redrawing selection box", data.canvasRedrawReason[SELECT_BOX]);
+		  
+			var context = forcedContext || data.canvases[SELECT_BOX].getContext("2d");
+			
+			if( !drawAll ){
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+			
+				context.translate(effectivePan.x, effectivePan.y);
+				context.scale(effectiveZoom, effectiveZoom);		
+			} 
+			if( forcedPan ){
+				context.translate(forcedPan.x, forcedPan.y);
+			} 
+			if( forcedZoom ){
+				context.scale(forcedZoom, forcedZoom);
+			}
+			
+			var coreStyle = cy.style()._private.coreStyle;
+
+			if (data.select[4] == 1) {
+				var zoom = data.cy.zoom();
+				var borderWidth = coreStyle["selection-box-border-width"].value / zoom;
+				
+				context.lineWidth = borderWidth;
+				context.fillStyle = "rgba(" 
+					+ coreStyle["selection-box-color"].value[0] + ","
+					+ coreStyle["selection-box-color"].value[1] + ","
+					+ coreStyle["selection-box-color"].value[2] + ","
+					+ coreStyle["selection-box-opacity"].value + ")";
+				
+				context.fillRect(
+					data.select[0],
+					data.select[1],
+					data.select[2] - data.select[0],
+					data.select[3] - data.select[1]);
+				
+				if (borderWidth > 0) {
+					context.strokeStyle = "rgba(" 
+						+ coreStyle["selection-box-border-color"].value[0] + ","
+						+ coreStyle["selection-box-border-color"].value[1] + ","
+						+ coreStyle["selection-box-border-color"].value[2] + ","
+						+ coreStyle["selection-box-opacity"].value + ")";
+					
+					context.strokeRect(
+						data.select[0],
+						data.select[1],
+						data.select[2] - data.select[0],
+						data.select[3] - data.select[1]);
+				}
+			}
+
+			if( data.bgActivePosistion ){
+				var zoom = data.cy.zoom();
+				var pos = data.bgActivePosistion;
+
+				context.fillStyle = "rgba(" 
+					+ coreStyle["active-bg-color"].value[0] + ","
+					+ coreStyle["active-bg-color"].value[1] + ","
+					+ coreStyle["active-bg-color"].value[2] + ","
+					+ coreStyle["active-bg-opacity"].value + ")";
+
+				context.beginPath();
+				context.arc(pos.x, pos.y, coreStyle["active-bg-size"].pxValue / zoom, 0, 2 * Math.PI); 
+				context.fill();
+			}
+			
+			if( !drawAll ){
+				data.canvasNeedsRedraw[SELECT_BOX] = false; data.canvasRedrawReason[SELECT_BOX] = [];
+			}
+		}
+
+		if( r.options.showOverlay ){
+			var context = data.canvases[OVERLAY].getContext("2d");
+
+			context.lineJoin = 'round';
+			context.font = '14px helvetica';
+			context.strokeStyle = '#fff';
+			context.lineWidth = '4';
+			context.fillStyle = '#666';
+			context.textAlign = 'right';
+
+			var text = 'cytoscape.js';
+			
+			var w = context.canvas.width;
+			var h = context.canvas.height;
+			var p = 4;
+			var tw = context.measureText(text).width;
+			var th = 14; 
+
+			context.clearRect(0, 0, w, h);
+			context.strokeText(text, w - p, h - p);
+			context.fillText(text, w - p, h - p);
+
+			data.overlayDrawn = true;
+		}
+
+		// } console.timeEnd('drawing')
+
+		var endTime = +new Date;
+
+		if( r.averageRedrawTime === undefined ){
+			r.averageRedrawTime = endTime - startTime;
+		}
+
+		// use a weighted average with a bias from the previous average so we don't spike so easily
+		r.averageRedrawTime = r.averageRedrawTime/2 + (endTime - startTime)/2;
+		//console.log('actual: %i, average: %i', endTime - startTime, this.averageRedrawTime);
+
+
+		// end on thread ready
+		}, 0);
+	};
+	
+	var imageCache = {};
+	
+	// Discard after 5 min. of disuse
+	var IMAGE_KEEP_TIME = 30 * 300; // 300frames@30fps, or. 5min
+	
+	CanvasRenderer.prototype.getCachedImage = function(url, onLoadRedraw) {
+
+		if (imageCache[url] && imageCache[url].image) {
+
+			// Reset image discard timer
+			imageCache[url].keepTime = IMAGE_KEEP_TIME; 
+			return imageCache[url].image;
+		}
+		
+		var imageContainer = imageCache[url];
+		
+		if (imageContainer == undefined) { 
+			imageCache[url] = new Object();
+			imageCache[url].image = new Image();
+			imageCache[url].image.onload = onLoadRedraw;
+			
+			imageCache[url].image.src = url;
+			
+			// Initialize image discard timer
+			imageCache[url].keepTime = IMAGE_KEEP_TIME;
+			
+			imageContainer = imageCache[url];
+		}
+		
+		return imageContainer.image;
+	}
+	
+	// Attempt to replace the image object with a canvas buffer to solve zooming problem
+	CanvasRenderer.prototype.swapCachedImage = function(url) {
+		if (imageCache[url]) {
+			
+			if (imageCache[url].image
+					&& imageCache[url].image.complete) {
+				
+				var image = imageCache[url].image;
+				
+				var buffer = document.createElement("canvas");
+				buffer.width = image.width;
+				buffer.height = image.height;
+				
+				buffer.getContext("2d").drawImage(image,
+						0, 0
+					);
+				
+				imageCache[url].image = buffer;
+				imageCache[url].swappedWithCanvas = true;
+				
+				return buffer;
+			} else {
+				return null;
+			} 
+		} else {
+			return null;
+		}
+	}
+	
+	CanvasRenderer.prototype.updateImageCaches = function() {
+		
+		for (var url in imageCache) {
+			if (imageCache[url].keepTime <= 0) {
+				
+				if (imageCache[url].image != undefined) {
+					imageCache[url].image.src = undefined;
+					imageCache[url].image = undefined;
+				}
+				
+				imageCache[url] = undefined;
+			} else {
+				imageCache[url] -= 1;
+			}
+		}
+	}
+	
+	CanvasRenderer.prototype.drawImage = function(context, x, y, widthScale, heightScale, rotationCW, image) {
+		
+		image.widthScale = 0.5;
+		image.heightScale = 0.5;
+		
+		image.rotate = rotationCW;
+		
+		var finalWidth; var finalHeight;
+		
+		canvas.drawImage(image, x, y);
+	}
+	
+	// Draw edge
+	CanvasRenderer.prototype.drawEdge = function(context, edge, drawOverlayInstead) {
+
+		if( this.hideEdgesOnViewport && (this.dragData.didDrag || this.pinching || this.hoverData.dragging || this.data.wheel || this.swipePanning) ){ return; } // save cycles on pinching
+
+		var startNode, endNode;
+
+		startNode = edge.source()[0];
+		endNode = edge.target()[0];
+		
+		if (edge._private.style["visibility"].value != "visible"
+			|| startNode._private.style["visibility"].value != "visible"
+			|| endNode._private.style["visibility"].value != "visible") {
+			return;
+		}
+		
+		var overlayPadding = edge._private.style["overlay-padding"].value;
+		var overlayOpacity = edge._private.style["overlay-opacity"].value;
+		var overlayColor = edge._private.style["overlay-color"].value;
+
+		// Edge color & opacity
+		if( drawOverlayInstead ){
+			context.strokeStyle = "rgba( " + overlayColor[0] + ", " + overlayColor[1] + ", " + overlayColor[2] + ", " + overlayOpacity + " )";
+			context.lineCap = "round";
+
+			if( edge._private.rscratch.edgeType == "self"){
+				context.lineCap = "butt";
+			}
+
+		} else {
+			context.strokeStyle = "rgba(" 
+				+ edge._private.style["line-color"].value[0] + ","
+				+ edge._private.style["line-color"].value[1] + ","
+				+ edge._private.style["line-color"].value[2] + ","
+				+ edge._private.style.opacity.value + ")";
+		}
+
+		// Edge line width
+		if (edge._private.style["width"].value <= 0) {
+			return;
+		}
+		
+		var edgeWidth = edge._private.style["width"].value + (drawOverlayInstead ? 2 * overlayPadding : 0);
+		var lineStyle = drawOverlayInstead ? "solid" : edge._private.style["line-style"].value;
+		context.lineWidth = edgeWidth;
+		
+		this.findEndpoints(edge);
+		
+		if (edge._private.rscratch.edgeType == "self") {
+					
+			var details = edge._private.rscratch;
+			this.drawStyledEdge(edge, context, [details.startX, details.startY, details.cp2ax,
+				details.cp2ay, details.selfEdgeMidX, details.selfEdgeMidY],
+				lineStyle,
+				edgeWidth);
+			
+			this.drawStyledEdge(edge, context, [details.selfEdgeMidX, details.selfEdgeMidY,
+				details.cp2cx, details.cp2cy, details.endX, details.endY],
+				lineStyle,
+				edgeWidth);
+			
+		} else if (edge._private.rscratch.edgeType == "straight") {
+			
+			var nodeDirectionX = endNode._private.position.x - startNode._private.position.x;
+			var nodeDirectionY = endNode._private.position.y - startNode._private.position.y;
+			
+			var edgeDirectionX = edge._private.rscratch.endX - edge._private.rscratch.startX;
+			var edgeDirectionY = edge._private.rscratch.endY - edge._private.rscratch.startY;
+			
+			if (nodeDirectionX * edgeDirectionX
+				+ nodeDirectionY * edgeDirectionY < 0) {
+				
+				edge._private.rscratch.straightEdgeTooShort = true;	
+			} else {
+				
+				var details = edge._private.rscratch;
+				this.drawStyledEdge(edge, context, [details.startX, details.startY,
+				                              details.endX, details.endY],
+				                              lineStyle,
+				                              edgeWidth);
+				
+				edge._private.rscratch.straightEdgeTooShort = false;	
+			}	
+		} else {
+			
+			var details = edge._private.rscratch;
+			this.drawStyledEdge(edge, context, [details.startX, details.startY,
+				details.cp2x, details.cp2y, details.endX, details.endY],
+				lineStyle,
+				edgeWidth);
+			
+		}
+		
+		if (edge._private.rscratch.noArrowPlacement !== true
+				&& edge._private.rscratch.startX !== undefined) {
+			this.drawArrowheads(context, edge, drawOverlayInstead);
+		}
+
+	}
+	
+	var _genPoints = function(pt, spacing, even) {
+		
+		var approxLen = Math.sqrt(Math.pow(pt[4] - pt[0], 2) + Math.pow(pt[5] - pt[1], 2));
+		approxLen += Math.sqrt(Math.pow((pt[4] + pt[0]) / 2 - pt[2], 2) + Math.pow((pt[5] + pt[1]) / 2 - pt[3], 2));
+
+		var pts = Math.ceil(approxLen / spacing); var inc = approxLen / spacing;
+		var pz;
+		
+		if (pts > 0) {
+			pz = new Array(pts * 2);
+		} else {
+			return null;
+		}
+		
+		for (var i = 0; i < pts; i++) {
+			var cur = i / pts;
+			pz[i * 2] = pt[0] * (1 - cur) * (1 - cur) + 2 * (pt[2]) * (1 - cur) * cur + pt[4] * (cur) * (cur);
+			pz[i * 2 + 1] = pt[1] * (1 - cur) * (1 - cur) + 2 * (pt[3]) * (1 - cur) * cur + pt[5] * (cur) * (cur);
+		}
+		
+		return pz;
+	}
+	
+	var _genStraightLinePoints = function(pt, spacing, even) {
+		
+		var approxLen = Math.sqrt(Math.pow(pt[2] - pt[0], 2) + Math.pow(pt[3] - pt[1], 2));
+		
+		var pts = Math.ceil(approxLen / spacing);
+		var pz;
+		
+		if (pts > 0) {
+			pz = new Array(pts * 2);
+		} else {
+			return null;
+		}
+		
+		var lineOffset = [pt[2] - pt[0], pt[3] - pt[1]];
+		for (var i = 0; i < pts; i++) {
+			var cur = i / pts;
+			pz[i * 2] = lineOffset[0] * cur + pt[0];
+			pz[i * 2 + 1] = lineOffset[1] * cur + pt[1];
+		}
+		
+		return pz;
+	}
+	
+	var _genEvenOddpts = function(pt, evenspac, oddspac) {
+		
+		pt1 = _genpts(pt, evenspac);
+		pt2 = _genpts(pt, oddspac);
+	}
+	
+	CanvasRenderer.prototype.createBuffer = function(w, h) {
+		var buffer = document.createElement("canvas");
+		buffer.width = w;
+		buffer.height = h;
+		
+		return [buffer, buffer.getContext("2d")];
+	}
+	
+	/*
+	CanvasRenderer.prototype.
+	
+	CanvasRenderer.prototype.drawStraightEdge = function(context, x1, y1, x2, y2, type, width) {
+		
+		if (type == "solid") {
+			context.beginPath();
+			context.moveTo(
+				edge._private.rscratch.startX,
+				edge._private.rscratch.startY);
+	
+			
+			context.stroke();
+		} else if (type == "dotted") {
+			var pt = _genStraightLinePoints([x1, y1, x2, y2], 10, false);
+			
+			
+		} else if (type == "dashed") {
+			var pt = _genStraightLinePoints([x1, y1, x2, y2], 10, false);
+		}
+		
+	}
+	*/
+	
+	CanvasRenderer.prototype.drawStyledEdge = function(
+			edge, context, pts, type, width) {
+		
+		// 3 points given -> assume Bezier
+		// 2 -> assume straight
+		
+		var cy = this.data.cy;
+		var zoom = cy.zoom();
+		
+		// Adjusted edge width for dotted
+//		width = Math.max(width * 1.6, 3.4) * zoom;
+
+		//		console.log("w", width);
+		
+		// from http://en.wikipedia.org/wiki/Bézier_curve#Quadratic_curves
+		function qbezierAt(p0, p1, p2, t){
+			return (1 - t)*(1 - t)*p0 + 2*(1 - t)*t*p1 + t*t*p2;
+		}
+
+		if( edge._private.rstyle.bezierPts === undefined ){
+			edge._private.rstyle.bezierPts = [];
+		}
+
+		var nBpts = edge._private.rstyle.bezierPts.length;
+		if( edge.isLoop() ){
+			if( nBpts >= 12 ){
+				edge._private.rstyle.bezierPts = [];
+			} else {
+				// append to current array
+			}
+		} else {
+			edge._private.rstyle.bezierPts = [];
+		}
+
+		var bpts = edge._private.rstyle.bezierPts;
+
+		if( pts.length === 6 ){
+			bpts.push({
+				x: qbezierAt( pts[0], pts[2], pts[4], 0.05 ),
+				y: qbezierAt( pts[1], pts[3], pts[5], 0.05 )
+			});
+
+			bpts.push({
+				x: qbezierAt( pts[0], pts[2], pts[4], 0.25 ),
+				y: qbezierAt( pts[1], pts[3], pts[5], 0.25 )
+			});
+
+			bpts.push({
+				x: qbezierAt( pts[0], pts[2], pts[4], 0.35 ),
+				y: qbezierAt( pts[1], pts[3], pts[5], 0.35 )
+			});
+
+			bpts.push({
+				x: qbezierAt( pts[0], pts[2], pts[4], 0.65 ),
+				y: qbezierAt( pts[1], pts[3], pts[5], 0.65 )
+			});
+
+			bpts.push({
+				x: qbezierAt( pts[0], pts[2], pts[4], 0.75 ),
+				y: qbezierAt( pts[1], pts[3], pts[5], 0.75 )
+			});
+
+			bpts.push({
+				x: qbezierAt( pts[0], pts[2], pts[4], 0.95 ),
+				y: qbezierAt( pts[1], pts[3], pts[5], 0.95 )
+			});
+		}
+
+		if (type == "solid") {
+			
+			context.beginPath();
+			context.moveTo(pts[0], pts[1]);
+			if (pts.length == 3 * 2) {
+				context.quadraticCurveTo(pts[2], pts[3], pts[4], pts[5]);
+			} else {
+				context.lineTo(pts[2], pts[3]);
+			}
+//			context.closePath();
+			context.stroke();
+			
+		} else if (type == "dotted") {
+			
+			var pt;
+			if (pts.length == 3 * 2) {
+				pt = _genPoints(pts, 16, true);
+			} else {
+				pt = _genStraightLinePoints(pts, 16, true);
+			}
+			
+			if (!pt) { return; }
+			
+			var dotRadius = Math.max(width * 1.6, 3.4) * zoom;
+			var bufW = dotRadius * 2, bufH = dotRadius * 2;
+			bufW = Math.max(bufW, 1);
+			bufH = Math.max(bufH, 1);
+			
+			var buffer = this.createBuffer(bufW, bufH);
+			
+			var context2 = buffer[1];
+//			console.log(buffer);
+//			console.log(bufW, bufH);
+			
+			// Draw on buffer
+			context2.setTransform(1, 0, 0, 1, 0, 0);
+			context2.clearRect(0, 0, bufW, bufH);
+			
+			context2.fillStyle = context.strokeStyle;
+			context2.beginPath();
+			context2.arc(bufW/2, bufH/2, dotRadius * 0.5, 0, Math.PI * 2, false);
+			context2.fill();
+			
+			// Now use buffer
+			context.beginPath();
+			//context.save();
+			
+			for (var i=0; i<pt.length/2; i++) {
+				
+//				context.beginPath();
+//				context.arc(pt[i*2], pt[i*2+1], width * 0.5, 0, Math.PI * 2, false);
+//				context.fill();
+				
+				context.drawImage(
+						buffer[0],
+						pt[i*2] - bufW/2 / zoom,
+						pt[i*2+1] - bufH/2 / zoom,
+						bufW / zoom,
+						bufH / zoom);
+			}
+			
+			//context.restore();
+			
+		} else if (type == "dashed") {
+			var pt;
+			if (pts.length == 3 * 2) {
+				pt = _genPoints(pts, 14, true);
+			} else {
+				pt = _genStraightLinePoints(pts, 14, true);
+			}
+			if (!pt) { return; }
+			
+//			var dashSize = Math.max(width * 1.6, 3.4);
+//			dashSize = Math.min(dashSize)
+			
+			//var bufW = width * 2 * zoom, bufH = width * 2.5 * zoom;
+			var bufW = width * 2 * zoom
+			var bufH = 7.8 * zoom;
+			bufW = Math.max(bufW, 1);
+			bufH = Math.max(bufH, 1);
+			
+			var buffer = this.createBuffer(bufW, bufH);
+			var context2 = buffer[1];
+
+			// Draw on buffer
+			context2.setTransform(1, 0, 0, 1, 0, 0);
+			context2.clearRect(0, 0, bufW, bufH);
+			
+			if (context.strokeStyle) {
+				context2.strokeStyle = context.strokeStyle;
+			}
+			
+			context2.lineWidth = width * cy.zoom();
+			
+	//		context2.fillStyle = context.strokeStyle;
+			
+			context2.beginPath();
+			context2.moveTo(bufW / 2, bufH * 0.2);
+			context2.lineTo(bufW / 2,  bufH * 0.8);
+			
+	//		context2.arc(bufH, dotRadius, dotRadius * 0.5, 0, Math.PI * 2, false);
+			
+	//		context2.fill();
+			context2.stroke();
+			
+			//context.save();
+			
+			// document.body.appendChild(buffer[0]);
+			
+			var quadraticBezierVaryingTangent = false;
+			var rotateVector, angle;
+			
+			// Straight line; constant tangent angle
+			if (pts.length == 2 * 2) {
+				rotateVector = [pts[2] - pts[0], pts[3] - pt[1]];
+				
+				angle = Math.acos((rotateVector[0] * 0 + rotateVector[1] * -1) / Math.sqrt(rotateVector[0] * rotateVector[0] 
+						+ rotateVector[1] * rotateVector[1]));
+	
+				if (rotateVector[0] < 0) {
+					angle = -angle + 2 * Math.PI;
+				}
+			} else if (pts.length == 3 * 2) {
+				quadraticBezierVaryingTangent = true;
+			}
+			
+			for (var i=0; i<pt.length/2; i++) {
+				
+				var p = i / (Math.max(pt.length/2 - 1, 1));
+			
+				// Quadratic bezier; varying tangent
+				// So, use derivative of quadratic Bezier function to find tangents
+				if (quadraticBezierVaryingTangent) {
+					rotateVector = [2 * (1-p) * (pts[2] - pts[0]) 
+					                	+ 2 * p * (pts[4] - pts[2]),
+					                    2 * (1-p) * (pts[3] - pts[1]) 
+					                    + 2 * p * (pts[5] - pts[3])];
+	
+					angle = Math.acos((rotateVector[0] * 0 + rotateVector[1] * -1) / Math.sqrt(rotateVector[0] * rotateVector[0] 
+								+ rotateVector[1] * rotateVector[1]));
+	
+					if (rotateVector[0] < 0) {
+						angle = -angle + 2 * Math.PI;
+					}
+				}
+				
+				context.translate(pt[i*2], pt[i*2+1]);
+				
+				context.rotate(angle);
+				context.translate(-bufW/2 / zoom, -bufH/2 / zoom);
+				
+				context.drawImage(
+						buffer[0],
+						0,
+						0,
+						bufW / zoom,
+						bufH / zoom);
+				
+				context.translate(bufW/2 / zoom, bufH/2 / zoom);
+				context.rotate(-angle);
+				
+				context.translate(-pt[i*2], -pt[i*2+1]);
+				
+			}
+			
+			
+			//context.restore();
+		} else {
+			this.drawStyledEdge(edge, context, pts, "solid", width);
+		}
+		
+	};
+	
+	// Draw edge text
+	CanvasRenderer.prototype.drawEdgeText = function(context, edge) {
+	
+		if( this.hideEdgesOnViewport && (this.dragData.didDrag || this.pinching || this.hoverData.dragging || this.data.wheel || this.swipePanning) ){ return; } // save cycles on pinching
+	
+		if (edge._private.style["visibility"].value != "visible") {
+			return;
+		}
+
+		var computedSize = edge._private.style["font-size"].pxValue * edge.cy().zoom();
+		var minSize = edge._private.style["min-zoomed-font-size"].pxValue;
+
+		if( computedSize < minSize ){
+			return;
+		}
+	
+		// Calculate text draw position
+		
+		context.textAlign = "center";
+		context.textBaseline = "middle";
+		
+		var textX, textY;	
+		var edgeCenterX, edgeCenterY;
+		
+		if (edge._private.rscratch.edgeType == "self") {
+			edgeCenterX = edge._private.rscratch.selfEdgeMidX;
+			edgeCenterY = edge._private.rscratch.selfEdgeMidY;
+		} else if (edge._private.rscratch.edgeType == "straight") {
+			edgeCenterX = (edge._private.rscratch.startX
+				+ edge._private.rscratch.endX) / 2;
+			edgeCenterY = (edge._private.rscratch.startY
+				+ edge._private.rscratch.endY) / 2;
+		} else if (edge._private.rscratch.edgeType == "bezier") {
+			edgeCenterX = 0.25 * edge._private.rscratch.startX
+				+ 2 * 0.5 * 0.5 * edge._private.rscratch.cp2x
+				+ (0.5 * 0.5) * edge._private.rscratch.endX;
+			edgeCenterY = Math.pow(1 - 0.5, 2) * edge._private.rscratch.startY
+				+ 2 * (1 - 0.5) * 0.5 * edge._private.rscratch.cp2y
+				+ (0.5 * 0.5) * edge._private.rscratch.endY;
+		}
+		
+		textX = edgeCenterX;
+		textY = edgeCenterY;
+
+		// add center point to style so bounding box calculations can use it
+		var rstyle = edge._private.rstyle;
+		rstyle.labelX = textX;
+		rstyle.labelY = textY;
+		
+		this.drawText(context, edge, textX, textY);
+	};
+	
+	// Draw node
+	CanvasRenderer.prototype.drawNode = function(context, node, drawOverlayInstead) {
+
+		var nodeWidth, nodeHeight;
+		
+		if ( node._private.style["visibility"].value != "visible" ) {
+			return;
+		}
+
+		var parentOpacity = 1;
+		var parents = node.parents();
+		for( var i = 0; i < parents.length; i++ ){
+			var parent = parents[i];
+			var opacity = parent._private.style.opacity.value;
+
+			parentOpacity = opacity * parentOpacity;
+
+			if( opacity === 0 ){
+				return;
+			}
+		}
+		
+		nodeWidth = this.getNodeWidth(node);
+		nodeHeight = this.getNodeHeight(node);
+		
+		context.lineWidth = node._private.style["border-width"].pxValue;
+
+		if( drawOverlayInstead === undefined || !drawOverlayInstead ){
+
+			// Node color & opacity
+			context.fillStyle = "rgba(" 
+				+ node._private.style["background-color"].value[0] + ","
+				+ node._private.style["background-color"].value[1] + ","
+				+ node._private.style["background-color"].value[2] + ","
+				+ (node._private.style["background-opacity"].value 
+				* node._private.style["opacity"].value * parentOpacity) + ")";
+			
+			// Node border color & opacity
+			context.strokeStyle = "rgba(" 
+				+ node._private.style["border-color"].value[0] + ","
+				+ node._private.style["border-color"].value[1] + ","
+				+ node._private.style["border-color"].value[2] + ","
+				+ (node._private.style["border-opacity"].value * node._private.style["opacity"].value * parentOpacity) + ")";
+			
+			
+			{
+				//var image = this.getCachedImage("url");
+				
+				var url = node._private.style["background-image"].value[2] ||
+					node._private.style["background-image"].value[1];
+				
+				if (url != undefined) {
+					
+					var r = this;
+					var image = this.getCachedImage(url,
+							
+							function() {
+								
+	//							console.log(e);
+								r.data.canvasNeedsRedraw[NODE] = true;
+								r.data.canvasRedrawReason[NODE].push("image finished load");
+								r.data.canvasNeedsRedraw[DRAG] = true;
+								r.data.canvasRedrawReason[DRAG].push("image finished load");
+								
+								// Replace Image object with Canvas to solve zooming too far
+								// into image graphical errors (Jan 10 2013)
+								r.swapCachedImage(url);
+								
+								r.redraw();
+							}
+					);
+					
+					if (image.complete == false) {
+
+						nodeShapes[r.getNodeShape(node)].drawPath(
+							context,
+							node._private.position.x,
+							node._private.position.y,
+						    nodeWidth, nodeHeight);
+							//node._private.style["width"].value,
+							//node._private.style["height"].value);
+						
+						context.stroke();
+						context.fillStyle = "#555555";
+						context.fill();
+						
+					} else {
+						//context.clip
+						this.drawInscribedImage(context, image, node);
+					}
+					
+				} else {
+
+					// Draw node
+					nodeShapes[this.getNodeShape(node)].draw(
+						context,
+						node._private.position.x,
+						node._private.position.y,
+						nodeWidth,
+						nodeHeight); //node._private.data.weight / 5.0
+				}
+				
+			}
+			
+			// Border width, draw border
+			if (node._private.style["border-width"].value > 0) {
+				context.stroke();
+			}
+			
+
+		// draw the overlay
+		} else {
+
+			var overlayPadding = node._private.style["overlay-padding"].value;
+			var overlayOpacity = node._private.style["overlay-opacity"].value;
+			var overlayColor = node._private.style["overlay-color"].value;
+			if( overlayOpacity > 0 ){
+				context.fillStyle = "rgba( " + overlayColor[0] + ", " + overlayColor[1] + ", " + overlayColor[2] + ", " + overlayOpacity + " )";
+
+				nodeShapes[this.getNodeShape(node)].draw(
+					context,
+					node._private.position.x,
+					node._private.position.y,
+					nodeWidth + overlayPadding * 2,
+					nodeHeight + overlayPadding * 2
+				);
+			}
+		}
+
+	};
+	
+	CanvasRenderer.prototype.drawInscribedImage = function(context, img, node) {
+		var r = this;
+//		console.log(this.data);
+		var zoom = this.data.cy._private.zoom;
+		
+		var nodeX = node._private.position.x;
+		var nodeY = node._private.position.y;
+
+		//var nodeWidth = node._private.style["width"].value;
+		//var nodeHeight = node._private.style["height"].value;
+		var nodeWidth = this.getNodeWidth(node);
+		var nodeHeight = this.getNodeHeight(node);
+		
+		context.save();
+		
+		nodeShapes[r.getNodeShape(node)].drawPath(
+				context,
+				nodeX, nodeY, 
+				nodeWidth, nodeHeight);
+		
+		context.clip();
+		
+//		context.setTransform(1, 0, 0, 1, 0, 0);
+		
+		var imgDim = [img.width, img.height];
+		context.drawImage(img, 
+				nodeX - imgDim[0] / 2,
+				nodeY - imgDim[1] / 2,
+				imgDim[0],
+				imgDim[1]);
+		
+		context.restore();
+		
+		if (node._private.style["border-width"].value > 0) {
+			context.stroke();
+		}
+		
+	};
+	
+	// Draw node text
+	CanvasRenderer.prototype.drawNodeText = function(context, node) {
+		
+		if (node._private.style["visibility"].value != "visible") {
+			return;
+		}
+
+		var computedSize = node._private.style["font-size"].pxValue * node.cy().zoom();
+		var minSize = node._private.style["min-zoomed-font-size"].pxValue;
+
+		if( computedSize < minSize ){
+			return;
+		}
+	
+		var textX, textY;
+
+		//var nodeWidth = node._private.style["width"].value;
+		//var nodeHeight = node._private.style["height"].value;
+		var nodeWidth = this.getNodeWidth(node);
+		var nodeHeight = this.getNodeHeight(node);
+	
+		// Find text position
+		var textHalign = node._private.style["text-halign"].strValue;
+		if (textHalign == "left") {
+			// Align right boundary of text with left boundary of node
+			context.textAlign = "right";
+			textX = node._private.position.x - nodeWidth / 2;
+		} else if (textHalign == "right") {
+			// Align left boundary of text with right boundary of node
+			context.textAlign = "left";
+			textX = node._private.position.x + nodeWidth / 2;
+		} else if (textHalign == "center") {
+			context.textAlign = "center";
+			textX = node._private.position.x;
+		} else {
+			// Same as center
+			context.textAlign = "center";
+			textX = node._private.position.x;
+		}
+		
+		var textValign = node._private.style["text-valign"].strValue;
+		if (textValign == "top") {
+			context.textBaseline = "bottom";
+			textY = node._private.position.y - nodeHeight / 2;
+		} else if (textValign == "bottom") {
+			context.textBaseline = "top";
+			textY = node._private.position.y + nodeHeight / 2;
+		} else if (textValign == "middle" || textValign == "center") {
+			context.textBaseline = "middle";
+			textY = node._private.position.y;
+		} else {
+			// same as center
+			context.textBaseline = "middle";
+			textY = node._private.position.y;
+		}
+		
+		this.drawText(context, node, textX, textY);
+	};
+	
+	// Draw text
+	CanvasRenderer.prototype.drawText = function(context, element, textX, textY) {
+	
+		var parentOpacity = 1;
+		var parents = element.parents();
+		for( var i = 0; i < parents.length; i++ ){
+			var parent = parents[i];
+			var opacity = parent._private.style.opacity.value;
+
+			parentOpacity = opacity * parentOpacity;
+
+			if( opacity === 0 ){
+				return;
+			}
+		}
+
+		// Font style
+		var labelStyle = element._private.style["font-style"].strValue;
+		var labelSize = element._private.style["font-size"].value + "px";
+		var labelFamily = element._private.style["font-family"].strValue;
+		var labelVariant = element._private.style["font-variant"].strValue;
+		var labelWeight = element._private.style["font-weight"].strValue;
+		
+		context.font = labelStyle + " " + labelWeight + " "
+			+ labelSize + " " + labelFamily;
+		
+		var text = String(element._private.style["content"].value);
+		var textTransform = element._private.style["text-transform"].value;
+		
+		if (textTransform == "none") {
+		} else if (textTransform == "uppercase") {
+			text = text.toUpperCase();
+		} else if (textTransform == "lowercase") {
+			text = text.toLowerCase();
+		}
+		
+		// Calculate text draw position based on text alignment
+		
+		// so text outlines aren't jagged
+		context.lineJoin = 'round';
+
+		context.fillStyle = "rgba(" 
+			+ element._private.style["color"].value[0] + ","
+			+ element._private.style["color"].value[1] + ","
+			+ element._private.style["color"].value[2] + ","
+			+ (element._private.style["text-opacity"].value
+			* element._private.style["opacity"].value * parentOpacity) + ")";
+		
+		context.strokeStyle = "rgba(" 
+			+ element._private.style["text-outline-color"].value[0] + ","
+			+ element._private.style["text-outline-color"].value[1] + ","
+			+ element._private.style["text-outline-color"].value[2] + ","
+			+ (element._private.style["text-opacity"].value
+			* element._private.style["opacity"].value * parentOpacity) + ")";
+		
+		if (text != undefined) {
+			var lineWidth = 2  * element._private.style["text-outline-width"].value; // *2 b/c the stroke is drawn centred on the middle
+			if (lineWidth > 0) {
+				context.lineWidth = lineWidth;
+				context.strokeText(text, textX, textY);
+			}
+
+			// Thanks sysord@github for the isNaN checks!
+			if (isNaN(textX)) { textX = 0; }
+			if (isNaN(textY)) { textY = 0; }
+
+			context.fillText("" + text, textX, textY);
+
+			// record the text's width for use in bounding box calc
+			element._private.rstyle.labelWidth = context.measureText( text ).width;
+		}
+	};
+
+	CanvasRenderer.prototype.drawBackground = function(context, color1, color2, 
+			startPosition, endPosition) {
+	
+		
+	}
+	
+	// @O Edge calculation functions
+	{
+	
+	// Find edge control points
+	CanvasRenderer.prototype.findEdgeControlPoints = function(edges) {
+		var hashTable = {}; var cy = this.data.cy;
+		var pairIds = [];
+		
+		var pairId;
+		for (var i = 0; i < edges.length; i++) {
+			pairId = edges[i]._private.data.source > edges[i]._private.data.target ?
+				edges[i]._private.data.target + '-' + edges[i]._private.data.source :
+				edges[i]._private.data.source + '-' + edges[i]._private.data.target ;
+
+			if (hashTable[pairId] == undefined) {
+				hashTable[pairId] = [];
+			}
+			
+			hashTable[pairId].push( edges[i] );
+			pairIds.push( pairId );
+		}
+		var src, tgt;
+		
+		// Nested for loop is OK; total number of iterations for both loops = edgeCount	
+		for (var p = 0; p < pairIds.length; p++) {
+			pairId = pairIds[p];
+		
+			src = cy.getElementById( hashTable[pairId][0]._private.data.source );
+			tgt = cy.getElementById( hashTable[pairId][0]._private.data.target );
+
+			var midPointX = (src._private.position.x + tgt._private.position.x) / 2;
+			var midPointY = (src._private.position.y + tgt._private.position.y) / 2;
+			
+			var displacementX, displacementY;
+			
+			if (hashTable[pairId].length > 1) {
+				displacementX = tgt._private.position.y - src._private.position.y;
+				displacementY = src._private.position.x - tgt._private.position.x;
+				
+				var displacementLength = Math.sqrt(displacementX * displacementX
+					+ displacementY * displacementY);
+				
+				displacementX /= displacementLength;
+				displacementY /= displacementLength;
+			}
+			
+			var edge;
+			
+			for (var i = 0; i < hashTable[pairId].length; i++) {
+				edge = hashTable[pairId][i];
+				
+				var edgeIndex1 = edge._private.rscratch.lastEdgeIndex;
+				var edgeIndex2 = i;
+
+				var numEdges1 = edge._private.rscratch.lastNumEdges;
+				var numEdges2 = hashTable[pairId].length;
+
+				var srcX1 = edge._private.rscratch.lastSrcCtlPtX;
+				var srcX2 = src._private.position.x;
+				var srcY1 = edge._private.rscratch.lastSrcCtlPtY;
+				var srcY2 = src._private.position.y;
+				var srcW1 = edge._private.rscratch.lastSrcCtlPtW;
+				var srcW2 = src.outerWidth();
+				var srcH1 = edge._private.rscratch.lastSrcCtlPtH;
+				var srcH2 = src.outerHeight();
+
+				var tgtX1 = edge._private.rscratch.lastTgtCtlPtX;
+				var tgtX2 = tgt._private.position.x;
+				var tgtY1 = edge._private.rscratch.lastTgtCtlPtY;
+				var tgtY2 = tgt._private.position.y;
+				var tgtW1 = edge._private.rscratch.lastTgtCtlPtW;
+				var tgtW2 = tgt.outerWidth();
+				var tgtH1 = edge._private.rscratch.lastTgtCtlPtH;
+				var tgtH2 = tgt.outerHeight();
+
+				if( srcX1 === srcX2 && srcY1 === srcY2 && srcW1 === srcW2 && srcH1 === srcH2
+				&&  tgtX1 === tgtX2 && tgtY1 === tgtY2 && tgtW1 === tgtW2 && tgtH1 === tgtH2
+				&&  edgeIndex1 === edgeIndex2 && numEdges1 === numEdges2 ){
+					// console.log('edge ctrl pt cache HIT')
+					continue; // then the control points haven't changed and we can skip calculating them
+				} else {
+					var rs = edge._private.rscratch;
+
+					rs.lastSrcCtlPtX = srcX2;
+					rs.lastSrcCtlPtY = srcY2;
+					rs.lastSrcCtlPtW = srcW2;
+					rs.lastSrcCtlPtH = srcH2;
+					rs.lastTgtCtlPtX = tgtX2;
+					rs.lastTgtCtlPtY = tgtY2;
+					rs.lastTgtCtlPtW = tgtW2;
+					rs.lastTgtCtlPtH = tgtH2;
+					rs.lastEdgeIndex = edgeIndex2;
+					rs.lastNumEdges = numEdges2;
+					// console.log('edge ctrl pt cache MISS')
+				}
+
+				// Self-edge
+				if (src._private.data.id == tgt._private.data.id) {
+					var stepSize = edge._private.style["control-point-step-size"].pxValue;
+						
+					edge._private.rscratch.edgeType = "self";
+					
+					// New -- fix for large nodes
+					edge._private.rscratch.cp2ax = src._private.position.x;
+					edge._private.rscratch.cp2ay = src._private.position.y
+						- (1 + Math.pow(this.getNodeHeight(src), 1.12) / 100) * stepSize * (i / 3 + 1);
+					
+					edge._private.rscratch.cp2cx = src._private.position.x
+						- (1 + Math.pow(this.getNodeWidth(src), 1.12) / 100) * stepSize * (i / 3 + 1);
+					edge._private.rscratch.cp2cy = src._private.position.y;
+					
+					edge._private.rscratch.selfEdgeMidX =
+						(edge._private.rscratch.cp2ax + edge._private.rscratch.cp2cx) / 2.0;
+				
+					edge._private.rscratch.selfEdgeMidY =
+						(edge._private.rscratch.cp2ay + edge._private.rscratch.cp2cy) / 2.0;
+					
+				// Straight edge
+				} else if (hashTable[pairId].length % 2 == 1
+					&& i == Math.floor(hashTable[pairId].length / 2)) {
+					
+					edge._private.rscratch.edgeType = "straight";
+					
+				// Bezier edge
+				} else {
+					var stepSize = edge._private.style["control-point-step-size"].value;
+					var distanceFromMidpoint = (0.5 - hashTable[pairId].length / 2 + i) * stepSize;
+					
+					edge._private.rscratch.edgeType = "bezier";
+					
+					edge._private.rscratch.cp2x = midPointX
+						+ displacementX * distanceFromMidpoint;
+					edge._private.rscratch.cp2y = midPointY
+						+ displacementY * distanceFromMidpoint;
+					
+					// console.log(edge, midPointX, displacementX, distanceFromMidpoint);
+				}
+			}
+		}
+		
+		return hashTable;
+	}
+
+	CanvasRenderer.prototype.findEndpoints = function(edge) {
+		var intersect;
+
+		var source = edge.source()[0];
+		var target = edge.target()[0];
+		
+//		var sourceRadius = Math.max(edge.source()[0]._private.style["width"].value,
+//			edge.source()[0]._private.style["height"].value);
+
+		var sourceRadius = Math.max(this.getNodeWidth(source),
+			this.getNodeHeight(source));
+		
+//		var targetRadius = Math.max(edge.target()[0]._private.style["width"].value,
+//			edge.target()[0]._private.style["height"].value);
+
+		var targetRadius = Math.max(this.getNodeWidth(target),
+			this.getNodeHeight(target));
+
+		sourceRadius = 0;
+		targetRadius /= 2;
+		
+		var start = [edge.source().position().x, edge.source().position().y];
+		var end = [edge.target().position().x, edge.target().position().y];
+		
+		if (edge._private.rscratch.edgeType == "self") {
+			
+			var cp = [edge._private.rscratch.cp2cx, edge._private.rscratch.cp2cy];
+			
+			intersect = nodeShapes[this.getNodeShape(target)].intersectLine(
+				target._private.position.x,
+				target._private.position.y,
+				//target._private.style["width"].value,
+				//target._private.style["height"].value,
+				this.getNodeWidth(target),
+				this.getNodeHeight(target),
+				cp[0], //halfPointX,
+				cp[1], //halfPointY
+				target._private.style["border-width"].value / 2
+			);
+			
+			var arrowEnd = this.shortenIntersection(intersect, cp,
+				arrowShapes[edge._private.style["target-arrow-shape"].value].spacing(edge));
+			var edgeEnd = this.shortenIntersection(intersect, cp,
+				arrowShapes[edge._private.style["target-arrow-shape"].value].gap(edge));
+			
+			edge._private.rscratch.endX = edgeEnd[0];
+			edge._private.rscratch.endY = edgeEnd[1];
+			
+			edge._private.rscratch.arrowEndX = arrowEnd[0];
+			edge._private.rscratch.arrowEndY = arrowEnd[1];
+			
+			var cp = [edge._private.rscratch.cp2ax, edge._private.rscratch.cp2ay];
+
+			intersect = nodeShapes[this.getNodeShape(source)].intersectLine(
+				source._private.position.x,
+				source._private.position.y,
+				//source._private.style["width"].value,
+				//source._private.style["height"].value,
+				this.getNodeWidth(source),
+				this.getNodeHeight(source),
+				cp[0], //halfPointX,
+				cp[1], //halfPointY
+				source._private.style["border-width"].value / 2
+			);
+			
+			var arrowStart = this.shortenIntersection(intersect, cp,
+				arrowShapes[edge._private.style["source-arrow-shape"].value].spacing(edge));
+			var edgeStart = this.shortenIntersection(intersect, cp,
+				arrowShapes[edge._private.style["source-arrow-shape"].value].gap(edge));
+			
+			edge._private.rscratch.startX = edgeStart[0];
+			edge._private.rscratch.startY = edgeStart[1];
+			
+			edge._private.rscratch.arrowStartX = arrowStart[0];
+			edge._private.rscratch.arrowStartY = arrowStart[1];
+			
+		} else if (edge._private.rscratch.edgeType == "straight") {
+		
+			intersect = nodeShapes[this.getNodeShape(target)].intersectLine(
+				target._private.position.x,
+				target._private.position.y,
+				//target._private.style["width"].value,
+				//target._private.style["height"].value,
+				this.getNodeWidth(target),
+				this.getNodeHeight(target),
+				source.position().x,
+				source.position().y,
+				target._private.style["border-width"].value / 2);
+				
+			if (intersect.length == 0) {
+				edge._private.rscratch.noArrowPlacement = true;
+	//			return;
+			} else {
+				edge._private.rscratch.noArrowPlacement = false;
+			}
+			
+			var arrowEnd = this.shortenIntersection(intersect,
+				[source.position().x, source.position().y],
+				arrowShapes[edge._private.style["target-arrow-shape"].value].spacing(edge));
+			var edgeEnd = this.shortenIntersection(intersect,
+				[source.position().x, source.position().y],
+				arrowShapes[edge._private.style["target-arrow-shape"].value].gap(edge));
+
+			edge._private.rscratch.endX = edgeEnd[0];
+			edge._private.rscratch.endY = edgeEnd[1];
+			
+			edge._private.rscratch.arrowEndX = arrowEnd[0];
+			edge._private.rscratch.arrowEndY = arrowEnd[1];
+		
+			intersect = nodeShapes[this.getNodeShape(source)].intersectLine(
+				source._private.position.x,
+				source._private.position.y,
+				//source._private.style["width"].value,
+				//source._private.style["height"].value,
+				this.getNodeWidth(source),
+				this.getNodeHeight(source),
+				target.position().x,
+				target.position().y,
+				source._private.style["border-width"].value / 2);
+			
+			if (intersect.length == 0) {
+				edge._private.rscratch.noArrowPlacement = true;
+	//			return;
+			} else {
+				edge._private.rscratch.noArrowPlacement = false;
+			}
+			
+			/*
+			console.log("1: "
+				+ arrowShapes[edge._private.style["source-arrow-shape"].value],
+					edge._private.style["source-arrow-shape"].value);
+			*/
+			var arrowStart = this.shortenIntersection(intersect,
+				[target.position().x, target.position().y],
+				arrowShapes[edge._private.style["source-arrow-shape"].value].spacing(edge));
+			var edgeStart = this.shortenIntersection(intersect,
+				[target.position().x, target.position().y],
+				arrowShapes[edge._private.style["source-arrow-shape"].value].gap(edge));
+
+			edge._private.rscratch.startX = edgeStart[0];
+			edge._private.rscratch.startY = edgeStart[1];
+			
+			edge._private.rscratch.arrowStartX = arrowStart[0];
+			edge._private.rscratch.arrowStartY = arrowStart[1];
+						
+		} else if (edge._private.rscratch.edgeType == "bezier") {
+			
+			var cp = [edge._private.rscratch.cp2x, edge._private.rscratch.cp2y];
+			
+			// Point at middle of Bezier
+			var halfPointX = start[0] * 0.25 + end[0] * 0.25 + cp[0] * 0.5;
+			var halfPointY = start[1] * 0.25 + end[1] * 0.25 + cp[1] * 0.5;
+			
+			intersect = nodeShapes[
+				this.getNodeShape(target)].intersectLine(
+				target._private.position.x,
+				target._private.position.y,
+				//target._private.style["width"].value,
+				//target._private.style["height"].value,
+				this.getNodeWidth(target),
+				this.getNodeHeight(target),
+				cp[0], //halfPointX,
+				cp[1], //halfPointY
+				target._private.style["border-width"].value / 2
+			);
+			
+			/*
+			console.log("2: "
+				+ arrowShapes[edge._private.style["source-arrow-shape"].value],
+					edge._private.style["source-arrow-shape"].value);
+			*/
+			var arrowEnd = this.shortenIntersection(intersect, cp,
+				arrowShapes[edge._private.style["target-arrow-shape"].value].spacing(edge));
+			var edgeEnd = this.shortenIntersection(intersect, cp,
+				arrowShapes[edge._private.style["target-arrow-shape"].value].gap(edge));
+			
+			edge._private.rscratch.endX = edgeEnd[0];
+			edge._private.rscratch.endY = edgeEnd[1];
+			
+			edge._private.rscratch.arrowEndX = arrowEnd[0];
+			edge._private.rscratch.arrowEndY = arrowEnd[1];
+			
+			intersect = nodeShapes[
+				this.getNodeShape(source)].intersectLine(
+				source._private.position.x,
+				source._private.position.y,
+				//source._private.style["width"].value,
+				//source._private.style["height"].value,
+				this.getNodeWidth(source),
+				this.getNodeHeight(source),
+				cp[0], //halfPointX,
+				cp[1], //halfPointY
+				source._private.style["border-width"].value / 2
+			);
+			
+			var arrowStart = this.shortenIntersection(intersect, cp,
+				arrowShapes[edge._private.style["source-arrow-shape"].value].spacing(edge));
+			var edgeStart = this.shortenIntersection(intersect, cp,
+				arrowShapes[edge._private.style["source-arrow-shape"].value].gap(edge));
+			
+			edge._private.rscratch.startX = edgeStart[0];
+			edge._private.rscratch.startY = edgeStart[1];
+			
+			edge._private.rscratch.arrowStartX = arrowStart[0];
+			edge._private.rscratch.arrowStartY = arrowStart[1];
+			
+		} else if (edge._private.rscratch.isArcEdge) {
+			return;
+		}
+	}
+
+	}
+
+	// @O Graph traversal functions
+	{
+	
+	// Find adjacent edges
+	CanvasRenderer.prototype.findEdges = function(nodeSet) {
+		
+		var edges = this.getCachedEdges();
+		
+		var hashTable = {};
+		var adjacentEdges = [];
+		
+		for (var i = 0; i < nodeSet.length; i++) {
+			hashTable[nodeSet[i]._private.data.id] = nodeSet[i];
+		}
+		
+		for (var i = 0; i < edges.length; i++) {
+			if (hashTable[edges[i]._private.data.source]
+				|| hashTable[edges[i]._private.data.target]) {
+				
+				adjacentEdges.push(edges[i]);
+			}
+		}
+		
+		return adjacentEdges;
+	}
+	
+	}
+	
+	// @O Intersection functions
+	{
+	CanvasRenderer.prototype.intersectLineEllipse = function(
+		x, y, centerX, centerY, ellipseWradius, ellipseHradius) {
+		
+		var dispX = centerX - x;
+		var dispY = centerY - y;
+		
+		dispX /= ellipseWradius;
+		dispY /= ellipseHradius;
+		
+		var len = Math.sqrt(dispX * dispX + dispY * dispY);
+		
+		var newLength = len - 1;
+		
+		if (newLength < 0) {
+			return [];
+		}
+		
+		var lenProportion = newLength / len;
+		
+		return [(centerX - x) * lenProportion + x, (centerY - y) * lenProportion + y];
+	}
+	
+	CanvasRenderer.prototype.dotProduct = function(
+		vec1, vec2) {
+		
+		if (vec1.length != 2 || vec2.length != 2) {
+			throw 'dot product: arguments are not vectors';
+		}
+		
+		return (vec1[0] * vec2[0] + vec1[1] * vec2[1]);
+	}
+	
+	// Returns intersections of increasing distance from line's start point
+	CanvasRenderer.prototype.intersectLineCircle = function(
+		x1, y1, x2, y2, centerX, centerY, radius) {
+		
+		// Calculate d, direction vector of line
+		var d = [x2 - x1, y2 - y1]; // Direction vector of line
+		var s = [x1, y1]; // Start of line
+		var c = [centerX, centerY]; // Center of circle
+		var f = [x1 - centerX, y1 - centerY]
+		
+		var a = d[0] * d[0] + d[1] * d[1];
+		var b = 2 * (f[0] * d[0] + f[1] * d[1]);
+		var c = (f[0] * f[0] + f[1] * f[1]) - radius * radius ;
+		
+		/*
+		var a = this.dotProduct(d, d);
+		var b = 2 * this.dotProduct(s, d) - this.dotProduct(d, c);
+		var c = this.dotProduct(s, s) - 2 * this.dotProduct(s, c) + this.dotProduct(c, c) - radius * radius ;
+		*/
+		
+		var discriminant = b*b-4*a*c;
+		
+		if (discriminant < 0) {
+			return [];
+		}
+		
+		t1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+		t2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+		
+		var tMin = Math.min(t1, t2);
+		var tMax = Math.max(t1, t2);
+		var inRangeParams = [];
+		
+		if (tMin >= 0 && tMin <= 1) {
+			inRangeParams.push(tMin);
+		}
+		
+		if (tMax >= 0 && tMax <= 1) {
+			inRangeParams.push(tMax);
+		}
+		
+		if (inRangeParams.length == 0) {
+			return [];
+		}
+		
+		var nearIntersectionX = inRangeParams[0] * d[0] + x1;
+		var nearIntersectionY = inRangeParams[0] * d[1] + y1;
+		
+		if (inRangeParams.length > 1) {
+		
+			if (inRangeParams[0] == inRangeParams[1]) {
+				return [nearIntersectionX, nearIntersectionY];
+			} else {
+			  
+				var farIntersectionX = inRangeParams[1] * d[0] + x1;
+				var farIntersectionY = inRangeParams[1] * d[1] + y1;
+			
+				return [nearIntersectionX, nearIntersectionY, farIntersectionX, farIntersectionY];
+			}
+			
+		} else {
+			return [nearIntersectionX, nearIntersectionY]
+		}
+	  
+	}
+	
+	CanvasRenderer.prototype.findCircleNearPoint = function(centerX, centerY, 
+		radius, farX, farY) {
+		
+		var displacementX = farX - centerX;
+		var displacementY = farY - centerY;
+		var distance = Math.sqrt(displacementX * displacementX 
+			+ displacementY * displacementY);
+		
+		var unitDisplacementX = displacementX / distance;
+		var unitDisplacementY = displacementY / distance;
+		
+		return [centerX + unitDisplacementX * radius, 
+			centerY + unitDisplacementY * radius];
+	}
+	
+	CanvasRenderer.prototype.findMaxSqDistanceToOrigin = function(points) {
+		var maxSqDistance = 0.000001;
+		var sqDistance;
+		
+		for (var i = 0; i < points.length / 2; i++) {
+			
+			sqDistance = points[i * 2] * points[i * 2] 
+				+ points[i * 2 + 1] * points[i * 2 + 1];
+			
+			if (sqDistance > maxSqDistance) {
+				maxSqDistance = sqDistance;
+			}
+		}
+		
+		return maxSqDistance;
+	}
+	
+	CanvasRenderer.prototype.finiteLinesIntersect = function(
+		x1, y1, x2, y2, x3, y3, x4, y4, infiniteLines) {
+		
+		var ua_t = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
+		var ub_t = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3);
+		var u_b = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+
+		if (u_b != 0) {
+			var ua = ua_t / u_b;
+			var ub = ub_t / u_b;
+			
+			if (0 <= ua && ua <= 1 && 0 <= ub && ub <= 1) {	
+				return [x1 + ua * (x2 - x1), y1 + ua * (y2 - y1)];
+				
+			} else {
+				if (!infiniteLines) {
+					return [];
+				} else {
+					return [x1 + ua * (x2 - x1), y1 + ua * (y2 - y1)];
+				}
+			}
+		} else {
+			if (ua_t == 0 || ub_t == 0) {
+
+				// Parallel, coincident lines. Check if overlap
+
+				// Check endpoint of second line
+				if ([x1, x2, x4].sort()[1] == x4) {
+					return [x4, y4];
+				}
+				
+				// Check start point of second line
+				if ([x1, x2, x3].sort()[1] == x3) {
+					return [x3, y3];
+				}
+				
+				// Endpoint of first line
+				if ([x3, x4, x2].sort()[1] == x2) {
+					return [x2, y2];
+				}
+				
+				return [];
+			} else {
+			
+				// Parallel, non-coincident
+				return [];
+			}
+		}
+	}
+	
+	// (boxMinX, boxMinY, boxMaxX, boxMaxY, padding,
+	//			cornerRadius * 2, cornerRadius * 2, vBoxTopLeftX + padding, hBoxTopLeftY + padding)) {
+	
+	CanvasRenderer.prototype.boxIntersectEllipse = function(
+		x1, y1, x2, y2, padding, width, height, centerX, centerY) {
+		
+		if (x2 < x1) {
+			var oldX1 = x1;
+			x1 = x2;
+			x2 = oldX1;
+		}
+		
+		if (y2 < y1) {
+			var oldY1 = y1;
+			y1 = y2;
+			y2 = oldY1;
+		}
+		
+		// 4 ortho extreme points
+		var west = [centerX - width / 2 - padding, centerY];
+		var east = [centerX + width / 2 + padding, centerY];
+		var north = [centerX, centerY - height / 2 - padding];
+		var south = [centerX, centerY + height / 2 + padding];
+		
+		// out of bounds: return false
+		if (x2 < west[0]) {
+			return false;
+		}
+		
+		if (x1 > east[0]) {
+			return false;
+		}
+		
+		if (y1 > south[1]) {
+			return false;
+		}
+		
+		if (y2 < north[1]) {
+			return false;
+		}
+		
+		// 1 of 4 ortho extreme points in box: return true
+		if (x1 <= east[0] && east[0] <= x2
+				&& y1 <= east[1] && east[1] <= y2) {
+			return true;
+		}
+		
+		if (x1 <= west[0] && west[0] <= x2
+				&& y1 <= west[1] && west[1] <= y2) {
+			return true;
+		}
+		
+		if (x1 <= north[0] && north[0] <= x2
+				&& y1 <= north[1] && north[1] <= y2) {
+			return true;
+		}
+		
+		if (x1 <= south[0] && south[0] <= x2
+				&& y1 <= south[1] && south[1] <= y2) {
+			return true;
+		}
+		
+		// box corner in ellipse: return true		
+		x1 = (x1 - centerX) / (width / 2 + padding);
+		x2 = (x2 - centerX) / (width / 2 + padding);
+		
+		y1 = (y1 - centerY) / (height / 2 + padding);
+		y2 = (y2 - centerY) / (height / 2 + padding);
+		
+		if (x1 * x1 + y1 * y1 <= 1) {
+			return true;
+		}
+		
+		if (x2 * x2 + y1 * y1 <= 1) {
+			return true;
+		}
+		
+		if (x2 * x2 + y2 * y2 <= 1) {
+			return true;
+		}
+		
+		if (x1 * x1 + y2 * y2 <= 1) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	CanvasRenderer.prototype.boxIntersectPolygon = function(
+		x1, y1, x2, y2, basePoints, width, height, centerX, centerY, direction, padding) {
+		
+//		console.log(arguments);
+		
+		if (x2 < x1) {
+			var oldX1 = x1;
+			x1 = x2;
+			x2 = oldX1;
+		}
+		
+		if (y2 < y1) {
+			var oldY1 = y1;
+			y1 = y2;
+			y2 = oldY1;
+		}
+		
+		var transformedPoints = new Array(basePoints.length)
+		
+		// Gives negative of angle
+		var angle = Math.asin(direction[1] / (Math.sqrt(direction[0] * direction[0] 
+			+ direction[1] * direction[1])));
+		
+		if (direction[0] < 0) {
+			angle = angle + Math.PI / 2;
+		} else {
+			angle = -angle - Math.PI / 2;
+		}
+		
+		var cos = Math.cos(-angle);
+		var sin = Math.sin(-angle);
+		
+		for (var i = 0; i < transformedPoints.length / 2; i++) {
+			transformedPoints[i * 2] = 
+				width / 2 * (basePoints[i * 2] * cos
+					- basePoints[i * 2 + 1] * sin);
+			
+			transformedPoints[i * 2 + 1] = 
+				height / 2 * (basePoints[i * 2 + 1] * cos 
+					+ basePoints[i * 2] * sin);
+			
+			transformedPoints[i * 2] += centerX;
+			transformedPoints[i * 2 + 1] += centerY;
+		}
+		
+		// Assume transformedPoints.length > 0, and check if intersection is possible
+		var minTransformedX = transformedPoints[0];
+		var maxTransformedX = transformedPoints[0];
+		var minTransformedY = transformedPoints[1];
+		var maxTransformedY = transformedPoints[1];
+		
+		for (var i = 1; i < transformedPoints.length / 2; i++) {
+			if (transformedPoints[i * 2] > maxTransformedX) {
+				maxTransformedX = transformedPoints[i * 2];
+			}
+			
+			if (transformedPoints[i * 2] < minTransformedX) {
+				minTransformedX = transformedPoints[i * 2];
+			}
+			
+			if (transformedPoints[i * 2 + 1] > maxTransformedY) {
+				maxTransformedY = transformedPoints[i * 2 + 1];
+			}
+			
+			if (transformedPoints[i * 2 + 1] < minTransformedY) {
+				minTransformedY = transformedPoints[i * 2 + 1];
+			}
+		}
+		
+		if (x2 < minTransformedX - padding) {
+			return false;
+		}
+		
+		if (x1 > maxTransformedX + padding) {
+			return false;
+		}
+		
+		if (y2 < minTransformedY - padding) {
+			return false;
+		}
+		
+		if (y1 > maxTransformedY + padding) {
+			return false;
+		}
+		
+		// Continue checking with padding-corrected points
+		var points;
+		
+		if (padding > 0) {
+			var expandedLineSet = renderer.expandPolygon(
+				transformedPoints,
+				-padding);
+			
+			points = renderer.joinLines(expandedLineSet);
+		} else {
+			points = transformedPoints;
+		}
+		
+		// Check if a point is in box
+		for (var i = 0; i < transformedPoints.length / 2; i++) {
+			if (x1 <= transformedPoints[i * 2]
+					&& transformedPoints[i * 2] <= x2) {
+				
+				if (y1 <= transformedPoints[i * 2 + 1]
+						&& transformedPoints[i * 2 + 1] <= y2) {
+					
+					return true;
+				}
+			}
+		}
+		
+		
+		// Check for intersections with the selection box
+		for (var i = 0; i < points.length / 2; i++) {
+			
+			var currentX = points[i * 2];
+			var currentY = points[i * 2 + 1];
+			var nextX;
+			var nextY;
+			
+			if (i < points.length / 2 - 1) {
+				nextX = points[(i + 1) * 2];
+				nextY = points[(i + 1) * 2 + 1]
+			} else {
+				nextX = points[0];
+				nextY = points[1];
+			}
+			
+			// Intersection with top of selection box
+			if (renderer.finiteLinesIntersect(currentX, currentY, nextX, nextY, x1, y1, x2, y1, false).length > 0) {
+				return true;
+			}
+			
+			// Intersection with bottom of selection box
+			if (renderer.finiteLinesIntersect(currentX, currentY, nextX, nextY, x1, y2, x2, y2, false).length > 0) {
+				return true;
+			}
+			
+			// Intersection with left side of selection box
+			if (renderer.finiteLinesIntersect(currentX, currentY, nextX, nextY, x1, y1, x1, y2, false).length > 0) {
+				return true;
+			}
+			
+			// Intersection with right side of selection box
+			if (renderer.finiteLinesIntersect(currentX, currentY, nextX, nextY, x2, y1, x2, y2, false).length > 0) {
+				return true;
+			}
+		}
+
+		/*
+		// Check if box corner in the polygon
+		if (renderer.pointInsidePolygon(
+			x1, y1, points, 0, 0, 1, 1, 0, direction)) {
+			
+			return true;
+		} else if (renderer.pointInsidePolygon(
+			x1, y2, points, 0, 0, 1, 1, 0, direction)) {
+			
+			return true;
+		} else if (renderer.pointInsidePolygon(
+			x2, y2, points, 0, 0, 1, 1, 0, direction)) {
+			 
+			return true; 
+		} else if (renderer.pointInsidePolygon(
+			x2, y1, points, 0, 0, 1, 1, 0, direction)) {
+			
+			return true;
+		}
+		*/
+		return false;
+	}
+	
+	CanvasRenderer.prototype.polygonIntersectLine = function(
+		x, y, basePoints, centerX, centerY, width, height, padding) {
+		
+		var intersections = [];
+		var intersection;
+		
+		var transformedPoints = new Array(basePoints.length);
+		
+		for (var i = 0; i < transformedPoints.length / 2; i++) {
+			transformedPoints[i * 2] = basePoints[i * 2] * width + centerX;
+			transformedPoints[i * 2 + 1] = basePoints[i * 2 + 1] * height + centerY;
+		}
+		
+		var points;
+		
+		if (padding > 0) {
+			var expandedLineSet = renderer.expandPolygon(
+				transformedPoints,
+				-padding);
+			
+			points = renderer.joinLines(expandedLineSet);
+		} else {
+			points = transformedPoints;
+		}
+		// var points = transformedPoints;
+		
+		var currentX, currentY, nextX, nextY;
+		
+		for (var i = 0; i < points.length / 2; i++) {
+		
+			currentX = points[i * 2];
+			currentY = points[i * 2 + 1];
+
+			if (i < points.length / 2 - 1) {
+				nextX = points[(i + 1) * 2]; 
+				nextY = points[(i + 1) * 2 + 1];
+			} else {
+				nextX = points[0]; 
+				nextY = points[1];
+			}
+			
+			intersection = this.finiteLinesIntersect(
+				x, y, centerX, centerY,
+				currentX, currentY,
+				nextX, nextY);
+			
+			if (intersection.length != 0) {
+				intersections.push(intersection[0], intersection[1]);
+			}
+		}
+		
+		return intersections;
+	}
+	
+	CanvasRenderer.prototype.shortenIntersection = function(
+		intersection, offset, amount) {
+		
+		var disp = [intersection[0] - offset[0], intersection[1] - offset[1]];
+		
+		var length = Math.sqrt(disp[0] * disp[0] + disp[1] * disp[1]);
+		
+		var lenRatio = (length - amount) / length;
+		
+		if (lenRatio < 0) {
+			return [];
+		} else {
+			return [offset[0] + lenRatio * disp[0], offset[1] + lenRatio * disp[1]];
+		}
+	}
+	}
+	
+	// @O Arrow shapes
+	{
+	// Contract for arrow shapes:
+	{
+	// 0, 0 is arrow tip
+	// (0, 1) is direction towards node
+	// (1, 0) is right
+	//
+	// functional api:
+	// collide: check x, y in shape
+	// roughCollide: called before collide, no false negatives
+	// draw: draw
+	// spacing: dist(arrowTip, nodeBoundary)
+	// gap: dist(edgeTip, nodeBoundary), edgeTip may != arrowTip
+	}
+	
+	// Declarations
+	{
+	arrowShapes["arrow"] = {
+		_points: [
+			-0.15, -0.3,
+			0, 0,
+			0.15, -0.3
+		],
+		collide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			var points = arrowShapes["arrow"]._points;
+			
+//			console.log("collide(): " + direction);
+			
+			return rendFunc.pointInsidePolygon(
+				x, y, points, centerX, centerY, width, height, direction, padding);
+		},
+		roughCollide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			if (typeof(arrowShapes["arrow"]._farthestPointSqDistance) == "undefined") {
+				arrowShapes["arrow"]._farthestPointSqDistance = 
+					rendFunc.findMaxSqDistanceToOrigin(arrowShapes["arrow"]._points);
+			}
+		
+			return rendFunc.checkInBoundingCircle(
+				x, y, arrowShapes["arrow"]._farthestPointSqDistance,
+				0, width, height, centerX, centerY);
+		},
+		draw: function(context) {
+			var points = arrowShapes["arrow"]._points;
+		
+			for (var i = 0; i < points.length / 2; i++) {
+				context.lineTo(points[i * 2], points[i * 2 + 1]);
+			}
+		},
+		spacing: function(edge) {
+			return 0;
+		},
+		gap: function(edge) {
+			return edge._private.style["width"].value * 2;
+		}
+	}
+	
+	arrowShapes["triangle"] = arrowShapes["arrow"];
+	
+	arrowShapes["none"] = {
+		collide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			return false;
+		},
+		roughCollide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			return false;
+		},
+		draw: function(context) {
+		},
+		spacing: function(edge) {
+			return 0;
+		},
+		gap: function(edge) {
+			return 0;
+		}
+	}
+	
+	arrowShapes["circle"] = {
+		_baseRadius: 0.15,
+		
+		collide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			// Transform x, y to get non-rotated ellipse
+			
+			if (width != height) {
+				// This gives negative of the angle
+				var angle = Math.asin(direction[1] / 
+					(Math.sqrt(direction[0] * direction[0] 
+						+ direction[1] * direction[1])));
+			
+				var cos = Math.cos(-angle);
+				var sin = Math.sin(-angle);
+				
+				var rotatedPoint = 
+					[x * cos - y * sin,
+						y * cos + x * sin];
+				
+				var aspectRatio = (height + padding) / (width + padding);
+				y /= aspectRatio;
+				centerY /= aspectRatio;
+				
+				return (Math.pow(centerX - x, 2) 
+					+ Math.pow(centerY - y, 2) <= Math.pow((width + padding)
+						* arrowShapes["circle"]._baseRadius, 2));
+			} else {
+				return (Math.pow(centerX - x, 2) 
+					+ Math.pow(centerY - y, 2) <= Math.pow((width + padding)
+						* arrowShapes["circle"]._baseRadius, 2));
+			}
+		},
+		roughCollide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			return true;
+		},
+		draw: function(context) {
+			context.arc(0, 0, arrowShapes["circle"]._baseRadius, 0, Math.PI * 2, false);
+		},
+		spacing: function(edge) {
+			return rendFunc.getArrowWidth(edge._private.style["width"].value)
+				* arrowShapes["circle"]._baseRadius;
+		},
+		gap: function(edge) {
+			return edge._private.style["width"].value * 2;
+		}
+	}
+	
+	arrowShapes["inhibitor"] = {
+		_points: [
+			-0.25, 0,
+			-0.25, -0.1,
+			0.25, -0.1,
+			0.25, 0
+		],
+		collide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			var points = arrowShapes["inhibitor"]._points;
+			
+			return rendFunc.pointInsidePolygon(
+				x, y, points, centerX, centerY, width, height, direction, padding);
+		},
+		roughCollide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			if (typeof(arrowShapes["inhibitor"]._farthestPointSqDistance) == "undefined") {
+				arrowShapes["inhibitor"]._farthestPointSqDistance = 
+					rendFunc.findMaxSqDistanceToOrigin(arrowShapes["inhibitor"]._points);
+			}
+		
+			return rendFunc.checkInBoundingCircle(
+				x, y, arrowShapes["inhibitor"]._farthestPointSqDistance,
+				0, width, height, centerX, centerY);
+		},
+		draw: function(context) {
+			var points = arrowShapes["inhibitor"]._points;
+			
+			for (var i = 0; i < points.length / 2; i++) {
+				context.lineTo(points[i * 2], points[i * 2 + 1]);
+			}
+		},
+		spacing: function(edge) {
+			return 4;
+		},
+		gap: function(edge) {
+			return 4;
+		}
+	}
+	
+	arrowShapes["square"] = {
+		_points: [
+			-0.12, 0.00,
+			0.12, 0.00,
+			0.12, -0.24,
+			-0.12, -0.24
+		],
+		collide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			var points = arrowShapes["square"]._points;
+			
+			return rendFunc.pointInsidePolygon(
+				x, y, points, centerX, centerY, width, height, direction, padding);
+		},
+		roughCollide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			if (typeof(arrowShapes["square"]._farthestPointSqDistance) == "undefined") {
+				arrowShapes["square"]._farthestPointSqDistance = 
+					rendFunc.findMaxSqDistanceToOrigin(arrowShapes["square"]._points);
+			}
+		
+			return rendFunc.checkInBoundingCircle(
+				x, y, arrowShapes["square"]._farthestPointSqDistance,
+				0, width, height, centerX, centerY);
+		},
+		draw: function(context) {
+			var points = arrowShapes["square"]._points;
+		
+			for (var i = 0; i < points.length / 2; i++) {
+				context.lineTo(points[i * 2], points[i * 2 + 1]);
+			}
+		},
+		spacing: function(edge) {
+			return 0;
+		},
+		gap: function(edge) {
+			return edge._private.style["width"].value * 2;
+		}
+	}
+	
+	arrowShapes["diamond"] = {
+		_points: [
+			-0.14, -0.14,
+			0, -0.28,
+			0.14, -0.14,
+			0, 0
+		],
+		collide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			var points = arrowShapes["diamond"]._points;
+					
+			return rendFunc.pointInsidePolygon(
+				x, y, points, centerX, centerY, width, height, direction, padding);
+		},
+		roughCollide: function(x, y, centerX, centerY, width, height, direction, padding) {
+			if (typeof(arrowShapes["diamond"]._farthestPointSqDistance) == "undefined") {
+				arrowShapes["diamond"]._farthestPointSqDistance = 
+					rendFunc.findMaxSqDistanceToOrigin(arrowShapes["diamond"]._points);
+			}
+				
+			return rendFunc.checkInBoundingCircle(
+				x, y, arrowShapes["diamond"]._farthestPointSqDistance,
+				0, width, height, centerX, centerY);
+		},
+		draw: function(context) {
+//			context.translate(0, 0.16);
+			context.lineTo(-0.14, -0.14);
+			context.lineTo(0, -0.28);
+			context.lineTo(0.14, -0.14);
+			context.lineTo(0, 0.0);
+		},
+		spacing: function(edge) {
+			return 0;
+		},
+		gap: function(edge) {
+			return edge._private.style["width"].value * 2;
+		}
+	}
+	
+	arrowShapes["tee"] = arrowShapes["inhibitor"];
+	}
+	
+	// @O Arrow shape sizing (w + l)
+	{
+	
+	CanvasRenderer.prototype.getArrowWidth = function(edgeWidth) {
+		return Math.max(Math.pow(edgeWidth * 13.37, 0.9), 29);
+	}
+	
+	CanvasRenderer.prototype.getArrowHeight = function(edgeWidth) {
+		return Math.max(Math.pow(edgeWidth * 13.37, 0.9), 29);
+	}
+	
+	}
+	
+	// @O Arrow shape drawing
+	
+	// Draw arrowheads on edge
+	CanvasRenderer.prototype.drawArrowheads = function(context, edge, drawOverlayInstead) {
+		if( drawOverlayInstead ){ return; } // don't do anything for overlays 
+
+		// Displacement gives direction for arrowhead orientation
+		var dispX, dispY;
+
+		var startX = edge._private.rscratch.arrowStartX;
+		var startY = edge._private.rscratch.arrowStartY;
+		
+		dispX = startX - edge.source().position().x;
+		dispY = startY - edge.source().position().y;
+		
+		//this.context.strokeStyle = "rgba("
+		context.fillStyle = "rgba("
+			+ edge._private.style["source-arrow-color"].value[0] + ","
+			+ edge._private.style["source-arrow-color"].value[1] + ","
+			+ edge._private.style["source-arrow-color"].value[2] + ","
+			+ edge._private.style.opacity.value + ")";
+		
+		context.lineWidth = edge._private.style["width"].value;
+		
+		this.drawArrowShape(context, edge._private.style["source-arrow-shape"].value, 
+			startX, startY, dispX, dispY);
+		
+		var endX = edge._private.rscratch.arrowEndX;
+		var endY = edge._private.rscratch.arrowEndY;
+		
+		dispX = endX - edge.target().position().x;
+		dispY = endY - edge.target().position().y;
+		
+		//this.context.strokeStyle = "rgba("
+		context.fillStyle = "rgba("
+			+ edge._private.style["target-arrow-color"].value[0] + ","
+			+ edge._private.style["target-arrow-color"].value[1] + ","
+			+ edge._private.style["target-arrow-color"].value[2] + ","
+			+ edge._private.style.opacity.value + ")";
+		
+		context.lineWidth = edge._private.style["width"].value;
+		
+		this.drawArrowShape(context, edge._private.style["target-arrow-shape"].value,
+			endX, endY, dispX, dispY);
+	}
+	
+	// Draw arrowshape
+	CanvasRenderer.prototype.drawArrowShape = function(context, shape, x, y, dispX, dispY) {
+	
+		// Negative of the angle
+		var angle = Math.asin(dispY / (Math.sqrt(dispX * dispX + dispY * dispY)));
+	
+		if (dispX < 0) {
+			//context.strokeStyle = "AA99AA";
+			angle = angle + Math.PI / 2;
+		} else {
+			//context.strokeStyle = "AAAA99";
+			angle = - (Math.PI / 2 + angle);
+		}
+		
+		//context.save();
+		context.translate(x, y);
+		
+		context.moveTo(0, 0);
+		context.rotate(-angle);
+		
+		var size = this.getArrowWidth(context.lineWidth);
+		/// size = 100;
+		context.scale(size, size);
+		
+		context.beginPath();
+		
+		arrowShapes[shape].draw(context);
+		
+		context.closePath();
+		
+//		context.stroke();
+		context.fill();
+
+		context.scale(1/size, 1/size);
+		context.rotate(angle);
+		context.translate(-x, -y);
+		//context.restore();
+	}
+
+	}
+	
+	// @O Node shapes
+	{
+	
+	// Generate polygon points
+	var generateUnitNgonPoints = function(sides, rotationRadians) {
+		
+		var increment = 1.0 / sides * 2 * Math.PI;
+		var startAngle = sides % 2 == 0 ? 
+			Math.PI / 2.0 + increment / 2.0 : Math.PI / 2.0;
+//		console.log(nodeShapes["square"]);
+		startAngle += rotationRadians;
+		
+		var points = new Array(sides * 2);
+		
+		var currentAngle;
+		for (var i = 0; i < sides; i++) {
+			currentAngle = i * increment + startAngle;
+			
+			points[2 * i] = Math.cos(currentAngle);// * (1 + i/2);
+			points[2 * i + 1] = Math.sin(-currentAngle);//  * (1 + i/2);
+		}
+		
+		// The above generates points for a polygon inscribed in a radius 1 circle.
+		// Stretch so that the maximum of the height and width becomes 2 so the resulting
+		// scaled shape appears to be inscribed inside a rectangle with the given
+		// width and height. The maximum of the width and height is used to preserve
+		// the shape's aspect ratio.
+		
+		// Stretch width
+		var maxAbsX = 0
+		var maxAbsY = 0;
+		for (var i = 0; i < points.length / 2; i++) {
+			if (Math.abs(points[2 * i] > maxAbsX)) {
+				maxAbsX = Math.abs(points[2 * i]);
+			}
+			
+			if (Math.abs(points[2 * i + 1] > maxAbsY)) {
+				maxAbsY = Math.abs(points[2 * i + 1]);
+			}
+		}
+		
+		var minScaleLimit = 0.0005;
+		
+		// Use the larger dimension to do the scale, in order to preserve the shape's
+		// aspect ratio
+		var maxDimension = Math.max(maxAbsX, maxAbsY);
+		
+		for (var i = 0; i < points.length / 2; i++) {
+			if (maxDimension > minScaleLimit) {
+				points[2 * i] *= (1 / maxDimension);
+				points[2 * i + 1] *= (1 / maxDimension);
+			}
+		}
+		
+		return points;
+	}
+	
+	// Node shape declarations
+	
+	// Contract for node shapes:
+	{
+	// Node shape contract:
+	//
+	// draw: draw
+	// intersectLine: report intersection from x, y, to node center
+	// checkPointRough: heuristic check x, y in node, no false negatives
+	// checkPoint: check x, y in node
+	}
+	
+	// Declarations
+	{
+	
+	var renderer = rendFunc;	
+	
+	nodeShapes["ellipse"] = {
+		draw: function(context, centerX, centerY, width, height) {
+			nodeShapes["ellipse"].drawPath(context, centerX, centerY, width, height);
+			context.fill();
+			
+//			console.log("drawing ellipse");
+//			console.log(arguments);
+		},
+		
+		drawPath: function(context, centerX, centerY, width, height) {
+			
+			//context.save();
+			
+			context.beginPath();
+			context.translate(centerX, centerY);
+			context.scale(width / 2, height / 2);
+			// At origin, radius 1, 0 to 2pi
+			context.arc(0, 0, 1, 0, Math.PI * 2 * 0.999, false); // *0.999 b/c chrome rendering bug on full circle
+			context.closePath();
+
+			context.scale(2/width, 2/height);
+			context.translate(-centerX, -centerY);
+			//context.restore();
+			
+//			console.log("drawing ellipse");
+//			console.log(arguments);
+			
+		},
+		
+		intersectLine: function(nodeX, nodeY, width, height, x, y, padding) {
+			var intersect = rendFunc.intersectLineEllipse(
+				x, y,
+				nodeX,
+				nodeY,
+				width / 2 + padding,
+				height / 2 + padding);
+			
+			return intersect;
+		},
+		
+		intersectBox: function(
+			x1, y1, x2, y2, width, height, centerX, centerY, padding) {
+			
+			return CanvasRenderer.prototype.boxIntersectEllipse(
+				x1, y1, x2, y2, padding, width, height, centerX, centerY);
+		},
+		
+		checkPointRough: function(
+			x, y, padding, width, height, centerX, centerY) {
+		
+			return true;
+		},
+		
+		checkPoint: function(
+			x, y, padding, width, height, centerX, centerY) {
+			
+//			console.log(arguments);
+			
+			x -= centerX;
+			y -= centerY;
+			
+			x /= (width / 2 + padding);
+			y /= (height / 2 + padding);
+			
+			return (Math.pow(x, 2) + Math.pow(y, 2) <= 1);
+		}
+	}
+	
+	nodeShapes["triangle"] = {
+		points: generateUnitNgonPoints(3, 0),
+		
+		draw: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygon(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["triangle"].points);
+		},
+		
+		drawPath: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygonPath(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["triangle"].points);
+		},
+		
+		intersectLine: function(nodeX, nodeY, width, height, x, y, padding) {
+			return renderer.polygonIntersectLine(
+				x, y,
+				nodeShapes["triangle"].points,
+				nodeX,
+				nodeY,
+				width / 2, height / 2,
+				padding);
+		
+			/*
+			polygonIntersectLine(x, y, basePoints, centerX, centerY, 
+				width, height, padding);
+			*/
+			
+			
+			/*
+			return renderer.polygonIntersectLine(
+				node, width, height,
+				x, y, nodeShapes["triangle"].points);
+			*/
+		},
+		
+		intersectBox: function(
+			x1, y1, x2, y2, width, height, centerX, centerY, padding) {
+			
+			var points = nodeShapes["triangle"].points;
+			
+			return renderer.boxIntersectPolygon(
+				x1, y1, x2, y2,
+				points, width, height, centerX, centerY, [0, -1], padding);
+		},
+		
+		checkPointRough: function(
+			x, y, padding, width, height, centerX, centerY) {
+		
+			return renderer.checkInBoundingBox(
+				x, y, nodeShapes["triangle"].points, // Triangle?
+					padding, width, height, centerX, centerY);
+		},
+		
+		checkPoint: function(
+			x, y, padding, width, height, centerX, centerY) {
+			
+			return renderer.pointInsidePolygon(
+				x, y, nodeShapes["triangle"].points,
+				centerX, centerY, width, height,
+				[0, -1], padding);
+		}
+	}
+	
+	nodeShapes["square"] = {
+		points: generateUnitNgonPoints(4, 0),
+		
+		draw: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygon(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["square"].points);
+		},
+		
+		drawPath: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygonPath(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["square"].points);
+		},
+		
+		intersectLine: function(nodeX, nodeY, width, height, x, y, padding) {
+			return renderer.polygonIntersectLine(
+					x, y,
+					nodeShapes["square"].points,
+					nodeX,
+					nodeY,
+					width / 2, height / 2,
+					padding);
+		},
+		
+		intersectBox: function(
+			x1, y1, x2, y2,
+			width, height, centerX, 
+			centerY, padding) {
+			
+			var points = nodeShapes["square"].points;
+			
+			return renderer.boxIntersectPolygon(
+				x1, y1, x2, y2,
+				points, width, height, centerX, 
+				centerY, [0, -1], padding);
+		},
+		
+		checkPointRough: function(
+			x, y, padding, width, height,
+			centerX, centerY) {
+		
+			return renderer.checkInBoundingBox(
+				x, y, nodeShapes["square"].points, 
+					padding, width, height, centerX, centerY);
+		},
+		
+		checkPoint: function(
+			x, y, padding, width, height, centerX, centerY) {
+			
+			return renderer.pointInsidePolygon(x, y, nodeShapes["square"].points,
+				centerX, centerY, width, height, [0, -1], padding);
+		}
+	}
+	
+	nodeShapes["rectangle"] = nodeShapes["square"];
+	
+	nodeShapes["octogon"] = {};
+	
+	nodeShapes["roundrectangle"] = {
+		points: generateUnitNgonPoints(4, 0),
+		
+		draw: function(context, centerX, centerY, width, height) {
+			renderer.drawRoundRectangle(context,
+				centerX, centerY,
+				width, height,
+				10);
+		},
+		
+		drawPath: function(context, centerX, centerY, width, height) {
+			renderer.drawRoundRectanglePath(context,
+				centerX, centerY,
+				width, height,
+				10);
+		},
+		
+		intersectLine: function(nodeX, nodeY, width, height, x, y, padding) {
+			return renderer.roundRectangleIntersectLine(
+					x, y,
+					nodeX,
+					nodeY,
+					width, height,
+					padding);
+		},
+		
+		intersectBox: function(
+			x1, y1, x2, y2,
+			width, height, centerX, 
+			centerY, padding) {
+
+			return renderer.roundRectangleIntersectBox(
+				x1, y1, x2, y2, 
+				width, height, centerX, centerY, padding);
+		},
+		
+		checkPointRough: function(
+			x, y, padding, width, height,
+			centerX, centerY) {
+		
+			// This check is OK because it assumes the round rectangle
+			// has sharp edges for the rough check 
+			return renderer.checkInBoundingBox(
+				x, y, nodeShapes["roundrectangle"].points, 
+					padding, width, height, centerX, centerY);
+		},
+		
+		// Looks like the width passed into this function is actually the total width / 2
+		checkPoint: function(
+			x, y, padding, width, height, centerX, centerY) {
+			
+			var cornerRadius = renderer.getRoundRectangleRadius(width, height);
+			
+			// Check hBox
+			if (renderer.pointInsidePolygon(x, y, nodeShapes["roundrectangle"].points,
+				centerX, centerY, width, height - 2 * cornerRadius, [0, -1], padding)) {
+				return true;
+			}
+			
+			// Check vBox
+			if (renderer.pointInsidePolygon(x, y, nodeShapes["roundrectangle"].points,
+				centerX, centerY, width - 2 * cornerRadius, height, [0, -1], padding)) {
+				return true;
+			}
+			
+			var checkInEllipse = function(x, y, centerX, centerY, width, height, padding) {
+				x -= centerX;
+				y -= centerY;
+				
+				x /= (width / 2 + padding);
+				y /= (height / 2 + padding);
+				
+				return (Math.pow(x, 2) + Math.pow(y, 2) <= 1);
+			}
+			
+			
+			// Check top left quarter circle
+			if (checkInEllipse(x, y,
+				centerX - width / 2 + cornerRadius,
+				centerY - height / 2 + cornerRadius,
+				cornerRadius * 2, cornerRadius * 2, padding)) {
+				
+				return true;
+			}
+			
+			/*
+			if (renderer.boxIntersectEllipse(x, y, x, y, padding, 
+				cornerRadius * 2, cornerRadius * 2,
+				centerX - width + cornerRadius,
+				centerY - height + cornerRadius)) {
+				return true;
+			}
+			*/
+			
+			// Check top right quarter circle
+			if (checkInEllipse(x, y,
+				centerX + width / 2 - cornerRadius,
+				centerY - height / 2 + cornerRadius,
+				cornerRadius * 2, cornerRadius * 2, padding)) {
+				
+				return true;
+			}
+			
+			// Check bottom right quarter circle
+			if (checkInEllipse(x, y,
+				centerX + width / 2 - cornerRadius,
+				centerY + height / 2 - cornerRadius,
+				cornerRadius * 2, cornerRadius * 2, padding)) {
+				
+				return true;
+			}
+			
+			// Check bottom left quarter circle
+			if (checkInEllipse(x, y,
+				centerX - width / 2 + cornerRadius,
+				centerY + height / 2 - cornerRadius,
+				cornerRadius * 2, cornerRadius * 2, padding)) {
+				
+				return true;
+			}
+			
+			return false;
+		}
+	};
+	
+	nodeShapes["roundrectangle2"] = {
+		roundness: 4.99,
+		
+		draw: function(node, width, height) {
+			if (width <= roundness * 2) {
+				return;
+			}
+		
+			renderer.drawPolygon(node._private.position.x,
+				node._private.position.y, width, height, nodeSapes["roundrectangle2"].points);
+		},
+
+		intersectLine: function(node, width, height, x, y) {
+			return renderer.findPolygonIntersection(
+				node, width, height, x, y, nodeShapes["square"].points);
+		},
+		
+		// TODO: Treat rectangle as sharp-cornered for now. This is a not-large approximation.
+		intersectBox: function(x1, y1, x2, y2, width, height, centerX, centerY, padding) {
+			var points = nodeShapes["square"].points;
+			
+			/*
+			return renderer.boxIntersectPolygon(
+				x1, y1, x2, y2,
+				points, 
+			*/
+		}	
+	}
+	
+	/*
+	function PolygonNodeShape(points) {
+		this.points = points;
+		
+		this.draw = function(context, node, width, height) {
+			renderer.drawPolygon(context,
+					node._private.position.x,
+					node._private.position.y,
+					width, height, nodeShapes["pentagon"].points);
+		};
+		
+		this.drawPath = 
+	}
+	*/
+	
+	nodeShapes["pentagon"] = {
+		points: generateUnitNgonPoints(5, 0),
+		
+		draw: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygon(context,
+				centerX, centerY,
+				width, height, nodeShapes["pentagon"].points);
+		},
+		
+		drawPath: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygonPath(context,
+				centerX, centerY,
+				width, height, nodeShapes["pentagon"].points);
+		},
+		
+		intersectLine: function(nodeX, nodeY, width, height, x, y, padding) {
+			return renderer.polygonIntersectLine(
+				x, y,
+				nodeShapes["pentagon"].points,
+				nodeX,
+				nodeY,
+				width / 2, height / 2,
+				padding);
+		},
+		
+		intersectBox: function(
+			x1, y1, x2, y2, width, height, centerX, centerY, padding) {
+			
+			var points = nodeShapes["pentagon"].points;
+			
+			return renderer.boxIntersectPolygon(
+				x1, y1, x2, y2,
+				points, width, height, centerX, centerY, [0, -1], padding);
+		},
+		
+		checkPointRough: function(
+			x, y, padding, width, height, centerX, centerY) {
+		
+			return renderer.checkInBoundingBox(
+				x, y, nodeShapes["pentagon"].points, 
+					padding, width, height, centerX, centerY);
+		},
+		
+		checkPoint: function(
+			x, y, padding, width, height, centerX, centerY) {
+			
+			return renderer.pointInsidePolygon(x, y, nodeShapes["pentagon"].points,
+				centerX, centerY, width, height, [0, -1], padding);
+		}
+	}
+	
+	nodeShapes["hexagon"] = {
+		points: generateUnitNgonPoints(6, 0),
+		
+		draw: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygon(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["hexagon"].points);
+		},
+		
+		drawPath: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygonPath(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["hexagon"].points);
+		},
+		
+		intersectLine: function(nodeX, nodeY, width, height, x, y, padding) {
+			return renderer.polygonIntersectLine(
+				x, y,
+				nodeShapes["hexagon"].points,
+				nodeX,
+				nodeY,
+				width / 2, height / 2,
+				padding);
+		},
+		
+		intersectBox: function(
+				x1, y1, x2, y2, width, height, centerX, centerY, padding) {
+				
+			var points = nodeShapes["hexagon"].points;
+			
+			return renderer.boxIntersectPolygon(
+				x1, y1, x2, y2,
+				points, width, height, centerX, centerY, [0, -1], padding);
+		},
+		
+		checkPointRough: function(
+			x, y, padding, width, height, centerX, centerY) {
+		
+			return renderer.checkInBoundingBox(
+				x, y, nodeShapes["hexagon"].points, 
+					padding, width, height, centerX, centerY);
+		},
+		
+		checkPoint: function(
+			x, y, padding, width, height, centerX, centerY) {
+			
+			return renderer.pointInsidePolygon(x, y, nodeShapes["hexagon"].points,
+				centerX, centerY, width, height, [0, -1], padding);
+		}
+	}
+	
+	nodeShapes["heptagon"] = {
+		points: generateUnitNgonPoints(7, 0),
+		
+		draw: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygon(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["heptagon"].points);
+		},
+		
+		drawPath: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygonPath(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["heptagon"].points);
+		},
+		
+		intersectLine: function(nodeX, nodeY, width, height, x, y, padding) {
+			return renderer.polygonIntersectLine(
+				x, y,
+				nodeShapes["heptagon"].points,
+				nodeX,
+				nodeY,
+				width / 2, height / 2,
+				padding);
+		},
+		
+		intersectBox: function(
+				x1, y1, x2, y2, width, height, centerX, centerY, padding) {
+			
+			var points = nodeShapes["heptagon"].points;
+			
+			return renderer.boxIntersectPolygon(
+				x1, y1, x2, y2,
+				points, width, height, centerX, centerY, [0, -1], padding);
+		},
+		
+		checkPointRough: function(
+			x, y, padding, width, height, centerX, centerY) {
+		
+			return renderer.checkInBoundingBox(
+				x, y, nodeShapes["heptagon"].points, 
+					padding, width, height, centerX, centerY);
+		},
+		
+		checkPoint: function(
+			x, y, padding, width, height, centerX, centerY) {
+			
+			return renderer.pointInsidePolygon(x, y, nodeShapes["heptagon"].points,
+				centerX, centerY, width, height, [0, -1], padding);
+		}
+	}
+	
+	nodeShapes["octagon"] = {
+		points: generateUnitNgonPoints(8, 0),
+		
+		draw: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygon(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["octagon"].points);
+		},
+		
+		drawPath: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygonPath(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["octagon"].points);
+		},
+		
+		intersectLine: function(nodeX, nodeY, width, height, x, y, padding) {
+			return renderer.polygonIntersectLine(
+				x, y,
+				nodeShapes["octagon"].points,
+				nodeX,
+				nodeY,
+				width / 2, height / 2,
+				padding);
+		},
+		
+		intersectBox: function(
+				x1, y1, x2, y2, width, height, centerX, centerY, padding) {
+			
+			var points = nodeShapes["octagon"].points;
+			
+			return renderer.boxIntersectPolygon(
+					x1, y1, x2, y2,
+					points, width, height, centerX, centerY, [0, -1], padding);
+		},
+		
+		checkPointRough: function(
+			x, y, padding, width, height, centerX, centerY) {
+		
+			return renderer.checkInBoundingBox(
+				x, y, nodeShapes["octagon"].points, 
+					padding, width, height, centerX, centerY);
+		},
+		
+		checkPoint: function(
+			x, y, padding, width, height, centerX, centerY) {
+			
+			return renderer.pointInsidePolygon(x, y, nodeShapes["octagon"].points,
+				centerX, centerY, width, height, [0, -1], padding);
+		}
+	};
+	
+	var star5Points = new Array(20);
+	{
+		var outerPoints = generateUnitNgonPoints(5, 0);
+		var innerPoints = generateUnitNgonPoints(5, Math.PI / 5);
+		
+//		console.log(outerPoints);
+//		console.log(innerPoints);
+		
+		// Outer radius is 1; inner radius of star is smaller
+		var innerRadius = 0.5 * (3 - Math.sqrt(5));
+		innerRadius *= 1.57;
+		
+		for (var i=0;i<innerPoints.length/2;i++) {
+			innerPoints[i*2] *= innerRadius;
+			innerPoints[i*2+1] *= innerRadius;
+		}
+		
+		for (var i=0;i<20/4;i++) {
+			star5Points[i*4] = outerPoints[i*2];
+			star5Points[i*4+1] = outerPoints[i*2+1];
+			
+			star5Points[i*4+2] = innerPoints[i*2];
+			star5Points[i*4+3] = innerPoints[i*2+1];
+		}
+		
+//		console.log(star5Points);
+	}
+	
+	nodeShapes["star5"] = {
+		points: star5Points,
+		
+		draw: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygon(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["star5"].points);
+		},
+		
+		drawPath: function(context, centerX, centerY, width, height) {
+			renderer.drawPolygonPath(context,
+				centerX, centerY,
+				width, height,
+				nodeShapes["star5"].points);
+		},
+		
+		intersectLine: function(nodeX, nodeY, width, height, x, y, padding) {
+			return renderer.polygonIntersectLine(
+				x, y,
+				nodeShapes["star5"].points,
+				nodeX,
+				nodeY,
+				width / 2, height / 2,
+				padding);
+		},
+		
+		intersectBox: function(
+				x1, y1, x2, y2, width, height, centerX, centerY, padding) {
+			
+			var points = nodeShapes["star5"].points;
+			
+			return renderer.boxIntersectPolygon(
+					x1, y1, x2, y2,
+					points, width, height, centerX, centerY, [0, -1], padding);
+		},
+		
+		checkPointRough: function(
+			x, y, padding, width, height, centerX, centerY) {
+		
+			return renderer.checkInBoundingBox(
+				x, y, nodeShapes["star5"].points, 
+					padding, width, height, centerX, centerY);
+		},
+		
+		checkPoint: function(
+			x, y, padding, width, height, centerX, centerY) {
+			
+			return renderer.pointInsidePolygon(x, y, nodeShapes["star5"].points,
+				centerX, centerY, width, height, [0, -1], padding);
+		}
+	};
+	
+	}
+
+	}
+	
+	// @O Polygon calculations
+	{
+	CanvasRenderer.prototype.expandPolygon = function(points, pad) {
+		
+		var expandedLineSet = new Array(points.length * 2);
+		
+		var currentPointX, currentPointY, nextPointX, nextPointY;
+		
+		for (var i = 0; i < points.length / 2; i++) {
+			currentPointX = points[i * 2];
+			currentPointY = points[i * 2 + 1];
+			
+			if (i < points.length / 2 - 1) {
+				nextPointX = points[(i + 1) * 2];
+				nextPointY = points[(i + 1) * 2 + 1];
+			} else {
+				nextPointX = points[0];
+				nextPointY = points[1];
+			}
+			
+			// Current line: [currentPointX, currentPointY] to [nextPointX, nextPointY]
+			
+			// Assume CCW polygon winding
+			
+			var offsetX = (nextPointY - currentPointY);
+			var offsetY = -(nextPointX - currentPointX);
+			
+			// Normalize
+			var offsetLength = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
+			var normalizedOffsetX = offsetX / offsetLength;
+			var normalizedOffsetY = offsetY / offsetLength;
+			
+			expandedLineSet[i * 4] = currentPointX + normalizedOffsetX * pad;
+			expandedLineSet[i * 4 + 1] = currentPointY + normalizedOffsetY * pad;
+			expandedLineSet[i * 4 + 2] = nextPointX + normalizedOffsetX * pad;
+			expandedLineSet[i * 4 + 3] = nextPointY + normalizedOffsetY * pad;
+		}
+		
+		return expandedLineSet;
+	}
+	
+	CanvasRenderer.prototype.joinLines = function(lineSet) {
+		
+		var vertices = new Array(lineSet.length / 2);
+		
+		var currentLineStartX, currentLineStartY, currentLineEndX, currentLineEndY;
+		var nextLineStartX, nextLineStartY, nextLineEndX, nextLineEndY;
+		
+		for (var i = 0; i < lineSet.length / 4; i++) {
+			currentLineStartX = lineSet[i * 4];
+			currentLineStartY = lineSet[i * 4 + 1];
+			currentLineEndX = lineSet[i * 4 + 2];
+			currentLineEndY = lineSet[i * 4 + 3];
+			
+			if (i < lineSet.length / 4 - 1) {
+				nextLineStartX = lineSet[(i + 1) * 4];
+				nextLineStartY = lineSet[(i + 1) * 4 + 1];
+				nextLineEndX = lineSet[(i + 1) * 4 + 2];
+				nextLineEndY = lineSet[(i + 1) * 4 + 3];
+			} else {
+				nextLineStartX = lineSet[0];
+				nextLineStartY = lineSet[1];
+				nextLineEndX = lineSet[2];
+				nextLineEndY = lineSet[3];
+			}
+			
+			var intersection = this.finiteLinesIntersect(
+				currentLineStartX, currentLineStartY,
+				currentLineEndX, currentLineEndY,
+				nextLineStartX, nextLineStartY,
+				nextLineEndX, nextLineEndY,
+				true);
+			
+			vertices[i * 2] = intersection[0];
+			vertices[i * 2 + 1] = intersection[1];
+		}
+		
+		return vertices;
+	}
+	
+	CanvasRenderer.prototype.pointInsidePolygon = function(
+		x, y, basePoints, centerX, centerY, width, height, direction, padding) {
+
+		//var direction = arguments[6];
+		var transformedPoints = new Array(basePoints.length)
+
+		// Gives negative angle
+		var angle = Math.asin(direction[1] / (Math.sqrt(direction[0] * direction[0] 
+			+ direction[1] * direction[1])));
+		
+		if (direction[0] < 0) {
+			angle = angle + Math.PI / 2;
+		} else {
+			angle = -angle - Math.PI / 2;
+		}
+				
+		var cos = Math.cos(-angle);
+		var sin = Math.sin(-angle);
+		
+//		console.log("base: " + basePoints);
+		for (var i = 0; i < transformedPoints.length / 2; i++) {
+			transformedPoints[i * 2] = 
+				width / 2 * (basePoints[i * 2] * cos
+					- basePoints[i * 2 + 1] * sin);
+			
+			transformedPoints[i * 2 + 1] = 
+				height / 2 * (basePoints[i * 2 + 1] * cos 
+					+ basePoints[i * 2] * sin);
+
+			transformedPoints[i * 2] += centerX;
+			transformedPoints[i * 2 + 1] += centerY;
+		}
+		
+		var points;
+		
+		if (padding > 0) {
+			var expandedLineSet = renderer.expandPolygon(
+				transformedPoints,
+				-padding);
+			
+			points = renderer.joinLines(expandedLineSet);
+		} else {
+			points = transformedPoints;
+		}
+		
+		var x1, y1, x2, y2;
+		var y3;
+		
+		// Intersect with vertical line through (x, y)
+		var up = 0;
+		var down = 0;
+		for (var i = 0; i < points.length / 2; i++) {
+			
+			x1 = points[i * 2];
+			y1 = points[i * 2 + 1];
+			
+			if (i + 1 < points.length / 2) {
+				x2 = points[(i + 1) * 2];
+				y2 = points[(i + 1) * 2 + 1];
+			} else {
+				x2 = points[(i + 1 - points.length / 2) * 2];
+				y2 = points[(i + 1 - points.length / 2) * 2 + 1];
+			}
+			
+//*			console.log("line from (" + x1 + ", " + y1 + ") to (" + x2 + ", " + y2 + ")");
+
+//&			console.log(x1, x, x2);
+
+			if (x1 == x && x2 == x) {
+				
+			} else if ((x1 >= x && x >= x2)
+				|| (x1 <= x && x <= x2)) {
+				
+				y3 = (x - x1) / (x2 - x1) * (y2 - y1) + y1;
+				
+				if (y3 > y) {
+					up++;
+				}
+				
+				if (y3 < y) {
+					down++;
+				}
+				
+//*				console.log(y3, y);
+				
+			} else {
+//*				console.log("22");
+				continue;
+			}
+			
+		}
+		
+//*		console.log("up: " + up + ", down: " + down);
+		
+		if (up % 2 == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	}
+	
+	// @O Polygon drawing
+	CanvasRenderer.prototype.drawPolygonPath = function(
+		context, x, y, width, height, points) {
+
+		//context.save();
+		
+
+		context.translate(x, y);
+		context.scale(width / 2, height / 2);
+
+		context.beginPath();
+
+		context.moveTo(points[0], points[1]);
+
+		for (var i = 1; i < points.length / 2; i++) {
+			context.lineTo(points[i * 2], points[i * 2 + 1]);
+		}
+		
+		context.closePath();
+		
+		context.scale(2/width, 2/height);
+		context.translate(-x, -y);
+		// context.restore();
+	}
+	
+	CanvasRenderer.prototype.drawPolygon = function(
+		context, x, y, width, height, points) {
+
+		// Draw path
+		this.drawPolygonPath(context, x, y, width, height, points);
+		
+		// Fill path
+		context.fill();
+	}
+	
+	CanvasRenderer.prototype.getRoundRectangleRadius = function(width, height) {
+		
+		// Set the default radius, unless half of width or height is smaller than default
+		return Math.min(width / 2, height / 2, 10);
+	}
+	
+	// Round rectangle drawing
+	CanvasRenderer.prototype.drawRoundRectanglePath = function(
+		context, x, y, width, height, radius) {
+		
+		var halfWidth = width / 2;
+		var halfHeight = height / 2;
+		var cornerRadius = this.getRoundRectangleRadius(width, height);
+		context.translate(x, y);
+		
+		context.beginPath();
+		
+		// Start at top middle
+		context.moveTo(0, -halfHeight);
+		// Arc from middle top to right side
+		context.arcTo(halfWidth, -halfHeight, halfWidth, 0, cornerRadius);
+		// Arc from right side to bottom
+		context.arcTo(halfWidth, halfHeight, 0, halfHeight, cornerRadius);
+		// Arc from bottom to left side
+		context.arcTo(-halfWidth, halfHeight, -halfWidth, 0, cornerRadius);
+		// Arc from left side to topBorder
+		context.arcTo(-halfWidth, -halfHeight, 0, -halfHeight, cornerRadius);
+		// Join line
+		context.lineTo(0, -halfHeight);
+		
+		/*
+		void arc(unrestricted double x, 
+				 unrestricted double y, 
+				 unrestricted double radius, 
+				 unrestricted double startAngle, 
+				 unrestricted double endAngle, 
+				 optional boolean anticlockwise = false);
+		*/
+		/*
+		context.arc(-width / 2 + cornerRadius,
+					-height / 2 + cornerRadius,
+					cornerRadius,
+					0,
+					Math.PI * 2 * 0.999);
+		*/
+		
+		context.closePath();
+		
+		context.translate(-x, -y);
+	}
+	
+	CanvasRenderer.prototype.drawRoundRectangle = function(
+		context, x, y, width, height, radius) {
+		
+		this.drawRoundRectanglePath(context, x, y, width, height, radius);
+		
+		context.fill();
+	}
+	
+	CanvasRenderer.prototype.roundRectangleIntersectLine = function(
+		x, y, nodeX, nodeY, width, height, padding) {
+		
+		var cornerRadius = this.getRoundRectangleRadius(width, height);
+	  
+		var halfWidth = width / 2;
+		var halfHeight = height / 2;
+		
+		// Check intersections with straight line segments
+		var straightLineIntersections;
+		
+		// Top segment, left to right
+		{
+			var topStartX = nodeX - halfWidth + cornerRadius - padding;
+			var topStartY = nodeY - halfHeight - padding;
+			var topEndX = nodeX + halfWidth - cornerRadius + padding;
+			var topEndY = topStartY;
+			
+			straightLineIntersections = this.finiteLinesIntersect(
+				x, y, nodeX, nodeY, topStartX, topStartY, topEndX, topEndY, false);
+			
+			if (straightLineIntersections.length > 0) {
+				return straightLineIntersections;
+			}
+		}
+		
+		// Right segment, top to bottom
+		{
+			var rightStartX = nodeX + halfWidth + padding;
+			var rightStartY = nodeY - halfHeight + cornerRadius - padding;
+			var rightEndX = rightStartX;
+			var rightEndY = nodeY + halfHeight - cornerRadius + padding;
+			
+			straightLineIntersections = this.finiteLinesIntersect(
+				x, y, nodeX, nodeY, rightStartX, rightStartY, rightEndX, rightEndY, false);
+			
+			if (straightLineIntersections.length > 0) {
+				return straightLineIntersections;
+			}
+		}
+		
+		// Bottom segment, left to right
+		{
+			var bottomStartX = nodeX - halfWidth + cornerRadius - padding;
+			var bottomStartY = nodeY + halfHeight + padding;
+			var bottomEndX = nodeX + halfWidth - cornerRadius + padding;
+			var bottomEndY = bottomStartY;
+			
+			straightLineIntersections = this.finiteLinesIntersect(
+				x, y, nodeX, nodeY, bottomStartX, bottomStartY, bottomEndX, bottomEndY, false);
+			
+			if (straightLineIntersections.length > 0) {
+				return straightLineIntersections;
+			}
+		}
+		
+		// Left segment, top to bottom
+		{
+			var leftStartX = nodeX - halfWidth - padding;
+			var leftStartY = nodeY - halfHeight + cornerRadius - padding;
+			var leftEndX = leftStartX;
+			var leftEndY = nodeY + halfHeight - cornerRadius + padding;
+			
+			straightLineIntersections = this.finiteLinesIntersect(
+				x, y, nodeX, nodeY, leftStartX, leftStartY, leftEndX, leftEndY, false);
+			
+			if (straightLineIntersections.length > 0) {
+				return straightLineIntersections;
+			}
+		}
+		
+		// Check intersections with arc segments
+		var arcIntersections;
+		
+		// Top Left
+		{
+			var topLeftCenterX = nodeX - halfWidth + cornerRadius;
+			var topLeftCenterY = nodeY - halfHeight + cornerRadius
+			arcIntersections = this.intersectLineCircle(
+				x, y, nodeX, nodeY, 
+				topLeftCenterX, topLeftCenterY, cornerRadius + padding);
+			
+			// Ensure the intersection is on the desired quarter of the circle
+			if (arcIntersections.length > 0
+				&& arcIntersections[0] <= topLeftCenterX
+				&& arcIntersections[1] <= topLeftCenterY) {
+				return [arcIntersections[0], arcIntersections[1]];
+			}
+		}
+		
+		// Top Right
+		{
+			var topRightCenterX = nodeX + halfWidth - cornerRadius;
+			var topRightCenterY = nodeY - halfHeight + cornerRadius
+			arcIntersections = this.intersectLineCircle(
+				x, y, nodeX, nodeY, 
+				topRightCenterX, topRightCenterY, cornerRadius + padding);
+			
+			// Ensure the intersection is on the desired quarter of the circle
+			if (arcIntersections.length > 0
+				&& arcIntersections[0] >= topRightCenterX
+				&& arcIntersections[1] <= topRightCenterY) {
+				return [arcIntersections[0], arcIntersections[1]];
+			}
+		}
+		
+		// Bottom Right
+		{
+			var bottomRightCenterX = nodeX + halfWidth - cornerRadius;
+			var bottomRightCenterY = nodeY + halfHeight - cornerRadius
+			arcIntersections = this.intersectLineCircle(
+				x, y, nodeX, nodeY, 
+				bottomRightCenterX, bottomRightCenterY, cornerRadius + padding);
+			
+			// Ensure the intersection is on the desired quarter of the circle
+			if (arcIntersections.length > 0
+				&& arcIntersections[0] >= bottomRightCenterX
+				&& arcIntersections[1] >= bottomRightCenterY) {
+				return [arcIntersections[0], arcIntersections[1]];
+			}
+		}
+		
+		// Bottom Left
+		{
+			var bottomLeftCenterX = nodeX - halfWidth + cornerRadius;
+			var bottomLeftCenterY = nodeY + halfHeight - cornerRadius
+			arcIntersections = this.intersectLineCircle(
+				x, y, nodeX, nodeY, 
+				bottomLeftCenterX, bottomLeftCenterY, cornerRadius + padding);
+			
+			// Ensure the intersection is on the desired quarter of the circle
+			if (arcIntersections.length > 0
+				&& arcIntersections[0] <= bottomLeftCenterX
+				&& arcIntersections[1] >= bottomLeftCenterY) {
+				return [arcIntersections[0], arcIntersections[1]];
+			}
+		}
+	}
+	
+	CanvasRenderer.prototype.roundRectangleIntersectBox = function(
+		boxX1, boxY1, boxX2, boxY2, width, height, centerX, centerY, padding) {
+		
+		// We have the following shpae
+		
+		//    _____
+		//  _|     |_
+		// |         |
+		// |_       _|
+		//   |_____|
+		//
+		// With a quarter circle at each corner.
+		
+		var cornerRadius = this.getRoundRectangleRadius(width, height);
+		
+		var hBoxTopLeftX = centerX - width / 2 - padding;
+		var hBoxTopLeftY = centerY - height / 2 + cornerRadius - padding;
+		var hBoxBottomRightX = centerX + width / 2 + padding;
+		var hBoxBottomRightY = centerY + height / 2 - cornerRadius + padding;
+		
+		var vBoxTopLeftX = centerX - width / 2 + cornerRadius - padding;
+		var vBoxTopLeftY = centerY - height / 2 - padding;
+		var vBoxBottomRightX = centerX + width / 2 - cornerRadius + padding;
+		var vBoxBottomRightY = centerY + height / 2 + padding;
+		
+		// Check if the box is out of bounds
+		var boxMinX = Math.min(boxX1, boxX2);
+		var boxMaxX = Math.max(boxX1, boxX2);
+		var boxMinY = Math.min(boxY1, boxY2);
+		var boxMaxY = Math.max(boxY1, boxY2);
+		
+		if (boxMaxX < hBoxTopLeftX) {
+			return false;
+		} else if (boxMinX > hBoxBottomRightX) {
+			return false;
+		}
+		
+		if (boxMaxY < vBoxTopLeftY) {
+			return false;
+		} else if (boxMinY > vBoxBottomRightY) {
+			return false;
+		}
+		
+		// Check if an hBox point is in given box
+		if (hBoxTopLeftX >= boxMinX && hBoxTopLeftX <= boxMaxX
+			  && hBoxTopLeftY >= boxMinY && hBoxTopLeftY <= boxMaxY) {
+			return true;
+		}
+		
+		if (hBoxBottomRightX >= boxMinX && hBoxBottomRightX <= boxMaxX
+			  && hBoxTopLeftY >= boxMinY && hBoxTopLeftY <= boxMaxY) {
+			return true;
+		}
+		
+		if (hBoxBottomRightX >= boxMinX && hBoxBottomRightX <= boxMaxX
+			  && hBoxBottomRightY >= boxMinY && hBoxBottomRightY <= boxMaxY) {
+			return true;
+		}
+		
+		if (hBoxTopLeftX >= boxMinX && hBoxTopLeftX <= boxMaxX
+			  && hBoxBottomRightY >= boxMinY && hBoxBottomRightY <= boxMaxY) {
+			return true;
+		}
+		
+		// Check if a given point box is in the hBox
+		if (boxMinX >= hBoxTopLeftX && boxMinX <= hBoxBottomRightX
+			&& boxMinY >= hBoxTopLeftY && boxMinY <= hBoxBottomRightY) {
+			return true;
+		}
+		
+		if (boxMaxX >= hBoxTopLeftX && boxMaxX <= hBoxBottomRightX
+			&& boxMinY >= hBoxTopLeftY && boxMinY <= hBoxBottomRightY) {
+			return true;
+		}
+		
+		if (boxMaxX >= hBoxTopLeftX && boxMaxX <= hBoxBottomRightX
+			&& boxMaxY >= hBoxTopLeftY && boxMaxY <= hBoxBottomRightY) {
+			return true;
+		}
+		
+		if (boxMinX >= hBoxTopLeftX && boxMinX <= hBoxBottomRightX
+			&& boxMaxY >= hBoxTopLeftY && boxMaxY <= hBoxBottomRightY) {
+			return true;
+		}
+		
+		// Check if an vBox point is in given box
+		if (vBoxTopLeftX >= boxMinX && vBoxTopLeftX <= boxMaxX
+			  && vBoxTopLeftY >= boxMinY && vBoxTopLeftY <= boxMaxY) {
+			return true;
+		}
+		
+		if (vBoxBottomRightX >= boxMinX && vBoxBottomRightX <= boxMaxX
+			  && vBoxTopLeftY >= boxMinY && vBoxTopLeftY <= boxMaxY) {
+			return true;
+		}
+		
+		if (vBoxBottomRightX >= boxMinX && vBoxBottomRightX <= boxMaxX
+			  && vBoxBottomRightY >= boxMinY && vBoxBottomRightY <= boxMaxY) {
+			return true;
+		}
+		
+		if (vBoxTopLeftX >= boxMinX && vBoxTopLeftX <= boxMaxX
+			  && vBoxBottomRightY >= boxMinY && vBoxBottomRightY <= boxMaxY) {
+			return true;
+		}
+		
+		// Check if a given point box is in the vBox
+		if (boxMinX >= vBoxTopLeftX && boxMinX <= vBoxBottomRightX
+			&& boxMinY >= vBoxTopLeftY && boxMinY <= vBoxBottomRightY) {
+			return true;
+		}
+		
+		if (boxMaxX >= vBoxTopLeftX && boxMaxX <= vBoxBottomRightX
+			&& boxMinY >= vBoxTopLeftY && boxMinY <= vBoxBottomRightY) {
+			return true;
+		}
+		
+		if (boxMaxX >= vBoxTopLeftX && boxMaxX <= vBoxBottomRightX
+			&& boxMaxY >= vBoxTopLeftY && boxMaxY <= vBoxBottomRightY) {
+			return true;
+		}
+		
+		if (boxMinX >= vBoxTopLeftX && boxMinX <= vBoxBottomRightX
+			&& boxMaxY >= vBoxTopLeftY && boxMaxY <= vBoxBottomRightY) {
+			return true;
+		}
+		
+		// Lastly, check if one of the ellipses coincide with the box
+		
+		if (this.boxIntersectEllipse(boxMinX, boxMinY, boxMaxX, boxMaxY, padding,
+				cornerRadius * 2, cornerRadius * 2, vBoxTopLeftX + padding, hBoxTopLeftY + padding)) {
+			return true;
+		}
+		
+		if (this.boxIntersectEllipse(boxMinX, boxMinY, boxMaxX, boxMaxY, padding,
+				cornerRadius * 2, cornerRadius * 2, vBoxBottomRightX - padding, hBoxTopLeftY + padding)) {
+			return true;
+		}
+		
+		if (this.boxIntersectEllipse(boxMinX, boxMinY, boxMaxX, boxMaxY, padding,
+				cornerRadius * 2, cornerRadius * 2, vBoxBottomRightX - padding, hBoxBottomRightY - padding)) {
+			return true;
+		}
+		
+		if (this.boxIntersectEllipse(boxMinX, boxMinY, boxMaxX, boxMaxY, padding,
+				cornerRadius * 2, cornerRadius * 2, vBoxTopLeftX + padding, hBoxBottomRightY - padding)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	// @O Approximate collision functions
+	CanvasRenderer.prototype.checkInBoundingCircle = function(
+		x, y, farthestPointSqDistance, padding, width, height, centerX, centerY) {
+		
+		x = (x - centerX) / (width + padding);
+		y = (y - centerY) / (height + padding);
+		
+		return (x * x + y * y) <= farthestPointSqDistance;
+	}
+	
+	CanvasRenderer.prototype.checkInBoundingBox = function(
+		x, y, points, padding, width, height, centerX, centerY) {
+		
+		// Assumes width, height >= 0, points.length > 0
+		
+		var minX = points[0], minY = points[1];
+		var maxX = points[0], maxY = points[1];
+		
+		for (var i = 1; i < points.length / 2; i++) {
+			
+			if (points[i * 2] < minX) {
+				minX = points[i * 2];
+			} else if (points[i * 2] > maxX) {
+				maxX = points[i * 2];
+			}
+			
+			if (points[i * 2 + 1] < minY) {
+				minY = points[i * 2 + 1];
+			} else if (points[i * 2 + 1] > maxY) {
+				maxY = points[i * 2 + 1];
+			}
+		}
+		
+		x -= centerX;
+		y -= centerY;
+		
+		x /= width;
+		y /= height;
+		
+		if (x < minX) {
+			return false;
+		} else if (x > maxX) {
+			return false;
+		}
+		
+		if (y < minY) {
+			return false;
+		} else if (y > maxY) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	// @O Straight/bezier edge approximate collision, precise collision, and distance calculation functions
+	{
+	CanvasRenderer.prototype.boxInBezierVicinity = function(
+		x1box, y1box, x2box, y2box, x1, y1, x2, y2, x3, y3, tolerance) {
+		
+		// Return values:
+		// 0 - curve is not in box
+		// 1 - curve may be in box; needs precise check
+		// 2 - curve is in box
+		
+		// midpoint
+		var midX = 0.25 * x1 + 0.5 * x2 + 0.25 * x3;
+		var midY = 0.25 * y1 + 0.5 * y2 + 0.25 * y3;
+
+		var boxMinX = Math.min(x1box, x2box) - tolerance;
+		var boxMinY = Math.min(y1box, y2box) - tolerance;
+		var boxMaxX = Math.max(x1box, x2box) + tolerance;
+		var boxMaxY = Math.max(y1box, y2box) + tolerance;
+		
+		if (x1 >= boxMinX && x1 <= boxMaxX && y1 >= boxMinY && y1 <= boxMaxY) { // (x1, y1) in box
+			return 1;
+		} else if (x3 >= boxMinX && x3 <= boxMaxX && y3 >= boxMinY && y3 <= boxMaxY) { // (x3, y3) in box
+			return 1;
+		} else if (midX >= boxMinX && midX <= boxMaxX && midY >= boxMinY && midY <= boxMaxY) { // (midX, midY) in box
+			return 1;
+		} else if (x2 >= boxMinX && x2 <= boxMaxX && y2 >= boxMinY && y2 <= boxMaxY) { // ctrl pt in box
+			return 1;
+		}
+		
+		var curveMinX = Math.min(x1, midX, x3);
+		var curveMinY = Math.min(y1, midY, y3);
+		var curveMaxX = Math.max(x1, midX, x3);
+		var curveMaxY = Math.max(y1, midY, y3);
+		
+		/*
+		console.log(curveMinX + ", " + curveMinY + ", " + curveMaxX 
+			+ ", " + curveMaxY);
+		if (curveMinX == undefined) {
+			console.log("undefined curveMinX: " + x1 + ", " + x2 + ", " + x3);
+		}
+		*/
+		
+		if (curveMinX > boxMaxX
+			|| curveMaxX < boxMinX
+			|| curveMinY > boxMaxY
+			|| curveMaxY < boxMinY) {
+			
+			return 0;	
+		}
+		
+		return 1;
+	}
+
+	CanvasRenderer.prototype.checkBezierInBox = function(
+		x1box, y1box, x2box, y2box, x1, y1, x2, y2, x3, y3, tolerance) {
+
+
+		function qbezierAt(p0, p1, p2, t){
+			return (1 - t)*(1 - t)*p0 + 2*(1 - t)*t*p1 + t*t*p2;
+		}
+
+		function sampleInBox(t){
+			var x = qbezierAt(x1, x2, x3, t);
+			var y = qbezierAt(y1, y2, y3, t);
+
+			return x1box <= x && x <= x2box
+				&& y1box <= y && y <= y2box
+			;
+		}
+
+		for( var t = 0; t <= 1; t += 0.25 ){
+			if( !sampleInBox(t) ){
+				return false;
+			}
+		}
+
+		return true;
+	};
+	
+	CanvasRenderer.prototype.checkStraightEdgeInBox = function(
+		x1box, y1box, x2box, y2box, x1, y1, x2, y2, tolerance) {
+
+		return x1box <= x1 && x1 <= x2box
+			&& x1box <= x2 && x2 <= x2box
+			&& y1box <= y1 && y1 <= y2box
+			&& y1box <= y2 && y2 <= y2box
+		;
+	};
+
+	CanvasRenderer.prototype.checkStraightEdgeCrossesBox = function(
+		x1box, y1box, x2box, y2box, x1, y1, x2, y2, tolerance) {
+		
+	 //console.log(arguments);
+		
+		var boxMinX = Math.min(x1box, x2box) - tolerance;
+		var boxMinY = Math.min(y1box, y2box) - tolerance;
+		var boxMaxX = Math.max(x1box, x2box) + tolerance;
+		var boxMaxY = Math.max(y1box, y2box) + tolerance;
+		
+		// Check left + right bounds
+		var aX = x2 - x1;
+		var bX = x1;
+		var yValue;
+		
+		// Top and bottom
+		var aY = y2 - y1;
+		var bY = y1;
+		var xValue;
+		
+		if (Math.abs(aX) < 0.0001) {
+			return (x1 >= boxMinX && x1 <= boxMaxX
+				&& Math.min(y1, y2) <= boxMinY
+				&& Math.max(y1, y2) >= boxMaxY);	
+		}
+		
+		var tLeft = (boxMinX - bX) / aX;
+		if (tLeft > 0 && tLeft <= 1) {
+			yValue = aY * tLeft + bY;
+			if (yValue >= boxMinY && yValue <= boxMaxY) {
+				return true;
+			} 
+		}
+		
+		var tRight = (boxMaxX - bX) / aX;
+		if (tRight > 0 && tRight <= 1) {
+			yValue = aY * tRight + bY;
+			if (yValue >= boxMinY && yValue <= boxMaxY) {
+				return true;
+			} 
+		}
+		
+		var tTop = (boxMinY - bY) / aY;
+		if (tTop > 0 && tTop <= 1) {
+			xValue = aX * tTop + bX;
+			if (xValue >= boxMinX && xValue <= boxMaxX) {
+				return true;
+			} 
+		}
+		
+		var tBottom = (boxMaxY - bY) / aY;
+		if (tBottom > 0 && tBottom <= 1) {
+			xValue = aX * tBottom + bX;
+			if (xValue >= boxMinX && xValue <= boxMaxX) {
+				return true;
+			} 
+		}
+		
+		return false;
+	}
+	
+	CanvasRenderer.prototype.checkBezierCrossesBox = function(
+		x1box, y1box, x2box, y2box, x1, y1, x2, y2, x3, y3, tolerance) {
+		
+		var boxMinX = Math.min(x1box, x2box) - tolerance;
+		var boxMinY = Math.min(y1box, y2box) - tolerance;
+		var boxMaxX = Math.max(x1box, x2box) + tolerance;
+		var boxMaxY = Math.max(y1box, y2box) + tolerance;
+		
+		if (x1 >= boxMinX && x1 <= boxMaxX && y1 >= boxMinY && y1 <= boxMaxY) {
+			return true;
+		} else if (x3 >= boxMinX && x3 <= boxMaxX && y3 >= boxMinY && y3 <= boxMaxY) {
+			return true;
+		}
+		
+		var aX = x1 - 2 * x2 + x3;
+		var bX = -2 * x1 + 2 * x2;
+		var cX = x1;
+
+		var xIntervals = [];
+		
+		if (Math.abs(aX) < 0.0001) {
+			var leftParam = (boxMinX - x1) / bX;
+			var rightParam = (boxMaxX - x1) / bX;
+			
+			xIntervals.push(leftParam, rightParam);
+		} else {
+			// Find when x coordinate of the curve crosses the left side of the box
+			var discriminantX1 = bX * bX - 4 * aX * (cX - boxMinX);
+			var tX1, tX2;
+			if (discriminantX1 > 0) {
+				var sqrt = Math.sqrt(discriminantX1);
+				tX1 = (-bX + sqrt) / (2 * aX);
+				tX2 = (-bX - sqrt) / (2 * aX);
+				
+				xIntervals.push(tX1, tX2);
+			}
+			
+			var discriminantX2 = bX * bX - 4 * aX * (cX - boxMaxX);
+			var tX3, tX4;
+			if (discriminantX2 > 0) {
+				var sqrt = Math.sqrt(discriminantX2);
+				tX3 = (-bX + sqrt) / (2 * aX);
+				tX4 = (-bX - sqrt) / (2 * aX);
+				
+				xIntervals.push(tX3, tX4);
+			}
+		}
+		
+		xIntervals.sort(function(a, b) { return a - b; });
+		
+		var aY = y1 - 2 * y2 + y3;
+		var bY = -2 * y1 + 2 * y2;
+		var cY = y1;
+		
+		var yIntervals = [];
+		
+		if (Math.abs(aY) < 0.0001) {
+			var topParam = (boxMinY - y1) / bY;
+			var bottomParam = (boxMaxY - y1) / bY;
+			
+			yIntervals.push(topParam, bottomParam);
+		} else {
+			var discriminantY1 = bY * bY - 4 * aY * (cY - boxMinY);
+			
+			var tY1, tY2;
+			if (discriminantY1 > 0) {
+				var sqrt = Math.sqrt(discriminantY1);
+				tY1 = (-bY + sqrt) / (2 * aY);
+				tY2 = (-bY - sqrt) / (2 * aY);
+				
+				yIntervals.push(tY1, tY2);
+			}
+	
+			var discriminantY2 = bY * bY - 4 * aY * (cY - boxMaxY);
+			
+			var tY3, tY4;
+			if (discriminantY2 > 0) {
+				var sqrt = Math.sqrt(discriminantY2);
+				tY3 = (-bY + sqrt) / (2 * aY);
+				tY4 = (-bY - sqrt) / (2 * aY);
+				
+				yIntervals.push(tY3, tY4);
+			}
+		}
+				
+		yIntervals.sort(function(a, b) { return a - b; });
+
+		for (var index = 0; index < xIntervals.length; index += 2) {
+			for (var yIndex = 1; yIndex < yIntervals.length; yIndex += 2) {
+				
+				// Check if there exists values for the Bezier curve
+				// parameter between 0 and 1 where both the curve's
+				// x and y coordinates are within the bounds specified by the box
+				if (xIntervals[index] < yIntervals[yIndex]
+					&& yIntervals[yIndex] >= 0.0
+					&& xIntervals[index] <= 1.0
+					&& xIntervals[index + 1] > yIntervals[yIndex - 1]
+					&& yIntervals[yIndex - 1] <= 1.0
+					&& xIntervals[index + 1] >= 0.0) {
+					
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	CanvasRenderer.prototype.inLineVicinity = function(x, y, lx1, ly1, lx2, ly2, tolerance){
+		var t = tolerance;
+
+		var x1 = Math.min(lx1, lx2);
+		var x2 = Math.max(lx1, lx2);
+		var y1 = Math.min(ly1, ly2);
+		var y2 = Math.max(ly1, ly2);
+
+		return x1 - t <= x && x <= x2 + t
+			&& y1 - t <= y && y <= y2 + t;
+	};
+
+	CanvasRenderer.prototype.inBezierVicinity = function(
+		x, y, x1, y1, x2, y2, x3, y3, toleranceSquared) {
+		
+		// Middle point occurs when t = 0.5, this is when the Bezier
+		// is closest to (x2, y2)
+		var middlePointX = 0.25 * x1 + 0.5 * x2 + 0.25 * x3;
+		var middlePointY = 0.25 * y1 + 0.5 * y2 + 0.25 * y3;
+
+		// a rough bounding box of the bezier curve
+		var bb = {
+			x1: Math.min( x1, x3, middlePointX ),
+			x2: Math.max( x1, x3, middlePointX ),
+			y1: Math.min( y1, y3, middlePointY ),
+			y2: Math.max( y1, y3, middlePointY )
+		};
+
+		// if outside the rough bounding box for the bezier, then it can't be a hit
+		if( x < bb.x1 || x > bb.x2 || y < bb.y1 || y > bb.y2 ){
+			// console.log('bezier out of rough bb')
+			return false;
+		} else {
+			// console.log('do more expensive check');
+		}
+		
+		var displacementX, displacementY, offsetX, offsetY;
+		var dotProduct, dotSquared, hypSquared;
+		var outside = function(x, y, startX, startY, endX, endY,
+				toleranceSquared, counterClockwise) {
+
+			dotProduct = (endY - startY) * (x - startX) + (startX - endX) * (y - startY);
+			dotSquared = dotProduct * dotProduct;
+			sideSquared = (endY - startY) * (endY - startY) 
+				+ (startX - endX) * (startX - endX);
+
+			if (counterClockwise) {
+				if (dotProduct > 0) {
+					return false;
+				}
+			} else {
+				if (dotProduct < 0) {
+					return false;
+				}
+			}
+			
+			return (dotSquared / sideSquared > toleranceSquared);
+		};
+		
+		// Used to check if the test polygon winding is clockwise or counterclockwise
+		var testPointX = (middlePointX + x2) / 2.0;
+		var testPointY = (middlePointY + y2) / 2.0;
+		
+		var counterClockwise = true;
+		
+		// The test point is always inside
+		if (outside(testPointX, testPointY, x1, y1, x2, y2, 0, counterClockwise)) {
+			counterClockwise = !counterClockwise;
+		}
+		
+		/*
+		return (!outside(x, y, x1, y1, x2, y2, toleranceSquared, counterClockwise)
+			&& !outside(x, y, x2, y2, x3, y3, toleranceSquared, counterClockwise)
+			&& !outside(x, y, x3, y3, middlePointX, middlePointY, toleranceSquared,
+				counterClockwise)
+			&& !outside(x, y, middlePointX, middlePointY, x1, y1, toleranceSquared,
+				counterClockwise)
+		);
+		*/
+		
+		return (!outside(x, y, x1, y1, x2, y2, toleranceSquared, counterClockwise)
+			&& !outside(x, y, x2, y2, x3, y3, toleranceSquared, counterClockwise)
+			&& !outside(x, y, x3, y3, x1, y1, toleranceSquared,
+				counterClockwise)
+		);
+	}
+	
+	CanvasRenderer.prototype.solveCubic = function(a, b, c, d, result) {
+		
+		// Solves a cubic function, returns root in form [r1, i1, r2, i2, r3, i3], where
+		// r is the real component, i is the imaginary component
+
+		// An implementation of the Cardano method from the year 1545
+		// http://en.wikipedia.org/wiki/Cubic_function#The_nature_of_the_roots
+
+		b /= a;
+		c /= a;
+		d /= a;
+		
+		var discriminant, q, r, dum1, s, t, term1, r13;
+
+		q = (3.0 * c - (b * b)) / 9.0;
+		r = -(27.0 * d) + b * (9.0 * c - 2.0 * (b * b));
+		r /= 54.0;
+		
+		discriminant = q * q * q + r * r;
+		result[1] = 0;
+		term1 = (b / 3.0);
+		
+		if (discriminant > 0) {
+			s = r + Math.sqrt(discriminant);
+			s = ((s < 0) ? -Math.pow(-s, (1.0 / 3.0)) : Math.pow(s, (1.0 / 3.0)));
+			t = r - Math.sqrt(discriminant);
+			t = ((t < 0) ? -Math.pow(-t, (1.0 / 3.0)) : Math.pow(t, (1.0 / 3.0)));
+			result[0] = -term1 + s + t;
+			term1 += (s + t) / 2.0;
+			result[4] = result[2] = -term1;
+			term1 = Math.sqrt(3.0) * (-t + s) / 2;
+			result[3] = term1;
+			result[5] = -term1;
+			return;
+		}
+		
+		result[5] = result[3] = 0;
+		
+		if (discriminant == 0) {
+			r13 = ((r < 0) ? -Math.pow(-r, (1.0 / 3.0)) : Math.pow(r, (1.0 / 3.0)));
+			result[0] = -term1 + 2.0 * r13;
+			result[4] = result[2] = -(r13 + term1);
+			return;
+		}
+		
+		q = -q;
+		dum1 = q * q * q;
+		dum1 = Math.acos(r / Math.sqrt(dum1));
+		r13 = 2.0 * Math.sqrt(q);
+		result[0] = -term1 + r13 * Math.cos(dum1 / 3.0);
+		result[2] = -term1 + r13 * Math.cos((dum1 + 2.0 * Math.PI) / 3.0);
+		result[4] = -term1 + r13 * Math.cos((dum1 + 4.0 * Math.PI) / 3.0);
+		
+		return;
+	}
+
+	CanvasRenderer.prototype.sqDistanceToQuadraticBezier = function(
+		x, y, x1, y1, x2, y2, x3, y3) {
+		
+		// Find minimum distance by using the minimum of the distance 
+		// function between the given point and the curve
+		
+		// This gives the coefficients of the resulting cubic equation
+		// whose roots tell us where a possible minimum is
+		// (Coefficients are divided by 4)
+		
+		var a = 1.0 * x1*x1 - 4*x1*x2 + 2*x1*x3 + 4*x2*x2 - 4*x2*x3 + x3*x3
+			+ y1*y1 - 4*y1*y2 + 2*y1*y3 + 4*y2*y2 - 4*y2*y3 + y3*y3;
+		
+		var b = 1.0 * 9*x1*x2 - 3*x1*x1 - 3*x1*x3 - 6*x2*x2 + 3*x2*x3
+			+ 9*y1*y2 - 3*y1*y1 - 3*y1*y3 - 6*y2*y2 + 3*y2*y3;
+		
+		var c = 1.0 * 3*x1*x1 - 6*x1*x2 + x1*x3 - x1*x + 2*x2*x2 + 2*x2*x - x3*x
+			+ 3*y1*y1 - 6*y1*y2 + y1*y3 - y1*y + 2*y2*y2 + 2*y2*y - y3*y;
+			
+		var d = 1.0 * x1*x2 - x1*x1 + x1*x - x2*x
+			+ y1*y2 - y1*y1 + y1*y - y2*y;
+		
+		debug("coefficients: " + a / a + ", " + b / a + ", " + c / a + ", " + d / a);
+		
+		var roots = [];
+		
+		// Use the cubic solving algorithm
+		this.solveCubic(a, b, c, d, roots);
+		
+		var zeroThreshold = 0.0000001;
+		
+		var params = [];
+		
+		for (var index = 0; index < 6; index += 2) {
+			if (Math.abs(roots[index + 1]) < zeroThreshold
+					&& roots[index] >= 0
+					&& roots[index] <= 1.0) {
+				params.push(roots[index]);
+			}
+		}
+		
+		params.push(1.0);
+		params.push(0.0);
+		
+		var minDistanceSquared = -1;
+		var closestParam;
+		
+		var curX, curY, distSquared;
+		for (var i = 0; i < params.length; i++) {
+			curX = Math.pow(1.0 - params[i], 2.0) * x1
+				+ 2.0 * (1 - params[i]) * params[i] * x2
+				+ params[i] * params[i] * x3;
+				
+			curY = Math.pow(1 - params[i], 2.0) * y1
+				+ 2 * (1.0 - params[i]) * params[i] * y2
+				+ params[i] * params[i] * y3;
+				
+			distSquared = Math.pow(curX - x, 2) + Math.pow(curY - y, 2);
+			debug("distance for param " + params[i] + ": " + Math.sqrt(distSquared));
+			if (minDistanceSquared >= 0) {
+				if (distSquared < minDistanceSquared) {
+					minDistanceSquared = distSquared;
+					closestParam = params[i];
+				}
+			} else {
+				minDistanceSquared = distSquared;
+				closestParam = params[i];
+			}
+		}
+		
+		/*
+		debugStats.clickX = x;
+		debugStats.clickY = y;
+		
+		debugStats.closestX = Math.pow(1.0 - closestParam, 2.0) * x1
+				+ 2.0 * (1.0 - closestParam) * closestParam * x2
+				+ closestParam * closestParam * x3;
+				
+		debugStats.closestY = Math.pow(1.0 - closestParam, 2.0) * y1
+				+ 2.0 * (1.0 - closestParam) * closestParam * y2
+				+ closestParam * closestParam * y3;
+		*/
+		
+		debug("given: " 
+			+ "( " + x + ", " + y + "), " 
+			+ "( " + x1 + ", " + y1 + "), " 
+			+ "( " + x2 + ", " + y2 + "), "
+			+ "( " + x3 + ", " + y3 + ")");
+		
+		
+		debug("roots: " + roots);
+		debug("params: " + params);
+		debug("closest param: " + closestParam);
+		return minDistanceSquared;
+	}
+	
+	CanvasRenderer.prototype.sqDistanceToFiniteLine = function(x, y, x1, y1, x2, y2) {
+		var offset = [x - x1, y - y1];
+		var line = [x2 - x1, y2 - y1];
+		
+		var lineSq = line[0] * line[0] + line[1] * line[1];
+		var hypSq = offset[0] * offset[0] + offset[1] * offset[1];
+		
+		var dotProduct = offset[0] * line[0] + offset[1] * line[1];
+		var adjSq = dotProduct * dotProduct / lineSq;
+		
+		if (dotProduct < 0) {
+			return hypSq;
+		}
+		
+		if (adjSq > lineSq) {
+			return (x - x2) * (x - x2) + (y - y2) * (y - y2);
+		}
+		
+		return (hypSq - adjSq)
+	}
+	
+	}
+	}
+	
+	var debug = function(){};
+	$$("renderer", "canvas", CanvasRenderer);
+	
+})( cytoscape );
+
+;(function($$){
+
+	// default layout options
+	var defaults = {
+		ready: function(){},
+		stop: function(){}
+	};
+
+	// constructor
+	// options : object containing layout options
+	function NullLayout( options ){
+		this.options = $$.util.extend(true, {}, defaults, options); 
+	}
+
+	// runs the layout
+	NullLayout.prototype.run = function(){
+		var options = this.options;
+		var cy = options.cy; // cy is automatically populated for us in the constructor
+
+		// puts all nodes at (0, 0)
+		cy.nodes().positions(function(){
+			return {
+				x: 0,
+				y: 0
+			};
+		});
+
+		// trigger layoutready when each node has had its position set at least once
+		cy.one("layoutready", options.ready);
+		cy.trigger("layoutready");
+
+		// trigger layoutstop when the layout stops (e.g. finishes)
+		cy.one("layoutstop", options.stop);
+		cy.trigger("layoutstop");
+	};
+
+	// called on continuous layouts to stop them before they finish
+	NullLayout.prototype.stop = function(){
+		var options = this.options;
+
+		cy.one("layoutstop", options.stop);
+		cy.trigger("layoutstop");
+	};
+
+	// register the layout
+	$$("layout", "null", NullLayout);
+
+})(cytoscape);
+
+;(function($$){
+	
+	var defaults = {
+		ready: undefined, // callback on layoutready
+		stop: undefined, // callback on layoutstop
+		fit: true, // whether to fit to viewport
+		padding: 30 // fit padding
+	};
+	
+	function RandomLayout( options ){
+		this.options = $$.util.extend(true, {}, defaults, options);
+	}
+	
+	RandomLayout.prototype.run = function(){
+		var options = this.options;
+		var cy = options.cy;
+		var nodes = cy.nodes();
+		var edges = cy.edges();
+		var container = cy.container();
+		
+		var width = container.clientWidth;
+		var height = container.clientHeight;
+		
+
+		nodes.positions(function(i, element){
+			
+			if( element.locked() ){
+				return false;
+			}
+
+			return {
+				x: Math.round( Math.random() * width ),
+				y: Math.round( Math.random() * height )
+			};
+		});
+		
+		// layoutready should be triggered when the layout has set each node's
+		// position at least once
+		cy.one("layoutready", options.ready);
+		cy.trigger("layoutready");
+		
+		if( options.fit ){
+			cy.fit( options.padding );
+		}
+		
+		// layoutstop should be triggered when the layout stops running
+		cy.one("layoutstop", options.stop);
+		cy.trigger("layoutstop");
+	};
+	
+	RandomLayout.prototype.stop = function(){
+		// stop the layout if it were running continuously
+	};
+
+	// register the layout
+	$$(
+		"layout", // we're registering a layout
+		"random", // the layout name
+		RandomLayout // the layout prototype
+	);
+	
+})(cytoscape);
+
+;(function($$){
+	
+	var defaults = {
+		fit: true, // whether to fit the viewport to the graph
+		rows: undefined, // force num of rows in the grid
+		columns: undefined, // force num of cols in the grid
+		ready: undefined, // callback on layoutready
+		stop: undefined // callback on layoutstop
+	};
+	
+	function GridLayout( options ){
+		this.options = $$.util.extend({}, defaults, options);
+	}
+	
+	GridLayout.prototype.run = function(){
+		var params = this.options;
+		var options = params;
+		
+		var cy = params.cy;
+		var nodes = cy.nodes();
+		var edges = cy.edges();
+		var container = cy.container();
+		
+		var width = container.clientWidth;
+		var height = container.clientHeight;
+
+		if( height == 0 || width == 0){
+			nodes.positions(function(){
+				return { x: 0, y: 0 };
+			});
+			
+		} else {
+			
+			// width/height * splits^2 = cells where splits is number of times to split width
+			var cells = nodes.size();
+			var splits = Math.sqrt( cells * height/width );
+			var rows = Math.round( splits );
+			var cols = Math.round( width/height * splits );
+
+			function small(val){
+				if( val == undefined ){
+					return Math.min(rows, cols);
+				} else {
+					var min = Math.min(rows, cols);
+					if( min == rows ){
+						rows = val;
+					} else {
+						cols = val;
+					}
+				}
+			}
+			
+			function large(val){
+				if( val == undefined ){
+					return Math.max(rows, cols);
+				} else {
+					var max = Math.max(rows, cols);
+					if( max == rows ){
+						rows = val;
+					} else {
+						cols = val;
+					}
+				}
+			}
+			
+			// if rows or columns were set in options, use those values
+			if( options.rows != null && options.columns != null ){
+				rows = options.rows;
+				cols = options.columns;
+			} else if( options.rows != null && options.columns == null ){
+				rows = options.rows;
+				cols = Math.ceil( cells / rows );
+			} else if( options.rows == null && options.columns != null ){
+				cols = options.columns;
+				rows = Math.ceil( cells / cols );
+			}
+			
+			// otherwise use the automatic values and adjust accordingly
+			
+			// if rounding was up, see if we can reduce rows or columns
+			else if( cols * rows > cells ){
+				var sm = small();
+				var lg = large();
+				
+				// reducing the small side takes away the most cells, so try it first
+				if( (sm - 1) * lg >= cells ){
+					small(sm - 1);
+				} else if( (lg - 1) * sm >= cells ){
+					large(lg - 1);
+				} 
+			} else {
+				
+				// if rounding was too low, add rows or columns
+				while( cols * rows < cells ){
+					var sm = small();
+					var lg = large();
+					
+					// try to add to larger side first (adds less in multiplication)
+					if( (lg + 1) * sm >= cells ){
+						large(lg + 1);
+					} else {
+						small(sm + 1);
+					}
+				}
+			}
+			
+			var cellWidth = width / cols;
+			var cellHeight = height / rows;
+			
+			var row = 0;
+			var col = 0;
+			nodes.positions(function(i, element){
+				
+				if( element.locked() ){
+					return false;
+				}
+				
+				var x = col * cellWidth + cellWidth/2;
+				var y = row * cellHeight + cellHeight/2;
+				
+				col++;
+				if( col >= cols ){
+					col = 0;
+					row++;
+				}
+				
+				return { x: x, y: y };
+				
+			});
+		}
+		
+		if( params.fit ){
+			cy.reset();
+		} 
+		
+		cy.one("layoutready", params.ready);
+		cy.trigger("layoutready");
+		
+		cy.one("layoutstop", params.stop);
+		cy.trigger("layoutstop");
+	};
+
+	GridLayout.prototype.stop = function(){
+		// not a continuous layout
+	};
+	
+	$$("layout", "grid", GridLayout);
+	
+})( cytoscape );
+
+;(function($$){
+	
+	var defaults = {
+		fit: true, // whether to fit to viewport
+		ready: undefined, // callback on layoutready
+		stop: undefined, // callback on layoutstop
+		positions: undefined, // map of (node id) => (position obj)
+		zoom: undefined, // the zoom level to set (prob want fit = false if set)
+		pan: undefined, // the pan level to set (prob want fit = false if set)
+		padding: 30 // padding on fit
+	};
+	
+	function PresetLayout( options ){
+		this.options = $$.util.extend(true, {}, defaults, options);
+	}
+	
+	PresetLayout.prototype.run = function(){
+		var options = this.options;
+		var cy = options.cy;
+		var nodes = cy.nodes();
+		var edges = cy.edges();
+		var container = cy.container();
+		
+		function getPosition(node){
+			if( options.positions == null ){
+				return null;
+			}
+			
+			if( options.positions[node._private.data.id] == null ){
+				return null;
+			}
+			
+			return options.positions[node._private.data.id];
+		}
+		
+		nodes.positions(function(i, node){
+			var position = getPosition(node);
+			
+			if( node.locked() || position == null ){
+				return false;
+			}
+			
+			return position;
+		});
+		
+		if( options.pan != null ){
+			cy.pan( options.pan );
+		}
+
+		if( options.zoom != null ){
+			cy.zoom( options.zoom );
+		}
+
+		cy.one("layoutready", options.ready);
+		cy.trigger("layoutready");
+		
+		if( options.fit ){
+			cy.fit( options.padding );
+		}
+		
+		cy.one("layoutstop", options.stop);
+		cy.trigger("layoutstop");
+	};
+	
+	$$("layout", "preset", PresetLayout);
+	
+	$$("core", "presetLayout", function(){
+		var cy = this;
+		var layout = {};
+		var elements = {};
+		
+		cy.nodes().each(function(i, ele){
+			elements[ ele.data("id") ] = ele.position();
+		});
+		
+		layout.positions = elements;
+		layout.name = "preset";
+		layout.zoom = cy.zoom();
+		layout.pan = cy.pan();
+
+		return layout;
+	});
+	
+})(cytoscape);
+
+;(function($$){
+	
+	var defaults = {
+		liveUpdate: true, // whether to show the layout as it's running
+		ready: undefined, // callback on layoutready 
+		stop: undefined, // callback on layoutstop
+		maxSimulationTime: 4000, // max length in ms to run the layout
+		fit: true, // fit to viewport
+		padding: [ 50, 50, 50, 50 ], // top, right, bottom, left
+		ungrabifyWhileSimulating: true, // so you can't drag nodes during layout
+
+		// forces used by arbor (use arbor default on undefined)
+		repulsion: undefined,
+		stiffness: undefined,
+		friction: undefined,
+		gravity: true,
+		fps: undefined,
+		precision: undefined,
+
+		// static numbers or functions that dynamically return what these
+		// values should be for each element
+		nodeMass: undefined, 
+		edgeLength: undefined,
+
+		stepSize: 1, // size of timestep in simulation
+
+		// function that returns true if the system is stable to indicate
+		// that the layout can be stopped
+		stableEnergy: function( energy ){
+			var e = energy; 
+			return (e.max <= 0.5) || (e.mean <= 0.3);
+		}
+	};
+	
+	function ArborLayout(options){
+		this.options = $$.util.extend({}, defaults, options);
+	}
+		
+	ArborLayout.prototype.run = function(){
+		var options = this.options;
+		var cy = options.cy;
+		var nodes = cy.nodes();
+		var edges = cy.edges();
+		var container = cy.container();
+		var width = container.clientWidth;
+		var height = container.clientHeight;
+
+		// arbor doesn't work with just 1 node
+		if( cy.nodes().size() <= 1 ){
+			if( options.fit ){
+				cy.reset();
+			}
+
+			cy.nodes().position({
+				x: Math.round( width/2 ),
+				y: Math.round( height/2 )
+			});
+
+			cy.one("layoutstop", options.stop);
+			cy.trigger("layoutstop");
+
+			cy.one("layoutstop", options.stop);
+			cy.trigger("layoutstop");
+
+			return;
+		}
+
+		var sys = this.system = arbor.ParticleSystem(options.repulsion, options.stiffness, options.friction, options.gravity, options.fps, options.dt, options.precision);
+		this.system = sys;
+
+		if( options.liveUpdate && options.fit ){
+			cy.reset();
+		};
+		
+		var doneTime = 250;
+		var doneTimeout;
+		
+		var ready = false;
+		
+		var lastDraw = +new Date;
+		var sysRenderer = {
+			init: function(system){
+			},
+			redraw: function(){
+				var energy = sys.energy();
+
+				// if we're stable (according to the client), we're done
+				if( options.stableEnergy != null && energy != null && energy.n > 0 && options.stableEnergy(energy) ){
+					sys.stop();
+					return;
+				}
+
+				clearTimeout(doneTimeout);
+				doneTimeout = setTimeout(doneHandler, doneTime);
+				
+				var movedNodes = [];
+				
+				sys.eachNode(function(n, point){ 
+					var id = n.name;
+					var data = n.data;
+					var node = data.element;
+					
+					if( node == null ){
+						return;
+					}
+					var pos = node._private.position;
+					
+					if( !node.locked() && !node.grabbed() ){
+						pos.x = point.x;
+						pos.y = point.y;
+						
+						movedNodes.push( node );
+					}
+				});
+				
+
+				var timeToDraw = (+new Date - lastDraw) >= 16;
+				if( options.liveUpdate && movedNodes.length > 0 && timeToDraw ){
+					new $$.Collection(cy, movedNodes).rtrigger("position");
+					lastDraw = +new Date;
+				}
+
+				
+				if( !ready ){
+					ready = true;
+					cy.one("layoutready", options.ready);
+					cy.trigger("layoutready");
+				}
+			}
+			
+		};
+		sys.renderer = sysRenderer;
+		sys.screenSize( width, height );
+		sys.screenPadding( options.padding[0], options.padding[1], options.padding[2], options.padding[3] );
+		sys.screenStep( options.stepSize );
+
+		function calculateValueForElement(element, value){
+			if( value == null ){
+				return undefined;
+			} else if( typeof value == typeof function(){} ){
+				return value.apply(element, [element._private.data, {
+					nodes: nodes.length,
+					edges: edges.length,
+					element: element
+				}]); 
+			} else {
+				return value;
+			}
+		}
+		
+		// TODO we're using a hack; sys.toScreen should work :(
+		function fromScreen(pos){
+			var x = pos.x;
+			var y = pos.y;
+			var w = width;
+			var h = height;
+			
+			var left = -2;
+			var right = 2;
+			var top = -2;
+			var bottom = 2;
+			
+			var d = 4;
+			
+			return {
+				x: x/w * d + left,
+				y: y/h * d + right
+			};
+		}
+		
+		var grabHandler = function(e){
+			grabbed = this;
+			var pos = sys.fromScreen( this.position() );
+			var p = arbor.Point(pos.x, pos.y);
+			this.scratch().arbor.p = p;
+			
+			switch( e.type ){
+			case "grab":
+				this.scratch().arbor.fixed = true;
+				break;
+			case "dragstop":
+				this.scratch().arbor.fixed = false;
+				this.scratch().arbor.tempMass = 1000
+				break;
+			}
+		};
+		nodes.bind("grab drag dragstop", grabHandler);
+			  	
+		nodes.each(function(i, node){
+			var id = this._private.data.id;
+			var mass = calculateValueForElement(this, options.nodeMass);
+			var locked = this._private.locked;
+			
+			var pos = fromScreen({
+				x: node.position().x,
+				y: node.position().y
+			});
+
+			if( node.locked() ){
+				return;
+			}
+
+			this.scratch().arbor = sys.addNode(id, {
+				element: this,
+				mass: mass,
+				fixed: locked,
+				x: locked ? pos.x : undefined,
+				y: locked ? pos.y : undefined
+			});
+		});
+		
+		edges.each(function(){
+			var id = this.id();
+			var src = this.source().id();
+			var tgt = this.target().id();
+			var length = calculateValueForElement(this, options.edgeLength);
+			
+			this.scratch().arbor = sys.addEdge(src, tgt, {
+				length: length
+			});
+		});
+		
+		function packToCenter(callback){
+			// TODO implement this for IE :(
+			
+			if( options.fit ){
+				cy.fit();
+			}
+			callback();
+		};
+		
+		var grabbableNodes = nodes.filter(":grabbable");
+		// disable grabbing if so set
+		if( options.ungrabifyWhileSimulating ){
+			grabbableNodes.ungrabify();
+		}
+		
+		var doneHandler = function(){
+			if( window.isIE ){
+				packToCenter(function(){
+					done();
+				});
+			} else {
+				done();
+			}
+			
+			function done(){
+				if( !options.liveUpdate ){
+					if( options.fit ){
+						cy.reset();
+					}
+
+					cy.nodes().rtrigger("position");
+				}
+
+				// unbind handlers
+				nodes.unbind("grab drag dragstop", grabHandler);
+				
+				// enable back grabbing if so set
+				if( options.ungrabifyWhileSimulating ){
+					grabbableNodes.grabify();
+				}
+
+				cy.one("layoutstop", options.stop);
+				cy.trigger("layoutstop");
+			}
+		};
+		
+		sys.start();
+		setTimeout(function(){
+			sys.stop();
+		}, options.maxSimulationTime);
+		
+	};
+
+	ArborLayout.prototype.stop = function(){
+		if( this.system != null ){
+			system.stop();
+		}
+	};
+	
+	$$("layout", "arbor", ArborLayout);
+	
+	
+})(cytoscape);
+
+;(function($$){
+    
+    var defaults = {
+        fit: true, // whether to fit the viewport to the graph
+        ready: undefined, // callback on layoutready
+        stop: undefined, // callback on layoutstop
+        rStepSize: 10, // the step size for increasing the radius if the nodes don't fit on screen
+        padding: 30, // the padding on fit
+        startAngle: 3/2 * Math.PI, // the position of the first node
+        counterclockwise: false // whether the layout should go counterclockwise (true) or clockwise (false)
+    };
+    
+    function CircleLayout( options ){
+        this.options = $$.util.extend({}, defaults, options);
+    }
+    
+    CircleLayout.prototype.run = function(){
+        var params = this.options;
+        var options = params;
+        
+        var cy = params.cy;
+        var nodes = cy.nodes();
+        var edges = cy.edges();
+        var container = cy.container();
+        
+        var width = container.clientWidth;
+        var height = container.clientHeight;
+
+        var center = {
+            x: width/2,
+            y: height/2
+        };
+
+        var padding = 50;
+        
+        var theta = options.startAngle;
+        var dTheta = 2 * Math.PI / nodes.length;
+        var maxNodeSize = 0;
+
+        for( var i = 0; i < nodes.length; i++ ){
+            var node = nodes[i];
+
+            maxNodeSize = Math.max( node.outerWidth(), node.outerHeight() );
+        }
+
+        var r = width/2 - maxNodeSize;
+
+        function distanceBetweenNodes(){
+            var t1 = 0;
+            var t2 = dTheta;
+
+            var p1 = {
+                x: center.x + r * Math.cos(t1),
+                y: center.y + r * Math.sin(t1)
+            };
+
+            var p2 = {
+                x: center.x + r * Math.cos(t2),
+                y: center.y + r * Math.sin(t2)
+            }; 
+
+            var dist = Math.sqrt( (p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y) );
+
+            return dist;
+        }
+
+        while( distanceBetweenNodes() < maxNodeSize ){
+            r += options.rStepSize;
+        }
+
+
+        var i = 0;
+        nodes.positions(function(){
+            var node = this;
+            var rx = r * Math.cos( theta );
+            var ry = r * Math.sin( theta );
+            var pos = {
+                x: center.x + rx,
+                y: center.y + ry
+            };
+
+            i++;
+            theta = options.counterclockwise ? theta - dTheta : theta + dTheta;
+            return pos;
+        });
+        
+        if( params.fit ){
+            cy.fit( options.padding );
+        } 
+        
+        cy.one("layoutready", params.ready);
+        cy.trigger("layoutready");
+        
+        cy.one("layoutstop", params.stop);
+        cy.trigger("layoutstop");
+    };
+
+    CircleLayout.prototype.stop = function(){
+        // not a continuous layout
+    };
+    
+    $$("layout", "circle", CircleLayout);
+    
+})( cytoscape );
+
+;(function($$){
+    
+    var defaults = {
+        fit: true, // whether to fit the viewport to the graph
+        ready: undefined, // callback on layoutready
+        stop: undefined, // callback on layoutstop
+        directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
+        padding: 30, // padding on fit
+        circle: false, // put depths in concentric circles if true, put depths top down if false
+        roots: undefined // the roots of the trees
+    };
+    
+    function BreadthFirstLayout( options ){
+        this.options = $$.util.extend({}, defaults, options);
+    }
+    
+    BreadthFirstLayout.prototype.run = function(){
+        var params = this.options;
+        var options = params;
+        
+        var cy = params.cy;
+        var nodes = cy.nodes();
+        var edges = cy.edges();
+        var container = cy.container();
+        
+        var width = container.clientWidth;
+        var height = container.clientHeight;
+
+        var roots;
+        if( $$.is.elementOrCollection(options.roots) ){
+            roots = options.roots;
+        } else if( $$.is.array(options.roots) ){
+            var rootsArray = [];
+
+            for( var i = 0; i < options.roots.length; i++ ){
+                var id = options.roots[i];
+                var ele = cy.getElementById( id );
+                roots.push( ele );
+            }
+
+            roots = new $$.Collection( cy, rootsArray );
+        } else {
+            roots = nodes.roots();
+        }
+
+
+        var depths = [];
+        var foundByBfs = {};
+        var id2depth = {};
+
+        // find the depths of the nodes
+        roots.bfs(function(i, depth){
+            var ele = this[0];
+
+            if( !depths[depth] ){
+                depths[depth] = [];
+            }
+
+            depths[depth].push( ele );
+            foundByBfs[ ele.id() ] = true;
+            id2depth[ ele.id() ] = depth;
+        }, options.directed);
+
+        // check for nodes not found by bfs
+        var orphanNodes = [];
+        for( var i = 0; i < nodes.length; i++ ){
+            var ele = nodes[i];
+
+            if( foundByBfs[ ele.id() ] ){
+                continue;
+            } else {
+                orphanNodes.push( ele );
+            }
+        }
+
+        // assign orphan nodes a depth from their neighborhood
+        var maxChecks = orphanNodes.length * 3;
+        var checks = 0;
+        while( orphanNodes.length !== 0 && checks < maxChecks ){
+            var node = orphanNodes.shift();
+            var neighbors = node.neighborhood().nodes();
+            var assignedDepth = false;
+
+            for( var i = 0; i < neighbors.length; i++ ){
+                var depth = id2depth[ neighbors[i].id() ];
+
+                if( depth !== undefined ){
+                    depths[depth].push( node );
+                    assignedDepth = true;
+                    break;
+                }
+            }
+
+            if( !assignedDepth ){
+                orphanNodes.push( node );
+            }
+
+            checks++;
+        }
+
+        // assign orphan nodes that are still left to the depth of their subgraph
+        while( orphanNodes.length !== 0 ){
+            var node = orphanNodes.shift();
+            var subgraph = node.bfs();
+            var assignedDepth = false;
+
+            for( var i = 0; i < subgraph.length; i++ ){
+                var depth = id2depth[ subgraph[i].id() ];
+
+                if( depth !== undefined ){
+                    depths[depth].push( node );
+                    assignedDepth = true;
+                    break;
+                }
+            }
+
+            if( !assignedDepth ){ // worst case if the graph really isn't tree friendly, then just dump it in 0
+                if( depths.length === 0 ){
+                    depths.push([]);
+                }
+                
+                depths[0].push( node );
+            }
+        }
+
+        // assign the nodes a depth and index
+        function assignDepthsToEles(){
+            for( var i = 0; i < depths.length; i++ ){
+                var eles = depths[i];
+
+                for( var j = 0; j < eles.length; j++ ){
+                    var ele = eles[j];
+
+                    ele._private.scratch.BreadthFirstLayout = {
+                        depth: i,
+                        index: j
+                    };
+                }
+            }
+        }
+        assignDepthsToEles();
+
+        // find min distance we need to leave between nodes
+        var minDistance = 0;
+        for( var i = 0; i < nodes.length; i++ ){
+            var w = nodes[i].outerWidth();
+            var h = nodes[i].outerHeight();
+            
+            minDistance = Math.max(minDistance, w, h);
+        }
+        minDistance *= 1.75; // just to have some nice spacing
+
+        // get the weighted percent for an element based on its connectivity to other levels
+        var cachedWeightedPercent = {};
+        function getWeightedPercent( ele ){
+            if( cachedWeightedPercent[ ele.id() ] ){
+                return cachedWeightedPercent[ ele.id() ];
+            }
+
+            var eleDepth = ele._private.scratch.BreadthFirstLayout.depth;
+            var neighbors = ele.neighborhood().nodes();
+            var percent = 0;
+            var samples = 0;
+
+            for( var i = 0; i < neighbors.length; i++ ){
+                var neighbor = neighbors[i];
+                var nEdges = neighbor.edgesWith( ele );
+                var index = neighbor._private.scratch.BreadthFirstLayout.index;
+                var depth = neighbor._private.scratch.BreadthFirstLayout.depth;
+                var nDepth = depths[depth].length;
+
+                if( eleDepth > depth || eleDepth === 0 ){ // only get influenced by elements above
+                    percent += index / nDepth;
+                    samples++;
+                }
+            }
+
+            samples = Math.max(1, samples);
+            percent = percent / samples;
+
+            if( samples === 0 ){ // so lone nodes have a "don't care" state in sorting
+                percent = undefined;
+            }
+
+            cachedWeightedPercent[ ele.id() ] = percent;
+            return percent;
+        }
+
+        // rearrange the indices in each depth level based on connectivity
+        for( var times = 0; times < 3; times++ ){ // do it a few times b/c the depths are dynamic and we want a more stable result
+
+            for( var i = 0; i < depths.length; i++ ){
+                var depth = i;
+                var newDepths = [];
+
+                depths[i] = depths[i].sort(function(a, b){
+                    var apct = getWeightedPercent( a );
+                    var bpct = getWeightedPercent( b );
+
+
+                    return apct - bpct;
+                });
+            }
+            assignDepthsToEles(); // and update
+
+        }
+
+        var center = {
+            x: width/2,
+            y: height/2
+        };
+        nodes.positions(function(){
+            var ele = this[0];
+            var info = ele._private.scratch.BreadthFirstLayout;
+            var depth = info.depth;
+            var index = info.index;
+
+            var distanceX = Math.max( width / (depths[depth].length + 1), minDistance );
+            var distanceY = Math.max( height / (depths.length + 1), minDistance );
+            var radiusStepSize = Math.min( width / 2 / depths.length, height / 2 / depths.length );
+            radiusStepSize = Math.max( radiusStepSize, minDistance );
+
+            if( options.circle ){
+                var radius = radiusStepSize * depth + radiusStepSize - (depths.length > 0 && depths[0].length <= 3 ? radiusStepSize/2 : 0);
+                var theta = 2 * Math.PI / depths[depth].length * index;
+
+                if( depth === 0 && depths[0].length === 1 ){
+                    radius = 1;
+                }
+
+                return {
+                    x: center.x + radius * Math.cos(theta),
+                    y: center.y + radius * Math.sin(theta)
+                };
+
+            } else {
+                return {
+                    x: (index + 1) * distanceX,
+                    y: (depth + 1) * distanceY
+                };
+            }
+            
+        });
+        
+        if( params.fit ){
+            cy.fit( options.padding );
+        } 
+        
+        cy.one("layoutready", params.ready);
+        cy.trigger("layoutready");
+        
+        cy.one("layoutstop", params.stop);
+        cy.trigger("layoutstop");
+    };
+
+    BreadthFirstLayout.prototype.stop = function(){
+        // not a continuous layout
+    };
+    
+    $$("layout", "breadthfirst", BreadthFirstLayout);
+    
+})( cytoscape );

@@ -1,1 +1,53 @@
-Pixastic.Actions.rotate={process:function(a){if(Pixastic.Client.hasCanvas()){var b=a.canvas,c=a.width,d=a.height,e=document.createElement("canvas");e.width=c,e.height=d,e.getContext("2d").drawImage(b,0,0,c,d);var f=-parseFloat(a.options.angle)*Math.PI/180,g=f;g>.5*Math.PI&&(g=Math.PI-g),g<.5*-Math.PI&&(g=-Math.PI-g);var h=Math.sqrt(c*c+d*d),i=Math.abs(g)-Math.abs(Math.atan2(d,c)),j=Math.abs(g)+Math.abs(Math.atan2(d,c)),k=Math.abs(Math.cos(i)*h),l=Math.abs(Math.sin(j)*h);b.width=k,b.height=l;var m=b.getContext("2d");return m.translate(k/2,l/2),m.rotate(f),m.drawImage(e,-c/2,-d/2),a.useData=!1,!0}},checkSupport:function(){return Pixastic.Client.hasCanvas()}};
+/*
+ * Pixastic Lib - Rotate - v0.1.0
+ * Copyright (c) 2009 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.rotate = {
+	process : function(params) {
+		if (Pixastic.Client.hasCanvas()) {
+			var canvas = params.canvas;
+
+			var width = params.width;
+			var height = params.height;
+
+			var copy = document.createElement("canvas");
+			copy.width = width;
+			copy.height = height;
+			copy.getContext("2d").drawImage(canvas,0,0,width,height);
+
+			var angle = -parseFloat(params.options.angle) * Math.PI / 180;
+
+			var dimAngle = angle;
+			if (dimAngle > Math.PI*0.5)
+				dimAngle = Math.PI - dimAngle;
+			if (dimAngle < -Math.PI*0.5)
+				dimAngle = -Math.PI - dimAngle;
+
+			var diag = Math.sqrt(width*width + height*height);
+
+			var diagAngle1 = Math.abs(dimAngle) - Math.abs(Math.atan2(height, width));
+			var diagAngle2 = Math.abs(dimAngle) + Math.abs(Math.atan2(height, width));
+
+			var newWidth = Math.abs(Math.cos(diagAngle1) * diag);
+			var newHeight = Math.abs(Math.sin(diagAngle2) * diag);
+
+			canvas.width = newWidth;
+			canvas.height = newHeight;
+
+			var ctx = canvas.getContext("2d");
+			ctx.translate(newWidth/2, newHeight/2);
+			ctx.rotate(angle);
+			ctx.drawImage(copy,-width/2,-height/2);
+
+			params.useData = false;
+			return true;
+		}
+	},
+	checkSupport : function() {
+		return Pixastic.Client.hasCanvas();
+	}
+}
+
+

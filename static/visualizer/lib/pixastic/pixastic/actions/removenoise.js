@@ -1,1 +1,89 @@
-Pixastic.Actions.removenoise={process:function(a){if(Pixastic.Client.hasCanvasImageData()){var b=Pixastic.prepareData(a),c=a.options.rect,d=c.width,e=c.height,f=4*d,g=e;do{var h=(g-1)*f,i=g==e?g-1:g,j=1==g?0:g-2,k=j*d*4,l=i*d*4,m=d;do{var n,o,p,q,r,s,t=h+(4*m-4),u=k+4*(1==m?0:m-2),v=l+4*(m==d?m-1:m);n=o=b[u];var w=b[t-4],x=b[t+4],y=b[v];n>w&&(n=w),n>x&&(n=x),n>y&&(n=y),w>o&&(o=w),x>o&&(o=x),y>o&&(o=y),p=q=b[u+1];var z=b[t-3],A=b[t+5],B=b[v+1];p>z&&(p=z),p>A&&(p=A),p>B&&(p=B),z>q&&(q=z),A>q&&(q=A),B>q&&(q=B),r=s=b[u+2];var C=b[t-2],D=b[t+6],E=b[v+2];r>C&&(r=C),r>D&&(r=D),r>E&&(r=E),C>s&&(s=C),D>s&&(s=D),E>s&&(s=E),b[t]>o?b[t]=o:b[t]<n&&(b[t]=n),b[t+1]>q?b[t+1]=q:b[t+1]<p&&(b[t+1]=p),b[t+2]>s?b[t+2]=s:b[t+2]<r&&(b[t+2]=r)}while(--m)}while(--g);return!0}},checkSupport:function(){return Pixastic.Client.hasCanvasImageData()}};
+/*
+ * Pixastic Lib - Remove noise - v0.1.0
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.removenoise = {
+	process : function(params) {
+
+		if (Pixastic.Client.hasCanvasImageData()) {
+			var data = Pixastic.prepareData(params);
+
+			var rect = params.options.rect;
+			var w = rect.width;
+			var h = rect.height;
+
+			var w4 = w*4;
+			var y = h;
+			do {
+				var offsetY = (y-1)*w4;
+
+				var nextY = (y == h) ? y - 1 : y;
+				var prevY = (y == 1) ? 0 : y-2;
+
+				var offsetYPrev = prevY*w*4;
+				var offsetYNext = nextY*w*4;
+
+				var x = w;
+				do {
+					var offset = offsetY + (x*4-4);
+
+					var offsetPrev = offsetYPrev + ((x == 1) ? 0 : x-2) * 4;
+					var offsetNext = offsetYNext + ((x == w) ? x-1 : x) * 4;
+
+					var minR, maxR, minG, maxG, minB, maxB;
+
+					minR = maxR = data[offsetPrev];
+					var r1 = data[offset-4], r2 = data[offset+4], r3 = data[offsetNext];
+					if (r1 < minR) minR = r1;
+					if (r2 < minR) minR = r2;
+					if (r3 < minR) minR = r3;
+					if (r1 > maxR) maxR = r1;
+					if (r2 > maxR) maxR = r2;
+					if (r3 > maxR) maxR = r3;
+
+					minG = maxG = data[offsetPrev+1];
+					var g1 = data[offset-3], g2 = data[offset+5], g3 = data[offsetNext+1];
+					if (g1 < minG) minG = g1;
+					if (g2 < minG) minG = g2;
+					if (g3 < minG) minG = g3;
+					if (g1 > maxG) maxG = g1;
+					if (g2 > maxG) maxG = g2;
+					if (g3 > maxG) maxG = g3;
+
+					minB = maxB = data[offsetPrev+2];
+					var b1 = data[offset-2], b2 = data[offset+6], b3 = data[offsetNext+2];
+					if (b1 < minB) minB = b1;
+					if (b2 < minB) minB = b2;
+					if (b3 < minB) minB = b3;
+					if (b1 > maxB) maxB = b1;
+					if (b2 > maxB) maxB = b2;
+					if (b3 > maxB) maxB = b3;
+
+					if (data[offset] > maxR) {
+						data[offset] = maxR;
+					} else if (data[offset] < minR) {
+						data[offset] = minR;
+					}
+					if (data[offset+1] > maxG) {
+						data[offset+1] = maxG;
+					} else if (data[offset+1] < minG) {
+						data[offset+1] = minG;
+					}
+					if (data[offset+2] > maxB) {
+						data[offset+2] = maxB;
+					} else if (data[offset+2] < minB) {
+						data[offset+2] = minB;
+					}
+
+				} while (--x);
+			} while (--y);
+
+			return true;
+		}
+	},
+	checkSupport : function() {
+		return Pixastic.Client.hasCanvasImageData();
+	}
+}

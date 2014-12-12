@@ -1,2 +1,2620 @@
-window.console||(window.console={},window.console.log=function(){},window.console.dir=function(){}),Array.prototype.indexOf||(Array.prototype.indexOf=function(a){for(var b=0;b<this.length;b++)if(this[b]==a)return b;return-1}),function(){function a(){var a={};return a.FRAMERATE=30,a.MAX_VIRTUAL_PIXELS=3e4,a.init=function(b){a.Definitions={},a.Styles={},a.Animations=[],a.Images=[],a.ctx=b,a.ViewPort=new function(){this.viewPorts=[],this.Clear=function(){this.viewPorts=[]},this.SetCurrent=function(a,b){this.viewPorts.push({width:a,height:b})},this.RemoveCurrent=function(){this.viewPorts.pop()},this.Current=function(){return this.viewPorts[this.viewPorts.length-1]},this.width=function(){return this.Current().width},this.height=function(){return this.Current().height},this.ComputeSize=function(a){return null!=a&&"number"==typeof a?a:"x"==a?this.width():"y"==a?this.height():Math.sqrt(Math.pow(this.width(),2)+Math.pow(this.height(),2))/Math.sqrt(2)}}},a.init(),a.ImagesLoaded=function(){for(var b=0;b<a.Images.length;b++)if(!a.Images[b].loaded)return!1;return!0},a.trim=function(a){return a.replace(/^\s+|\s+$/g,"")},a.compressSpaces=function(a){return a.replace(/[\s\r\t\n]+/gm," ")},a.ajax=function(a){var b;return b=window.XMLHttpRequest?new XMLHttpRequest:new ActiveXObject("Microsoft.XMLHTTP"),b?(b.open("GET",a,!1),b.send(null),b.responseText):null},a.parseXml=function(a){if(window.DOMParser){var b=new DOMParser;return b.parseFromString(a,"text/xml")}a=a.replace(/<!DOCTYPE svg[^>]*>/,"");var c=new ActiveXObject("Microsoft.XMLDOM");return c.async="false",c.loadXML(a),c},a.Property=function(b,c){this.name=b,this.value=c,this.hasValue=function(){return null!=this.value&&""!==this.value},this.numValue=function(){if(!this.hasValue())return 0;var a=parseFloat(this.value);return(this.value+"").match(/%$/)&&(a/=100),a},this.valueOrDefault=function(a){return this.hasValue()?this.value:a},this.numValueOrDefault=function(a){return this.hasValue()?this.numValue():a};var d=this;this.Color={addOpacity:function(b){var c=d.value;if(null!=b&&""!=b){var e=new RGBColor(d.value);e.ok&&(c="rgba("+e.r+", "+e.g+", "+e.b+", "+b+")")}return new a.Property(d.name,c)}},this.Definition={getDefinition:function(){var b=d.value.replace(/^(url\()?#([^\)]+)\)?$/,"$2");return a.Definitions[b]},isUrl:function(){return 0==d.value.indexOf("url(")},getFillStyle:function(b){var c=this.getDefinition();return null!=c&&c.createGradient?c.createGradient(a.ctx,b):null!=c&&c.createPattern?c.createPattern(a.ctx,b):null}},this.Length={DPI:function(){return 96},EM:function(b){var c=12,d=new a.Property("fontSize",a.Font.Parse(a.ctx.font).fontSize);return d.hasValue()&&(c=d.Length.toPixels(b)),c},toPixels:function(b){if(!d.hasValue())return 0;var c=d.value+"";return c.match(/em$/)?d.numValue()*this.EM(b):c.match(/ex$/)?d.numValue()*this.EM(b)/2:c.match(/px$/)?d.numValue():c.match(/pt$/)?1.25*d.numValue():c.match(/pc$/)?15*d.numValue():c.match(/cm$/)?d.numValue()*this.DPI(b)/2.54:c.match(/mm$/)?d.numValue()*this.DPI(b)/25.4:c.match(/in$/)?d.numValue()*this.DPI(b):c.match(/%$/)?d.numValue()*a.ViewPort.ComputeSize(b):d.numValue()}},this.Time={toMilliseconds:function(){if(!d.hasValue())return 0;var a=d.value+"";return a.match(/s$/)?1e3*d.numValue():(a.match(/ms$/),d.numValue())}},this.Angle={toRadians:function(){if(!d.hasValue())return 0;var a=d.value+"";return a.match(/deg$/)?d.numValue()*(Math.PI/180):a.match(/grad$/)?d.numValue()*(Math.PI/200):a.match(/rad$/)?d.numValue():d.numValue()*(Math.PI/180)}}},a.Font=new function(){this.Styles=["normal","italic","oblique","inherit"],this.Variants=["normal","small-caps","inherit"],this.Weights=["normal","bold","bolder","lighter","100","200","300","400","500","600","700","800","900","inherit"],this.CreateFont=function(b,c,d,e,f,g){var h=null!=g?this.Parse(g):this.CreateFont("","","","","",a.ctx.font);return{fontFamily:f||h.fontFamily,fontSize:e||h.fontSize,fontStyle:b||h.fontStyle,fontWeight:d||h.fontWeight,fontVariant:c||h.fontVariant,toString:function(){return[this.fontStyle,this.fontVariant,this.fontWeight,this.fontSize,this.fontFamily].join(" ")}}};var b=this;this.Parse=function(c){for(var d={},e=a.trim(a.compressSpaces(c||"")).split(" "),f={fontSize:!1,fontStyle:!1,fontWeight:!1,fontVariant:!1},g="",h=0;h<e.length;h++)f.fontStyle||-1==b.Styles.indexOf(e[h])?f.fontVariant||-1==b.Variants.indexOf(e[h])?f.fontWeight||-1==b.Weights.indexOf(e[h])?f.fontSize?"inherit"!=e[h]&&(g+=e[h]):("inherit"!=e[h]&&(d.fontSize=e[h].split("/")[0]),f.fontStyle=f.fontVariant=f.fontWeight=f.fontSize=!0):("inherit"!=e[h]&&(d.fontWeight=e[h]),f.fontStyle=f.fontVariant=f.fontWeight=!0):("inherit"!=e[h]&&(d.fontVariant=e[h]),f.fontStyle=f.fontVariant=!0):("inherit"!=e[h]&&(d.fontStyle=e[h]),f.fontStyle=!0);return""!=g&&(d.fontFamily=g),d}},a.ToNumberArray=function(b){for(var c=a.trim(a.compressSpaces((b||"").replace(/,/g," "))).split(" "),d=0;d<c.length;d++)c[d]=parseFloat(c[d]);return c},a.Point=function(a,b){this.x=a,this.y=b,this.angleTo=function(a){return Math.atan2(a.y-this.y,a.x-this.x)},this.applyTransform=function(a){var b=this.x*a[0]+this.y*a[2]+a[4],c=this.x*a[1]+this.y*a[3]+a[5];this.x=b,this.y=c}},a.CreatePoint=function(b){var c=a.ToNumberArray(b);return new a.Point(c[0],c[1])},a.CreatePath=function(b){for(var c=a.ToNumberArray(b),d=[],e=0;e<c.length;e+=2)d.push(new a.Point(c[e],c[e+1]));return d},a.BoundingBox=function(a,b,c,d){this.x1=Number.NaN,this.y1=Number.NaN,this.x2=Number.NaN,this.y2=Number.NaN,this.x=function(){return this.x1},this.y=function(){return this.y1},this.width=function(){return this.x2-this.x1},this.height=function(){return this.y2-this.y1},this.addPoint=function(a,b){null!=a&&((isNaN(this.x1)||isNaN(this.x2))&&(this.x1=a,this.x2=a),a<this.x1&&(this.x1=a),a>this.x2&&(this.x2=a)),null!=b&&((isNaN(this.y1)||isNaN(this.y2))&&(this.y1=b,this.y2=b),b<this.y1&&(this.y1=b),b>this.y2&&(this.y2=b))},this.addX=function(a){this.addPoint(a,null)},this.addY=function(a){this.addPoint(null,a)},this.addBoundingBox=function(a){this.addPoint(a.x1,a.y1),this.addPoint(a.x2,a.y2)},this.addQuadraticCurve=function(a,b,c,d,e,f){var g=a+2/3*(c-a),h=b+2/3*(d-b),i=g+1/3*(e-a),j=h+1/3*(f-b);this.addBezierCurve(a,b,g,i,h,j,e,f)},this.addBezierCurve=function(a,b,c,d,e,f,g,h){var j=[a,b],k=[c,d],l=[e,f],m=[g,h];for(this.addPoint(j[0],j[1]),this.addPoint(m[0],m[1]),i=0;1>=i;i++){var n=function(a){return Math.pow(1-a,3)*j[i]+3*Math.pow(1-a,2)*a*k[i]+3*(1-a)*Math.pow(a,2)*l[i]+Math.pow(a,3)*m[i]},o=6*j[i]-12*k[i]+6*l[i],p=-3*j[i]+9*k[i]-9*l[i]+3*m[i],q=3*k[i]-3*j[i];if(0!=p){var r=Math.pow(o,2)-4*q*p;if(!(0>r)){var s=(-o+Math.sqrt(r))/(2*p);s>0&&1>s&&(0==i&&this.addX(n(s)),1==i&&this.addY(n(s)));var t=(-o-Math.sqrt(r))/(2*p);t>0&&1>t&&(0==i&&this.addX(n(t)),1==i&&this.addY(n(t)))}}else{if(0==o)continue;var u=-q/o;u>0&&1>u&&(0==i&&this.addX(n(u)),1==i&&this.addY(n(u)))}}},this.isPointInBox=function(a,b){return this.x1<=a&&a<=this.x2&&this.y1<=b&&b<=this.y2},this.addPoint(a,b),this.addPoint(c,d)},a.Transform=function(b){var c=this;this.Type={},this.Type.translate=function(b){this.p=a.CreatePoint(b),this.apply=function(a){a.translate(this.p.x||0,this.p.y||0)},this.applyToPoint=function(a){a.applyTransform([1,0,0,1,this.p.x||0,this.p.y||0])}},this.Type.rotate=function(b){var c=a.ToNumberArray(b);this.angle=new a.Property("angle",c[0]),this.cx=c[1]||0,this.cy=c[2]||0,this.apply=function(a){a.translate(this.cx,this.cy),a.rotate(this.angle.Angle.toRadians()),a.translate(-this.cx,-this.cy)},this.applyToPoint=function(a){var b=this.angle.Angle.toRadians();a.applyTransform([1,0,0,1,this.p.x||0,this.p.y||0]),a.applyTransform([Math.cos(b),Math.sin(b),-Math.sin(b),Math.cos(b),0,0]),a.applyTransform([1,0,0,1,-this.p.x||0,-this.p.y||0])}},this.Type.scale=function(b){this.p=a.CreatePoint(b),this.apply=function(a){a.scale(this.p.x||1,this.p.y||this.p.x||1)},this.applyToPoint=function(a){a.applyTransform([this.p.x||0,0,0,this.p.y||0,0,0])}},this.Type.matrix=function(b){this.m=a.ToNumberArray(b),this.apply=function(a){a.transform(this.m[0],this.m[1],this.m[2],this.m[3],this.m[4],this.m[5])},this.applyToPoint=function(a){a.applyTransform(this.m)}},this.Type.SkewBase=function(b){this.base=c.Type.matrix,this.base(b),this.angle=new a.Property("angle",b)},this.Type.SkewBase.prototype=new this.Type.matrix,this.Type.skewX=function(a){this.base=c.Type.SkewBase,this.base(a),this.m=[1,0,Math.tan(this.angle.Angle.toRadians()),1,0,0]},this.Type.skewX.prototype=new this.Type.SkewBase,this.Type.skewY=function(a){this.base=c.Type.SkewBase,this.base(a),this.m=[1,Math.tan(this.angle.Angle.toRadians()),0,1,0,0]},this.Type.skewY.prototype=new this.Type.SkewBase,this.transforms=[],this.apply=function(a){for(var b=0;b<this.transforms.length;b++)this.transforms[b].apply(a)},this.applyToPoint=function(a){for(var b=0;b<this.transforms.length;b++)this.transforms[b].applyToPoint(a)};for(var d=a.trim(a.compressSpaces(b)).split(/\s(?=[a-z])/),e=0;e<d.length;e++){var f=d[e].split("(")[0],g=d[e].split("(")[1].replace(")",""),h=new this.Type[f](g);this.transforms.push(h)}},a.AspectRatio=function(b,c,d,e,f,g,h,i,j,k){c=a.compressSpaces(c),c=c.replace(/^defer\s/,"");var l=c.split(" ")[0]||"xMidYMid",m=c.split(" ")[1]||"meet",n=d/e,o=f/g,p=Math.min(n,o),q=Math.max(n,o);"meet"==m&&(e*=p,g*=p),"slice"==m&&(e*=q,g*=q),j=new a.Property("refX",j),k=new a.Property("refY",k),j.hasValue()&&k.hasValue()?b.translate(-p*j.Length.toPixels("x"),-p*k.Length.toPixels("y")):(l.match(/^xMid/)&&("meet"==m&&p==o||"slice"==m&&q==o)&&b.translate(d/2-e/2,0),l.match(/YMid$/)&&("meet"==m&&p==n||"slice"==m&&q==n)&&b.translate(0,f/2-g/2),l.match(/^xMax/)&&("meet"==m&&p==o||"slice"==m&&q==o)&&b.translate(d-e,0),l.match(/YMax$/)&&("meet"==m&&p==n||"slice"==m&&q==n)&&b.translate(0,f-g)),"none"==l?b.scale(n,o):"meet"==m?b.scale(p,p):"slice"==m&&b.scale(q,q),b.translate(null==h?0:-h,null==i?0:-i)},a.Element={},a.Element.ElementBase=function(b){if(this.attributes={},this.styles={},this.children=[],this.attribute=function(b,c){var d=this.attributes[b];return null!=d?d:(d=new a.Property(b,""),1==c&&(this.attributes[b]=d),d)},this.style=function(b,c){var d=this.styles[b];if(null!=d)return d;var e=this.attribute(b);if(null!=e&&e.hasValue())return e;var f=this.parent;if(null!=f){var g=f.style(b);if(null!=g&&g.hasValue())return g}return d=new a.Property(b,""),1==c&&(this.styles[b]=d),d},this.render=function(a){if("none"!=this.style("display").value&&"hidden"!=this.attribute("visibility").value){if(a.save(),this.setContext(a),this.attribute("mask").hasValue()){var b=this.attribute("mask").Definition.getDefinition();null!=b&&b.apply(a,this)}else if(this.style("filter").hasValue()){var c=this.style("filter").Definition.getDefinition();null!=c&&c.apply(a,this)}else this.renderChildren(a);this.clearContext(a),a.restore()}},this.setContext=function(){},this.clearContext=function(){},this.renderChildren=function(a){for(var b=0;b<this.children.length;b++)this.children[b].render(a)},this.addChild=function(b,c){var d=b;c&&(d=a.CreateElement(b)),d.parent=this,this.children.push(d)},null!=b&&1==b.nodeType){for(var c=0;c<b.childNodes.length;c++){var d=b.childNodes[c];1==d.nodeType&&this.addChild(d,!0)}for(var c=0;c<b.attributes.length;c++){var e=b.attributes[c];this.attributes[e.nodeName]=new a.Property(e.nodeName,e.nodeValue)}var f=a.Styles[b.nodeName];if(null!=f)for(var g in f)this.styles[g]=f[g];if(this.attribute("class").hasValue())for(var h=a.compressSpaces(this.attribute("class").value).split(" "),i=0;i<h.length;i++){if(f=a.Styles["."+h[i]],null!=f)for(var g in f)this.styles[g]=f[g];if(f=a.Styles[b.nodeName+"."+h[i]],null!=f)for(var g in f)this.styles[g]=f[g]}if(this.attribute("style").hasValue())for(var f=this.attribute("style").value.split(";"),c=0;c<f.length;c++)if(""!=a.trim(f[c])){var j=f[c].split(":"),g=a.trim(j[0]),k=a.trim(j[1]);this.styles[g]=new a.Property(g,k)}this.attribute("id").hasValue()&&null==a.Definitions[this.attribute("id").value]&&(a.Definitions[this.attribute("id").value]=this)}},a.Element.RenderedElementBase=function(b){this.base=a.Element.ElementBase,this.base(b),this.setContext=function(b){if(this.style("fill").Definition.isUrl()){var c=this.style("fill").Definition.getFillStyle(this);null!=c&&(b.fillStyle=c)}else if(this.style("fill").hasValue()){var d=this.style("fill");this.style("fill-opacity").hasValue()&&(d=d.Color.addOpacity(this.style("fill-opacity").value)),b.fillStyle="none"==d.value?"rgba(0,0,0,0)":d.value}if(this.style("stroke").Definition.isUrl()){var c=this.style("stroke").Definition.getFillStyle(this);null!=c&&(b.strokeStyle=c)}else if(this.style("stroke").hasValue()){var e=this.style("stroke");this.style("stroke-opacity").hasValue()&&(e=e.Color.addOpacity(this.style("stroke-opacity").value)),b.strokeStyle="none"==e.value?"rgba(0,0,0,0)":e.value}if(this.style("stroke-width").hasValue()&&(b.lineWidth=this.style("stroke-width").Length.toPixels()),this.style("stroke-linecap").hasValue()&&(b.lineCap=this.style("stroke-linecap").value),this.style("stroke-linejoin").hasValue()&&(b.lineJoin=this.style("stroke-linejoin").value),this.style("stroke-miterlimit").hasValue()&&(b.miterLimit=this.style("stroke-miterlimit").value),"undefined"!=typeof b.font&&(b.font=a.Font.CreateFont(this.style("font-style").value,this.style("font-variant").value,this.style("font-weight").value,this.style("font-size").hasValue()?this.style("font-size").Length.toPixels()+"px":"",this.style("font-family").value).toString()),this.attribute("transform").hasValue()){var f=new a.Transform(this.attribute("transform").value);f.apply(b)}if(this.attribute("clip-path").hasValue()){var g=this.attribute("clip-path").Definition.getDefinition();null!=g&&g.apply(b)}this.style("opacity").hasValue()&&(b.globalAlpha=this.style("opacity").numValue())}},a.Element.RenderedElementBase.prototype=new a.Element.ElementBase,a.Element.PathElementBase=function(b){this.base=a.Element.RenderedElementBase,this.base(b),this.path=function(b){return null!=b&&b.beginPath(),new a.BoundingBox},this.renderChildren=function(b){this.path(b),a.Mouse.checkPath(this,b),""!=b.fillStyle&&b.fill(),""!=b.strokeStyle&&b.stroke();var c=this.getMarkers();if(null!=c){if(this.style("marker-start").Definition.isUrl()){var d=this.style("marker-start").Definition.getDefinition();d.render(b,c[0][0],c[0][1])}if(this.style("marker-mid").Definition.isUrl())for(var d=this.style("marker-mid").Definition.getDefinition(),e=1;e<c.length-1;e++)d.render(b,c[e][0],c[e][1]);if(this.style("marker-end").Definition.isUrl()){var d=this.style("marker-end").Definition.getDefinition();d.render(b,c[c.length-1][0],c[c.length-1][1])}}},this.getBoundingBox=function(){return this.path()},this.getMarkers=function(){return null}},a.Element.PathElementBase.prototype=new a.Element.RenderedElementBase,a.Element.svg=function(b){this.base=a.Element.RenderedElementBase,this.base(b),this.baseClearContext=this.clearContext,this.clearContext=function(b){this.baseClearContext(b),a.ViewPort.RemoveCurrent()},this.baseSetContext=this.setContext,this.setContext=function(b){b.strokeStyle="rgba(0,0,0,0)",b.lineCap="butt",b.lineJoin="miter",b.miterLimit=4,this.baseSetContext(b),this.attribute("x").hasValue()&&this.attribute("y").hasValue()&&b.translate(this.attribute("x").Length.toPixels("x"),this.attribute("y").Length.toPixels("y"));var c=a.ViewPort.width(),d=a.ViewPort.height();if("undefined"==typeof this.root&&this.attribute("width").hasValue()&&this.attribute("height").hasValue()){c=this.attribute("width").Length.toPixels("x"),d=this.attribute("height").Length.toPixels("y");var e=0,f=0;this.attribute("refX").hasValue()&&this.attribute("refY").hasValue()&&(e=-this.attribute("refX").Length.toPixels("x"),f=-this.attribute("refY").Length.toPixels("y")),b.beginPath(),b.moveTo(e,f),b.lineTo(c,f),b.lineTo(c,d),b.lineTo(e,d),b.closePath(),b.clip()}if(a.ViewPort.SetCurrent(c,d),this.attribute("viewBox").hasValue()){var g=a.ToNumberArray(this.attribute("viewBox").value),h=g[0],i=g[1];c=g[2],d=g[3],a.AspectRatio(b,this.attribute("preserveAspectRatio").value,a.ViewPort.width(),c,a.ViewPort.height(),d,h,i,this.attribute("refX").value,this.attribute("refY").value),a.ViewPort.RemoveCurrent(),a.ViewPort.SetCurrent(g[2],g[3])}}},a.Element.svg.prototype=new a.Element.RenderedElementBase,a.Element.rect=function(b){this.base=a.Element.PathElementBase,this.base(b),this.path=function(b){var c=this.attribute("x").Length.toPixels("x"),d=this.attribute("y").Length.toPixels("y"),e=this.attribute("width").Length.toPixels("x"),f=this.attribute("height").Length.toPixels("y"),g=this.attribute("rx").Length.toPixels("x"),h=this.attribute("ry").Length.toPixels("y");return this.attribute("rx").hasValue()&&!this.attribute("ry").hasValue()&&(h=g),this.attribute("ry").hasValue()&&!this.attribute("rx").hasValue()&&(g=h),null!=b&&(b.beginPath(),b.moveTo(c+g,d),b.lineTo(c+e-g,d),b.quadraticCurveTo(c+e,d,c+e,d+h),b.lineTo(c+e,d+f-h),b.quadraticCurveTo(c+e,d+f,c+e-g,d+f),b.lineTo(c+g,d+f),b.quadraticCurveTo(c,d+f,c,d+f-h),b.lineTo(c,d+h),b.quadraticCurveTo(c,d,c+g,d),b.closePath()),new a.BoundingBox(c,d,c+e,d+f)}},a.Element.rect.prototype=new a.Element.PathElementBase,a.Element.circle=function(b){this.base=a.Element.PathElementBase,this.base(b),this.path=function(b){var c=this.attribute("cx").Length.toPixels("x"),d=this.attribute("cy").Length.toPixels("y"),e=this.attribute("r").Length.toPixels();return null!=b&&(b.beginPath(),b.arc(c,d,e,0,2*Math.PI,!0),b.closePath()),new a.BoundingBox(c-e,d-e,c+e,d+e)}},a.Element.circle.prototype=new a.Element.PathElementBase,a.Element.ellipse=function(b){this.base=a.Element.PathElementBase,this.base(b),this.path=function(b){var c=4*((Math.sqrt(2)-1)/3),d=this.attribute("rx").Length.toPixels("x"),e=this.attribute("ry").Length.toPixels("y"),f=this.attribute("cx").Length.toPixels("x"),g=this.attribute("cy").Length.toPixels("y");return null!=b&&(b.beginPath(),b.moveTo(f,g-e),b.bezierCurveTo(f+c*d,g-e,f+d,g-c*e,f+d,g),b.bezierCurveTo(f+d,g+c*e,f+c*d,g+e,f,g+e),b.bezierCurveTo(f-c*d,g+e,f-d,g+c*e,f-d,g),b.bezierCurveTo(f-d,g-c*e,f-c*d,g-e,f,g-e),b.closePath()),new a.BoundingBox(f-d,g-e,f+d,g+e)}},a.Element.ellipse.prototype=new a.Element.PathElementBase,a.Element.line=function(b){this.base=a.Element.PathElementBase,this.base(b),this.getPoints=function(){return[new a.Point(this.attribute("x1").Length.toPixels("x"),this.attribute("y1").Length.toPixels("y")),new a.Point(this.attribute("x2").Length.toPixels("x"),this.attribute("y2").Length.toPixels("y"))]},this.path=function(b){var c=this.getPoints();return null!=b&&(b.beginPath(),b.moveTo(c[0].x,c[0].y),b.lineTo(c[1].x,c[1].y)),new a.BoundingBox(c[0].x,c[0].y,c[1].x,c[1].y)},this.getMarkers=function(){var a=this.getPoints(),b=a[0].angleTo(a[1]);return[[a[0],b],[a[1],b]]}},a.Element.line.prototype=new a.Element.PathElementBase,a.Element.polyline=function(b){this.base=a.Element.PathElementBase,this.base(b),this.points=a.CreatePath(this.attribute("points").value),this.path=function(b){var c=new a.BoundingBox(this.points[0].x,this.points[0].y);null!=b&&(b.beginPath(),b.moveTo(this.points[0].x,this.points[0].y));for(var d=1;d<this.points.length;d++)c.addPoint(this.points[d].x,this.points[d].y),null!=b&&b.lineTo(this.points[d].x,this.points[d].y);return c},this.getMarkers=function(){for(var a=[],b=0;b<this.points.length-1;b++)a.push([this.points[b],this.points[b].angleTo(this.points[b+1])]);return a.push([this.points[this.points.length-1],a[a.length-1][1]]),a}},a.Element.polyline.prototype=new a.Element.PathElementBase,a.Element.polygon=function(b){this.base=a.Element.polyline,this.base(b),this.basePath=this.path,this.path=function(a){var b=this.basePath(a);return null!=a&&(a.lineTo(this.points[0].x,this.points[0].y),a.closePath()),b}},a.Element.polygon.prototype=new a.Element.polyline,a.Element.path=function(b){this.base=a.Element.PathElementBase,this.base(b);var c=this.attribute("d").value;c=c.replace(/,/gm," "),c=c.replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm,"$1 $2"),c=c.replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm,"$1 $2"),c=c.replace(/([MmZzLlHhVvCcSsQqTtAa])([^\s])/gm,"$1 $2"),c=c.replace(/([^\s])([MmZzLlHhVvCcSsQqTtAa])/gm,"$1 $2"),c=c.replace(/([0-9])([+\-])/gm,"$1 $2"),c=c.replace(/(\.[0-9]*)(\.)/gm,"$1 $2"),c=c.replace(/([Aa](\s+[0-9]+){3})\s+([01])\s*([01])/gm,"$1 $3 $4 "),c=a.compressSpaces(c),c=a.trim(c),this.PathParser=new function(b){this.tokens=b.split(" "),this.reset=function(){this.i=-1,this.command="",this.previousCommand="",this.start=new a.Point(0,0),this.control=new a.Point(0,0),this.current=new a.Point(0,0),this.points=[],this.angles=[]},this.isEnd=function(){return this.i>=this.tokens.length-1},this.isCommandOrEnd=function(){return this.isEnd()?!0:null!=this.tokens[this.i+1].match(/^[A-Za-z]$/)},this.isRelativeCommand=function(){return this.command==this.command.toLowerCase()},this.getToken=function(){return this.i=this.i+1,this.tokens[this.i]},this.getScalar=function(){return parseFloat(this.getToken())},this.nextCommand=function(){this.previousCommand=this.command,this.command=this.getToken()},this.getPoint=function(){var b=new a.Point(this.getScalar(),this.getScalar());return this.makeAbsolute(b)},this.getAsControlPoint=function(){var a=this.getPoint();return this.control=a,a},this.getAsCurrentPoint=function(){var a=this.getPoint();return this.current=a,a},this.getReflectedControlPoint=function(){if("c"!=this.previousCommand.toLowerCase()&&"s"!=this.previousCommand.toLowerCase())return this.current;var b=new a.Point(2*this.current.x-this.control.x,2*this.current.y-this.control.y);return b},this.makeAbsolute=function(a){return this.isRelativeCommand()&&(a.x=this.current.x+a.x,a.y=this.current.y+a.y),a},this.addMarker=function(a,b,c){null!=c&&this.angles.length>0&&null==this.angles[this.angles.length-1]&&(this.angles[this.angles.length-1]=this.points[this.points.length-1].angleTo(c)),this.addMarkerAngle(a,null==b?null:b.angleTo(a))},this.addMarkerAngle=function(a,b){this.points.push(a),this.angles.push(b)},this.getMarkerPoints=function(){return this.points},this.getMarkerAngles=function(){for(var a=0;a<this.angles.length;a++)if(null==this.angles[a])for(var b=a+1;b<this.angles.length;b++)if(null!=this.angles[b]){this.angles[a]=this.angles[b];break}return this.angles}}(c),this.path=function(b){var c=this.PathParser;c.reset();var d=new a.BoundingBox;for(null!=b&&b.beginPath();!c.isEnd();)switch(c.nextCommand(),c.command.toUpperCase()){case"M":var e=c.getAsCurrentPoint();for(c.addMarker(e),d.addPoint(e.x,e.y),null!=b&&b.moveTo(e.x,e.y),c.start=c.current;!c.isCommandOrEnd();){var e=c.getAsCurrentPoint();c.addMarker(e,c.start),d.addPoint(e.x,e.y),null!=b&&b.lineTo(e.x,e.y)}break;case"L":for(;!c.isCommandOrEnd();){var f=c.current,e=c.getAsCurrentPoint();c.addMarker(e,f),d.addPoint(e.x,e.y),null!=b&&b.lineTo(e.x,e.y)}break;case"H":for(;!c.isCommandOrEnd();){var g=new a.Point((c.isRelativeCommand()?c.current.x:0)+c.getScalar(),c.current.y);c.addMarker(g,c.current),c.current=g,d.addPoint(c.current.x,c.current.y),null!=b&&b.lineTo(c.current.x,c.current.y)}break;case"V":for(;!c.isCommandOrEnd();){var g=new a.Point(c.current.x,(c.isRelativeCommand()?c.current.y:0)+c.getScalar());c.addMarker(g,c.current),c.current=g,d.addPoint(c.current.x,c.current.y),null!=b&&b.lineTo(c.current.x,c.current.y)}break;case"C":for(;!c.isCommandOrEnd();){var h=c.current,i=c.getPoint(),j=c.getAsControlPoint(),k=c.getAsCurrentPoint();c.addMarker(k,j,i),d.addBezierCurve(h.x,h.y,i.x,i.y,j.x,j.y,k.x,k.y),null!=b&&b.bezierCurveTo(i.x,i.y,j.x,j.y,k.x,k.y)}break;case"S":for(;!c.isCommandOrEnd();){var h=c.current,i=c.getReflectedControlPoint(),j=c.getAsControlPoint(),k=c.getAsCurrentPoint();c.addMarker(k,j,i),d.addBezierCurve(h.x,h.y,i.x,i.y,j.x,j.y,k.x,k.y),null!=b&&b.bezierCurveTo(i.x,i.y,j.x,j.y,k.x,k.y)}break;case"Q":for(;!c.isCommandOrEnd();){var h=c.current,j=c.getAsControlPoint(),k=c.getAsCurrentPoint();c.addMarker(k,j,j),d.addQuadraticCurve(h.x,h.y,j.x,j.y,k.x,k.y),null!=b&&b.quadraticCurveTo(j.x,j.y,k.x,k.y)}break;case"T":for(;!c.isCommandOrEnd();){var h=c.current,j=c.getReflectedControlPoint();c.control=j;var k=c.getAsCurrentPoint();c.addMarker(k,j,j),d.addQuadraticCurve(h.x,h.y,j.x,j.y,k.x,k.y),null!=b&&b.quadraticCurveTo(j.x,j.y,k.x,k.y)}break;case"A":for(;!c.isCommandOrEnd();){var h=c.current,l=c.getScalar(),m=c.getScalar(),n=c.getScalar()*(Math.PI/180),o=c.getScalar(),p=c.getScalar(),k=c.getAsCurrentPoint(),q=new a.Point(Math.cos(n)*(h.x-k.x)/2+Math.sin(n)*(h.y-k.y)/2,-Math.sin(n)*(h.x-k.x)/2+Math.cos(n)*(h.y-k.y)/2),r=Math.pow(q.x,2)/Math.pow(l,2)+Math.pow(q.y,2)/Math.pow(m,2);r>1&&(l*=Math.sqrt(r),m*=Math.sqrt(r));var s=(o==p?-1:1)*Math.sqrt((Math.pow(l,2)*Math.pow(m,2)-Math.pow(l,2)*Math.pow(q.y,2)-Math.pow(m,2)*Math.pow(q.x,2))/(Math.pow(l,2)*Math.pow(q.y,2)+Math.pow(m,2)*Math.pow(q.x,2)));isNaN(s)&&(s=0);var t=new a.Point(s*l*q.y/m,s*-m*q.x/l),u=new a.Point((h.x+k.x)/2+Math.cos(n)*t.x-Math.sin(n)*t.y,(h.y+k.y)/2+Math.sin(n)*t.x+Math.cos(n)*t.y),v=function(a){return Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2))},w=function(a,b){return(a[0]*b[0]+a[1]*b[1])/(v(a)*v(b))},x=function(a,b){return(a[0]*b[1]<a[1]*b[0]?-1:1)*Math.acos(w(a,b))},y=x([1,0],[(q.x-t.x)/l,(q.y-t.y)/m]),z=[(q.x-t.x)/l,(q.y-t.y)/m],A=[(-q.x-t.x)/l,(-q.y-t.y)/m],B=x(z,A);w(z,A)<=-1&&(B=Math.PI),w(z,A)>=1&&(B=0),0==p&&B>0&&(B-=2*Math.PI),1==p&&0>B&&(B+=2*Math.PI);var C=new a.Point(u.x-l*Math.cos((y+B)/2),u.y-m*Math.sin((y+B)/2));if(c.addMarkerAngle(C,(y+B)/2+(0==p?1:-1)*Math.PI/2),c.addMarkerAngle(k,B+(0==p?1:-1)*Math.PI/2),d.addPoint(k.x,k.y),null!=b){var w=l>m?l:m,D=l>m?1:l/m,E=l>m?m/l:1;b.translate(u.x,u.y),b.rotate(n),b.scale(D,E),b.arc(0,0,w,y,y+B,1-p),b.scale(1/D,1/E),b.rotate(-n),b.translate(-u.x,-u.y)}}break;case"Z":null!=b&&b.closePath(),c.current=c.start}return d},this.getMarkers=function(){for(var a=this.PathParser.getMarkerPoints(),b=this.PathParser.getMarkerAngles(),c=[],d=0;d<a.length;d++)c.push([a[d],b[d]]);return c}},a.Element.path.prototype=new a.Element.PathElementBase,a.Element.pattern=function(b){this.base=a.Element.ElementBase,this.base(b),this.createPattern=function(b){var c=new a.Element.svg;c.attributes.viewBox=new a.Property("viewBox",this.attribute("viewBox").value),c.attributes.x=new a.Property("x",this.attribute("x").value),c.attributes.y=new a.Property("y",this.attribute("y").value),c.attributes.width=new a.Property("width",this.attribute("width").value),c.attributes.height=new a.Property("height",this.attribute("height").value),c.children=this.children;var d=document.createElement("canvas");return d.width=this.attribute("width").Length.toPixels("x"),d.height=this.attribute("height").Length.toPixels("y"),c.render(d.getContext("2d")),b.createPattern(d,"repeat")}},a.Element.pattern.prototype=new a.Element.ElementBase,a.Element.marker=function(b){this.base=a.Element.ElementBase,this.base(b),this.baseRender=this.render,this.render=function(b,c,d){b.translate(c.x,c.y),"auto"==this.attribute("orient").valueOrDefault("auto")&&b.rotate(d),"strokeWidth"==this.attribute("markerUnits").valueOrDefault("strokeWidth")&&b.scale(b.lineWidth,b.lineWidth),b.save();var e=new a.Element.svg;e.attributes.viewBox=new a.Property("viewBox",this.attribute("viewBox").value),e.attributes.refX=new a.Property("refX",this.attribute("refX").value),e.attributes.refY=new a.Property("refY",this.attribute("refY").value),e.attributes.width=new a.Property("width",this.attribute("markerWidth").value),e.attributes.height=new a.Property("height",this.attribute("markerHeight").value),e.attributes.fill=new a.Property("fill",this.attribute("fill").valueOrDefault("black")),e.attributes.stroke=new a.Property("stroke",this.attribute("stroke").valueOrDefault("none")),e.children=this.children,e.render(b),b.restore(),"strokeWidth"==this.attribute("markerUnits").valueOrDefault("strokeWidth")&&b.scale(1/b.lineWidth,1/b.lineWidth),"auto"==this.attribute("orient").valueOrDefault("auto")&&b.rotate(-d),b.translate(-c.x,-c.y)}},a.Element.marker.prototype=new a.Element.ElementBase,a.Element.defs=function(b){this.base=a.Element.ElementBase,this.base(b),this.render=function(){}},a.Element.defs.prototype=new a.Element.ElementBase,a.Element.GradientBase=function(b){this.base=a.Element.ElementBase,this.base(b),this.gradientUnits=this.attribute("gradientUnits").valueOrDefault("objectBoundingBox"),this.stops=[];for(var c=0;c<this.children.length;c++){var d=this.children[c];this.stops.push(d)}this.getGradient=function(){},this.createGradient=function(b,c){var d=this;this.attribute("xlink:href").hasValue()&&(d=this.attribute("xlink:href").Definition.getDefinition());for(var e=this.getGradient(b,c),f=0;f<d.stops.length;f++)e.addColorStop(d.stops[f].offset,d.stops[f].color);if(this.attribute("gradientTransform").hasValue()){var g=a.ViewPort.viewPorts[0],h=new a.Element.rect;h.attributes.x=new a.Property("x",-a.MAX_VIRTUAL_PIXELS/3),h.attributes.y=new a.Property("y",-a.MAX_VIRTUAL_PIXELS/3),h.attributes.width=new a.Property("width",a.MAX_VIRTUAL_PIXELS),h.attributes.height=new a.Property("height",a.MAX_VIRTUAL_PIXELS);var i=new a.Element.g;i.attributes.transform=new a.Property("transform",this.attribute("gradientTransform").value),i.children=[h];var j=new a.Element.svg;j.attributes.x=new a.Property("x",0),j.attributes.y=new a.Property("y",0),j.attributes.width=new a.Property("width",g.width),j.attributes.height=new a.Property("height",g.height),j.children=[i];var k=document.createElement("canvas");k.width=g.width,k.height=g.height;var l=k.getContext("2d");return l.fillStyle=e,j.render(l),l.createPattern(k,"no-repeat")}return e}},a.Element.GradientBase.prototype=new a.Element.ElementBase,a.Element.linearGradient=function(b){this.base=a.Element.GradientBase,this.base(b),this.getGradient=function(a,b){var c=b.getBoundingBox(),d="objectBoundingBox"==this.gradientUnits?c.x()+c.width()*this.attribute("x1").numValue():this.attribute("x1").Length.toPixels("x"),e="objectBoundingBox"==this.gradientUnits?c.y()+c.height()*this.attribute("y1").numValue():this.attribute("y1").Length.toPixels("y"),f="objectBoundingBox"==this.gradientUnits?c.x()+c.width()*this.attribute("x2").numValue():this.attribute("x2").Length.toPixels("x"),g="objectBoundingBox"==this.gradientUnits?c.y()+c.height()*this.attribute("y2").numValue():this.attribute("y2").Length.toPixels("y");return a.createLinearGradient(d,e,f,g)}},a.Element.linearGradient.prototype=new a.Element.GradientBase,a.Element.radialGradient=function(b){this.base=a.Element.GradientBase,this.base(b),this.getGradient=function(a,b){var c=b.getBoundingBox(),d="objectBoundingBox"==this.gradientUnits?c.x()+c.width()*this.attribute("cx").numValue():this.attribute("cx").Length.toPixels("x"),e="objectBoundingBox"==this.gradientUnits?c.y()+c.height()*this.attribute("cy").numValue():this.attribute("cy").Length.toPixels("y"),f=d,g=e;this.attribute("fx").hasValue()&&(f="objectBoundingBox"==this.gradientUnits?c.x()+c.width()*this.attribute("fx").numValue():this.attribute("fx").Length.toPixels("x")),this.attribute("fy").hasValue()&&(g="objectBoundingBox"==this.gradientUnits?c.y()+c.height()*this.attribute("fy").numValue():this.attribute("fy").Length.toPixels("y"));var h="objectBoundingBox"==this.gradientUnits?(c.width()+c.height())/2*this.attribute("r").numValue():this.attribute("r").Length.toPixels();return a.createRadialGradient(f,g,0,d,e,h)}},a.Element.radialGradient.prototype=new a.Element.GradientBase,a.Element.stop=function(b){this.base=a.Element.ElementBase,this.base(b),this.offset=this.attribute("offset").numValue();var c=this.style("stop-color");this.style("stop-opacity").hasValue()&&(c=c.Color.addOpacity(this.style("stop-opacity").value)),this.color=c.value},a.Element.stop.prototype=new a.Element.ElementBase,a.Element.AnimateBase=function(b){this.base=a.Element.ElementBase,this.base(b),a.Animations.push(this),this.duration=0,this.begin=this.attribute("begin").Time.toMilliseconds(),this.maxDuration=this.begin+this.attribute("dur").Time.toMilliseconds(),this.getProperty=function(){var a=this.attribute("attributeType").value,b=this.attribute("attributeName").value;
-return"CSS"==a?this.parent.style(b,!0):this.parent.attribute(b,!0)},this.initialValue=null,this.removed=!1,this.calcValue=function(){return""},this.update=function(a){if(null==this.initialValue&&(this.initialValue=this.getProperty().value),this.duration>this.maxDuration){if("indefinite"!=this.attribute("repeatCount").value)return"remove"!=this.attribute("fill").valueOrDefault("remove")||this.removed?!1:(this.removed=!0,this.getProperty().value=this.initialValue,!0);this.duration=0}this.duration=this.duration+a;var b=!1;if(this.begin<this.duration){var c=this.calcValue();if(this.attribute("type").hasValue()){var d=this.attribute("type").value;c=d+"("+c+")"}this.getProperty().value=c,b=!0}return b},this.progress=function(){return(this.duration-this.begin)/(this.maxDuration-this.begin)}},a.Element.AnimateBase.prototype=new a.Element.ElementBase,a.Element.animate=function(b){this.base=a.Element.AnimateBase,this.base(b),this.calcValue=function(){var a=this.attribute("from").numValue(),b=this.attribute("to").numValue();return a+(b-a)*this.progress()}},a.Element.animate.prototype=new a.Element.AnimateBase,a.Element.animateColor=function(b){this.base=a.Element.AnimateBase,this.base(b),this.calcValue=function(){var a=new RGBColor(this.attribute("from").value),b=new RGBColor(this.attribute("to").value);if(a.ok&&b.ok){var c=a.r+(b.r-a.r)*this.progress(),d=a.g+(b.g-a.g)*this.progress(),e=a.b+(b.b-a.b)*this.progress();return"rgb("+parseInt(c,10)+","+parseInt(d,10)+","+parseInt(e,10)+")"}return this.attribute("from").value}},a.Element.animateColor.prototype=new a.Element.AnimateBase,a.Element.animateTransform=function(b){this.base=a.Element.animate,this.base(b)},a.Element.animateTransform.prototype=new a.Element.animate,a.Element.font=function(b){this.base=a.Element.ElementBase,this.base(b),this.horizAdvX=this.attribute("horiz-adv-x").numValue(),this.isRTL=!1,this.isArabic=!1,this.fontFace=null,this.missingGlyph=null,this.glyphs=[];for(var c=0;c<this.children.length;c++){var d=this.children[c];"font-face"==d.type?(this.fontFace=d,d.style("font-family").hasValue()&&(a.Definitions[d.style("font-family").value]=this)):"missing-glyph"==d.type?this.missingGlyph=d:"glyph"==d.type&&(""!=d.arabicForm?(this.isRTL=!0,this.isArabic=!0,"undefined"==typeof this.glyphs[d.unicode]&&(this.glyphs[d.unicode]=[]),this.glyphs[d.unicode][d.arabicForm]=d):this.glyphs[d.unicode]=d)}},a.Element.font.prototype=new a.Element.ElementBase,a.Element.fontface=function(b){this.base=a.Element.ElementBase,this.base(b),this.ascent=this.attribute("ascent").value,this.descent=this.attribute("descent").value,this.unitsPerEm=this.attribute("units-per-em").numValue()},a.Element.fontface.prototype=new a.Element.ElementBase,a.Element.missingglyph=function(b){this.base=a.Element.path,this.base(b),this.horizAdvX=0},a.Element.missingglyph.prototype=new a.Element.path,a.Element.glyph=function(b){this.base=a.Element.path,this.base(b),this.horizAdvX=this.attribute("horiz-adv-x").numValue(),this.unicode=this.attribute("unicode").value,this.arabicForm=this.attribute("arabic-form").value},a.Element.glyph.prototype=new a.Element.path,a.Element.text=function(b){if(this.base=a.Element.RenderedElementBase,this.base(b),null!=b){this.children=[];for(var c=0;c<b.childNodes.length;c++){var d=b.childNodes[c];1==d.nodeType?this.addChild(d,!0):3==d.nodeType&&this.addChild(new a.Element.tspan(d),!1)}}this.baseSetContext=this.setContext,this.setContext=function(a){this.baseSetContext(a),this.style("dominant-baseline").hasValue()&&(a.textBaseline=this.style("dominant-baseline").value),this.style("alignment-baseline").hasValue()&&(a.textBaseline=this.style("alignment-baseline").value)},this.renderChildren=function(a){for(var b=this.style("text-anchor").valueOrDefault("start"),c=this.attribute("x").Length.toPixels("x"),d=this.attribute("y").Length.toPixels("y"),e=0;e<this.children.length;e++){var f=this.children[e];f.attribute("x").hasValue()?f.x=f.attribute("x").Length.toPixels("x"):(f.attribute("dx").hasValue()&&(c+=f.attribute("dx").Length.toPixels("x")),f.x=c);var g=f.measureText(a);if("start"!=b&&(0==e||f.attribute("x").hasValue())){for(var h=g,i=e+1;i<this.children.length;i++){var j=this.children[i];if(j.attribute("x").hasValue())break;h+=j.measureText(a)}f.x-="end"==b?h:h/2}c=f.x+g,f.attribute("y").hasValue()?f.y=f.attribute("y").Length.toPixels("y"):(f.attribute("dy").hasValue()&&(d+=f.attribute("dy").Length.toPixels("y")),f.y=d),d=f.y,f.render(a)}}},a.Element.text.prototype=new a.Element.RenderedElementBase,a.Element.TextElementBase=function(b){this.base=a.Element.RenderedElementBase,this.base(b),this.getGlyph=function(a,b,c){var d=b[c],e=null;if(a.isArabic){var f="isolated";(0==c||" "==b[c-1])&&c<b.length-2&&" "!=b[c+1]&&(f="terminal"),c>0&&" "!=b[c-1]&&c<b.length-2&&" "!=b[c+1]&&(f="medial"),c>0&&" "!=b[c-1]&&(c==b.length-1||" "==b[c+1])&&(f="initial"),"undefined"!=typeof a.glyphs[d]&&(e=a.glyphs[d][f],null==e&&"glyph"==a.glyphs[d].type&&(e=a.glyphs[d]))}else e=a.glyphs[d];return null==e&&(e=a.missingGlyph),e},this.renderChildren=function(b){var c=this.parent.style("font-family").Definition.getDefinition();if(null==c)""!=b.strokeStyle&&b.strokeText(a.compressSpaces(this.getText()),this.x,this.y),""!=b.fillStyle&&b.fillText(a.compressSpaces(this.getText()),this.x,this.y);else{var d=this.parent.style("font-size").numValueOrDefault(a.Font.Parse(a.ctx.font).fontSize),e=this.parent.style("font-style").valueOrDefault(a.Font.Parse(a.ctx.font).fontStyle),f=this.getText();c.isRTL&&(f=f.split("").reverse().join(""));for(var g=a.ToNumberArray(this.parent.attribute("dx").value),h=0;h<f.length;h++){var i=this.getGlyph(c,f,h),j=d/c.fontFace.unitsPerEm;b.translate(this.x,this.y),b.scale(j,-j);var k=b.lineWidth;b.lineWidth=b.lineWidth*c.fontFace.unitsPerEm/d,"italic"==e&&b.transform(1,0,.4,1,0,0),i.render(b),"italic"==e&&b.transform(1,0,-.4,1,0,0),b.lineWidth=k,b.scale(1/j,-1/j),b.translate(-this.x,-this.y),this.x+=d*(i.horizAdvX||c.horizAdvX)/c.fontFace.unitsPerEm,"undefined"==typeof g[h]||isNaN(g[h])||(this.x+=g[h])}}},this.getText=function(){},this.measureText=function(b){var c=this.parent.style("font-family").Definition.getDefinition();if(null!=c){var d=this.parent.style("font-size").numValueOrDefault(a.Font.Parse(a.ctx.font).fontSize),e=0,f=this.getText();c.isRTL&&(f=f.split("").reverse().join(""));for(var g=a.ToNumberArray(this.parent.attribute("dx").value),h=0;h<f.length;h++){var i=this.getGlyph(c,f,h);e+=(i.horizAdvX||c.horizAdvX)*d/c.fontFace.unitsPerEm,"undefined"==typeof g[h]||isNaN(g[h])||(e+=g[h])}return e}var j=a.compressSpaces(this.getText());if(!b.measureText)return 10*j.length;b.save(),this.setContext(b);var k=b.measureText(j).width;return b.restore(),k}},a.Element.TextElementBase.prototype=new a.Element.RenderedElementBase,a.Element.tspan=function(b){this.base=a.Element.TextElementBase,this.base(b),this.text=3==b.nodeType?b.nodeValue:b.childNodes.length>0?b.childNodes[0].nodeValue:b.text,this.getText=function(){return this.text}},a.Element.tspan.prototype=new a.Element.TextElementBase,a.Element.tref=function(b){this.base=a.Element.TextElementBase,this.base(b),this.getText=function(){var a=this.attribute("xlink:href").Definition.getDefinition();return null!=a?a.children[0].getText():void 0}},a.Element.tref.prototype=new a.Element.TextElementBase,a.Element.a=function(b){this.base=a.Element.TextElementBase,this.base(b),this.hasText=!0;for(var c=0;c<b.childNodes.length;c++)3!=b.childNodes[c].nodeType&&(this.hasText=!1);this.text=this.hasText?b.childNodes[0].nodeValue:"",this.getText=function(){return this.text},this.baseRenderChildren=this.renderChildren,this.renderChildren=function(b){if(this.hasText){this.baseRenderChildren(b);var c=new a.Property("fontSize",a.Font.Parse(a.ctx.font).fontSize);a.Mouse.checkBoundingBox(this,new a.BoundingBox(this.x,this.y-c.Length.toPixels("y"),this.x+this.measureText(b),this.y))}else{var d=new a.Element.g;d.children=this.children,d.parent=this,d.render(b)}},this.onclick=function(){window.open(this.attribute("xlink:href").value)},this.onmousemove=function(){a.ctx.canvas.style.cursor="pointer"}},a.Element.a.prototype=new a.Element.TextElementBase,a.Element.image=function(b){this.base=a.Element.RenderedElementBase,this.base(b),a.Images.push(this),this.img=document.createElement("img"),this.loaded=!1;var c=this;this.img.onload=function(){c.loaded=!0},this.img.src=this.attribute("xlink:href").value,this.renderChildren=function(b){var c=this.attribute("x").Length.toPixels("x"),d=this.attribute("y").Length.toPixels("y"),e=this.attribute("width").Length.toPixels("x"),f=this.attribute("height").Length.toPixels("y");0!=e&&0!=f&&(b.save(),b.translate(c,d),a.AspectRatio(b,this.attribute("preserveAspectRatio").value,e,this.img.width,f,this.img.height,0,0),b.drawImage(this.img,0,0),b.restore())}},a.Element.image.prototype=new a.Element.RenderedElementBase,a.Element.g=function(b){this.base=a.Element.RenderedElementBase,this.base(b),this.getBoundingBox=function(){for(var b=new a.BoundingBox,c=0;c<this.children.length;c++)b.addBoundingBox(this.children[c].getBoundingBox());return b}},a.Element.g.prototype=new a.Element.RenderedElementBase,a.Element.symbol=function(b){this.base=a.Element.RenderedElementBase,this.base(b),this.baseSetContext=this.setContext,this.setContext=function(b){if(this.baseSetContext(b),this.attribute("viewBox").hasValue()){var c=a.ToNumberArray(this.attribute("viewBox").value),d=c[0],e=c[1];width=c[2],height=c[3],a.AspectRatio(b,this.attribute("preserveAspectRatio").value,this.attribute("width").Length.toPixels("x"),width,this.attribute("height").Length.toPixels("y"),height,d,e),a.ViewPort.SetCurrent(c[2],c[3])}}},a.Element.symbol.prototype=new a.Element.RenderedElementBase,a.Element.style=function(b){this.base=a.Element.ElementBase,this.base(b);var c=b.childNodes[0].nodeValue+(b.childNodes.length>1?b.childNodes[1].nodeValue:"");c=c.replace(/(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(^[\s]*\/\/.*)/gm,""),c=a.compressSpaces(c);for(var d=c.split("}"),e=0;e<d.length;e++)if(""!=a.trim(d[e]))for(var f=d[e].split("{"),g=f[0].split(","),h=f[1].split(";"),i=0;i<g.length;i++){var j=a.trim(g[i]);if(""!=j){for(var k={},l=0;l<h.length;l++){var m=h[l].indexOf(":"),n=h[l].substr(0,m),o=h[l].substr(m+1,h[l].length-m);null!=n&&null!=o&&(k[a.trim(n)]=new a.Property(a.trim(n),a.trim(o)))}if(a.Styles[j]=k,"@font-face"==j)for(var p=k["font-family"].value.replace(/"/g,""),q=k.src.value.split(","),r=0;r<q.length;r++)if(q[r].indexOf('format("svg")')>0)for(var s=q[r].indexOf("url"),t=q[r].indexOf(")",s),u=q[r].substr(s+5,t-s-6),v=a.parseXml(a.ajax(u)),w=v.getElementsByTagName("font"),x=0;x<w.length;x++){var y=a.CreateElement(w[x]);a.Definitions[p]=y}}}},a.Element.style.prototype=new a.Element.ElementBase,a.Element.use=function(b){this.base=a.Element.RenderedElementBase,this.base(b),this.baseSetContext=this.setContext,this.setContext=function(a){this.baseSetContext(a),this.attribute("x").hasValue()&&a.translate(this.attribute("x").Length.toPixels("x"),0),this.attribute("y").hasValue()&&a.translate(0,this.attribute("y").Length.toPixels("y"))},this.getDefinition=function(){var a=this.attribute("xlink:href").Definition.getDefinition();return this.attribute("width").hasValue()&&(a.attribute("width",!0).value=this.attribute("width").value),this.attribute("height").hasValue()&&(a.attribute("height",!0).value=this.attribute("height").value),a},this.path=function(a){var b=this.getDefinition();null!=b&&b.path(a)},this.renderChildren=function(a){var b=this.getDefinition();null!=b&&b.render(a)}},a.Element.use.prototype=new a.Element.RenderedElementBase,a.Element.mask=function(b){this.base=a.Element.ElementBase,this.base(b),this.apply=function(a,b){var c=this.attribute("x").Length.toPixels("x"),d=this.attribute("y").Length.toPixels("y"),e=this.attribute("width").Length.toPixels("x"),f=this.attribute("height").Length.toPixels("y"),g=b.attribute("mask").value;b.attribute("mask").value="";var h=document.createElement("canvas");h.width=c+e,h.height=d+f;var i=h.getContext("2d");this.renderChildren(i);var j=document.createElement("canvas");j.width=c+e,j.height=d+f;var k=j.getContext("2d");b.render(k),k.globalCompositeOperation="destination-in",k.fillStyle=i.createPattern(h,"no-repeat"),k.fillRect(0,0,c+e,d+f),a.fillStyle=k.createPattern(j,"no-repeat"),a.fillRect(0,0,c+e,d+f),b.attribute("mask").value=g},this.render=function(){}},a.Element.mask.prototype=new a.Element.ElementBase,a.Element.clipPath=function(b){this.base=a.Element.ElementBase,this.base(b),this.apply=function(a){for(var b=0;b<this.children.length;b++)this.children[b].path&&(this.children[b].path(a),a.clip())},this.render=function(){}},a.Element.clipPath.prototype=new a.Element.ElementBase,a.Element.filter=function(b){this.base=a.Element.ElementBase,this.base(b),this.apply=function(a,b){var c=b.getBoundingBox(),d=this.attribute("x").Length.toPixels("x"),e=this.attribute("y").Length.toPixels("y");(0==d||0==e)&&(d=c.x1,e=c.y1);var f=this.attribute("width").Length.toPixels("x"),g=this.attribute("height").Length.toPixels("y");(0==f||0==g)&&(f=c.width(),g=c.height());var h=b.style("filter").value;b.style("filter").value="";var i=.2,j=i*f,k=i*g,l=document.createElement("canvas");l.width=f+2*j,l.height=g+2*k;var m=l.getContext("2d");m.translate(-d+j,-e+k),b.render(m);for(var n=0;n<this.children.length;n++)this.children[n].apply(m,0,0,f+2*j,g+2*k);a.drawImage(l,0,0,f+2*j,g+2*k,d-j,e-k,f+2*j,g+2*k),b.style("filter",!0).value=h},this.render=function(){}},a.Element.filter.prototype=new a.Element.ElementBase,a.Element.feGaussianBlur=function(b){function c(a){a=Math.max(a,.01);var b=Math.ceil(4*a)+1;mask=[];for(var c=0;b>c;c++)mask[c]=Math.exp(-.5*(c/a)*(c/a));return mask}function d(a){for(var b=0,c=1;c<a.length;c++)b+=Math.abs(a[c]);b=2*b+Math.abs(a[0]);for(var c=0;c<a.length;c++)a[c]/=b;return a}function e(a,b,c,d,e){for(var h=0;e>h;h++)for(var i=0;d>i;i++)for(var j=f(a,i,h,d,e,3)/255,k=0;4>k;k++){for(var l=c[0]*(0==j?255:f(a,i,h,d,e,k))*(0==j||3==k?1:j),m=1;m<c.length;m++){var n=f(a,Math.max(i-m,0),h,d,e,3)/255,o=f(a,Math.min(i+m,d-1),h,d,e,3)/255;l+=c[m]*((0==n?255:f(a,Math.max(i-m,0),h,d,e,k))*(0==n||3==k?1:n)+(0==o?255:f(a,Math.min(i+m,d-1),h,d,e,k))*(0==o||3==k?1:o))}g(b,h,i,e,d,k,l)}}function f(a,b,c,d,e,f){return a[c*d*4+4*b+f]}function g(a,b,c,d,e,f,g){a[c*d*4+4*b+f]=g}function h(a,b,f,g){var h=a.getImageData(0,0,b,f),i=c(g);i=d(i),tmp=[],e(h.data,tmp,i,b,f),e(tmp,h.data,i,f,b),a.clearRect(0,0,b,f),a.putImageData(h,0,0)}this.base=a.Element.ElementBase,this.base(b),this.apply=function(a,b,c,d,e){h(a,d,e,this.attribute("stdDeviation").numValue())}},a.Element.filter.prototype=new a.Element.feGaussianBlur,a.Element.title=function(){},a.Element.title.prototype=new a.Element.ElementBase,a.Element.desc=function(){},a.Element.desc.prototype=new a.Element.ElementBase,a.Element.MISSING=function(a){console.log("ERROR: Element '"+a.nodeName+"' not yet implemented.")},a.Element.MISSING.prototype=new a.Element.ElementBase,a.CreateElement=function(b){var c=b.nodeName.replace(/^[^:]+:/,"");c=c.replace(/\-/g,"");var d=null;return d="undefined"!=typeof a.Element[c]?new a.Element[c](b):new a.Element.MISSING(b),d.type=b.nodeName,d},a.load=function(b,c){a.loadXml(b,a.ajax(c))},a.loadXml=function(b,c){a.loadXmlDoc(b,a.parseXml(c))},a.loadXmlDoc=function(b,c){a.init(b);var d=function(a){for(var c=b.canvas;c;)a.x-=c.offsetLeft,a.y-=c.offsetTop,c=c.offsetParent;return window.scrollX&&(a.x+=window.scrollX),window.scrollY&&(a.y+=window.scrollY),a};1!=a.opts.ignoreMouse&&(b.canvas.onclick=function(b){var c=d(new a.Point(null!=b?b.clientX:event.clientX,null!=b?b.clientY:event.clientY));a.Mouse.onclick(c.x,c.y)},b.canvas.onmousemove=function(b){var c=d(new a.Point(null!=b?b.clientX:event.clientX,null!=b?b.clientY:event.clientY));a.Mouse.onmousemove(c.x,c.y)});var e=a.CreateElement(c.documentElement);e.root=!0;var f=!0,g=function(){a.ViewPort.Clear(),b.canvas.parentNode&&a.ViewPort.SetCurrent(b.canvas.parentNode.clientWidth,b.canvas.parentNode.clientHeight),1!=a.opts.ignoreDimensions&&(e.style("width").hasValue()&&(b.canvas.width=e.style("width").Length.toPixels("x"),b.canvas.style.width=b.canvas.width+"px"),e.style("height").hasValue()&&(b.canvas.height=e.style("height").Length.toPixels("y"),b.canvas.style.height=b.canvas.height+"px"));var c=b.canvas.clientWidth||b.canvas.width,d=b.canvas.clientHeight||b.canvas.height;if(a.ViewPort.SetCurrent(c,d),null!=a.opts&&null!=a.opts.offsetX&&(e.attribute("x",!0).value=a.opts.offsetX),null!=a.opts&&null!=a.opts.offsetY&&(e.attribute("y",!0).value=a.opts.offsetY),null!=a.opts&&null!=a.opts.scaleWidth&&null!=a.opts.scaleHeight){var g=1,h=1;e.attribute("width").hasValue()&&(g=e.attribute("width").Length.toPixels("x")/a.opts.scaleWidth),e.attribute("height").hasValue()&&(h=e.attribute("height").Length.toPixels("y")/a.opts.scaleHeight),e.attribute("width",!0).value=a.opts.scaleWidth,e.attribute("height",!0).value=a.opts.scaleHeight,e.attribute("viewBox",!0).value="0 0 "+c*g+" "+d*h,e.attribute("preserveAspectRatio",!0).value="none"}1!=a.opts.ignoreClear&&b.clearRect(0,0,c,d),e.render(b),f&&(f=!1,null!=a.opts&&"function"==typeof a.opts.renderCallback&&a.opts.renderCallback())},h=!0;a.ImagesLoaded()&&(h=!1,g()),a.intervalID=setInterval(function(){var b=!1;if(h&&a.ImagesLoaded()&&(h=!1,b=!0),1!=a.opts.ignoreMouse&&(b|=a.Mouse.hasEvents()),1!=a.opts.ignoreAnimation)for(var c=0;c<a.Animations.length;c++)b|=a.Animations[c].update(1e3/a.FRAMERATE);null!=a.opts&&"function"==typeof a.opts.forceRedraw&&1==a.opts.forceRedraw()&&(b=!0),b&&(g(),a.Mouse.runEvents())},1e3/a.FRAMERATE)},a.stop=function(){a.intervalID&&clearInterval(a.intervalID)},a.Mouse=new function(){this.events=[],this.hasEvents=function(){return 0!=this.events.length},this.onclick=function(a,b){this.events.push({type:"onclick",x:a,y:b,run:function(a){a.onclick&&a.onclick()}})},this.onmousemove=function(a,b){this.events.push({type:"onmousemove",x:a,y:b,run:function(a){a.onmousemove&&a.onmousemove()}})},this.eventElements=[],this.checkPath=function(a,b){for(var c=0;c<this.events.length;c++){var d=this.events[c];b.isPointInPath&&b.isPointInPath(d.x,d.y)&&(this.eventElements[c]=a)}},this.checkBoundingBox=function(a,b){for(var c=0;c<this.events.length;c++){var d=this.events[c];b.isPointInBox(d.x,d.y)&&(this.eventElements[c]=a)}},this.runEvents=function(){a.ctx.canvas.style.cursor="";for(var b=0;b<this.events.length;b++)for(var c=this.events[b],d=this.eventElements[b];d;)c.run(d),d=d.parent;this.events=[],this.eventElements=[]}},a}this.canvg=function(b,c,d){if(null!=b||null!=c||null!=d){d=d||{},"string"==typeof b&&(b=document.getElementById(b));var e;null==b.svg?(e=a(),b.svg=e):(e=b.svg,e.stop()),e.opts=d;var f=b.getContext("2d");"undefined"!=typeof c.documentElement?e.loadXmlDoc(f,c):"<"==c.substr(0,1)?e.loadXml(f,c):e.load(f,c)}else for(var g=document.getElementsByTagName("svg"),h=0;h<g.length;h++){var i=g[h],j=document.createElement("canvas");j.width=i.clientWidth,j.height=i.clientHeight,i.parentNode.insertBefore(j,i),i.parentNode.removeChild(i);var k=document.createElement("div");k.appendChild(i),canvg(j,k.innerHTML)}}}(),CanvasRenderingContext2D&&(CanvasRenderingContext2D.prototype.drawSvg=function(a,b,c,d,e){canvg(this.canvas,a,{ignoreMouse:!0,ignoreAnimation:!0,ignoreDimensions:!0,ignoreClear:!0,offsetX:b,offsetY:c,scaleWidth:d,scaleHeight:e})});
+/*
+ * canvg.js - Javascript SVG parser and renderer on Canvas
+ * MIT Licensed
+ * Gabe Lerner (gabelerner@gmail.com)
+ * http://code.google.com/p/canvg/
+ *
+ * Requires: rgbcolor.js - http://www.phpied.com/rgb-color-parser-in-javascript/
+ */
+if(!window.console) {
+	window.console = {};
+	window.console.log = function(str) {};
+	window.console.dir = function(str) {};
+}
+
+if(!Array.prototype.indexOf){
+	Array.prototype.indexOf = function(obj){
+		for(var i=0; i<this.length; i++){
+			if(this[i]==obj){
+				return i;
+			}
+		}
+		return -1;
+	}
+}
+
+(function(){
+	// canvg(target, s)
+	// empty parameters: replace all 'svg' elements on page with 'canvas' elements
+	// target: canvas element or the id of a canvas element
+	// s: svg string, url to svg file, or xml document
+	// opts: optional hash of options
+	//		 ignoreMouse: true => ignore mouse events
+	//		 ignoreAnimation: true => ignore animations
+	//		 ignoreDimensions: true => does not try to resize canvas
+	//		 ignoreClear: true => does not clear canvas
+	//		 offsetX: int => draws at a x offset
+	//		 offsetY: int => draws at a y offset
+	//		 scaleWidth: int => scales horizontally to width
+	//		 scaleHeight: int => scales vertically to height
+	//		 renderCallback: function => will call the function after the first render is completed
+	//		 forceRedraw: function => will call the function on every frame, if it returns true, will redraw
+	this.canvg = function (target, s, opts) {
+		// no parameters
+		if (target == null && s == null && opts == null) {
+			var svgTags = document.getElementsByTagName('svg');
+			for (var i=0; i<svgTags.length; i++) {
+				var svgTag = svgTags[i];
+				var c = document.createElement('canvas');
+				c.width = svgTag.clientWidth;
+				c.height = svgTag.clientHeight;
+				svgTag.parentNode.insertBefore(c, svgTag);
+				svgTag.parentNode.removeChild(svgTag);
+				var div = document.createElement('div');
+				div.appendChild(svgTag);
+				canvg(c, div.innerHTML);
+			}
+			return;
+		}
+		opts = opts || {};
+
+		if (typeof target == 'string') {
+			target = document.getElementById(target);
+		}
+
+		// reuse class per canvas
+		var svg;
+		if (target.svg == null) {
+			svg = build();
+			target.svg = svg;
+		}
+		else {
+			svg = target.svg;
+			svg.stop();
+		}
+		svg.opts = opts;
+
+		var ctx = target.getContext('2d');
+		if (typeof(s.documentElement) != 'undefined') {
+			// load from xml doc
+			svg.loadXmlDoc(ctx, s);
+		}
+		else if (s.substr(0,1) == '<') {
+			// load from xml string
+			svg.loadXml(ctx, s);
+		}
+		else {
+			// load from url
+			svg.load(ctx, s);
+		}
+	}
+
+	function build() {
+		var svg = { };
+
+		svg.FRAMERATE = 30;
+		svg.MAX_VIRTUAL_PIXELS = 30000;
+
+		// globals
+		svg.init = function(ctx) {
+			svg.Definitions = {};
+			svg.Styles = {};
+			svg.Animations = [];
+			svg.Images = [];
+			svg.ctx = ctx;
+			svg.ViewPort = new (function () {
+				this.viewPorts = [];
+				this.Clear = function() { this.viewPorts = []; }
+				this.SetCurrent = function(width, height) { this.viewPorts.push({ width: width, height: height }); }
+				this.RemoveCurrent = function() { this.viewPorts.pop(); }
+				this.Current = function() { return this.viewPorts[this.viewPorts.length - 1]; }
+				this.width = function() { return this.Current().width; }
+				this.height = function() { return this.Current().height; }
+				this.ComputeSize = function(d) {
+					if (d != null && typeof(d) == 'number') return d;
+					if (d == 'x') return this.width();
+					if (d == 'y') return this.height();
+					return Math.sqrt(Math.pow(this.width(), 2) + Math.pow(this.height(), 2)) / Math.sqrt(2);
+				}
+			});
+		}
+		svg.init();
+
+		// images loaded
+		svg.ImagesLoaded = function() {
+			for (var i=0; i<svg.Images.length; i++) {
+				if (!svg.Images[i].loaded) return false;
+			}
+			return true;
+		}
+
+		// trim
+		svg.trim = function(s) { return s.replace(/^\s+|\s+$/g, ''); }
+
+		// compress spaces
+		svg.compressSpaces = function(s) { return s.replace(/[\s\r\t\n]+/gm,' '); }
+
+		// ajax
+		svg.ajax = function(url) {
+			var AJAX;
+			if(window.XMLHttpRequest){AJAX=new XMLHttpRequest();}
+			else{AJAX=new ActiveXObject('Microsoft.XMLHTTP');}
+			if(AJAX){
+			   AJAX.open('GET',url,false);
+			   AJAX.send(null);
+			   return AJAX.responseText;
+			}
+			return null;
+		}
+
+		// parse xml
+		svg.parseXml = function(xml) {
+			if (window.DOMParser)
+			{
+				var parser = new DOMParser();
+				return parser.parseFromString(xml, 'text/xml');
+			}
+			else
+			{
+				xml = xml.replace(/<!DOCTYPE svg[^>]*>/, '');
+				var xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
+				xmlDoc.async = 'false';
+				xmlDoc.loadXML(xml);
+				return xmlDoc;
+			}
+		}
+
+		svg.Property = function(name, value) {
+			this.name = name;
+			this.value = value;
+
+			this.hasValue = function() {
+				return (this.value != null && this.value !== '');
+			}
+
+			// return the numerical value of the property
+			this.numValue = function() {
+				if (!this.hasValue()) return 0;
+
+				var n = parseFloat(this.value);
+				if ((this.value + '').match(/%$/)) {
+					n = n / 100.0;
+				}
+				return n;
+			}
+
+			this.valueOrDefault = function(def) {
+				if (this.hasValue()) return this.value;
+				return def;
+			}
+
+			this.numValueOrDefault = function(def) {
+				if (this.hasValue()) return this.numValue();
+				return def;
+			}
+
+			/* EXTENSIONS */
+			var that = this;
+
+			// color extensions
+			this.Color = {
+				// augment the current color value with the opacity
+				addOpacity: function(opacity) {
+					var newValue = that.value;
+					if (opacity != null && opacity != '') {
+						var color = new RGBColor(that.value);
+						if (color.ok) {
+							newValue = 'rgba(' + color.r + ', ' + color.g + ', ' + color.b + ', ' + opacity + ')';
+						}
+					}
+					return new svg.Property(that.name, newValue);
+				}
+			}
+
+			// definition extensions
+			this.Definition = {
+				// get the definition from the definitions table
+				getDefinition: function() {
+					var name = that.value.replace(/^(url\()?#([^\)]+)\)?$/, '$2');
+					return svg.Definitions[name];
+				},
+
+				isUrl: function() {
+					return that.value.indexOf('url(') == 0
+				},
+
+				getFillStyle: function(e) {
+					var def = this.getDefinition();
+
+					// gradient
+					if (def != null && def.createGradient) {
+						return def.createGradient(svg.ctx, e);
+					}
+
+					// pattern
+					if (def != null && def.createPattern) {
+						return def.createPattern(svg.ctx, e);
+					}
+
+					return null;
+				}
+			}
+
+			// length extensions
+			this.Length = {
+				DPI: function(viewPort) {
+					return 96.0; // TODO: compute?
+				},
+
+				EM: function(viewPort) {
+					var em = 12;
+
+					var fontSize = new svg.Property('fontSize', svg.Font.Parse(svg.ctx.font).fontSize);
+					if (fontSize.hasValue()) em = fontSize.Length.toPixels(viewPort);
+
+					return em;
+				},
+
+				// get the length as pixels
+				toPixels: function(viewPort) {
+					if (!that.hasValue()) return 0;
+					var s = that.value+'';
+					if (s.match(/em$/)) return that.numValue() * this.EM(viewPort);
+					if (s.match(/ex$/)) return that.numValue() * this.EM(viewPort) / 2.0;
+					if (s.match(/px$/)) return that.numValue();
+					if (s.match(/pt$/)) return that.numValue() * 1.25;
+					if (s.match(/pc$/)) return that.numValue() * 15;
+					if (s.match(/cm$/)) return that.numValue() * this.DPI(viewPort) / 2.54;
+					if (s.match(/mm$/)) return that.numValue() * this.DPI(viewPort) / 25.4;
+					if (s.match(/in$/)) return that.numValue() * this.DPI(viewPort);
+					if (s.match(/%$/)) return that.numValue() * svg.ViewPort.ComputeSize(viewPort);
+					return that.numValue();
+				}
+			}
+
+			// time extensions
+			this.Time = {
+				// get the time as milliseconds
+				toMilliseconds: function() {
+					if (!that.hasValue()) return 0;
+					var s = that.value+'';
+					if (s.match(/s$/)) return that.numValue() * 1000;
+					if (s.match(/ms$/)) return that.numValue();
+					return that.numValue();
+				}
+			}
+
+			// angle extensions
+			this.Angle = {
+				// get the angle as radians
+				toRadians: function() {
+					if (!that.hasValue()) return 0;
+					var s = that.value+'';
+					if (s.match(/deg$/)) return that.numValue() * (Math.PI / 180.0);
+					if (s.match(/grad$/)) return that.numValue() * (Math.PI / 200.0);
+					if (s.match(/rad$/)) return that.numValue();
+					return that.numValue() * (Math.PI / 180.0);
+				}
+			}
+		}
+
+		// fonts
+		svg.Font = new (function() {
+			this.Styles = ['normal','italic','oblique','inherit'];
+			this.Variants = ['normal','small-caps','inherit'];
+			this.Weights = ['normal','bold','bolder','lighter','100','200','300','400','500','600','700','800','900','inherit'];
+
+			this.CreateFont = function(fontStyle, fontVariant, fontWeight, fontSize, fontFamily, inherit) {
+				var f = inherit != null ? this.Parse(inherit) : this.CreateFont('', '', '', '', '', svg.ctx.font);
+				return {
+					fontFamily: fontFamily || f.fontFamily,
+					fontSize: fontSize || f.fontSize,
+					fontStyle: fontStyle || f.fontStyle,
+					fontWeight: fontWeight || f.fontWeight,
+					fontVariant: fontVariant || f.fontVariant,
+					toString: function () { return [this.fontStyle, this.fontVariant, this.fontWeight, this.fontSize, this.fontFamily].join(' ') }
+				}
+			}
+
+			var that = this;
+			this.Parse = function(s) {
+				var f = {};
+				var d = svg.trim(svg.compressSpaces(s || '')).split(' ');
+				var set = { fontSize: false, fontStyle: false, fontWeight: false, fontVariant: false }
+				var ff = '';
+				for (var i=0; i<d.length; i++) {
+					if (!set.fontStyle && that.Styles.indexOf(d[i]) != -1) { if (d[i] != 'inherit') f.fontStyle = d[i]; set.fontStyle = true; }
+					else if (!set.fontVariant && that.Variants.indexOf(d[i]) != -1) { if (d[i] != 'inherit') f.fontVariant = d[i]; set.fontStyle = set.fontVariant = true;	}
+					else if (!set.fontWeight && that.Weights.indexOf(d[i]) != -1) {	if (d[i] != 'inherit') f.fontWeight = d[i]; set.fontStyle = set.fontVariant = set.fontWeight = true; }
+					else if (!set.fontSize) { if (d[i] != 'inherit') f.fontSize = d[i].split('/')[0]; set.fontStyle = set.fontVariant = set.fontWeight = set.fontSize = true; }
+					else { if (d[i] != 'inherit') ff += d[i]; }
+				} if (ff != '') f.fontFamily = ff;
+				return f;
+			}
+		});
+
+		// points and paths
+		svg.ToNumberArray = function(s) {
+			var a = svg.trim(svg.compressSpaces((s || '').replace(/,/g, ' '))).split(' ');
+			for (var i=0; i<a.length; i++) {
+				a[i] = parseFloat(a[i]);
+			}
+			return a;
+		}
+		svg.Point = function(x, y) {
+			this.x = x;
+			this.y = y;
+
+			this.angleTo = function(p) {
+				return Math.atan2(p.y - this.y, p.x - this.x);
+			}
+
+			this.applyTransform = function(v) {
+				var xp = this.x * v[0] + this.y * v[2] + v[4];
+				var yp = this.x * v[1] + this.y * v[3] + v[5];
+				this.x = xp;
+				this.y = yp;
+			}
+		}
+		svg.CreatePoint = function(s) {
+			var a = svg.ToNumberArray(s);
+			return new svg.Point(a[0], a[1]);
+		}
+		svg.CreatePath = function(s) {
+			var a = svg.ToNumberArray(s);
+			var path = [];
+			for (var i=0; i<a.length; i+=2) {
+				path.push(new svg.Point(a[i], a[i+1]));
+			}
+			return path;
+		}
+
+		// bounding box
+		svg.BoundingBox = function(x1, y1, x2, y2) { // pass in initial points if you want
+			this.x1 = Number.NaN;
+			this.y1 = Number.NaN;
+			this.x2 = Number.NaN;
+			this.y2 = Number.NaN;
+
+			this.x = function() { return this.x1; }
+			this.y = function() { return this.y1; }
+			this.width = function() { return this.x2 - this.x1; }
+			this.height = function() { return this.y2 - this.y1; }
+
+			this.addPoint = function(x, y) {
+				if (x != null) {
+					if (isNaN(this.x1) || isNaN(this.x2)) {
+						this.x1 = x;
+						this.x2 = x;
+					}
+					if (x < this.x1) this.x1 = x;
+					if (x > this.x2) this.x2 = x;
+				}
+
+				if (y != null) {
+					if (isNaN(this.y1) || isNaN(this.y2)) {
+						this.y1 = y;
+						this.y2 = y;
+					}
+					if (y < this.y1) this.y1 = y;
+					if (y > this.y2) this.y2 = y;
+				}
+			}
+			this.addX = function(x) { this.addPoint(x, null); }
+			this.addY = function(y) { this.addPoint(null, y); }
+
+			this.addBoundingBox = function(bb) {
+				this.addPoint(bb.x1, bb.y1);
+				this.addPoint(bb.x2, bb.y2);
+			}
+
+			this.addQuadraticCurve = function(p0x, p0y, p1x, p1y, p2x, p2y) {
+				var cp1x = p0x + 2/3 * (p1x - p0x); // CP1 = QP0 + 2/3 *(QP1-QP0)
+				var cp1y = p0y + 2/3 * (p1y - p0y); // CP1 = QP0 + 2/3 *(QP1-QP0)
+				var cp2x = cp1x + 1/3 * (p2x - p0x); // CP2 = CP1 + 1/3 *(QP2-QP0)
+				var cp2y = cp1y + 1/3 * (p2y - p0y); // CP2 = CP1 + 1/3 *(QP2-QP0)
+				this.addBezierCurve(p0x, p0y, cp1x, cp2x, cp1y,	cp2y, p2x, p2y);
+			}
+
+			this.addBezierCurve = function(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y) {
+				// from http://blog.hackers-cafe.net/2009/06/how-to-calculate-bezier-curves-bounding.html
+				var p0 = [p0x, p0y], p1 = [p1x, p1y], p2 = [p2x, p2y], p3 = [p3x, p3y];
+				this.addPoint(p0[0], p0[1]);
+				this.addPoint(p3[0], p3[1]);
+
+				for (i=0; i<=1; i++) {
+					var f = function(t) {
+						return Math.pow(1-t, 3) * p0[i]
+						+ 3 * Math.pow(1-t, 2) * t * p1[i]
+						+ 3 * (1-t) * Math.pow(t, 2) * p2[i]
+						+ Math.pow(t, 3) * p3[i];
+					}
+
+					var b = 6 * p0[i] - 12 * p1[i] + 6 * p2[i];
+					var a = -3 * p0[i] + 9 * p1[i] - 9 * p2[i] + 3 * p3[i];
+					var c = 3 * p1[i] - 3 * p0[i];
+
+					if (a == 0) {
+						if (b == 0) continue;
+						var t = -c / b;
+						if (0 < t && t < 1) {
+							if (i == 0) this.addX(f(t));
+							if (i == 1) this.addY(f(t));
+						}
+						continue;
+					}
+
+					var b2ac = Math.pow(b, 2) - 4 * c * a;
+					if (b2ac < 0) continue;
+					var t1 = (-b + Math.sqrt(b2ac)) / (2 * a);
+					if (0 < t1 && t1 < 1) {
+						if (i == 0) this.addX(f(t1));
+						if (i == 1) this.addY(f(t1));
+					}
+					var t2 = (-b - Math.sqrt(b2ac)) / (2 * a);
+					if (0 < t2 && t2 < 1) {
+						if (i == 0) this.addX(f(t2));
+						if (i == 1) this.addY(f(t2));
+					}
+				}
+			}
+
+			this.isPointInBox = function(x, y) {
+				return (this.x1 <= x && x <= this.x2 && this.y1 <= y && y <= this.y2);
+			}
+
+			this.addPoint(x1, y1);
+			this.addPoint(x2, y2);
+		}
+
+		// transforms
+		svg.Transform = function(v) {
+			var that = this;
+			this.Type = {}
+
+			// translate
+			this.Type.translate = function(s) {
+				this.p = svg.CreatePoint(s);
+				this.apply = function(ctx) {
+					ctx.translate(this.p.x || 0.0, this.p.y || 0.0);
+				}
+				this.applyToPoint = function(p) {
+					p.applyTransform([1, 0, 0, 1, this.p.x || 0.0, this.p.y || 0.0]);
+				}
+			}
+
+			// rotate
+			this.Type.rotate = function(s) {
+				var a = svg.ToNumberArray(s);
+				this.angle = new svg.Property('angle', a[0]);
+				this.cx = a[1] || 0;
+				this.cy = a[2] || 0;
+				this.apply = function(ctx) {
+					ctx.translate(this.cx, this.cy);
+					ctx.rotate(this.angle.Angle.toRadians());
+					ctx.translate(-this.cx, -this.cy);
+				}
+				this.applyToPoint = function(p) {
+					var a = this.angle.Angle.toRadians();
+					p.applyTransform([1, 0, 0, 1, this.p.x || 0.0, this.p.y || 0.0]);
+					p.applyTransform([Math.cos(a), Math.sin(a), -Math.sin(a), Math.cos(a), 0, 0]);
+					p.applyTransform([1, 0, 0, 1, -this.p.x || 0.0, -this.p.y || 0.0]);
+				}
+			}
+
+			this.Type.scale = function(s) {
+				this.p = svg.CreatePoint(s);
+				this.apply = function(ctx) {
+					ctx.scale(this.p.x || 1.0, this.p.y || this.p.x || 1.0);
+				}
+				this.applyToPoint = function(p) {
+					p.applyTransform([this.p.x || 0.0, 0, 0, this.p.y || 0.0, 0, 0]);
+				}
+			}
+
+			this.Type.matrix = function(s) {
+				this.m = svg.ToNumberArray(s);
+				this.apply = function(ctx) {
+					ctx.transform(this.m[0], this.m[1], this.m[2], this.m[3], this.m[4], this.m[5]);
+				}
+				this.applyToPoint = function(p) {
+					p.applyTransform(this.m);
+				}
+			}
+
+			this.Type.SkewBase = function(s) {
+				this.base = that.Type.matrix;
+				this.base(s);
+				this.angle = new svg.Property('angle', s);
+			}
+			this.Type.SkewBase.prototype = new this.Type.matrix;
+
+			this.Type.skewX = function(s) {
+				this.base = that.Type.SkewBase;
+				this.base(s);
+				this.m = [1, 0, Math.tan(this.angle.Angle.toRadians()), 1, 0, 0];
+			}
+			this.Type.skewX.prototype = new this.Type.SkewBase;
+
+			this.Type.skewY = function(s) {
+				this.base = that.Type.SkewBase;
+				this.base(s);
+				this.m = [1, Math.tan(this.angle.Angle.toRadians()), 0, 1, 0, 0];
+			}
+			this.Type.skewY.prototype = new this.Type.SkewBase;
+
+			this.transforms = [];
+
+			this.apply = function(ctx) {
+				for (var i=0; i<this.transforms.length; i++) {
+					this.transforms[i].apply(ctx);
+				}
+			}
+
+			this.applyToPoint = function(p) {
+				for (var i=0; i<this.transforms.length; i++) {
+					this.transforms[i].applyToPoint(p);
+				}
+			}
+
+			var data = svg.trim(svg.compressSpaces(v)).split(/\s(?=[a-z])/);
+			for (var i=0; i<data.length; i++) {
+				var type = data[i].split('(')[0];
+				var s = data[i].split('(')[1].replace(')','');
+				var transform = new this.Type[type](s);
+				this.transforms.push(transform);
+			}
+		}
+
+		// aspect ratio
+		svg.AspectRatio = function(ctx, aspectRatio, width, desiredWidth, height, desiredHeight, minX, minY, refX, refY) {
+			// aspect ratio - http://www.w3.org/TR/SVG/coords.html#PreserveAspectRatioAttribute
+			aspectRatio = svg.compressSpaces(aspectRatio);
+			aspectRatio = aspectRatio.replace(/^defer\s/,''); // ignore defer
+			var align = aspectRatio.split(' ')[0] || 'xMidYMid';
+			var meetOrSlice = aspectRatio.split(' ')[1] || 'meet';
+
+			// calculate scale
+			var scaleX = width / desiredWidth;
+			var scaleY = height / desiredHeight;
+			var scaleMin = Math.min(scaleX, scaleY);
+			var scaleMax = Math.max(scaleX, scaleY);
+			if (meetOrSlice == 'meet') { desiredWidth *= scaleMin; desiredHeight *= scaleMin; }
+			if (meetOrSlice == 'slice') { desiredWidth *= scaleMax; desiredHeight *= scaleMax; }
+
+			refX = new svg.Property('refX', refX);
+			refY = new svg.Property('refY', refY);
+			if (refX.hasValue() && refY.hasValue()) {
+				ctx.translate(-scaleMin * refX.Length.toPixels('x'), -scaleMin * refY.Length.toPixels('y'));
+			}
+			else {
+				// align
+				if (align.match(/^xMid/) && ((meetOrSlice == 'meet' && scaleMin == scaleY) || (meetOrSlice == 'slice' && scaleMax == scaleY))) ctx.translate(width / 2.0 - desiredWidth / 2.0, 0);
+				if (align.match(/YMid$/) && ((meetOrSlice == 'meet' && scaleMin == scaleX) || (meetOrSlice == 'slice' && scaleMax == scaleX))) ctx.translate(0, height / 2.0 - desiredHeight / 2.0);
+				if (align.match(/^xMax/) && ((meetOrSlice == 'meet' && scaleMin == scaleY) || (meetOrSlice == 'slice' && scaleMax == scaleY))) ctx.translate(width - desiredWidth, 0);
+				if (align.match(/YMax$/) && ((meetOrSlice == 'meet' && scaleMin == scaleX) || (meetOrSlice == 'slice' && scaleMax == scaleX))) ctx.translate(0, height - desiredHeight);
+			}
+
+			// scale
+			if (align == 'none') ctx.scale(scaleX, scaleY);
+			else if (meetOrSlice == 'meet') ctx.scale(scaleMin, scaleMin);
+			else if (meetOrSlice == 'slice') ctx.scale(scaleMax, scaleMax); 
+
+			// translate
+			ctx.translate(minX == null ? 0 : -minX, minY == null ? 0 : -minY);
+		}
+
+		// elements
+		svg.Element = {}
+
+		svg.Element.ElementBase = function(node) {
+			this.attributes = {};
+			this.styles = {};
+			this.children = [];
+
+			// get or create attribute
+			this.attribute = function(name, createIfNotExists) {
+				var a = this.attributes[name];
+				if (a != null) return a;
+
+				a = new svg.Property(name, '');
+				if (createIfNotExists == true) this.attributes[name] = a;
+				return a;
+			}
+
+			// get or create style, crawls up node tree
+			this.style = function(name, createIfNotExists) {
+				var s = this.styles[name];
+				if (s != null) return s;
+
+				var a = this.attribute(name);
+				if (a != null && a.hasValue()) {
+					return a;
+				}
+
+				var p = this.parent;
+				if (p != null) {
+					var ps = p.style(name);
+					if (ps != null && ps.hasValue()) {
+						return ps;
+					}
+				}
+
+				s = new svg.Property(name, '');
+				if (createIfNotExists == true) this.styles[name] = s;
+				return s;
+			}
+
+			// base render
+			this.render = function(ctx) {
+				// don't render display=none
+				if (this.style('display').value == 'none') return;
+
+				// don't render visibility=hidden
+				if (this.attribute('visibility').value == 'hidden') return;
+
+				ctx.save();
+					this.setContext(ctx);
+						// mask
+						if (this.attribute('mask').hasValue()) {
+							var mask = this.attribute('mask').Definition.getDefinition();
+							if (mask != null) mask.apply(ctx, this);
+						}
+						else if (this.style('filter').hasValue()) {
+							var filter = this.style('filter').Definition.getDefinition();
+							if (filter != null) filter.apply(ctx, this);
+						}
+						else this.renderChildren(ctx);
+					this.clearContext(ctx);
+				ctx.restore();
+			}
+
+			// base set context
+			this.setContext = function(ctx) {
+				// OVERRIDE ME!
+			}
+
+			// base clear context
+			this.clearContext = function(ctx) {
+				// OVERRIDE ME!
+			}
+
+			// base render children
+			this.renderChildren = function(ctx) {
+				for (var i=0; i<this.children.length; i++) {
+					this.children[i].render(ctx);
+				}
+			}
+
+			this.addChild = function(childNode, create) {
+				var child = childNode;
+				if (create) child = svg.CreateElement(childNode);
+				child.parent = this;
+				this.children.push(child);
+			}
+
+			if (node != null && node.nodeType == 1) { //ELEMENT_NODE
+				// add children
+				for (var i=0; i<node.childNodes.length; i++) {
+					var childNode = node.childNodes[i];
+					if (childNode.nodeType == 1) this.addChild(childNode, true); //ELEMENT_NODE
+				}
+
+				// add attributes
+				for (var i=0; i<node.attributes.length; i++) {
+					var attribute = node.attributes[i];
+					this.attributes[attribute.nodeName] = new svg.Property(attribute.nodeName, attribute.nodeValue);
+				}
+
+				// add tag styles
+				var styles = svg.Styles[node.nodeName];
+				if (styles != null) {
+					for (var name in styles) {
+						this.styles[name] = styles[name];
+					}
+				}
+
+				// add class styles
+				if (this.attribute('class').hasValue()) {
+					var classes = svg.compressSpaces(this.attribute('class').value).split(' ');
+					for (var j=0; j<classes.length; j++) {
+						styles = svg.Styles['.'+classes[j]];
+						if (styles != null) {
+							for (var name in styles) {
+								this.styles[name] = styles[name];
+							}
+						}
+						styles = svg.Styles[node.nodeName+'.'+classes[j]];
+						if (styles != null) {
+							for (var name in styles) {
+								this.styles[name] = styles[name];
+							}
+						}
+					}
+				}
+
+				// add inline styles
+				if (this.attribute('style').hasValue()) {
+					var styles = this.attribute('style').value.split(';');
+					for (var i=0; i<styles.length; i++) {
+						if (svg.trim(styles[i]) != '') {
+							var style = styles[i].split(':');
+							var name = svg.trim(style[0]);
+							var value = svg.trim(style[1]);
+							this.styles[name] = new svg.Property(name, value);
+						}
+					}
+				}
+
+				// add id
+				if (this.attribute('id').hasValue()) {
+					if (svg.Definitions[this.attribute('id').value] == null) {
+						svg.Definitions[this.attribute('id').value] = this;
+					}
+				}
+			}
+		}
+
+		svg.Element.RenderedElementBase = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.setContext = function(ctx) {
+				// fill
+				if (this.style('fill').Definition.isUrl()) {
+					var fs = this.style('fill').Definition.getFillStyle(this);
+					if (fs != null) ctx.fillStyle = fs;
+				}
+				else if (this.style('fill').hasValue()) {
+					var fillStyle = this.style('fill');
+					if (this.style('fill-opacity').hasValue()) fillStyle = fillStyle.Color.addOpacity(this.style('fill-opacity').value);
+					ctx.fillStyle = (fillStyle.value == 'none' ? 'rgba(0,0,0,0)' : fillStyle.value);
+				}
+
+				// stroke
+				if (this.style('stroke').Definition.isUrl()) {
+					var fs = this.style('stroke').Definition.getFillStyle(this);
+					if (fs != null) ctx.strokeStyle = fs;
+				}
+				else if (this.style('stroke').hasValue()) {
+					var strokeStyle = this.style('stroke');
+					if (this.style('stroke-opacity').hasValue()) strokeStyle = strokeStyle.Color.addOpacity(this.style('stroke-opacity').value);
+					ctx.strokeStyle = (strokeStyle.value == 'none' ? 'rgba(0,0,0,0)' : strokeStyle.value);
+				}
+				if (this.style('stroke-width').hasValue()) ctx.lineWidth = this.style('stroke-width').Length.toPixels();
+				if (this.style('stroke-linecap').hasValue()) ctx.lineCap = this.style('stroke-linecap').value;
+				if (this.style('stroke-linejoin').hasValue()) ctx.lineJoin = this.style('stroke-linejoin').value;
+				if (this.style('stroke-miterlimit').hasValue()) ctx.miterLimit = this.style('stroke-miterlimit').value;
+
+				// font
+				if (typeof(ctx.font) != 'undefined') {
+					ctx.font = svg.Font.CreateFont(
+						this.style('font-style').value,
+						this.style('font-variant').value,
+						this.style('font-weight').value,
+						this.style('font-size').hasValue() ? this.style('font-size').Length.toPixels() + 'px' : '',
+						this.style('font-family').value).toString();
+				}
+
+				// transform
+				if (this.attribute('transform').hasValue()) {
+					var transform = new svg.Transform(this.attribute('transform').value);
+					transform.apply(ctx);
+				}
+
+				// clip
+				if (this.attribute('clip-path').hasValue()) {
+					var clip = this.attribute('clip-path').Definition.getDefinition();
+					if (clip != null) clip.apply(ctx);
+				}
+
+				// opacity
+				if (this.style('opacity').hasValue()) {
+					ctx.globalAlpha = this.style('opacity').numValue();
+				}
+			}
+		}
+		svg.Element.RenderedElementBase.prototype = new svg.Element.ElementBase;
+
+		svg.Element.PathElementBase = function(node) {
+			this.base = svg.Element.RenderedElementBase;
+			this.base(node);
+
+			this.path = function(ctx) {
+				if (ctx != null) ctx.beginPath();
+				return new svg.BoundingBox();
+			}
+
+			this.renderChildren = function(ctx) {
+				this.path(ctx);
+				svg.Mouse.checkPath(this, ctx);
+				if (ctx.fillStyle != '') ctx.fill();
+				if (ctx.strokeStyle != '') ctx.stroke();
+
+				var markers = this.getMarkers();
+				if (markers != null) {
+					if (this.style('marker-start').Definition.isUrl()) {
+						var marker = this.style('marker-start').Definition.getDefinition();
+						marker.render(ctx, markers[0][0], markers[0][1]);
+					}
+					if (this.style('marker-mid').Definition.isUrl()) {
+						var marker = this.style('marker-mid').Definition.getDefinition();
+						for (var i=1;i<markers.length-1;i++) {
+							marker.render(ctx, markers[i][0], markers[i][1]);
+						}
+					}
+					if (this.style('marker-end').Definition.isUrl()) {
+						var marker = this.style('marker-end').Definition.getDefinition();
+						marker.render(ctx, markers[markers.length-1][0], markers[markers.length-1][1]);
+					}
+				}
+			}
+
+			this.getBoundingBox = function() {
+				return this.path();
+			}
+
+			this.getMarkers = function() {
+				return null;
+			}
+		}
+		svg.Element.PathElementBase.prototype = new svg.Element.RenderedElementBase;
+
+		// svg element
+		svg.Element.svg = function(node) {
+			this.base = svg.Element.RenderedElementBase;
+			this.base(node);
+
+			this.baseClearContext = this.clearContext;
+			this.clearContext = function(ctx) {
+				this.baseClearContext(ctx);
+				svg.ViewPort.RemoveCurrent();
+			}
+
+			this.baseSetContext = this.setContext;
+			this.setContext = function(ctx) {
+				// initial values
+				ctx.strokeStyle = 'rgba(0,0,0,0)';
+				ctx.lineCap = 'butt';
+				ctx.lineJoin = 'miter';
+				ctx.miterLimit = 4;
+
+				this.baseSetContext(ctx);
+
+				// create new view port
+				if (this.attribute('x').hasValue() && this.attribute('y').hasValue()) {
+					ctx.translate(this.attribute('x').Length.toPixels('x'), this.attribute('y').Length.toPixels('y'));
+				}
+
+				var width = svg.ViewPort.width();
+				var height = svg.ViewPort.height();
+				if (typeof(this.root) == 'undefined' && this.attribute('width').hasValue() && this.attribute('height').hasValue()) {
+					width = this.attribute('width').Length.toPixels('x');
+					height = this.attribute('height').Length.toPixels('y');
+
+					var x = 0;
+					var y = 0;
+					if (this.attribute('refX').hasValue() && this.attribute('refY').hasValue()) {
+						x = -this.attribute('refX').Length.toPixels('x');
+						y = -this.attribute('refY').Length.toPixels('y');
+					}
+
+					ctx.beginPath();
+					ctx.moveTo(x, y);
+					ctx.lineTo(width, y);
+					ctx.lineTo(width, height);
+					ctx.lineTo(x, height);
+					ctx.closePath();
+					ctx.clip();
+				}
+				svg.ViewPort.SetCurrent(width, height);
+
+				// viewbox
+				if (this.attribute('viewBox').hasValue()) {
+					var viewBox = svg.ToNumberArray(this.attribute('viewBox').value);
+					var minX = viewBox[0];
+					var minY = viewBox[1];
+					width = viewBox[2];
+					height = viewBox[3];
+
+					svg.AspectRatio(ctx,
+									this.attribute('preserveAspectRatio').value,
+									svg.ViewPort.width(),
+									width,
+									svg.ViewPort.height(),
+									height,
+									minX,
+									minY,
+									this.attribute('refX').value,
+									this.attribute('refY').value);
+
+					svg.ViewPort.RemoveCurrent();
+					svg.ViewPort.SetCurrent(viewBox[2], viewBox[3]);
+				}
+			}
+		}
+		svg.Element.svg.prototype = new svg.Element.RenderedElementBase;
+
+		// rect element
+		svg.Element.rect = function(node) {
+			this.base = svg.Element.PathElementBase;
+			this.base(node);
+
+			this.path = function(ctx) {
+				var x = this.attribute('x').Length.toPixels('x');
+				var y = this.attribute('y').Length.toPixels('y');
+				var width = this.attribute('width').Length.toPixels('x');
+				var height = this.attribute('height').Length.toPixels('y');
+				var rx = this.attribute('rx').Length.toPixels('x');
+				var ry = this.attribute('ry').Length.toPixels('y');
+				if (this.attribute('rx').hasValue() && !this.attribute('ry').hasValue()) ry = rx;
+				if (this.attribute('ry').hasValue() && !this.attribute('rx').hasValue()) rx = ry;
+
+				if (ctx != null) {
+					ctx.beginPath();
+					ctx.moveTo(x + rx, y);
+					ctx.lineTo(x + width - rx, y);
+					ctx.quadraticCurveTo(x + width, y, x + width, y + ry)
+					ctx.lineTo(x + width, y + height - ry);
+					ctx.quadraticCurveTo(x + width, y + height, x + width - rx, y + height)
+					ctx.lineTo(x + rx, y + height);
+					ctx.quadraticCurveTo(x, y + height, x, y + height - ry)
+					ctx.lineTo(x, y + ry);
+					ctx.quadraticCurveTo(x, y, x + rx, y)
+					ctx.closePath();
+				}
+
+				return new svg.BoundingBox(x, y, x + width, y + height);
+			}
+		}
+		svg.Element.rect.prototype = new svg.Element.PathElementBase;
+
+		// circle element
+		svg.Element.circle = function(node) {
+			this.base = svg.Element.PathElementBase;
+			this.base(node);
+
+			this.path = function(ctx) {
+				var cx = this.attribute('cx').Length.toPixels('x');
+				var cy = this.attribute('cy').Length.toPixels('y');
+				var r = this.attribute('r').Length.toPixels();
+
+				if (ctx != null) {
+					ctx.beginPath();
+					ctx.arc(cx, cy, r, 0, Math.PI * 2, true);
+					ctx.closePath();
+				}
+
+				return new svg.BoundingBox(cx - r, cy - r, cx + r, cy + r);
+			}
+		}
+		svg.Element.circle.prototype = new svg.Element.PathElementBase;
+
+		// ellipse element
+		svg.Element.ellipse = function(node) {
+			this.base = svg.Element.PathElementBase;
+			this.base(node);
+
+			this.path = function(ctx) {
+				var KAPPA = 4 * ((Math.sqrt(2) - 1) / 3);
+				var rx = this.attribute('rx').Length.toPixels('x');
+				var ry = this.attribute('ry').Length.toPixels('y');
+				var cx = this.attribute('cx').Length.toPixels('x');
+				var cy = this.attribute('cy').Length.toPixels('y');
+
+				if (ctx != null) {
+					ctx.beginPath();
+					ctx.moveTo(cx, cy - ry);
+					ctx.bezierCurveTo(cx + (KAPPA * rx), cy - ry,  cx + rx, cy - (KAPPA * ry), cx + rx, cy);
+					ctx.bezierCurveTo(cx + rx, cy + (KAPPA * ry), cx + (KAPPA * rx), cy + ry, cx, cy + ry);
+					ctx.bezierCurveTo(cx - (KAPPA * rx), cy + ry, cx - rx, cy + (KAPPA * ry), cx - rx, cy);
+					ctx.bezierCurveTo(cx - rx, cy - (KAPPA * ry), cx - (KAPPA * rx), cy - ry, cx, cy - ry);
+					ctx.closePath();
+				}
+
+				return new svg.BoundingBox(cx - rx, cy - ry, cx + rx, cy + ry);
+			}
+		}
+		svg.Element.ellipse.prototype = new svg.Element.PathElementBase;
+
+		// line element
+		svg.Element.line = function(node) {
+			this.base = svg.Element.PathElementBase;
+			this.base(node);
+
+			this.getPoints = function() {
+				return [
+					new svg.Point(this.attribute('x1').Length.toPixels('x'), this.attribute('y1').Length.toPixels('y')),
+					new svg.Point(this.attribute('x2').Length.toPixels('x'), this.attribute('y2').Length.toPixels('y'))];
+			}
+
+			this.path = function(ctx) {
+				var points = this.getPoints();
+
+				if (ctx != null) {
+					ctx.beginPath();
+					ctx.moveTo(points[0].x, points[0].y);
+					ctx.lineTo(points[1].x, points[1].y);
+				}
+
+				return new svg.BoundingBox(points[0].x, points[0].y, points[1].x, points[1].y);
+			}
+
+			this.getMarkers = function() {
+				var points = this.getPoints();
+				var a = points[0].angleTo(points[1]);
+				return [[points[0], a], [points[1], a]];
+			}
+		}
+		svg.Element.line.prototype = new svg.Element.PathElementBase;
+
+		// polyline element
+		svg.Element.polyline = function(node) {
+			this.base = svg.Element.PathElementBase;
+			this.base(node);
+
+			this.points = svg.CreatePath(this.attribute('points').value);
+			this.path = function(ctx) {
+				var bb = new svg.BoundingBox(this.points[0].x, this.points[0].y);
+				if (ctx != null) {
+					ctx.beginPath();
+					ctx.moveTo(this.points[0].x, this.points[0].y);
+				}
+				for (var i=1; i<this.points.length; i++) {
+					bb.addPoint(this.points[i].x, this.points[i].y);
+					if (ctx != null) ctx.lineTo(this.points[i].x, this.points[i].y);
+				}
+				return bb;
+			}
+
+			this.getMarkers = function() {
+				var markers = [];
+				for (var i=0; i<this.points.length - 1; i++) {
+					markers.push([this.points[i], this.points[i].angleTo(this.points[i+1])]);
+				}
+				markers.push([this.points[this.points.length-1], markers[markers.length-1][1]]);
+				return markers;
+			}
+		}
+		svg.Element.polyline.prototype = new svg.Element.PathElementBase;
+
+		// polygon element
+		svg.Element.polygon = function(node) {
+			this.base = svg.Element.polyline;
+			this.base(node);
+
+			this.basePath = this.path;
+			this.path = function(ctx) {
+				var bb = this.basePath(ctx);
+				if (ctx != null) {
+					ctx.lineTo(this.points[0].x, this.points[0].y);
+					ctx.closePath();
+				}
+				return bb;
+			}
+		}
+		svg.Element.polygon.prototype = new svg.Element.polyline;
+
+		// path element
+		svg.Element.path = function(node) {
+			this.base = svg.Element.PathElementBase;
+			this.base(node);
+
+			var d = this.attribute('d').value;
+			// TODO: convert to real lexer based on http://www.w3.org/TR/SVG11/paths.html#PathDataBNF
+			d = d.replace(/,/gm,' '); // get rid of all commas
+			d = d.replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm,'$1 $2'); // separate commands from commands
+			d = d.replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm,'$1 $2'); // separate commands from commands
+			d = d.replace(/([MmZzLlHhVvCcSsQqTtAa])([^\s])/gm,'$1 $2'); // separate commands from points
+			d = d.replace(/([^\s])([MmZzLlHhVvCcSsQqTtAa])/gm,'$1 $2'); // separate commands from points
+			d = d.replace(/([0-9])([+\-])/gm,'$1 $2'); // separate digits when no comma
+			d = d.replace(/(\.[0-9]*)(\.)/gm,'$1 $2'); // separate digits when no comma
+			d = d.replace(/([Aa](\s+[0-9]+){3})\s+([01])\s*([01])/gm,'$1 $3 $4 '); // shorthand elliptical arc path syntax
+			d = svg.compressSpaces(d); // compress multiple spaces
+			d = svg.trim(d);
+			this.PathParser = new (function(d) {
+				this.tokens = d.split(' ');
+
+				this.reset = function() {
+					this.i = -1;
+					this.command = '';
+					this.previousCommand = '';
+					this.start = new svg.Point(0, 0);
+					this.control = new svg.Point(0, 0);
+					this.current = new svg.Point(0, 0);
+					this.points = [];
+					this.angles = [];
+				}
+
+				this.isEnd = function() {
+					return this.i >= this.tokens.length - 1;
+				}
+
+				this.isCommandOrEnd = function() {
+					if (this.isEnd()) return true;
+					return this.tokens[this.i + 1].match(/^[A-Za-z]$/) != null;
+				}
+
+				this.isRelativeCommand = function() {
+					return this.command == this.command.toLowerCase();
+				}
+
+				this.getToken = function() {
+					this.i = this.i + 1;
+					return this.tokens[this.i];
+				}
+
+				this.getScalar = function() {
+					return parseFloat(this.getToken());
+				}
+
+				this.nextCommand = function() {
+					this.previousCommand = this.command;
+					this.command = this.getToken();
+				}
+
+				this.getPoint = function() {
+					var p = new svg.Point(this.getScalar(), this.getScalar());
+					return this.makeAbsolute(p);
+				}
+
+				this.getAsControlPoint = function() {
+					var p = this.getPoint();
+					this.control = p;
+					return p;
+				}
+
+				this.getAsCurrentPoint = function() {
+					var p = this.getPoint();
+					this.current = p;
+					return p;
+				}
+
+				this.getReflectedControlPoint = function() {
+					if (this.previousCommand.toLowerCase() != 'c' && this.previousCommand.toLowerCase() != 's') {
+						return this.current;
+					}
+
+					// reflect point
+					var p = new svg.Point(2 * this.current.x - this.control.x, 2 * this.current.y - this.control.y);
+					return p;
+				}
+
+				this.makeAbsolute = function(p) {
+					if (this.isRelativeCommand()) {
+						p.x = this.current.x + p.x;
+						p.y = this.current.y + p.y;
+					}
+					return p;
+				}
+
+				this.addMarker = function(p, from, priorTo) {
+					// if the last angle isn't filled in because we didn't have this point yet ...
+					if (priorTo != null && this.angles.length > 0 && this.angles[this.angles.length-1] == null) {
+						this.angles[this.angles.length-1] = this.points[this.points.length-1].angleTo(priorTo);
+					}
+					this.addMarkerAngle(p, from == null ? null : from.angleTo(p));
+				}
+
+				this.addMarkerAngle = function(p, a) {
+					this.points.push(p);
+					this.angles.push(a);
+				}
+
+				this.getMarkerPoints = function() { return this.points; }
+				this.getMarkerAngles = function() {
+					for (var i=0; i<this.angles.length; i++) {
+						if (this.angles[i] == null) {
+							for (var j=i+1; j<this.angles.length; j++) {
+								if (this.angles[j] != null) {
+									this.angles[i] = this.angles[j];
+									break;
+								}
+							}
+						}
+					}
+					return this.angles;
+				}
+			})(d);
+
+			this.path = function(ctx) {
+				var pp = this.PathParser;
+				pp.reset();
+
+				var bb = new svg.BoundingBox();
+				if (ctx != null) ctx.beginPath();
+				while (!pp.isEnd()) {
+					pp.nextCommand();
+					switch (pp.command.toUpperCase()) {
+					case 'M':
+						var p = pp.getAsCurrentPoint();
+						pp.addMarker(p);
+						bb.addPoint(p.x, p.y);
+						if (ctx != null) ctx.moveTo(p.x, p.y);
+						pp.start = pp.current;
+						while (!pp.isCommandOrEnd()) {
+							var p = pp.getAsCurrentPoint();
+							pp.addMarker(p, pp.start);
+							bb.addPoint(p.x, p.y);
+							if (ctx != null) ctx.lineTo(p.x, p.y);
+						}
+						break;
+					case 'L':
+						while (!pp.isCommandOrEnd()) {
+							var c = pp.current;
+							var p = pp.getAsCurrentPoint();
+							pp.addMarker(p, c);
+							bb.addPoint(p.x, p.y);
+							if (ctx != null) ctx.lineTo(p.x, p.y);
+						}
+						break;
+					case 'H':
+						while (!pp.isCommandOrEnd()) {
+							var newP = new svg.Point((pp.isRelativeCommand() ? pp.current.x : 0) + pp.getScalar(), pp.current.y);
+							pp.addMarker(newP, pp.current);
+							pp.current = newP;
+							bb.addPoint(pp.current.x, pp.current.y);
+							if (ctx != null) ctx.lineTo(pp.current.x, pp.current.y);
+						}
+						break;
+					case 'V':
+						while (!pp.isCommandOrEnd()) {
+							var newP = new svg.Point(pp.current.x, (pp.isRelativeCommand() ? pp.current.y : 0) + pp.getScalar());
+							pp.addMarker(newP, pp.current);
+							pp.current = newP;
+							bb.addPoint(pp.current.x, pp.current.y);
+							if (ctx != null) ctx.lineTo(pp.current.x, pp.current.y);
+						}
+						break;
+					case 'C':
+						while (!pp.isCommandOrEnd()) {
+							var curr = pp.current;
+							var p1 = pp.getPoint();
+							var cntrl = pp.getAsControlPoint();
+							var cp = pp.getAsCurrentPoint();
+							pp.addMarker(cp, cntrl, p1);
+							bb.addBezierCurve(curr.x, curr.y, p1.x, p1.y, cntrl.x, cntrl.y, cp.x, cp.y);
+							if (ctx != null) ctx.bezierCurveTo(p1.x, p1.y, cntrl.x, cntrl.y, cp.x, cp.y);
+						}
+						break;
+					case 'S':
+						while (!pp.isCommandOrEnd()) {
+							var curr = pp.current;
+							var p1 = pp.getReflectedControlPoint();
+							var cntrl = pp.getAsControlPoint();
+							var cp = pp.getAsCurrentPoint();
+							pp.addMarker(cp, cntrl, p1);
+							bb.addBezierCurve(curr.x, curr.y, p1.x, p1.y, cntrl.x, cntrl.y, cp.x, cp.y);
+							if (ctx != null) ctx.bezierCurveTo(p1.x, p1.y, cntrl.x, cntrl.y, cp.x, cp.y);
+						}
+						break;
+					case 'Q':
+						while (!pp.isCommandOrEnd()) {
+							var curr = pp.current;
+							var cntrl = pp.getAsControlPoint();
+							var cp = pp.getAsCurrentPoint();
+							pp.addMarker(cp, cntrl, cntrl);
+							bb.addQuadraticCurve(curr.x, curr.y, cntrl.x, cntrl.y, cp.x, cp.y);
+							if (ctx != null) ctx.quadraticCurveTo(cntrl.x, cntrl.y, cp.x, cp.y);
+						}
+						break;
+					case 'T':
+						while (!pp.isCommandOrEnd()) {
+							var curr = pp.current;
+							var cntrl = pp.getReflectedControlPoint();
+							pp.control = cntrl;
+							var cp = pp.getAsCurrentPoint();
+							pp.addMarker(cp, cntrl, cntrl);
+							bb.addQuadraticCurve(curr.x, curr.y, cntrl.x, cntrl.y, cp.x, cp.y);
+							if (ctx != null) ctx.quadraticCurveTo(cntrl.x, cntrl.y, cp.x, cp.y);
+						}
+						break;
+					case 'A':
+						while (!pp.isCommandOrEnd()) {
+							var curr = pp.current;
+							var rx = pp.getScalar();
+							var ry = pp.getScalar();
+							var xAxisRotation = pp.getScalar() * (Math.PI / 180.0);
+							var largeArcFlag = pp.getScalar();
+							var sweepFlag = pp.getScalar();
+							var cp = pp.getAsCurrentPoint();
+
+							// Conversion from endpoint to center parameterization
+							// http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
+							// x1', y1'
+							var currp = new svg.Point(
+								Math.cos(xAxisRotation) * (curr.x - cp.x) / 2.0 + Math.sin(xAxisRotation) * (curr.y - cp.y) / 2.0,
+								-Math.sin(xAxisRotation) * (curr.x - cp.x) / 2.0 + Math.cos(xAxisRotation) * (curr.y - cp.y) / 2.0
+							);
+							// adjust radii
+							var l = Math.pow(currp.x,2)/Math.pow(rx,2)+Math.pow(currp.y,2)/Math.pow(ry,2);
+							if (l > 1) {
+								rx *= Math.sqrt(l);
+								ry *= Math.sqrt(l);
+							}
+							// cx', cy'
+							var s = (largeArcFlag == sweepFlag ? -1 : 1) * Math.sqrt(
+								((Math.pow(rx,2)*Math.pow(ry,2))-(Math.pow(rx,2)*Math.pow(currp.y,2))-(Math.pow(ry,2)*Math.pow(currp.x,2))) /
+								(Math.pow(rx,2)*Math.pow(currp.y,2)+Math.pow(ry,2)*Math.pow(currp.x,2))
+							);
+							if (isNaN(s)) s = 0;
+							var cpp = new svg.Point(s * rx * currp.y / ry, s * -ry * currp.x / rx);
+							// cx, cy
+							var centp = new svg.Point(
+								(curr.x + cp.x) / 2.0 + Math.cos(xAxisRotation) * cpp.x - Math.sin(xAxisRotation) * cpp.y,
+								(curr.y + cp.y) / 2.0 + Math.sin(xAxisRotation) * cpp.x + Math.cos(xAxisRotation) * cpp.y
+							);
+							// vector magnitude
+							var m = function(v) { return Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2)); }
+							// ratio between two vectors
+							var r = function(u, v) { return (u[0]*v[0]+u[1]*v[1]) / (m(u)*m(v)) }
+							// angle between two vectors
+							var a = function(u, v) { return (u[0]*v[1] < u[1]*v[0] ? -1 : 1) * Math.acos(r(u,v)); }
+							// initial angle
+							var a1 = a([1,0], [(currp.x-cpp.x)/rx,(currp.y-cpp.y)/ry]);
+							// angle delta
+							var u = [(currp.x-cpp.x)/rx,(currp.y-cpp.y)/ry];
+							var v = [(-currp.x-cpp.x)/rx,(-currp.y-cpp.y)/ry];
+							var ad = a(u, v);
+							if (r(u,v) <= -1) ad = Math.PI;
+							if (r(u,v) >= 1) ad = 0;
+
+							if (sweepFlag == 0 && ad > 0) ad = ad - 2 * Math.PI;
+							if (sweepFlag == 1 && ad < 0) ad = ad + 2 * Math.PI;
+
+							// for markers
+							var halfWay = new svg.Point(
+								centp.x - rx * Math.cos((a1 + ad) / 2),
+								centp.y - ry * Math.sin((a1 + ad) / 2)
+							);
+							pp.addMarkerAngle(halfWay, (a1 + ad) / 2 + (sweepFlag == 0 ? 1 : -1) * Math.PI / 2);
+							pp.addMarkerAngle(cp, ad + (sweepFlag == 0 ? 1 : -1) * Math.PI / 2);
+
+							bb.addPoint(cp.x, cp.y); // TODO: this is too naive, make it better
+							if (ctx != null) {
+								var r = rx > ry ? rx : ry;
+								var sx = rx > ry ? 1 : rx / ry;
+								var sy = rx > ry ? ry / rx : 1;
+
+								ctx.translate(centp.x, centp.y);
+								ctx.rotate(xAxisRotation);
+								ctx.scale(sx, sy);
+								ctx.arc(0, 0, r, a1, a1 + ad, 1 - sweepFlag);
+								ctx.scale(1/sx, 1/sy);
+								ctx.rotate(-xAxisRotation);
+								ctx.translate(-centp.x, -centp.y);
+							}
+						}
+						break;
+					case 'Z':
+						if (ctx != null) ctx.closePath();
+						pp.current = pp.start;
+					}
+				}
+
+				return bb;
+			}
+
+			this.getMarkers = function() {
+				var points = this.PathParser.getMarkerPoints();
+				var angles = this.PathParser.getMarkerAngles();
+
+				var markers = [];
+				for (var i=0; i<points.length; i++) {
+					markers.push([points[i], angles[i]]);
+				}
+				return markers;
+			}
+		}
+		svg.Element.path.prototype = new svg.Element.PathElementBase;
+
+		// pattern element
+		svg.Element.pattern = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.createPattern = function(ctx, element) {
+				// render me using a temporary svg element
+				var tempSvg = new svg.Element.svg();
+				tempSvg.attributes['viewBox'] = new svg.Property('viewBox', this.attribute('viewBox').value);
+				tempSvg.attributes['x'] = new svg.Property('x', this.attribute('x').value);
+				tempSvg.attributes['y'] = new svg.Property('y', this.attribute('y').value);
+				tempSvg.attributes['width'] = new svg.Property('width', this.attribute('width').value);
+				tempSvg.attributes['height'] = new svg.Property('height', this.attribute('height').value);
+				tempSvg.children = this.children;
+
+				var c = document.createElement('canvas');
+				c.width = this.attribute('width').Length.toPixels('x');
+				c.height = this.attribute('height').Length.toPixels('y');
+				tempSvg.render(c.getContext('2d'));
+				return ctx.createPattern(c, 'repeat');
+			}
+		}
+		svg.Element.pattern.prototype = new svg.Element.ElementBase;
+
+		// marker element
+		svg.Element.marker = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.baseRender = this.render;
+			this.render = function(ctx, point, angle) {
+				ctx.translate(point.x, point.y);
+				if (this.attribute('orient').valueOrDefault('auto') == 'auto') ctx.rotate(angle);
+				if (this.attribute('markerUnits').valueOrDefault('strokeWidth') == 'strokeWidth') ctx.scale(ctx.lineWidth, ctx.lineWidth);
+				ctx.save();
+
+				// render me using a temporary svg element
+				var tempSvg = new svg.Element.svg();
+				tempSvg.attributes['viewBox'] = new svg.Property('viewBox', this.attribute('viewBox').value);
+				tempSvg.attributes['refX'] = new svg.Property('refX', this.attribute('refX').value);
+				tempSvg.attributes['refY'] = new svg.Property('refY', this.attribute('refY').value);
+				tempSvg.attributes['width'] = new svg.Property('width', this.attribute('markerWidth').value);
+				tempSvg.attributes['height'] = new svg.Property('height', this.attribute('markerHeight').value);
+				tempSvg.attributes['fill'] = new svg.Property('fill', this.attribute('fill').valueOrDefault('black'));
+				tempSvg.attributes['stroke'] = new svg.Property('stroke', this.attribute('stroke').valueOrDefault('none'));
+				tempSvg.children = this.children;
+				tempSvg.render(ctx);
+
+				ctx.restore();
+				if (this.attribute('markerUnits').valueOrDefault('strokeWidth') == 'strokeWidth') ctx.scale(1/ctx.lineWidth, 1/ctx.lineWidth);
+				if (this.attribute('orient').valueOrDefault('auto') == 'auto') ctx.rotate(-angle);
+				ctx.translate(-point.x, -point.y);
+			}
+		}
+		svg.Element.marker.prototype = new svg.Element.ElementBase;
+
+		// definitions element
+		svg.Element.defs = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.render = function(ctx) {
+				// NOOP
+			}
+		}
+		svg.Element.defs.prototype = new svg.Element.ElementBase;
+
+		// base for gradients
+		svg.Element.GradientBase = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.gradientUnits = this.attribute('gradientUnits').valueOrDefault('objectBoundingBox');
+
+			this.stops = [];
+			for (var i=0; i<this.children.length; i++) {
+				var child = this.children[i];
+				this.stops.push(child);
+			}
+
+			this.getGradient = function() {
+				// OVERRIDE ME!
+			}
+
+			this.createGradient = function(ctx, element) {
+				var stopsContainer = this;
+				if (this.attribute('xlink:href').hasValue()) {
+					stopsContainer = this.attribute('xlink:href').Definition.getDefinition();
+				}
+
+				var g = this.getGradient(ctx, element);
+				for (var i=0; i<stopsContainer.stops.length; i++) {
+					g.addColorStop(stopsContainer.stops[i].offset, stopsContainer.stops[i].color);
+				}
+
+				if (this.attribute('gradientTransform').hasValue()) {
+					// render as transformed pattern on temporary canvas
+					var rootView = svg.ViewPort.viewPorts[0];
+
+					var rect = new svg.Element.rect();
+					rect.attributes['x'] = new svg.Property('x', -svg.MAX_VIRTUAL_PIXELS/3.0);
+					rect.attributes['y'] = new svg.Property('y', -svg.MAX_VIRTUAL_PIXELS/3.0);
+					rect.attributes['width'] = new svg.Property('width', svg.MAX_VIRTUAL_PIXELS);
+					rect.attributes['height'] = new svg.Property('height', svg.MAX_VIRTUAL_PIXELS);
+
+					var group = new svg.Element.g();
+					group.attributes['transform'] = new svg.Property('transform', this.attribute('gradientTransform').value);
+					group.children = [ rect ];
+
+					var tempSvg = new svg.Element.svg();
+					tempSvg.attributes['x'] = new svg.Property('x', 0);
+					tempSvg.attributes['y'] = new svg.Property('y', 0);
+					tempSvg.attributes['width'] = new svg.Property('width', rootView.width);
+					tempSvg.attributes['height'] = new svg.Property('height', rootView.height);
+					tempSvg.children = [ group ];
+
+					var c = document.createElement('canvas');
+					c.width = rootView.width;
+					c.height = rootView.height;
+					var tempCtx = c.getContext('2d');
+					tempCtx.fillStyle = g;
+					tempSvg.render(tempCtx);
+					return tempCtx.createPattern(c, 'no-repeat');
+				}
+
+				return g;
+			}
+		}
+		svg.Element.GradientBase.prototype = new svg.Element.ElementBase;
+
+		// linear gradient element
+		svg.Element.linearGradient = function(node) {
+			this.base = svg.Element.GradientBase;
+			this.base(node);
+
+			this.getGradient = function(ctx, element) {
+				var bb = element.getBoundingBox();
+
+				var x1 = (this.gradientUnits == 'objectBoundingBox'
+					? bb.x() + bb.width() * this.attribute('x1').numValue()
+					: this.attribute('x1').Length.toPixels('x'));
+				var y1 = (this.gradientUnits == 'objectBoundingBox'
+					? bb.y() + bb.height() * this.attribute('y1').numValue()
+					: this.attribute('y1').Length.toPixels('y'));
+				var x2 = (this.gradientUnits == 'objectBoundingBox'
+					? bb.x() + bb.width() * this.attribute('x2').numValue()
+					: this.attribute('x2').Length.toPixels('x'));
+				var y2 = (this.gradientUnits == 'objectBoundingBox'
+					? bb.y() + bb.height() * this.attribute('y2').numValue()
+					: this.attribute('y2').Length.toPixels('y'));
+
+				return ctx.createLinearGradient(x1, y1, x2, y2);
+			}
+		}
+		svg.Element.linearGradient.prototype = new svg.Element.GradientBase;
+
+		// radial gradient element
+		svg.Element.radialGradient = function(node) {
+			this.base = svg.Element.GradientBase;
+			this.base(node);
+
+			this.getGradient = function(ctx, element) {
+				var bb = element.getBoundingBox();
+
+				var cx = (this.gradientUnits == 'objectBoundingBox'
+					? bb.x() + bb.width() * this.attribute('cx').numValue()
+					: this.attribute('cx').Length.toPixels('x'));
+				var cy = (this.gradientUnits == 'objectBoundingBox'
+					? bb.y() + bb.height() * this.attribute('cy').numValue()
+					: this.attribute('cy').Length.toPixels('y'));
+
+				var fx = cx;
+				var fy = cy;
+				if (this.attribute('fx').hasValue()) {
+					fx = (this.gradientUnits == 'objectBoundingBox'
+					? bb.x() + bb.width() * this.attribute('fx').numValue()
+					: this.attribute('fx').Length.toPixels('x'));
+				}
+				if (this.attribute('fy').hasValue()) {
+					fy = (this.gradientUnits == 'objectBoundingBox'
+					? bb.y() + bb.height() * this.attribute('fy').numValue()
+					: this.attribute('fy').Length.toPixels('y'));
+				}
+
+				var r = (this.gradientUnits == 'objectBoundingBox'
+					? (bb.width() + bb.height()) / 2.0 * this.attribute('r').numValue()
+					: this.attribute('r').Length.toPixels());
+
+				return ctx.createRadialGradient(fx, fy, 0, cx, cy, r);
+			}
+		}
+		svg.Element.radialGradient.prototype = new svg.Element.GradientBase;
+
+		// gradient stop element
+		svg.Element.stop = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.offset = this.attribute('offset').numValue();
+
+			var stopColor = this.style('stop-color');
+			if (this.style('stop-opacity').hasValue()) stopColor = stopColor.Color.addOpacity(this.style('stop-opacity').value);
+			this.color = stopColor.value;
+		}
+		svg.Element.stop.prototype = new svg.Element.ElementBase;
+
+		// animation base element
+		svg.Element.AnimateBase = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			svg.Animations.push(this);
+
+			this.duration = 0.0;
+			this.begin = this.attribute('begin').Time.toMilliseconds();
+			this.maxDuration = this.begin + this.attribute('dur').Time.toMilliseconds();
+
+			this.getProperty = function() {
+				var attributeType = this.attribute('attributeType').value;
+				var attributeName = this.attribute('attributeName').value;
+
+				if (attributeType == 'CSS') {
+					return this.parent.style(attributeName, true);
+				}
+				return this.parent.attribute(attributeName, true);
+			};
+
+			this.initialValue = null;
+			this.removed = false;
+
+			this.calcValue = function() {
+				// OVERRIDE ME!
+				return '';
+			}
+
+			this.update = function(delta) {
+				// set initial value
+				if (this.initialValue == null) {
+					this.initialValue = this.getProperty().value;
+				}
+
+				// if we're past the end time
+				if (this.duration > this.maxDuration) {
+					// loop for indefinitely repeating animations
+					if (this.attribute('repeatCount').value == 'indefinite') {
+						this.duration = 0.0
+					}
+					else if (this.attribute('fill').valueOrDefault('remove') == 'remove' && !this.removed) {
+						this.removed = true;
+						this.getProperty().value = this.initialValue;
+						return true;
+					}
+					else {
+						return false; // no updates made
+					}
+				}
+				this.duration = this.duration + delta;
+
+				// if we're past the begin time
+				var updated = false;
+				if (this.begin < this.duration) {
+					var newValue = this.calcValue(); // tween
+
+					if (this.attribute('type').hasValue()) {
+						// for transform, etc.
+						var type = this.attribute('type').value;
+						newValue = type + '(' + newValue + ')';
+					}
+
+					this.getProperty().value = newValue;
+					updated = true;
+				}
+
+				return updated;
+			}
+
+			// fraction of duration we've covered
+			this.progress = function() {
+				return ((this.duration - this.begin) / (this.maxDuration - this.begin));
+			}
+		}
+		svg.Element.AnimateBase.prototype = new svg.Element.ElementBase;
+
+		// animate element
+		svg.Element.animate = function(node) {
+			this.base = svg.Element.AnimateBase;
+			this.base(node);
+
+			this.calcValue = function() {
+				var from = this.attribute('from').numValue();
+				var to = this.attribute('to').numValue();
+
+				// tween value linearly
+				return from + (to - from) * this.progress();
+			};
+		}
+		svg.Element.animate.prototype = new svg.Element.AnimateBase;
+
+		// animate color element
+		svg.Element.animateColor = function(node) {
+			this.base = svg.Element.AnimateBase;
+			this.base(node);
+
+			this.calcValue = function() {
+				var from = new RGBColor(this.attribute('from').value);
+				var to = new RGBColor(this.attribute('to').value);
+
+				if (from.ok && to.ok) {
+					// tween color linearly
+					var r = from.r + (to.r - from.r) * this.progress();
+					var g = from.g + (to.g - from.g) * this.progress();
+					var b = from.b + (to.b - from.b) * this.progress();
+					return 'rgb('+parseInt(r,10)+','+parseInt(g,10)+','+parseInt(b,10)+')';
+				}
+				return this.attribute('from').value;
+			};
+		}
+		svg.Element.animateColor.prototype = new svg.Element.AnimateBase;
+
+		// animate transform element
+		svg.Element.animateTransform = function(node) {
+			this.base = svg.Element.animate;
+			this.base(node);
+		}
+		svg.Element.animateTransform.prototype = new svg.Element.animate;
+
+		// font element
+		svg.Element.font = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.horizAdvX = this.attribute('horiz-adv-x').numValue();
+
+			this.isRTL = false;
+			this.isArabic = false;
+			this.fontFace = null;
+			this.missingGlyph = null;
+			this.glyphs = [];
+			for (var i=0; i<this.children.length; i++) {
+				var child = this.children[i];
+				if (child.type == 'font-face') {
+					this.fontFace = child;
+					if (child.style('font-family').hasValue()) {
+						svg.Definitions[child.style('font-family').value] = this;
+					}
+				}
+				else if (child.type == 'missing-glyph') this.missingGlyph = child;
+				else if (child.type == 'glyph') {
+					if (child.arabicForm != '') {
+						this.isRTL = true;
+						this.isArabic = true;
+						if (typeof(this.glyphs[child.unicode]) == 'undefined') this.glyphs[child.unicode] = [];
+						this.glyphs[child.unicode][child.arabicForm] = child;
+					}
+					else {
+						this.glyphs[child.unicode] = child;
+					}
+				}
+			}
+		}
+		svg.Element.font.prototype = new svg.Element.ElementBase;
+
+		// font-face element
+		svg.Element.fontface = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.ascent = this.attribute('ascent').value;
+			this.descent = this.attribute('descent').value;
+			this.unitsPerEm = this.attribute('units-per-em').numValue();
+		}
+		svg.Element.fontface.prototype = new svg.Element.ElementBase;
+
+		// missing-glyph element
+		svg.Element.missingglyph = function(node) {
+			this.base = svg.Element.path;
+			this.base(node);
+
+			this.horizAdvX = 0;
+		}
+		svg.Element.missingglyph.prototype = new svg.Element.path;
+
+		// glyph element
+		svg.Element.glyph = function(node) {
+			this.base = svg.Element.path;
+			this.base(node);
+
+			this.horizAdvX = this.attribute('horiz-adv-x').numValue();
+			this.unicode = this.attribute('unicode').value;
+			this.arabicForm = this.attribute('arabic-form').value;
+		}
+		svg.Element.glyph.prototype = new svg.Element.path;
+
+		// text element
+		svg.Element.text = function(node) {
+			this.base = svg.Element.RenderedElementBase;
+			this.base(node);
+
+			if (node != null) {
+				// add children
+				this.children = [];
+				for (var i=0; i<node.childNodes.length; i++) {
+					var childNode = node.childNodes[i];
+					if (childNode.nodeType == 1) { // capture tspan and tref nodes
+						this.addChild(childNode, true);
+					}
+					else if (childNode.nodeType == 3) { // capture text
+						this.addChild(new svg.Element.tspan(childNode), false);
+					}
+				}
+			}
+
+			this.baseSetContext = this.setContext;
+			this.setContext = function(ctx) {
+				this.baseSetContext(ctx);
+				if (this.style('dominant-baseline').hasValue()) ctx.textBaseline = this.style('dominant-baseline').value;
+				if (this.style('alignment-baseline').hasValue()) ctx.textBaseline = this.style('alignment-baseline').value;
+			}
+
+			this.renderChildren = function(ctx) {
+				var textAnchor = this.style('text-anchor').valueOrDefault('start');
+				var x = this.attribute('x').Length.toPixels('x');
+				var y = this.attribute('y').Length.toPixels('y');
+				for (var i=0; i<this.children.length; i++) {
+					var child = this.children[i];
+
+					if (child.attribute('x').hasValue()) {
+						child.x = child.attribute('x').Length.toPixels('x');
+					}
+					else {
+						if (child.attribute('dx').hasValue()) x += child.attribute('dx').Length.toPixels('x');
+						child.x = x;
+					}
+
+					var childLength = child.measureText(ctx);
+					if (textAnchor != 'start' && (i==0 || child.attribute('x').hasValue())) { // new group?
+						// loop through rest of children
+						var groupLength = childLength;
+						for (var j=i+1; j<this.children.length; j++) {
+							var childInGroup = this.children[j];
+							if (childInGroup.attribute('x').hasValue()) break; // new group
+							groupLength += childInGroup.measureText(ctx);
+						}
+						child.x -= (textAnchor == 'end' ? groupLength : groupLength / 2.0);
+					}
+					x = child.x + childLength;
+
+					if (child.attribute('y').hasValue()) {
+						child.y = child.attribute('y').Length.toPixels('y');
+					}
+					else {
+						if (child.attribute('dy').hasValue()) y += child.attribute('dy').Length.toPixels('y');
+						child.y = y;
+					}
+					y = child.y;
+
+					child.render(ctx);
+				}
+			}
+		}
+		svg.Element.text.prototype = new svg.Element.RenderedElementBase;
+
+		// text base
+		svg.Element.TextElementBase = function(node) {
+			this.base = svg.Element.RenderedElementBase;
+			this.base(node);
+
+			this.getGlyph = function(font, text, i) {
+				var c = text[i];
+				var glyph = null;
+				if (font.isArabic) {
+					var arabicForm = 'isolated';
+					if ((i==0 || text[i-1]==' ') && i<text.length-2 && text[i+1]!=' ') arabicForm = 'terminal';
+					if (i>0 && text[i-1]!=' ' && i<text.length-2 && text[i+1]!=' ') arabicForm = 'medial';
+					if (i>0 && text[i-1]!=' ' && (i == text.length-1 || text[i+1]==' ')) arabicForm = 'initial';
+					if (typeof(font.glyphs[c]) != 'undefined') {
+						glyph = font.glyphs[c][arabicForm];
+						if (glyph == null && font.glyphs[c].type == 'glyph') glyph = font.glyphs[c];
+					}
+				}
+				else {
+					glyph = font.glyphs[c];
+				}
+				if (glyph == null) glyph = font.missingGlyph;
+				return glyph;
+			}
+
+			this.renderChildren = function(ctx) {
+				var customFont = this.parent.style('font-family').Definition.getDefinition();
+				if (customFont != null) {
+					var fontSize = this.parent.style('font-size').numValueOrDefault(svg.Font.Parse(svg.ctx.font).fontSize);
+					var fontStyle = this.parent.style('font-style').valueOrDefault(svg.Font.Parse(svg.ctx.font).fontStyle);
+					var text = this.getText();
+					if (customFont.isRTL) text = text.split("").reverse().join("");
+
+					var dx = svg.ToNumberArray(this.parent.attribute('dx').value);
+					for (var i=0; i<text.length; i++) {
+						var glyph = this.getGlyph(customFont, text, i);
+						var scale = fontSize / customFont.fontFace.unitsPerEm;
+						ctx.translate(this.x, this.y);
+						ctx.scale(scale, -scale);
+						var lw = ctx.lineWidth;
+						ctx.lineWidth = ctx.lineWidth * customFont.fontFace.unitsPerEm / fontSize;
+						if (fontStyle == 'italic') ctx.transform(1, 0, .4, 1, 0, 0);
+						glyph.render(ctx);
+						if (fontStyle == 'italic') ctx.transform(1, 0, -.4, 1, 0, 0);
+						ctx.lineWidth = lw;
+						ctx.scale(1/scale, -1/scale);
+						ctx.translate(-this.x, -this.y);
+
+						this.x += fontSize * (glyph.horizAdvX || customFont.horizAdvX) / customFont.fontFace.unitsPerEm;
+						if (typeof(dx[i]) != 'undefined' && !isNaN(dx[i])) {
+							this.x += dx[i];
+						}
+					}
+					return;
+				}
+
+				if (ctx.strokeStyle != '') ctx.strokeText(svg.compressSpaces(this.getText()), this.x, this.y);
+				if (ctx.fillStyle != '') ctx.fillText(svg.compressSpaces(this.getText()), this.x, this.y);
+			}
+
+			this.getText = function() {
+				// OVERRIDE ME
+			}
+
+			this.measureText = function(ctx) {
+				var customFont = this.parent.style('font-family').Definition.getDefinition();
+				if (customFont != null) {
+					var fontSize = this.parent.style('font-size').numValueOrDefault(svg.Font.Parse(svg.ctx.font).fontSize);
+					var measure = 0;
+					var text = this.getText();
+					if (customFont.isRTL) text = text.split("").reverse().join("");
+					var dx = svg.ToNumberArray(this.parent.attribute('dx').value);
+					for (var i=0; i<text.length; i++) {
+						var glyph = this.getGlyph(customFont, text, i);
+						measure += (glyph.horizAdvX || customFont.horizAdvX) * fontSize / customFont.fontFace.unitsPerEm;
+						if (typeof(dx[i]) != 'undefined' && !isNaN(dx[i])) {
+							measure += dx[i];
+						}
+					}
+					return measure;
+				}
+
+				var textToMeasure = svg.compressSpaces(this.getText());
+				if (!ctx.measureText) return textToMeasure.length * 10;
+
+				ctx.save();
+				this.setContext(ctx);
+				var width = ctx.measureText(textToMeasure).width;
+				ctx.restore();
+				return width;
+			}
+		}
+		svg.Element.TextElementBase.prototype = new svg.Element.RenderedElementBase;
+
+		// tspan
+		svg.Element.tspan = function(node) {
+			this.base = svg.Element.TextElementBase;
+			this.base(node);
+
+			this.text = node.nodeType == 3 ? node.nodeValue : // text
+						node.childNodes.length > 0 ? node.childNodes[0].nodeValue : // element
+						node.text;
+			this.getText = function() {
+				return this.text;
+			}
+		}
+		svg.Element.tspan.prototype = new svg.Element.TextElementBase;
+
+		// tref
+		svg.Element.tref = function(node) {
+			this.base = svg.Element.TextElementBase;
+			this.base(node);
+
+			this.getText = function() {
+				var element = this.attribute('xlink:href').Definition.getDefinition();
+				if (element != null) return element.children[0].getText();
+			}
+		}
+		svg.Element.tref.prototype = new svg.Element.TextElementBase;
+
+		// a element
+		svg.Element.a = function(node) {
+			this.base = svg.Element.TextElementBase;
+			this.base(node);
+
+			this.hasText = true;
+			for (var i=0; i<node.childNodes.length; i++) {
+				if (node.childNodes[i].nodeType != 3) this.hasText = false;
+			}
+
+			// this might contain text
+			this.text = this.hasText ? node.childNodes[0].nodeValue : '';
+			this.getText = function() {
+				return this.text;
+			}
+
+			this.baseRenderChildren = this.renderChildren;
+			this.renderChildren = function(ctx) {
+				if (this.hasText) {
+					// render as text element
+					this.baseRenderChildren(ctx);
+					var fontSize = new svg.Property('fontSize', svg.Font.Parse(svg.ctx.font).fontSize);
+					svg.Mouse.checkBoundingBox(this, new svg.BoundingBox(this.x, this.y - fontSize.Length.toPixels('y'), this.x + this.measureText(ctx), this.y));
+				}
+				else {
+					// render as temporary group
+					var g = new svg.Element.g();
+					g.children = this.children;
+					g.parent = this;
+					g.render(ctx);
+				}
+			}
+
+			this.onclick = function() {
+				window.open(this.attribute('xlink:href').value);
+			}
+
+			this.onmousemove = function() {
+				svg.ctx.canvas.style.cursor = 'pointer';
+			}
+		}
+		svg.Element.a.prototype = new svg.Element.TextElementBase;
+
+		// image element
+		svg.Element.image = function(node) {
+			this.base = svg.Element.RenderedElementBase;
+			this.base(node);
+
+			svg.Images.push(this);
+			this.img = document.createElement('img');
+			this.loaded = false;
+			var that = this;
+			this.img.onload = function() { that.loaded = true; }
+			this.img.src = this.attribute('xlink:href').value;
+
+			this.renderChildren = function(ctx) {
+				var x = this.attribute('x').Length.toPixels('x');
+				var y = this.attribute('y').Length.toPixels('y');
+
+				var width = this.attribute('width').Length.toPixels('x');
+				var height = this.attribute('height').Length.toPixels('y');
+				if (width == 0 || height == 0) return;
+
+				ctx.save();
+				ctx.translate(x, y);
+				svg.AspectRatio(ctx,
+								this.attribute('preserveAspectRatio').value,
+								width,
+								this.img.width,
+								height,
+								this.img.height,
+								0,
+								0);
+				ctx.drawImage(this.img, 0, 0);
+				ctx.restore();
+			}
+		}
+		svg.Element.image.prototype = new svg.Element.RenderedElementBase;
+
+		// group element
+		svg.Element.g = function(node) {
+			this.base = svg.Element.RenderedElementBase;
+			this.base(node);
+
+			this.getBoundingBox = function() {
+				var bb = new svg.BoundingBox();
+				for (var i=0; i<this.children.length; i++) {
+					bb.addBoundingBox(this.children[i].getBoundingBox());
+				}
+				return bb;
+			};
+		}
+		svg.Element.g.prototype = new svg.Element.RenderedElementBase;
+
+		// symbol element
+		svg.Element.symbol = function(node) {
+			this.base = svg.Element.RenderedElementBase;
+			this.base(node);
+
+			this.baseSetContext = this.setContext;
+			this.setContext = function(ctx) {
+				this.baseSetContext(ctx);
+
+				// viewbox
+				if (this.attribute('viewBox').hasValue()) {
+					var viewBox = svg.ToNumberArray(this.attribute('viewBox').value);
+					var minX = viewBox[0];
+					var minY = viewBox[1];
+					width = viewBox[2];
+					height = viewBox[3];
+
+					svg.AspectRatio(ctx,
+									this.attribute('preserveAspectRatio').value,
+									this.attribute('width').Length.toPixels('x'),
+									width,
+									this.attribute('height').Length.toPixels('y'),
+									height,
+									minX,
+									minY);
+
+					svg.ViewPort.SetCurrent(viewBox[2], viewBox[3]);
+				}
+			}
+		}
+		svg.Element.symbol.prototype = new svg.Element.RenderedElementBase;
+
+		// style element
+		svg.Element.style = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			// text, or spaces then CDATA
+			var css = node.childNodes[0].nodeValue + (node.childNodes.length > 1 ? node.childNodes[1].nodeValue : '');
+			css = css.replace(/(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(^[\s]*\/\/.*)/gm, ''); // remove comments
+			css = svg.compressSpaces(css); // replace whitespace
+			var cssDefs = css.split('}');
+			for (var i=0; i<cssDefs.length; i++) {
+				if (svg.trim(cssDefs[i]) != '') {
+					var cssDef = cssDefs[i].split('{');
+					var cssClasses = cssDef[0].split(',');
+					var cssProps = cssDef[1].split(';');
+					for (var j=0; j<cssClasses.length; j++) {
+						var cssClass = svg.trim(cssClasses[j]);
+						if (cssClass != '') {
+							var props = {};
+							for (var k=0; k<cssProps.length; k++) {
+								var prop = cssProps[k].indexOf(':');
+								var name = cssProps[k].substr(0, prop);
+								var value = cssProps[k].substr(prop + 1, cssProps[k].length - prop);
+								if (name != null && value != null) {
+									props[svg.trim(name)] = new svg.Property(svg.trim(name), svg.trim(value));
+								}
+							}
+							svg.Styles[cssClass] = props;
+							if (cssClass == '@font-face') {
+								var fontFamily = props['font-family'].value.replace(/"/g,'');
+								var srcs = props['src'].value.split(',');
+								for (var s=0; s<srcs.length; s++) {
+									if (srcs[s].indexOf('format("svg")') > 0) {
+										var urlStart = srcs[s].indexOf('url');
+										var urlEnd = srcs[s].indexOf(')', urlStart);
+										var url = srcs[s].substr(urlStart + 5, urlEnd - urlStart - 6);
+										var doc = svg.parseXml(svg.ajax(url));
+										var fonts = doc.getElementsByTagName('font');
+										for (var f=0; f<fonts.length; f++) {
+											var font = svg.CreateElement(fonts[f]);
+											svg.Definitions[fontFamily] = font;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		svg.Element.style.prototype = new svg.Element.ElementBase;
+
+		// use element
+		svg.Element.use = function(node) {
+			this.base = svg.Element.RenderedElementBase;
+			this.base(node);
+
+			this.baseSetContext = this.setContext;
+			this.setContext = function(ctx) {
+				this.baseSetContext(ctx);
+				if (this.attribute('x').hasValue()) ctx.translate(this.attribute('x').Length.toPixels('x'), 0);
+				if (this.attribute('y').hasValue()) ctx.translate(0, this.attribute('y').Length.toPixels('y'));
+			}
+
+			this.getDefinition = function() {
+				var element = this.attribute('xlink:href').Definition.getDefinition();
+				if (this.attribute('width').hasValue()) element.attribute('width', true).value = this.attribute('width').value;
+				if (this.attribute('height').hasValue()) element.attribute('height', true).value = this.attribute('height').value;
+				return element;
+			}
+
+			this.path = function(ctx) {
+				var element = this.getDefinition();
+				if (element != null) element.path(ctx);
+			}
+
+			this.renderChildren = function(ctx) {
+				var element = this.getDefinition();
+				if (element != null) element.render(ctx);
+			}
+		}
+		svg.Element.use.prototype = new svg.Element.RenderedElementBase;
+
+		// mask element
+		svg.Element.mask = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.apply = function(ctx, element) {
+				// render as temp svg
+				var x = this.attribute('x').Length.toPixels('x');
+				var y = this.attribute('y').Length.toPixels('y');
+				var width = this.attribute('width').Length.toPixels('x');
+				var height = this.attribute('height').Length.toPixels('y');
+
+				// temporarily remove mask to avoid recursion
+				var mask = element.attribute('mask').value;
+				element.attribute('mask').value = '';
+
+					var cMask = document.createElement('canvas');
+					cMask.width = x + width;
+					cMask.height = y + height;
+					var maskCtx = cMask.getContext('2d');
+					this.renderChildren(maskCtx);
+
+					var c = document.createElement('canvas');
+					c.width = x + width;
+					c.height = y + height;
+					var tempCtx = c.getContext('2d');
+					element.render(tempCtx);
+					tempCtx.globalCompositeOperation = 'destination-in';
+					tempCtx.fillStyle = maskCtx.createPattern(cMask, 'no-repeat');
+					tempCtx.fillRect(0, 0, x + width, y + height);
+
+					ctx.fillStyle = tempCtx.createPattern(c, 'no-repeat');
+					ctx.fillRect(0, 0, x + width, y + height);
+
+				// reassign mask
+				element.attribute('mask').value = mask;
+			}
+
+			this.render = function(ctx) {
+				// NO RENDER
+			}
+		}
+		svg.Element.mask.prototype = new svg.Element.ElementBase;
+
+		// clip element
+		svg.Element.clipPath = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.apply = function(ctx) {
+				for (var i=0; i<this.children.length; i++) {
+					if (this.children[i].path) {
+						this.children[i].path(ctx);
+						ctx.clip();
+					}
+				}
+			}
+
+			this.render = function(ctx) {
+				// NO RENDER
+			}
+		}
+		svg.Element.clipPath.prototype = new svg.Element.ElementBase;
+
+		// filters
+		svg.Element.filter = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			this.apply = function(ctx, element) {
+				// render as temp svg
+				var bb = element.getBoundingBox();
+				var x = this.attribute('x').Length.toPixels('x');
+				var y = this.attribute('y').Length.toPixels('y');
+				if (x == 0 || y == 0) {
+					x = bb.x1;
+					y = bb.y1;
+				}
+				var width = this.attribute('width').Length.toPixels('x');
+				var height = this.attribute('height').Length.toPixels('y');
+				if (width == 0 || height == 0) {
+					width = bb.width();
+					height = bb.height();
+				}
+
+				// temporarily remove filter to avoid recursion
+				var filter = element.style('filter').value;
+				element.style('filter').value = '';
+
+				// max filter distance
+				var extraPercent = .20;
+				var px = extraPercent * width;
+				var py = extraPercent * height;
+
+				var c = document.createElement('canvas');
+				c.width = width + 2*px;
+				c.height = height + 2*py;
+				var tempCtx = c.getContext('2d');
+				tempCtx.translate(-x + px, -y + py);
+				element.render(tempCtx);
+
+				// apply filters
+				for (var i=0; i<this.children.length; i++) {
+					this.children[i].apply(tempCtx, 0, 0, width + 2*px, height + 2*py);
+				}
+
+				// render on me
+				ctx.drawImage(c, 0, 0, width + 2*px, height + 2*py, x - px, y - py, width + 2*px, height + 2*py);
+
+				// reassign filter
+				element.style('filter', true).value = filter;
+			};
+
+			this.render = function(ctx) {
+				// NO RENDER
+			};
+		}
+		svg.Element.filter.prototype = new svg.Element.ElementBase;
+
+		svg.Element.feGaussianBlur = function(node) {
+			this.base = svg.Element.ElementBase;
+			this.base(node);
+
+			function make_fgauss(sigma) {
+				sigma = Math.max(sigma, 0.01);
+				var len = Math.ceil(sigma * 4.0) + 1;
+				mask = [];
+				for (var i = 0; i < len; i++) {
+					mask[i] = Math.exp(-0.5 * (i / sigma) * (i / sigma));
+				}
+				return mask;
+			}
+
+			function normalize(mask) {
+				var sum = 0;
+				for (var i = 1; i < mask.length; i++) {
+					sum += Math.abs(mask[i]);
+				}
+				sum = 2 * sum + Math.abs(mask[0]);
+				for (var i = 0; i < mask.length; i++) {
+					mask[i] /= sum;
+				}
+				return mask;
+			}
+
+			function convolve_even(src, dst, mask, width, height) {
+			  for (var y = 0; y < height; y++) {
+				for (var x = 0; x < width; x++) {
+				  var a = imGet(src, x, y, width, height, 3)/255;
+				  for (var rgba = 0; rgba < 4; rgba++) {
+					  var sum = mask[0] * (a==0?255:imGet(src, x, y, width, height, rgba)) * (a==0||rgba==3?1:a);
+					  for (var i = 1; i < mask.length; i++) {
+						var a1 = imGet(src, Math.max(x-i,0), y, width, height, 3)/255;
+						var a2 = imGet(src, Math.min(x+i, width-1), y, width, height, 3)/255;
+						sum += mask[i] *
+						  ((a1==0?255:imGet(src, Math.max(x-i,0), y, width, height, rgba)) * (a1==0||rgba==3?1:a1) +
+						   (a2==0?255:imGet(src, Math.min(x+i, width-1), y, width, height, rgba)) * (a2==0||rgba==3?1:a2));
+					  }
+					  imSet(dst, y, x, height, width, rgba, sum);
+				  }
+				}
+			  }
+			}
+
+			function imGet(img, x, y, width, height, rgba) {
+				return img[y*width*4 + x*4 + rgba];
+			}
+
+			function imSet(img, x, y, width, height, rgba, val) {
+				img[y*width*4 + x*4 + rgba] = val;
+			}
+
+			function blur(ctx, width, height, sigma)
+			{
+				var srcData = ctx.getImageData(0, 0, width, height);
+				var mask = make_fgauss(sigma);
+				mask = normalize(mask);
+				tmp = [];
+				convolve_even(srcData.data, tmp, mask, width, height);
+				convolve_even(tmp, srcData.data, mask, height, width);
+				ctx.clearRect(0, 0, width, height);
+				ctx.putImageData(srcData, 0, 0);
+			}
+
+			this.apply = function(ctx, x, y, width, height) {
+				// assuming x==0 && y==0 for now
+				blur(ctx, width, height, this.attribute('stdDeviation').numValue());
+			}
+		}
+		svg.Element.filter.prototype = new svg.Element.feGaussianBlur;
+
+		// title element, do nothing
+		svg.Element.title = function(node) {
+		}
+		svg.Element.title.prototype = new svg.Element.ElementBase;
+
+		// desc element, do nothing
+		svg.Element.desc = function(node) {
+		}
+		svg.Element.desc.prototype = new svg.Element.ElementBase;
+
+		svg.Element.MISSING = function(node) {
+			console.log('ERROR: Element \'' + node.nodeName + '\' not yet implemented.');
+		}
+		svg.Element.MISSING.prototype = new svg.Element.ElementBase;
+
+		// element factory
+		svg.CreateElement = function(node) {
+			var className = node.nodeName.replace(/^[^:]+:/,''); // remove namespace
+			className = className.replace(/\-/g,''); // remove dashes
+			var e = null;
+			if (typeof(svg.Element[className]) != 'undefined') {
+				e = new svg.Element[className](node);
+			}
+			else {
+				e = new svg.Element.MISSING(node);
+			}
+
+			e.type = node.nodeName;
+			return e;
+		}
+
+		// load from url
+		svg.load = function(ctx, url) {
+			svg.loadXml(ctx, svg.ajax(url));
+		}
+
+		// load from xml
+		svg.loadXml = function(ctx, xml) {
+			svg.loadXmlDoc(ctx, svg.parseXml(xml));
+		}
+
+		svg.loadXmlDoc = function(ctx, dom) {
+			svg.init(ctx);
+
+			var mapXY = function(p) {
+				var e = ctx.canvas;
+				while (e) {
+					p.x -= e.offsetLeft;
+					p.y -= e.offsetTop;
+					e = e.offsetParent;
+				}
+				if (window.scrollX) p.x += window.scrollX;
+				if (window.scrollY) p.y += window.scrollY;
+				return p;
+			}
+
+			// bind mouse
+			if (svg.opts['ignoreMouse'] != true) {
+				ctx.canvas.onclick = function(e) {
+					var p = mapXY(new svg.Point(e != null ? e.clientX : event.clientX, e != null ? e.clientY : event.clientY));
+					svg.Mouse.onclick(p.x, p.y);
+				};
+				ctx.canvas.onmousemove = function(e) {
+					var p = mapXY(new svg.Point(e != null ? e.clientX : event.clientX, e != null ? e.clientY : event.clientY));
+					svg.Mouse.onmousemove(p.x, p.y);
+				};
+			}
+
+			var e = svg.CreateElement(dom.documentElement);
+			e.root = true;
+
+			// render loop
+			var isFirstRender = true;
+			var draw = function() {
+				svg.ViewPort.Clear();
+				if (ctx.canvas.parentNode) svg.ViewPort.SetCurrent(ctx.canvas.parentNode.clientWidth, ctx.canvas.parentNode.clientHeight);
+
+				if (svg.opts['ignoreDimensions'] != true) {
+					// set canvas size
+					if (e.style('width').hasValue()) {
+						ctx.canvas.width = e.style('width').Length.toPixels('x');
+						ctx.canvas.style.width = ctx.canvas.width + 'px';
+					}
+					if (e.style('height').hasValue()) {
+						ctx.canvas.height = e.style('height').Length.toPixels('y');
+						ctx.canvas.style.height = ctx.canvas.height + 'px';
+					}
+				}
+				var cWidth = ctx.canvas.clientWidth || ctx.canvas.width;
+				var cHeight = ctx.canvas.clientHeight || ctx.canvas.height;
+				svg.ViewPort.SetCurrent(cWidth, cHeight);
+
+				if (svg.opts != null && svg.opts['offsetX'] != null) e.attribute('x', true).value = svg.opts['offsetX'];
+				if (svg.opts != null && svg.opts['offsetY'] != null) e.attribute('y', true).value = svg.opts['offsetY'];
+				if (svg.opts != null && svg.opts['scaleWidth'] != null && svg.opts['scaleHeight'] != null) {
+					var xRatio = 1, yRatio = 1;
+					if (e.attribute('width').hasValue()) xRatio = e.attribute('width').Length.toPixels('x') / svg.opts['scaleWidth'];
+					if (e.attribute('height').hasValue()) yRatio = e.attribute('height').Length.toPixels('y') / svg.opts['scaleHeight'];
+
+					e.attribute('width', true).value = svg.opts['scaleWidth'];
+					e.attribute('height', true).value = svg.opts['scaleHeight'];
+					e.attribute('viewBox', true).value = '0 0 ' + (cWidth * xRatio) + ' ' + (cHeight * yRatio);
+					e.attribute('preserveAspectRatio', true).value = 'none';
+				}
+
+				// clear and render
+				if (svg.opts['ignoreClear'] != true) {
+					ctx.clearRect(0, 0, cWidth, cHeight);
+				}
+				e.render(ctx);
+				if (isFirstRender) {
+					isFirstRender = false;
+					if (svg.opts != null && typeof(svg.opts['renderCallback']) == 'function') svg.opts['renderCallback']();
+				}
+			}
+
+			var waitingForImages = true;
+			if (svg.ImagesLoaded()) {
+				waitingForImages = false;
+				draw();
+			}
+			svg.intervalID = setInterval(function() {
+				var needUpdate = false;
+
+				if (waitingForImages && svg.ImagesLoaded()) {
+					waitingForImages = false;
+					needUpdate = true;
+				}
+
+				// need update from mouse events?
+				if (svg.opts['ignoreMouse'] != true) {
+					needUpdate = needUpdate | svg.Mouse.hasEvents();
+				}
+
+				// need update from animations?
+				if (svg.opts['ignoreAnimation'] != true) {
+					for (var i=0; i<svg.Animations.length; i++) {
+						needUpdate = needUpdate | svg.Animations[i].update(1000 / svg.FRAMERATE);
+					}
+				}
+
+				// need update from redraw?
+				if (svg.opts != null && typeof(svg.opts['forceRedraw']) == 'function') {
+					if (svg.opts['forceRedraw']() == true) needUpdate = true;
+				}
+
+				// render if needed
+				if (needUpdate) {
+					draw();
+					svg.Mouse.runEvents(); // run and clear our events
+				}
+			}, 1000 / svg.FRAMERATE);
+		}
+
+		svg.stop = function() {
+			if (svg.intervalID) {
+				clearInterval(svg.intervalID);
+			}
+		}
+
+		svg.Mouse = new (function() {
+			this.events = [];
+			this.hasEvents = function() { return this.events.length != 0; }
+
+			this.onclick = function(x, y) {
+				this.events.push({ type: 'onclick', x: x, y: y,
+					run: function(e) { if (e.onclick) e.onclick(); }
+				});
+			}
+
+			this.onmousemove = function(x, y) {
+				this.events.push({ type: 'onmousemove', x: x, y: y,
+					run: function(e) { if (e.onmousemove) e.onmousemove(); }
+				});
+			}
+
+			this.eventElements = [];
+
+			this.checkPath = function(element, ctx) {
+				for (var i=0; i<this.events.length; i++) {
+					var e = this.events[i];
+					if (ctx.isPointInPath && ctx.isPointInPath(e.x, e.y)) this.eventElements[i] = element;
+				}
+			}
+
+			this.checkBoundingBox = function(element, bb) {
+				for (var i=0; i<this.events.length; i++) {
+					var e = this.events[i];
+					if (bb.isPointInBox(e.x, e.y)) this.eventElements[i] = element;
+				}
+			}
+
+			this.runEvents = function() {
+				svg.ctx.canvas.style.cursor = '';
+
+				for (var i=0; i<this.events.length; i++) {
+					var e = this.events[i];
+					var element = this.eventElements[i];
+					while (element) {
+						e.run(element);
+						element = element.parent;
+					}
+				}
+
+				// done running, clear
+				this.events = [];
+				this.eventElements = [];
+			}
+		});
+
+		return svg;
+	}
+})();
+
+if (CanvasRenderingContext2D) {
+	CanvasRenderingContext2D.prototype.drawSvg = function(s, dx, dy, dw, dh) {
+		canvg(this.canvas, s, {
+			ignoreMouse: true,
+			ignoreAnimation: true,
+			ignoreDimensions: true,
+			ignoreClear: true,
+			offsetX: dx,
+			offsetY: dy,
+			scaleWidth: dw,
+			scaleHeight: dh
+		});
+	}
+}

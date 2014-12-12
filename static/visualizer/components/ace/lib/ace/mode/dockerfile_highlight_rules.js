@@ -41,8 +41,8 @@ var DockerfileHighlightRules = function() {
     for (var i = 0; i < startRules.length; i++) {
         if (startRules[i].token == "variable.language") {
             startRules.splice(i, 0, {
-                token: "variable.language",
-                regex: "(?:^(?:FROM|MAINTAINER|RUN|CMD|EXPOSE|ENV|ADD|ENTRYPOINT|VOLUME|USER|WORKDIR|ONBUILD)\\b)",
+                token: "constant.language",
+                regex: "(?:^(?:FROM|MAINTAINER|RUN|CMD|EXPOSE|ENV|ADD|ENTRYPOINT|VOLUME|USER|WORKDIR|ONBUILD|COPY)\\b)",
                 caseInsensitive: true
             });
             break;

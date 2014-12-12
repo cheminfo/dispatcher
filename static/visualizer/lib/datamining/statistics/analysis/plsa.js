@@ -1,1 +1,569 @@
-define(["./../matrix-tools","./../../math/matrix","./../../math/norm","./../../math/decompositions"],function(a,b,c,d){function e(c,d,e,f){if("undefined"==typeof e&&(e="center"),"undefined"==typeof f&&(f="nipals"),c instanceof b||(c=new b(c)),d instanceof b||(d=new b(d)),c.rows!==d.rows)throw"The number of rows in the inputs matrix must match the number of rows in the outputs matrix.";this.analysisMethod=e,this._algorithm=f,this.sourceX=c,this.sourceY=d,this.meanX=a.mean(c),this.meanY=a.mean(d),this.stdDevX=a.standardDeviation(c,this.meanX),this.stdDevY=a.standardDeviation(d,this.meanY),this.inputVariables=new l(this,!0),this.outputVariables=new l(this,!1),this.overwriteSourceMatrix=!1}function f(a,e,f,g){for(var h=a.sourceX.rows,i=a.sourceX.columns,j=a.sourceY.columns,k=b.zeros(h,g),l=b.zeros(h,g),m=b.zeros(i,g),n=b.zeros(j,g),o=b.zeros(i,g),p=new Array(g),q=new Array(g),r=b.zeros(i,g),s=e.transpose().mmul(f),t="",u=0;u<s.rows;u++)for(var v=0;v<s.columns;v++)t+=s.get(u,v)+" ";console.log(t),console.log("start iteration");for(var w=0;g>w;w++){var x=new d.SingularValueDecomposition(s,{computeLeftSingularVectors:!0,computeRightSingularVectors:!1,autoTranspose:!0}),y=x.U.getColumn(0),z=s.transpose().mmul(y);y=y.to1DArray();for(var A=new Array(h),u=0;h>u;A[u++]=0);for(var u=0;h>u;u++)for(var v=0,B=y.length;B>v;v++)A[u]+=e[u][v]*y[v];for(var C=c.euclidean(A),u=0;h>u;u++)A[u]/=C;for(var D=new Array(i),u=0;i>u;D[u++]=0);for(var u=0;i>u;u++)for(var v=0;h>v;v++)D[u]+=e[v][u]*A[v];for(var u=0,E=y.length;E>u;u++)y[u]/=C;z=z.divS(C).to1DArray();for(var F=new Array(h),u=0;h>u;u++)for(var v=0,B=z.length;B>v;v++)F[u]+=f[u][v]*z[v];var G=D.slice();if(w>0){for(var v=0;w>v;v++){for(var H=0,I=0;i>I;I++)H+=G[I]*r[I][v];for(var I=0;i>I;I++)G[I]-=H*r[I][v]}for(var v=0;w>v;v++){for(var H=0,I=0;h>I;I++)H+=F[I]*k[I][v];for(var I=0;h>I;I++)F[I]-=H*k[I][v]}}var J=c.euclidean(G);console.log(J);for(var u=0,E=G.length;E>u;u++)G[u]/=J;for(var K=s.clone(),u=0,E=G.Length;E>u;u++)for(var v=0;E>v;v++)for(var L=G[u]*G[v],I=0;j>I;I++)K[u][I]-=L*s[v][I];s=K,console.log(y[0]);for(var t="",u=0;u<s.rows;u++)for(var v=0;v<s.columns;v++)t+=s.get(u,v)+" ";console.log(t),o.setColumn(w,y),l.setColumn(w,F),n.setColumn(w,z),k.setColumn(w,A),m.setColumn(w,D),r.setColumn(w,G),p[w]=b.rowVector(D).dot(b.columnVector(D)),q[w]=b.rowVector(z).dot(b.columnVector(z))}a.scoresX=k,a.scoresY=l,a.loadingsX=m,a.loadingsY=n,a._weights=o,a.coeffbase=o,a.componentProportionX=new Array(g),a.componentProportionY=new Array(g);for(var M=0,N=0,u=0;h>u;u++){for(var v=0;i>v;v++)M+=e[u][v]*e[u][v];for(var v=0;j>v;v++)N+=f[u][v]*f[u][v]}for(var u=0;g>u;u++)a.componentProportionY[u]=q[u]/N,a.componentProportionX[u]=p[u]/M}function g(a,e,f,g,h){for(var i=a.sourceX.rows,j=a.sourceX.columns,l=a.sourceY.columns,m=a.inputsX.clone(),n=a.outputsY.clone(),o=b.zeros(i,g),p=b.zeros(i,g),q=b.zeros(j,g),r=b.zeros(l,g),s=b.zeros(j,j),t=Array(j),u=new Array(g),v=new Array(g),w=!1,x=0;g>x&&!w;x++){for(var y=m.getColumn(k(m)).to1DArray(),z=n.getColumn(k(n)).to1DArray(),A=new Array(j),B=0;j>B;A[B++]=0);for(var C=new Array(l),B=0;j>B;C[B++]=0);for(var D=c.euclidean(y);D>1e-14;){var E=y.slice();A=new Array(j);for(var B=0;j>B;A[B++]=0);for(var F=0;j>F;F++)for(var B=0,G=z.length;G>B;B++)A[F]+=m[B][F]*z[B];for(var H=c.euclidean(A),B=0;j>B;B++)A[B]/=H;y=new Array(i);for(var B=0;i>B;y[B++]=0);for(var B=0;i>B;B++)for(var F=0;j>F;F++)y[B]+=m[B][F]*A[F];D=c.euclidean(y);for(var B=0;i>B;B++)y[B]/=D;C=new Array(l);for(var B=0;l>B;C[B++]=0);for(var F=0;l>F;F++)for(var B=0;i>B;B++)C[F]+=n[B][F]*y[B];for(var I=c.euclidean(C),B=0;l>B;B++)C[B]/=I;z=new Array(i);for(var B=0;i>B;B++)for(var F=0;l>F;F++)z[B]+=n[B][F]*C[F];D=0;for(var B=0;i>B;B++){var J=E[B]-y[B];D+=J*J}D=Math.sqrt(D)}for(var K=b.columnVector(y).dot(b.rowVector(z)),L=new Array(j),B=0;j>B;L[B++]=0);for(var F=0;j>F;F++)for(var B=0;i>B;B++)L[F]+=m[B][F]*y[B];for(var B=0;i>B;B++){for(var F=0;j>F;F++)m[B][F]-=y[B]*L[F];for(var F=0;l>F;F++)n[B][F]-=K*y[B]*C[F]}v[x]=K*K,u[x]=b.columnVector(L).dot(b.rowVector(L)),o.setColumn(x,y),q.setColumn(x,L),p.setColumn(x,z),r.setColumn(x,C),s.setColumn(x,A),t[x]=K;var M=c.euclideanM(m),N=c.euclideanM(n);w=!0;for(var B=0,G=M.length;G>B&&w===!0;B++)(M[B]>h||N[B]>h)&&(w=!1)}a.coeffbase=new d.SingularValueDecomposition(q.transpose()).solveForDiagonal(t),a.scoresX=o,a.scoresY=p,a.loadingsX=q,a.loadingsY=r,a._weights=s,a.componentProportionX=new Array(g),a.componentProportionY=new Array(g);for(var O=0,P=0,B=0;i>B;B++){for(var F=0;j>F;F++)O+=e[B][F]*e[B][F];for(var F=0;l>F;F++)P+=f[B][F]*f[B][F]}for(var B=0;g>B;B++)a.componentProportionY[B]=v[B]/P,a.componentProportionX[B]=u[B]/O}function h(a,d){for(var e=a.sourceX.columns,f=b.zeros(e,d),g=0;e>g;g++){for(var h=new Array(d),i=new Array(d),j=0;d>j;j++){var k=a.loadingsY.getColumn(j)[0][0],l=a.scoresX.getColumn(j),m=a.loadingsX.getColumn(j).to1DArray(),n=k*k*l.dot(l.transpose()),o=m[g]*m[g]/c.squareEuclidean(m);h[j]=n*o,i[j]=n}for(var p=0,q=0;d>q;q++)p+=h[q],r+=i[q];var p,r;require(["./../array-tools"],function(a){p=a.cumulativeSum(h),r=a.cumulativeSum(i)});for(var j=0;d>j;j++)f[g][j]=Math.sqrt(e*p[j]/r[j])}return f}function i(){}function j(c,d,e,f,g){var h=a.center(d,e,g);if(null!==f&&"standardize"===c.analysisMethod){for(var i=0,j=f.length;j>i;i++)if(0===f[i])throw new ArithmeticException("Standard deviation cannot be zero (cannot standardize the constant variable at column index "+i+").");a.standardize(h,f,!0)}return new b(h)}function k(a){for(var b=a.rows,c=a.columns,d=0,e=0,f=0;c>f;f++){for(var g=0,h=0;b>h;h++)g+=a[h][f]*a[h][f];g>e&&(e=g,d=f)}return d}function l(a,b){this.analysis=a,this.inputs=b}return e.prototype={get source(){return this.sourceX},get output(){return this.sourceY},get predictors(){return this.inputVariables},get dependents(){return this.outputVariables},get weights(){return this._weights},get factors(){return this.factorCollection},get algorithm(){return this._algorithm},get method(){return this.analysisMethod},get importance(){return this.vip},set overwrite(a){"boolean"==typeof a&&(this.overwriteSourceMatrix=a)},compute:function(a){var b=Math.min(this.sourceX.rows-1,this.sourceX.columns);if("undefined"==typeof a&&(a=b),a>b)throw"Argument factors out of range.";var c=j(this,this.sourceX,this.meanX,this.stdDevX,this.overwriteSourceMatrix),d=j(this,this.sourceY,this.meanY,null,this.overwriteSourceMatrix);"simpls"===this.algorithm?f(this,c,d,a):g(this,c,d,a,0),this.cumulativeProportionX=new Array(a),this.cumulativeProportionY=new Array(a),this.cumulativeProportionX[0]=this.componentProportionX[0],this.cumulativeProportionY[0]=this.componentProportionY[0];for(var e=1;a>e;e++)this.cumulativeProportionX[e]=this.cumulativeProportionX[e-1]+this.componentProportionX[e],this.cumulativeProportionY[e]=this.cumulativeProportionY[e-1]+this.componentProportionY[e],console.log(this.cumulativeProportionX[e]+" "+this.cumulativeProportionY[e]);this.vip=h(this,a);for(var k=new Array(a),e=0,l=k.length;l>e;e++)k[e]=new i(this,e);this.factorCollection=k},transform:function(a,c){"undefined"==typeof c&&(c=this.loadingsX.columns),a instanceof b||(a=new b(a));var d=a.rows,e=a.columns;if(e>this.loadingsX.rows)throw"The data matrix should have a number of columns less than or equal to the number of rows in the loadings matrix for the input variables.";for(var f=b.zeros(d,c),g=j(this,a,this.meanX,this.stdDevX,!1),h=this.loadingsX,i=0;d>i;i++)for(var k=0;c>k;k++)for(var l=0;e>l;l++)f[i][k]+=g[i][l]*h[l][k];return f},transformOutput:function(a,c){"undefined"==typeof c&&(c=this.loadingsY.columns),a instanceof b||(a=new b(a));var d=a.rows,e=a.columns;if(e>this.loadingsY.rows)throw"The data matrix should have a number of columns less than or equal to the number of rows in the loadings matrix for the input variables.";for(var f=b.zeros(d,c),g=j(this,a,this.meanY,this.stdDevY,!1),h=this.loadingsY,i=0;d>i;i++)for(var k=0;c>k;k++)for(var l=0;e>l;l++)f[i][k]+=g[i][l]*h[l][k];return f},createRegression:function(a){if("undefined"==typeof a&&(a=this.factorCollection.length),a>this.factorCollection.length)throw"The number of factors should be equal to or less than the number of factors computed in the analysis.";for(var c=this.sourceX.columns,d=this.sourceY.columns,e=b.zeros(c,d),f=this.coeffbase,g=this.loadingsY,h=0;c>h;h++)for(var i=0;d>i;i++)for(var j=0;a>j;j++)e[h][i]+=f[h][j]*g[i][j];if("standardize"===this.analysisMethod)for(var h=0;c>h;h++)for(var i=0;d>i;i++)e[h][i]=e[h][i]/this.stdDevX[h];for(var k=new Array(d),h=0;d>h;h++){for(var l=0,i=0;c>i;i++)l+=this.meanX[i]*e[i][h];k[h]=this.meanY[h]-l}var m;return require(["./../models/regression/multivariate-linear-regression"],function(a){m=new a(e,k,!0)}),m}},l.prototype={get source(){return this.inputs?this.analysis.sourceX:this.analysis.sourceY},get result(){return this.inputs?this.analysis.scoresX:this.analysis.scoresY},get means(){return this.inputs?this.analysis.meanX:this.analysis.meanY},get standardDeviations(){return this.inputs?this.analysis.stdDevX:this.analysis.stdDevY},get factorMatrix(){return this.inputs?this.analysis.loadingsX:this.analysis.loadingsY},get factorProportions(){return this.inputs?this.analysis.cumulativeProportionX:this.analysis.cumulativeProportionY},transform:function(a,b){return inputs?this.analysis.transform(a,b):this.analysis.transformOutput(a,b)}},e});
+// https://github.com/accord-net/framework/blob/development/Sources/Accord.Statistics/Analysis/PartialLeastSquaresAnalysis.cs
+define(["./../matrix-tools","./../../math/matrix","./../../math/norm","./../../math/decompositions"], function(MTools, Matrix, Norm, DC){
+
+    function PartialLeastSquaresAnalysis(inputs, outputs, method, algorithm) {
+        if(typeof(method)==='undefined') method = "center";
+        if(typeof(algorithm)==='undefined') algorithm = "nipals";
+        if(!(inputs instanceof Matrix)) inputs = new Matrix(inputs);
+        if(!(outputs instanceof Matrix)) outputs = new Matrix(outputs);
+        
+        if(inputs.rows !== outputs.rows)
+            throw "The number of rows in the inputs matrix must match the number of rows in the outputs matrix.";
+        
+        this.analysisMethod = method;
+        this._algorithm = algorithm;
+        
+        this.sourceX = inputs;
+        this.sourceY = outputs;
+        
+        this.meanX = MTools.mean(inputs);
+        this.meanY = MTools.mean(outputs);
+        this.stdDevX = MTools.standardDeviation(inputs, this.meanX);
+        this.stdDevY = MTools.standardDeviation(outputs, this.meanY);
+        
+        this.inputVariables = new PartialLeastSquaresVariables(this, true);
+        this.outputVariables = new PartialLeastSquaresVariables(this, false);
+        
+        this.overwriteSourceMatrix = false;
+    }
+    
+    PartialLeastSquaresAnalysis.prototype = {
+        get source() {
+            return this.sourceX;
+        },
+        get output() {
+            return this.sourceY;
+        },
+        get predictors() {
+            return this.inputVariables;
+        },
+        get dependents() {
+            return this.outputVariables;
+        },
+        get weights() {
+            return this._weights;
+        },
+        get factors() {
+            return this.factorCollection;
+        },
+        get algorithm() {
+            return this._algorithm;
+        },
+        get method() {
+            return this.analysisMethod;
+        },
+        get importance() {
+            return this.vip;
+        },
+        set overwrite(value) {
+            if(typeof value === 'boolean')
+                this.overwriteSourceMatrix = value;
+        },
+        compute : function(factors) {
+        
+            var maxFactors = Math.min(this.sourceX.rows-1,this.sourceX.columns);
+            if(typeof(factors)==='undefined') factors = maxFactors;
+            if(factors > maxFactors)
+                throw "Argument factors out of range.";
+            
+            var inputs = adjust(this,this.sourceX,this.meanX,this.stdDevX,this.overwriteSourceMatrix);
+            var outputs = adjust(this,this.sourceY,this.meanY,null,this.overwriteSourceMatrix);
+            
+            if(this.algorithm === "simpls")
+                simpls(this, inputs, outputs, factors);
+            else
+                nipals(this, inputs, outputs, factors, 0);
+            
+            this.cumulativeProportionX = new Array(factors);
+            this.cumulativeProportionY = new Array(factors);
+            this.cumulativeProportionX[0] = this.componentProportionX[0];
+            this.cumulativeProportionY[0] = this.componentProportionY[0];
+            for (var i = 1; i < factors; i++) {
+                this.cumulativeProportionX[i] = this.cumulativeProportionX[i - 1] + this.componentProportionX[i];
+                this.cumulativeProportionY[i] = this.cumulativeProportionY[i - 1] + this.componentProportionY[i];
+                console.log(this.cumulativeProportionX[i] + " " + this.cumulativeProportionY[i]);
+            }
+
+            this.vip = computeVariableImportanceInProjection(this, factors);
+
+            var array = new Array(factors);
+            for (var i = 0, ii = array.length; i < ii; i++)
+                array[i] = new PartialLeastSquaresFactor(this, i);
+            this.factorCollection = array;
+        },
+        transform : function(data, dimensions) {
+            if(typeof(dimensions)==='undefined') dimensions = this.loadingsX.columns;
+            if(!(data instanceof Matrix)) data = new Matrix(data);
+            var rows = data.rows;
+            var cols = data.columns;
+            if(cols > this.loadingsX.rows) throw "The data matrix should have a number of columns less than or equal to the number of rows in the loadings matrix for the input variables.";
+            
+            var result = Matrix.zeros(rows, dimensions);
+            var source = adjust(this, data, this.meanX, this.stdDevX, false);
+            var loadingsX = this.loadingsX;
+            
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < dimensions; j++)
+                    for (var k = 0; k < cols; k++)
+                        result[i][j] += source[i][k] * loadingsX[k][j];
+
+            return result;
+        },
+        transformOutput : function(outputs, dimensions) {
+            if(typeof(dimensions)==='undefined') dimensions = this.loadingsY.columns;
+            if(!(outputs instanceof Matrix)) outputs = new Matrix(outputs);
+            var rows = outputs.rows;
+            var cols = outputs.columns;
+            if(cols > this.loadingsY.rows) throw "The data matrix should have a number of columns less than or equal to the number of rows in the loadings matrix for the input variables.";
+            
+            var result = Matrix.zeros(rows, dimensions);
+            var source = adjust(this, outputs, this.meanY, this.stdDevY, false);
+            var loadingsY = this.loadingsY;
+            
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < dimensions; j++)
+                    for (var k = 0; k < cols; k++)
+                        result[i][j] += source[i][k] * loadingsY[k][j];
+
+            return result;
+        },
+        createRegression : function(factors) {
+            if(typeof(factors)==='undefined') factors = this.factorCollection.length;
+            if(factors > this.factorCollection.length)
+                throw "The number of factors should be equal to or less than the number of factors computed in the analysis.";
+            var xcols = this.sourceX.columns;
+            var ycols = this.sourceY.columns;
+
+            var B = Matrix.zeros(xcols, ycols);
+            var coeffbase = this.coeffbase, loadingsY = this.loadingsY;
+            for (var i = 0; i < xcols; i++)
+                for (var j = 0; j < ycols; j++)
+                    for (var k = 0; k < factors; k++)
+                        B[i][j] += coeffbase[i][k] * loadingsY[j][k];
+
+            if (this.analysisMethod === "standardize")
+                for (var i = 0; i < xcols; i++)
+                    for (var j = 0; j < ycols; j++)
+                        B[i][j] = B[i][j] / this.stdDevX[i];
+
+            var A = new Array(ycols);
+            for (var i = 0; i < ycols; i++) {
+                var sum = 0;
+                for (var j = 0; j < xcols; j++)
+                    sum += this.meanX[j] * B[j][i];
+                A[i] = this.meanY[i] - sum;
+            }
+            
+            var toReturn;
+            require(["./../models/regression/multivariate-linear-regression"],function(MLR){
+                toReturn = new MLR(B, A, true);
+            });
+            return toReturn;
+        }
+    };
+    
+    function simpls(plsa, inputsX, outputsY, factors) {
+
+        var rows = plsa.sourceX.rows;
+        var xcols = plsa.sourceX.columns;
+        var ycols = plsa.sourceY.columns;
+
+        var T = Matrix.zeros(rows, factors);  // factor score matrix T
+        var U = Matrix.zeros(rows, factors);  // factor score matrix U
+        var P = Matrix.zeros(xcols, factors); // loading matrix P, the loadings for X such that X = TP + F
+        var C = Matrix.zeros(ycols, factors); // loading matrix C, the loadings for Y such that Y = TC + E
+        var W = Matrix.zeros(xcols, factors); // weight matrix W
+        var varX = new Array(factors);
+        var varY = new Array(factors);
+
+        var V = Matrix.zeros(xcols, factors);
+
+        var covariance = inputsX.transpose().mmul(outputsY);
+
+        var toLog = "";
+            for(var i = 0; i < covariance.rows; i++)
+                for(var j = 0; j < covariance.columns; j++)
+                    toLog += covariance.get(i,j)+" ";
+            console.log(toLog);
+            
+            console.log("start iteration");
+        
+        for (var factor = 0; factor < factors; factor++) {
+        
+            var svd = new DC.SingularValueDecomposition(covariance,
+                {computeLeftSingularVectors: true,
+                computeRightSingularVectors: false,
+                autoTranspose: true});
+
+            var w = svd.U.getColumn(0);
+            var c = covariance.transpose().mmul(w);
+            w = w.to1DArray();
+
+            var t = new Array(rows);
+            for(var i = 0 ; i < rows; t[i++] = 0);
+            
+            for (var i = 0; i < rows; i++)
+                for (var j = 0, jj = w.length ; j < jj; j++)
+                    t[i] += inputsX[i][j] * w[j];
+
+            var norm_t = Norm.euclidean(t);
+            for(var i = 0; i < rows; i++)
+                    t[i] /= norm_t;
+
+            var p = new Array(xcols);
+            for(var i = 0 ; i < xcols; p[i++] = 0);
+            
+            for (var i = 0; i < xcols; i++)
+                for (var j = 0; j < rows; j++)
+                    p[i] += inputsX[j][i] * t[j];
+
+            for(var i = 0, ii = w.length; i < ii; i++)
+                w[i] /= norm_t;
+            c = c.divS(norm_t).to1DArray();
+
+            var u = new Array(rows);
+            for (var i = 0; i < rows; i++)
+                for (var j = 0, jj = c.length; j < jj; j++)
+                    u[i] += outputsY[i][j] * c[j];
+
+            var v = p.slice();
+
+            if (factor > 0) {
+                for (var j = 0; j < factor; j++) {
+                    var proj = 0;
+                    for (var k = 0; k < xcols; k++)
+                        proj += v[k] * V[k][j];
+
+                    for (var k = 0; k < xcols; k++)
+                        v[k] -= proj * V[k][j];
+                }
+
+                for (var j = 0; j < factor; j++) {
+                    var proj = 0;
+                    for (var k = 0; k < rows; k++)
+                        proj += u[k] * T[k][j];
+
+                    for (var k = 0; k < rows; k++)
+                        u[k] -= proj * T[k][j];
+                }
+            }
+            
+            var normV = Norm.euclidean(v);
+            console.log(normV);
+            for(var i = 0, ii = v.length; i < ii; i++)
+                v[i] /= normV;
+
+            var cov = covariance.clone();
+            for (var i = 0, ii = v.Length; i < ii; i++) {
+                for (var j = 0; j < ii; j++) {
+                    var d = v[i] * v[j];
+
+                    for (var k = 0; k < ycols; k++)
+                        cov[i][k] -= d * covariance[j][k];
+                }
+            }
+            covariance = cov;
+
+            console.log(w[0])
+            var toLog = "";
+            for(var i = 0; i < covariance.rows; i++)
+                for(var j = 0; j < covariance.columns; j++)
+                    toLog += covariance.get(i,j)+" ";
+            console.log(toLog);
+            
+            W.setColumn(factor, w);
+            U.setColumn(factor, u);
+            C.setColumn(factor, c);
+            T.setColumn(factor, t);
+            P.setColumn(factor, p);
+            V.setColumn(factor, v);
+            
+            varX[factor] = Matrix.rowVector(p).dot(Matrix.columnVector(p));
+            varY[factor] = Matrix.rowVector(c).dot(Matrix.columnVector(c));
+        }
+        
+        plsa.scoresX = T;
+        plsa.scoresY = U;
+        plsa.loadingsX = P;
+        plsa.loadingsY = C;
+        plsa._weights = W;
+        plsa.coeffbase = W;
+
+        plsa.componentProportionX = new Array(factors);
+        plsa.componentProportionY = new Array(factors);
+
+        var sumX = 0, sumY = 0;
+        for (var i = 0; i < rows; i++) {
+            for (var j = 0; j < xcols; j++)
+                sumX += inputsX[i][j] * inputsX[i][j];
+
+            for (var j = 0; j < ycols; j++)
+                sumY += outputsY[i][j] * outputsY[i][j];
+        }
+
+        for (var i = 0; i < factors; i++) {
+            plsa.componentProportionY[i] = varY[i] / sumY;
+            plsa.componentProportionX[i] = varX[i] / sumX;
+        }
+
+    }
+    
+    function nipals(plsa, inputsX, outputsY, factors, tolerance) {
+
+        var rows = plsa.sourceX.rows;
+        var xcols = plsa.sourceX.columns;
+        var ycols = plsa.sourceY.columns;
+
+        var E = plsa.inputsX.clone();
+        var F = plsa.outputsY.clone();
+
+        var T = Matrix.zeros(rows, factors);  // factor score matrix T
+        var U = Matrix.zeros(rows, factors);  // factor score matrix U
+        var P = Matrix.zeros(xcols, factors); // loading matrix P, the loadings for X such that X = TP + F
+        var C = Matrix.zeros(ycols, factors); // loading matrix C, the loadings for Y such that Y = TC + E
+        var W = Matrix.zeros(xcols, xcols);   // weight matrix W
+        var B = Array(xcols);
+
+        var varX = new Array(factors);
+        var varY = new Array(factors);
+
+        var stop = false;
+        
+        for (var factor = 0; factor < factors && !stop; factor++)
+        {
+            var t = E.getColumn(largest(E)).to1DArray();
+
+            var u = F.getColumn(largest(F)).to1DArray();
+
+            var w = new Array(xcols);
+            for(var i = 0; i < xcols; w[i++]=0);
+            
+            var c = new Array(ycols);
+            for(var i = 0; i < xcols; c[i++]=0);
+
+            var norm_t = Norm.euclidean(t);
+
+            while (norm_t > 1e-14)
+            {
+                var t0 = t.slice();
+
+                w = new Array(xcols);
+                for(var i = 0; i < xcols; w[i++]=0);
+                
+                for (var j = 0; j < xcols; j++)
+                    for (var i = 0, ii = u.length; i < ii; i++)
+                        w[j] += E[i][j] * u[i];
+
+                var normW = Norm.euclidean(w);
+                for(var i = 0; i < xcols; i++)
+                    w[i] /= normW;
+                
+                t = new Array(rows);
+                for(var i = 0; i < rows; t[i++]=0);
+                
+                for (var i = 0; i < rows; i++)
+                    for (var j = 0; j < xcols; j++)
+                        t[i] += E[i][j] * w[j];
+
+                norm_t = Norm.euclidean(t);
+                for(var i = 0; i < rows; i++)
+                    t[i] /= norm_t;
+
+                c = new Array(ycols);
+                for(var i = 0; i < ycols; c[i++]=0);
+                
+                for (var j = 0; j < ycols; j++)
+                    for (var i = 0; i < rows; i++)
+                        c[j] += F[i][j] * t[i];
+
+                var normC = Norm.euclidean(c);
+                for(var i = 0; i < ycols; i++)
+                    c[i] /= normC;
+
+                u = new Array(rows);
+                for (var i = 0; i < rows; i++)
+                    for (var j = 0; j < ycols; j++)
+                        u[i] += F[i][j] * c[j];
+
+                norm_t = 0.0;
+                for (var i = 0; i < rows; i++) {
+                    var d = (t0[i] - t[i]);
+                    norm_t += d * d;
+                }
+                norm_t = Math.sqrt(norm_t);
+            }
+
+            var b = Matrix.columnVector(t).dot(Matrix.rowVector(u));
+
+            var p = new Array(xcols);
+            for(var i = 0; i < xcols; p[i++]=0);
+            
+            for (var j = 0; j < xcols; j++)
+                for (var i = 0; i < rows; i++)
+                    p[j] += E[i][j] * t[i];
+
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < xcols; j++)
+                    E[i][j] -= t[i] * p[j];
+
+                for (var j = 0; j < ycols; j++)
+                    F[i][j] -= b * t[i] * c[j];
+            }
+
+            varY[factor] = b * b;
+            varX[factor] = Matrix.columnVector(p).dot(Matrix.rowVector(p));
+
+            T.setColumn(factor, t);
+            P.setColumn(factor, p);
+            U.setColumn(factor, u);
+            C.setColumn(factor, c);
+            W.setColumn(factor, w);
+            B[factor] = b;
+
+            var norm_x = Norm.euclideanM(E);
+            var norm_y = Norm.euclideanM(F);
+
+            stop = true;
+            for (var i = 0, ii = norm_x.length; i < ii && stop === true; i++) {
+                if (norm_x[i] > tolerance || norm_y[i] > tolerance)
+                    stop = false;
+            }
+        }
+
+        plsa.coeffbase = new DC.SingularValueDecomposition(P.transpose()).solveForDiagonal(B);
+
+        plsa.scoresX = T;
+        plsa.scoresY = U;
+        plsa.loadingsX = P;
+        plsa.loadingsY = C;
+        plsa._weights = W;
+
+        plsa.componentProportionX = new Array(factors);
+        plsa.componentProportionY = new Array(factors);
+
+        var sumX = 0.0, sumY = 0.0;
+        for (var i = 0; i < rows; i++) {
+            for (var j = 0; j < xcols; j++)
+                sumX += inputsX[i][j] * inputsX[i][j];
+
+            for (var j = 0; j < ycols; j++)
+                sumY += outputsY[i][j] * outputsY[i][j];
+        }
+
+        for (var i = 0; i < factors; i++) {
+            plsa.componentProportionY[i] = varY[i] / sumY;
+            plsa.componentProportionX[i] = varX[i] / sumX;
+        }
+    }
+    
+    function computeVariableImportanceInProjection(plsa, factors) {
+
+        var xcols = plsa.sourceX.columns;
+
+        var importance = Matrix.zeros(xcols, factors);
+
+        for (var j = 0; j < xcols; j++) {
+            var SS1 = new Array(factors);
+            var SS2 = new Array(factors);
+
+            for (var k = 0; k < factors; k++) {
+                var b = plsa.loadingsY.getColumn(k)[0][0];
+                var t = plsa.scoresX.getColumn(k);
+                var w = plsa.loadingsX.getColumn(k).to1DArray();
+
+                var ss = (b * b) * (t.dot(t.transpose()));
+                var wn = (w[j] * w[j]) / Norm.squareEuclidean(w);
+
+                SS1[k] = ss * wn;
+                SS2[k] = ss;
+            }
+            
+            var sum1 = 0;
+            for(var i = 0; i < factors; i++) {
+                sum1 += SS1[i];
+                sum2 += SS2[i];
+            }
+            
+            var sum1, sum2;
+            require(["./../array-tools"],function(ATools){
+                sum1 = ATools.cumulativeSum(SS1);
+                sum2 = ATools.cumulativeSum(SS2);
+            });
+
+            for (var k = 0; k < factors; k++)
+                importance[j][k] = Math.sqrt(xcols * sum1[k] / sum2[k]);
+        }
+        return importance;
+    }
+    
+    function PartialLeastSquaresFactor() {
+    
+    }
+    
+    function PartialLeastSquaresFactorCollection() {
+    
+    }
+    
+    function adjust(plsa, matrix, columnMeans, columnStdDev, inPlace) {
+        var result = MTools.center(matrix,columnMeans,inPlace);
+        if(columnStdDev !== null && plsa.analysisMethod === "standardize") {
+            for (var j = 0, jj = columnStdDev.length; j < jj; j++)
+                if (columnStdDev[j] === 0) throw new ArithmeticException("Standard deviation cannot be zero (cannot standardize the constant variable at column index " + j + ").");
+            MTools.standardize(result, columnStdDev, true);
+        }
+        
+        return new Matrix(result);
+    }
+    
+    function largest(matrix) {
+        var rows = matrix.rows;
+        var cols = matrix.columns;
+        
+        var index = 0;
+        var max = 0;
+        for(var i = 0; i < cols; i++) {
+            var squareSum = 0;
+            for(var j = 0; j < rows; j++)
+                squareSum += matrix[j][i] * matrix[j][i];
+            
+            if(squareSum > max) {
+                max = squareSum;
+                index = i;
+            }
+        }
+        return index;
+    }
+    
+    function PartialLeastSquaresVariables(analysis, inputs) {
+        this.analysis = analysis;
+        this.inputs = inputs;
+    }
+    
+    PartialLeastSquaresVariables.prototype = {
+        get source() {
+            return this.inputs ? this.analysis.sourceX : this.analysis.sourceY;
+        },
+        get result() {
+            return this.inputs ? this.analysis.scoresX : this.analysis.scoresY;
+        },
+        get means() {
+            return this.inputs ? this.analysis.meanX : this.analysis.meanY;
+        },
+        get standardDeviations() {
+            return this.inputs ? this.analysis.stdDevX : this.analysis.stdDevY;
+        },
+        get factorMatrix() {
+            return this.inputs ? this.analysis.loadingsX : this.analysis.loadingsY;
+        },
+        get factorProportions() {
+            return this.inputs ? this.analysis.cumulativeProportionX : this.analysis.cumulativeProportionY;
+        },
+        transform : function(data, factors) {
+            return inputs ? this.analysis.transform(data, factors) : this.analysis.transformOutput(data, factors);
+        }
+    };
+    
+    
+    return PartialLeastSquaresAnalysis;
+
+});

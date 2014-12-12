@@ -1,1 +1,114 @@
-define(["./../math/comparator"],function(a){function b(b,f,g){for(var h=a(b,g),i=h.clone(),j=[],k=0,l=b.length;l>k;k++)j[k]=(new c).add(new d(b[k],k));for(;j.length>1;){var m=new c,n=e(i),o=n.row,p=n.column,q=p-1;i.removeRow(o),i.removeColumn(o),m.distance=n.v,m.addChild(j[o]).addChild(j[p]),j.splice(o,1),j.splice(q,1,m);for(var r=new Array(j.length),k=0;k<j.length;k++)k===q&&(r[k]=0),r[k]=f(m.elements,j[k].elements,h);i.setRow(q,r),i.setColumn(q,r)}return j[0]}function c(){this.elements=[],this.children=[],this.distance=0}function d(a,b){this.data=a,this.index=b}function e(a){for(var b=1/0,c={},d=0,e=a.rows;e>d;d++)for(var f=d+1,g=a.columns;g>f;f++)a[d][f]<b&&(b=a[d][f],c.row=d,c.column=f);return c.v=b,c}function f(a,b,c){for(var d=1/0,e=0,f=a.length;f>e;e++)for(var g=a[e].index,h=0,i=b.length;i>h;h++){var j=c[g][b[h].index];d>j&&(d=j)}return d}function g(a,b,c){for(var d=-1/0,e=0,f=a.length;f>e;e++)for(var g=a[e].index,h=0,i=b.length;i>h;h++){var j=c[g][b[h].index];j>d&&(d=j)}return d}function h(a,b,c){for(var d=0,e=a.length,f=b.length,g=0;e>g;g++)for(var h=a[g].index,i=0;f>i;i++)d+=c[h][b[i].index];return d/(e*f)}return c.prototype.add=function(a){return this.elements=this.elements.concat(a),this},c.prototype.addChild=function(a){return this.children.push(a),this.elements=this.elements.concat(a.elements),this},{compute:b,methods:{singleLinkage:f,completeLinkage:g,upgma:h,averageLinkage:h}}});
+define(["./../math/comparator"],function(Comparator){
+    
+    function HClust(data, method, distanceFunction) {
+        var initialDistanceMatrix = Comparator(data, distanceFunction);
+        var evolutiveDistanceMatrix = initialDistanceMatrix.clone();
+        var clusters = [];
+        for(var i = 0, ii = data.length; i < ii; i++) {
+            clusters[i] = new Cluster().add(new ClusterElement(data[i], i));
+        }
+        while(clusters.length > 1) {
+            var newCluster = new Cluster();
+            var min = minIndex(evolutiveDistanceMatrix);
+            var row = min.row, column = min.column, col=column-1;
+            evolutiveDistanceMatrix.removeRow(row);
+            evolutiveDistanceMatrix.removeColumn(row);
+            newCluster.distance = min.v;
+            newCluster.addChild(clusters[row]).addChild(clusters[column]);
+            clusters.splice(row,1);
+            clusters.splice(col,1,newCluster);
+            var newRow = new Array(clusters.length);
+            for(var i = 0; i < clusters.length; i++) {
+                if(i===col) newRow[i] = 0;
+                newRow[i] = method(newCluster.elements, clusters[i].elements, initialDistanceMatrix);
+            }
+            evolutiveDistanceMatrix.setRow(col,newRow);
+            evolutiveDistanceMatrix.setColumn(col,newRow);
+        }
+        return clusters[0];
+    }
+    
+    function Cluster() {
+        this.elements = [];
+        this.children = [];
+        this.distance = 0;
+    }
+    
+    Cluster.prototype.add = function(newElements) {
+        this.elements = this.elements.concat(newElements);
+        return this;
+    };
+    
+    Cluster.prototype.addChild = function(child) {
+        this.children.push(child);
+        this.elements = this.elements.concat(child.elements);
+        return this;
+    };
+    
+    function ClusterElement(element, index) {
+        this.data = element;
+        this.index = index;
+    }
+    
+    function minIndex(distanceMatrix) {
+        var v = Infinity;
+        var index = {};
+        for(var i = 0, ii = distanceMatrix.rows; i < ii; i++) {
+            for(var j = i+1, jj = distanceMatrix.columns; j < jj; j++) {
+                if(distanceMatrix[i][j] < v) {
+                    v = distanceMatrix[i][j];
+                    index.row=i;
+                    index.column=j;
+                }
+            }
+        }
+        index.v = v;
+        return index;
+    }
+    
+    function singleLinkage(cluster1, cluster2, distanceMatrix) {
+        var min = Infinity;
+        for(var i = 0, ii = cluster1.length; i < ii; i++){
+            var index1 = cluster1[i].index;
+            for(var j = 0, jj = cluster2.length; j < jj; j++){
+                var dist = distanceMatrix[index1][cluster2[j].index];
+                if(dist < min) min = dist;
+            }
+        }
+        return min;
+    }
+
+    function completeLinkage(cluster1, cluster2, distanceMatrix) {
+        var max = -Infinity;
+        for(var i = 0, ii = cluster1.length; i < ii; i++){
+            var index1 = cluster1[i].index;
+            for(var j = 0, jj = cluster2.length; j < jj; j++){
+                var dist = distanceMatrix[index1][cluster2[j].index];
+                if(dist > max) max = dist;
+            }
+        }
+        return max;
+    }
+    
+    function averageLinkage(cluster1, cluster2, distanceMatrix) {
+        var total = 0, c1 = cluster1.length, c2 = cluster2.length;
+        for(var i = 0; i < c1; i++){
+            var index1 = cluster1[i].index;
+            for(var j = 0; j < c2; j++){
+                total += distanceMatrix[index1][cluster2[j].index];
+            }
+        }
+        return total/(c1*c2);
+    }
+    
+    return {
+        compute : HClust,
+        methods : {
+            singleLinkage: singleLinkage,
+            completeLinkage : completeLinkage,
+            upgma : averageLinkage,
+            averageLinkage : averageLinkage
+        }
+    };
+    
+});

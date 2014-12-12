@@ -1,1 +1,68 @@
-define(["components/jit/Jit/jit"],function(a){a.RGraph.Plot.NodeTypes.implement({image:{render:function(b,c){function d(a){var b=f/(a.width>a.height?a.width:a.height);g.drawImage(a,e.x-a.width/2*b,e.y-a.height/2*b,a.width*b,a.height*b)}a.imageCache=a.imageCache||[];var e=b.pos.getc(!0),f=b.getData("dim");if(b.data.image){var g=c.getCtx(),h=new Image;h.src=b.data.image.value?b.data.image.value:b.data.image,a.imageCache[h.src]?(h=a.imageCache[h.src],d(h)):h.onload=function(){d(h),a.imageCache[h.src]=h}}else this.nodeHelper.circle.render("fill",e,f,c)},contains:function(a,b){var c=a.pos.getc(!0),d=a.getData("dim");return this.nodeHelper.circle.contains(c,b,d)}},piechart:{render:function(a,b){var c=a.pos.getc(!0),d=a.getData("dim");if(a.data.piechart){for(var e=b.getCtx(),f=c.x,g=c.y,h=0,i=a.data.piechart,j=i.length,k=0,l=0;j>l;k+=i[l++][0]);for(var m=2*Math.PI/k,l=0;j>l;l++){var n=i[l],o=n[0]*m;e.beginPath(),e.arc(f,g,d,h,h+o),e.lineTo(f,g),e.fillStyle=n[1],e.fill(),h+=o}}else this.nodeHelper.circle.render("fill",c,d,b)},contains:function(a,b){var c=a.pos.getc(!0),d=a.getData("dim");return this.nodeHelper.circle.contains(c,b,d)}}})});
+define(['components/jit/Jit/jit'], function($jit) {
+    //Here we implement custom node rendering types for the RGraph  
+    //Using this feature requires some javascript and canvas experience.  
+    $jit.RGraph.Plot.NodeTypes.implement({
+        //This node type is used for plotting the upper-left pie chart  
+        'image': {
+            'render': function(node, canvas) {
+                function paintImage(image) {
+                    var ratio = dim / ((image.width > image.height) ? image.width : image.height);
+                    ctx.drawImage(image, pos.x - (image.width / 2 * ratio), pos.y - (image.height / 2 * ratio), image.width * ratio, image.height * ratio);
+                }
+                $jit.imageCache = $jit.imageCache || [];
+                var pos = node.pos.getc(true),
+                        dim = node.getData('dim');
+                if (node.data.image) {
+                    var ctx = canvas.getCtx();
+                    var image = new Image();
+                    image.src = node.data.image.value ? node.data.image.value : node.data.image;
+                    if ($jit.imageCache[image.src]) {
+                        image = $jit.imageCache[image.src];
+                        paintImage(image);
+                    } else {
+                        image.onload = function() {
+                            paintImage(image);
+                            $jit.imageCache[image.src] = image;
+                        }
+                    }
+                } else {
+                    this.nodeHelper.circle.render('fill', pos, dim, canvas);
+                }
+            },
+            'contains': function(node, pos) {
+                var npos = node.pos.getc(true),
+                        dim = node.getData('dim');
+                return this.nodeHelper.circle.contains(npos, pos, dim);
+            }
+        },
+        'piechart': {
+            'render': function(node, canvas) {
+                var pos = node.pos.getc(true),
+                    dim = node.getData('dim');
+                if (node.data.piechart) {
+                    var ctx = canvas.getCtx();
+                    var x = pos.x, y = pos.y, angle = 0, pie = node.data.piechart, l = pie.length;
+                    var total = 0
+                    for(var i = 0; i < l; total += pie[i++][0]);
+                    var rapport = Math.PI*2/total;
+                    for(var i = 0; i < l; i++) {
+                        var slice = pie[i], sliceAngle = slice[0]*rapport;
+                        ctx.beginPath();
+                        ctx.arc(x, y, dim, angle, angle+sliceAngle);
+                        ctx.lineTo(x, y);
+                        ctx.fillStyle = slice[1];
+                        ctx.fill();
+                        angle += sliceAngle;
+                    }
+                } else {
+                    this.nodeHelper.circle.render('fill', pos, dim, canvas);
+                }
+            },
+            'contains': function(node, pos) {
+                var npos = node.pos.getc(true),
+                        dim = node.getData('dim');
+                return this.nodeHelper.circle.contains(npos, pos, dim);
+            }
+        }
+    })
+});

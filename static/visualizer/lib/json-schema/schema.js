@@ -1,1 +1,36 @@
-define(function(){function a(b){var c={};switch(typeof b){case"object":if(null===b){c.type="string";break}if(b instanceof Array)c.type="array",b.length&&(c.items=a(b[0]));else if(c.type="object",Object.keys(b).length){c.properties={};for(var d in b)c.properties[d]=a(b[d])}break;default:c.type=typeof b}return c}return{fromObject:a}});
+define(function(){
+    
+    function generate_schema_from_object(object) {
+        var schema = {};
+        switch(typeof object) {
+            case "object":
+				if(object === null) {
+					schema.type = "string";
+					break;
+				}
+                if(Array.isArray(object)) {
+                    schema.type = "array";
+                    if(object.length) {
+                        schema.items = generate_schema_from_object(object[0]);
+                    }
+                } else {
+                    schema.type = "object";
+                    if(Object.keys(object).length) {
+                        schema.properties = {};
+                        for(var i in object) {
+                            schema.properties[i] = generate_schema_from_object(object[i]);
+                        }
+                    }
+                }
+                break;
+            default:
+                schema.type = typeof object;
+        }
+        return schema;
+    }
+    
+    return {
+        fromObject: generate_schema_from_object
+    };
+    
+});

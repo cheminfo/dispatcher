@@ -1,1 +1,91 @@
-Pixastic.Actions.pointillize={process:function(a){var b=Math.max(1,parseInt(a.options.radius,10)),c=Math.min(5,Math.max(0,parseFloat(a.options.density)||0)),d=Math.max(0,parseFloat(a.options.noise)||0),e=!(!a.options.transparent||"false"==a.options.transparent);if(Pixastic.Client.hasCanvasImageData()){var f=a.options.rect,g=f.width,h=f.height,i=h,j=a.canvas.getContext("2d"),k=a.canvas.width,l=a.canvas.height,m=document.createElement("canvas");m.width=m.height=1;var n=m.getContext("2d"),o=document.createElement("canvas");o.width=g,o.height=h;var p=o.getContext("2d");p.drawImage(a.canvas,f.left,f.top,g,h,0,0,g,h);var q=2*b;e&&j.clearRect(f.left,f.top,f.width,f.height);for(var r=b*d,s=1/c,i=0;h+b>i;i+=q*s)for(var t=0;g+b>t;t+=q*s){rndX=d?t+(2*Math.random()-1)*r>>0:t,rndY=d?i+(2*Math.random()-1)*r>>0:i;var u=rndX-b,v=rndY-b;0>u&&(u=0),0>v&&(v=0);var w=rndX+f.left,x=rndY+f.top;0>w&&(w=0),w>k&&(w=k),0>x&&(x=0),x>l&&(x=l);var y=q,z=q;y+u>g&&(y=g-u),z+v>h&&(z=h-v),1>y&&(y=1),1>z&&(z=1),n.drawImage(o,u,v,y,z,0,0,1,1);var A=n.getImageData(0,0,1,1).data;j.fillStyle="rgb("+A[0]+","+A[1]+","+A[2]+")",j.beginPath(),j.arc(w,x,b,0,2*Math.PI,!0),j.closePath(),j.fill()}return a.useData=!1,!0}},checkSupport:function(){return Pixastic.Client.hasCanvasImageData()}};
+/*
+ * Pixastic Lib - Pointillize filter - v0.1.0
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.pointillize = {
+
+	process : function(params) {
+		var radius = Math.max(1,parseInt(params.options.radius,10));
+		var density = Math.min(5,Math.max(0,parseFloat(params.options.density)||0));
+		var noise = Math.max(0,parseFloat(params.options.noise)||0);
+		var transparent = !!(params.options.transparent && params.options.transparent != "false");
+
+		if (Pixastic.Client.hasCanvasImageData()) {
+			var rect = params.options.rect;
+			var w = rect.width;
+			var h = rect.height;
+			var w4 = w*4;
+			var y = h;
+
+			var ctx = params.canvas.getContext("2d");
+			var canvasWidth = params.canvas.width;
+			var canvasHeight = params.canvas.height;
+
+			var pixel = document.createElement("canvas");
+			pixel.width = pixel.height = 1;
+			var pixelCtx = pixel.getContext("2d");
+
+			var copy = document.createElement("canvas");
+			copy.width = w;
+			copy.height = h;
+			var copyCtx = copy.getContext("2d");
+			copyCtx.drawImage(params.canvas,rect.left,rect.top,w,h, 0,0,w,h);
+
+			var diameter = radius * 2;
+
+			if (transparent)
+				ctx.clearRect(rect.left, rect.top, rect.width, rect.height);
+
+			var noiseRadius = radius * noise;
+
+			var dist = 1 / density;
+
+			for (var y=0;y<h+radius;y+=diameter*dist) {
+				for (var x=0;x<w+radius;x+=diameter*dist) {
+					rndX = noise ? (x+((Math.random()*2-1) * noiseRadius))>>0 : x;
+					rndY = noise ? (y+((Math.random()*2-1) * noiseRadius))>>0 : y;
+
+					var pixX = rndX - radius;
+					var pixY = rndY - radius;
+					if (pixX < 0) pixX = 0;
+					if (pixY < 0) pixY = 0;
+
+					var cx = rndX + rect.left;
+					var cy = rndY + rect.top;
+					if (cx < 0) cx = 0;
+					if (cx > canvasWidth) cx = canvasWidth;
+					if (cy < 0) cy = 0;
+					if (cy > canvasHeight) cy = canvasHeight;
+
+					var diameterX = diameter;
+					var diameterY = diameter;
+
+					if (diameterX + pixX > w)
+						diameterX = w - pixX;
+					if (diameterY + pixY > h)
+						diameterY = h - pixY;
+					if (diameterX < 1) diameterX = 1;
+					if (diameterY < 1) diameterY = 1;
+
+					pixelCtx.drawImage(copy, pixX, pixY, diameterX, diameterY, 0, 0, 1, 1);
+					var data = pixelCtx.getImageData(0,0,1,1).data;
+
+					ctx.fillStyle = "rgb(" + data[0] + "," + data[1] + "," + data[2] + ")";
+					ctx.beginPath();
+					ctx.arc(cx, cy, radius, 0, Math.PI*2, true);
+					ctx.closePath();
+					ctx.fill();
+				}
+			}
+
+			params.useData = false;
+
+			return true;
+		}
+	},
+	checkSupport : function() {
+		return (Pixastic.Client.hasCanvasImageData());
+	}
+}

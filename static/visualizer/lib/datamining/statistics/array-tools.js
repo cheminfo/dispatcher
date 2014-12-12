@@ -1,1 +1,329 @@
-define(function(){function a(a){for(var b=0,c=a.length,d=0;c>d;d++)b+=a[d];return b/c}function b(a){for(var b=0,c=a.length,d=0;c>d;d++)b*=a[d];return Math.pow(b,1/c)}function c(a){for(var b=0,c=a.length,d=0;c>d;d++)b+=Math.log(a[d]);return b/c}function d(a,b){for(var c=0,d=0,e=a.length,f=0;e>f;f++)c+=b[f]*a[f],d+=b[f];return c/d}function e(a,b,c){"undefined"==typeof c&&(c=!1),a=c?a:a.slice(),a.sort();for(var d=a.length,e=Math.floor(d*b),f=0,g=e;d-e>g;g++)f+=a[g];return f/(d-2*e)}function f(a,b){"undefined"==typeof b&&(b=1);for(var c=0,d=0,e=a.length,f=0;e>f;f++)c+=Math.pow(a[f],b+1),d+=Math.pow(a[f],b);return c/d}function g(a,b){return Math.sqrt(k(a,b))}function h(a){return g(a)/Math.sqrt(samples.length)}function i(a,b){"undefined"==typeof b&&(b=!1),b||(a=a.slice(),a.sort());var c=a.length,d=Math.floor(c/2);return c%2===0?.5*(a[d-1]+a[d]):a[d]}function j(a,b){"undefined"==typeof b&&(b=!1),b||(a=a.slice(),a.sort());var c=a.length/4,d=a[Math.ceil(c)-1],e=i(a,!0),f=a[Math.ceil(3*c)-1];return{q1:d,q2:e,q3:f}}function k(b,c){"undefined"==typeof c&&(c=!0);for(var d=a(b),e=0,f=b.length,g=0;f>g;g++){var h=b[g]-d;e+=h*h}return c?e/(f-1):e/f}function l(a,b){return Math.sqrt(m(a,b))}function m(a,b){"undefined"==typeof b&&(b=!0);for(var c=0,d=0,e=a.length,f=0;e>f;f++){var g=a[f],h=k(g);c+=(g.length-1)*h,d+=b?g.length-1:g.length}return c/d}function n(a){for(var b=a.length,c=new Array(b),d=0;b>d;c[d++]=0);for(var e=new Array(b),f=0,d=0;b>d;d++){var g=e.indexOf(a[d]);g>=0?c[g]++:(e[f]=a[d],c[f]=1,f++)}for(var h=0,i=0,d=0;f>d;d++)c[d]>h&&(h=c[d],i=d);return e[i]}function o(b,c,d){"undefined"==typeof d&&(d=!0);var e=a(b),f=a(c);if(b.length!==c.length)throw"Vectors do not have the same dimensions";for(var g=0,h=b.length,i=0;h>i;i++){var j=b[i]-e,k=c[i]-f;g+=j*k}return d?g/(h-1):g/h}function p(b,c){"undefined"==typeof c&&(c=!0);for(var d=a(b),e=0,f=0,g=b.length,h=0;g>h;h++){var i=b[h]-d;e+=i*i,f+=i*i*i}var j=e/g,k=f/g,l=k/Math.pow(j,1.5);if(c){var m=Math.sqrt(g*(g-1)),n=g-2;return m/n*l}return l}function q(b,c){"undefined"==typeof c&&(c=!0);for(var d=a(b),e=b.length,f=0,g=0,h=0;e>h;h++){var i=b[h]-d;f+=i*i,g+=i*i*i*i}var j=f/e,k=g/e;if(c){var l=f/(e-1),m=e*(e+1)/((e-1)*(e-2)*(e-3)),n=g/(l*l),o=(e-1)*(e-1)/((e-2)*(e-3));return m*n-3*o}return k/(j*j)-3}function r(a,b){"undefined"==typeof b&&(b=0);for(var c=0,d=a.length,e=0;d>e;e++)c+=a[e]*Math.log(a[e]+b);return-c}function s(a){for(var b=0,c=a.length,d=0;c>d;d++)b+=a[d]*weights[d];return b}function t(a){return Math.sqrt(u(a,weigths))}function u(a,b){for(var c=s(a,b),d=0,e=a.length,f=0,g=0,h=0;e>h;h++){var i=a[h]-c,j=weights[h];d+=j*i*i,g+=j,f+=j*j}return d*(g/(g*g-f))}function v(b,c){"undefined"==typeof c&&(c=!1);var d=b;c||(d=b.slice());for(var e=a(d),f=d.length,g=0;f>g;g++)d[g]-=e}function w(a,b,c){"undefined"==typeof b&&(b=g(a)),"undefined"==typeof c&&(c=!1);for(var d=a.length,e=c?a:new Array(d),f=0;d>f;f++)e[f]=a[f]/b;return e}function x(a){var b=a.length,c=new Array(b);c[0]=a[0];for(var d=1;b>d;d++)c[d]=c[d-1]+a[d];return c}return{mean:a,geometricMean:b,logGeometricMean:c,grandMean:d,truncatedMean:e,contraHarmonicMean:f,standardDeviation:g,standardError:h,median:i,quartiles:j,variance:k,pooledStandardDeviation:l,pooledVariance:m,mode:n,covariance:o,skewness:p,kurtosis:q,entropy:r,weightedMean:s,weightedStandardDeviation:t,weightedVariance:u,center:v,standardize:w,cumulativeSum:x}});
+// https://github.com/accord-net/framework/blob/development/Sources/Accord.Statistics/Tools.cs
+define(function(){
+
+    function mean(values) {
+        var sum = 0, l = values.length;
+        for(var i = 0; i < l; i++)
+            sum += values[i];
+        return sum / l;
+    }
+    
+    function geometricMean(values) {
+        var sum = 0, l = values.length;
+        for(var i = 0; i < l; i++)
+            sum *= values[i];
+        return Math.pow(sum, 1/l);
+    }
+    
+    function logGeometricMean(values) {
+        var lnsum = 0, l = values.length;
+        for(var i = 0; i < l; i++)
+            lnsum += Math.log(values[i]);
+        return lnsum / l;
+    }
+    
+    function grandMean(means, samples) {
+        var sum = 0, n = 0, l = means.length;
+        for(var i = 0; i < l; i++) {
+            sum += samples[i] * means[i];
+            n += samples[i];
+        }
+        return sum / n;
+    }
+    
+    function truncatedMean(values, percent, inPlace) {
+        if(typeof(inPlace)==='undefined') inPlace = false;
+        
+        values = inPlace ? values : values.slice();
+        values.sort();
+        
+        var l = values.length;
+        var k = Math.floor(l*percent);
+        
+        var sum = 0;
+        for(var i = k; i < l - k; i++)
+            sum += values[i];
+        
+        return sum / (l - 2 * k);
+    }
+    
+    function contraHarmonicMean(values, order) {
+        if(typeof(order)==='undefined') order = 1;
+        var r1 = 0, r2 = 0, l = values.length;
+        for(var i = 0; i < l; i++) {
+            r1 += Math.pow(values[i], order + 1);
+            r2 += Math.pow(values[i], order);
+        }
+        return r1 / r2;
+    }
+    
+    function standardDeviation(values, unbiased) {
+        return Math.sqrt(variance(values, unbiased));
+    }
+    
+    function standardError(values) {
+        return standardDeviation(values) / Math.sqrt(samples.length);
+    }
+    
+    function median(values, alreadySorted) {
+        if(typeof(alreadySorted)==='undefined') alreadySorted = false;
+        if(!alreadySorted) {
+            values = values.slice();
+            values.sort();
+        }
+        
+        var l = values.length;
+        var half = Math.floor(l / 2);
+        if(l % 2 === 0)
+            return (values[half-1] + values[half]) * 0.5;
+        return values[half];
+    }
+    
+    function quartiles(values, alreadySorted) {
+        if(typeof(alreadySorted)==='undefined') alreadySorted = false;
+        if(!alreadySorted) {
+            values = values.slice();
+            values.sort();
+        }
+        
+        var quart = values.length / 4;
+        var q1 = values[Math.ceil(quart)-1];
+        var q2 = median(values, true);
+        var q3 = values[Math.ceil(quart*3)-1];
+
+        return {q1: q1, q2: q2, q3: q3};
+    }
+    
+    function variance(values, unbiased) {
+        if(typeof(unbiased)==='undefined') unbiased = true;
+        var theMean = mean(values);
+        var theVariance = 0, l = values.length;
+        
+        for(var i = 0; i < l; i++) {
+            var x = values[i] - theMean;
+            theVariance += x * x;
+        }
+        
+        if(unbiased)
+            return theVariance / (l - 1);
+        else
+            return theVariance / l;
+    }
+    
+    function pooledStandardDeviation(samples, unbiased) {
+        return Math.sqrt(pooledVariance(samples, unbiased));
+    }
+    
+    function pooledVariance(samples, unbiased) {
+        if(typeof(unbiased)==='undefined') unbiased = true;
+        var sum = 0;
+        var length = 0, l = samples.length;
+        for(var i = 0; i < l; i++) {
+            var values = samples[i];
+            var vari = variance(values);
+            
+            sum += (values.length-1) * vari;
+            
+            if(unbiased)
+                length += values.length - 1;
+            else
+                length += values.length;
+        }
+        return sum / length;
+    }
+    
+    function mode(values) {
+        var l = values.length
+        var itemCount = new Array(l);
+        for(var i = 0; i < l; itemCount[i++]=0);
+        var itemArray = new Array(l);
+        var count = 0;
+        
+        for(var i = 0; i < l; i++) {
+            var index = itemArray.indexOf(values[i]);
+            if(index >= 0)
+                itemCount[index]++;
+            else {
+                itemArray[count] = values[i];
+                itemCount[count] = 1;
+                count++;
+            }
+        }
+        
+        var maxValue = 0, maxIndex = 0;
+        for(var i = 0; i < count; i++) {
+            if(itemCount[i] > maxValue) {
+                maxValue = itemCount[i];
+                maxIndex = i;
+            }
+        }
+        
+        return itemArray[maxIndex];
+    }
+    
+    function covariance(vector1, vector2, unbiased) {
+        if(typeof(unbiased)==='undefined') unbiased = true;
+        var mean1 = mean(vector1);
+        var mean2 = mean(vector2);
+        
+        if(vector1.length !== vector2.length)
+            throw "Vectors do not have the same dimensions";
+        
+        var cov = 0, l = vector1.length;
+        for(var i = 0; i < l; i++) {
+            var x = vector1[i] - mean1;
+            var y = vector2[i] - mean2;
+            cov += x * y;
+        }
+        
+        if(unbiased)
+            return cov / (l - 1);
+        else
+            return cov / l;
+    }
+    
+    function skewness(values, unbiased) {
+        if(typeof(unbiased)==='undefined') unbiased = true;
+        var theMean = mean(values);
+        
+        var s2 = 0, s3 = 0, l = values.length;
+        for(var i = 0; i < l; i++) {
+            var dev = values[i] - theMean;
+            s2 += dev * dev;
+            s3 += dev * dev * dev;
+        }
+        var m2 = s2 / l;
+        var m3 = s3 / l;
+        
+        var g = m3 / (Math.pow(m2, 3 / 2.0));
+        if(unbiased) {
+            var a = Math.sqrt(l *(l - 1));
+            var b = l - 2;
+            return (a / b) * g;
+        }
+        else {
+            return g;
+        }
+    }
+    
+    function kurtosis(values, unbiased) {
+        if(typeof(unbiased)==='undefined') unbiased = true;
+        var theMean = mean(values);
+        var n = values.length, s2 = 0, s4 = 0;
+        
+        for(var i = 0; i < n; i++) {
+            var dev = values[i] - theMean;
+            s2 += dev * dev;
+            s4 += dev * dev * dev * dev;
+        }
+        var m2 = s2 / n;
+        var m4 = s4 / n;
+        
+        if(unbiased) {
+            var v = s2 / (n - 1);
+            var a = (n * (n + 1)) / ((n - 1) * (n - 2) * (n - 3));
+            var b = s4 / (v * v);
+            var c = ((n - 1) * (n - 1)) / ((n - 2) * (n - 3));
+            
+            return a * b - 3 * c;
+        }
+        else {
+            return m4 / (m2 * m2) - 3;
+        }
+    }
+    
+    function entropy(values, eps) {
+        if(typeof(eps)==='undefined') eps = 0;
+        var sum = 0, l = values.length;
+        for(var i = 0; i < l; i++)
+            sum += values[i] * Math.log(values[i] + eps);
+        return -sum;
+    }
+    
+    function weightedMean(values, weigths) {
+        var sum = 0, l = values.length;
+        for(var i = 0; i < l; i++)
+            sum += values[i] * weights[i];
+        return sum;
+    }
+    
+    function weightedStandardDeviation(values, weights) {
+        return Math.sqrt(weightedVariance(values, weigths));
+    }
+    
+    function weightedVariance(values, weigths) {
+        var theMean = weightedMean(values, weigths);
+        var vari = 0, l = values.length;
+        var a = 0, b = 0;
+        
+        for(var i = 0; i < l; i++) {
+            var z = values[i] - theMean;
+            var w = weights[i];
+            
+            vari += w * (z * z);
+            b += w;
+            a += w * w;
+        }
+        
+        return vari * (b / (b * b - a));
+    }
+    
+    function center(values, inPlace) {
+        if(typeof(inPlace)==='undefined') inPlace = false;
+        
+        var result = values;
+        if(!inPlace)
+            result = values.slice();
+        
+        var theMean = mean(result), l = result.length;
+        for(var i = 0; i < l; i++)
+            result[i] -= theMean;
+    }
+    
+    function standardize(values, standardDev, inPlace) {
+        if(typeof(standardDev)==='undefined') standardDev = standardDeviation(values);
+        if(typeof(inPlace)==='undefined') inPlace = false;
+        var l = values.length;
+        var result = inPlace ? values : new Array(l);
+        for(var i = 0; i < l; i++)
+            result[i] = values[i] / standardDev;
+        return result;
+    }
+    
+    function cumulativeSum(array) {
+        var l = array.length;
+        var result = new Array(l);
+        result[0] = array[0];
+        for(var i = 1; i < l ; i++)
+            result[i] = result[i-1] + array[i];
+        return result;
+    }
+
+    return {
+        mean: mean,
+        geometricMean: geometricMean,
+        logGeometricMean: logGeometricMean,
+        grandMean: grandMean,
+        truncatedMean: truncatedMean,
+        contraHarmonicMean: contraHarmonicMean,
+        standardDeviation: standardDeviation,
+        standardError: standardError,
+        median: median,
+        quartiles: quartiles,
+        variance: variance,
+        pooledStandardDeviation: pooledStandardDeviation,
+        pooledVariance: pooledVariance,
+        mode: mode,
+        covariance: covariance,
+        skewness: skewness,
+        kurtosis: kurtosis,
+        entropy: entropy,
+        weightedMean: weightedMean,
+        weightedStandardDeviation: weightedStandardDeviation,
+        weightedVariance: weightedVariance,
+        center: center,
+        standardize: standardize,
+        cumulativeSum : cumulativeSum
+    };
+
+});

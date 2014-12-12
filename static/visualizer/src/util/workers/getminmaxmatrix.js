@@ -1,15 +1,1 @@
-
-onmessage = function(event) {
-	
-	var gridData = event.data.message;
-	var minValue = false, maxValue = false;
-	for (i=0;i<gridData.length;i++) {
-		for (j=0;j<gridData[i].length;j++) {
-			if (minValue === false || gridData[i][j]<minValue) minValue=gridData[i][j];
-			if (maxValue === false || gridData[i][j]>maxValue) maxValue=gridData[i][j];
-		}
-	}
-		
-	event.data.message = { min: minValue, max: maxValue};
-	postMessage(event.data);
-}
+onmessage=function(a){var b,c,d=JSON.parse(a.data),e=1/0,f=-1/0;for(b=0;b<d.length;b++)for(c=0;c<d[b].length;c++)d[b][c]<e&&(e=d[b][c]),d[b][c]>f&&(f=d[b][c]);this.postMessage({min:e,max:f})};

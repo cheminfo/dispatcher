@@ -1,1 +1,73 @@
-Pixastic.Actions.noise={process:function(a){var b=0,c=0,d=!1;"undefined"!=typeof a.options.amount&&(b=parseFloat(a.options.amount)||0),"undefined"!=typeof a.options.strength&&(c=parseFloat(a.options.strength)||0),"undefined"!=typeof a.options.mono&&(d=!(!a.options.mono||"false"==a.options.mono)),b=Math.max(0,Math.min(1,b)),c=Math.max(0,Math.min(1,c));var e=128*c,f=e/2;if(Pixastic.Client.hasCanvasImageData()){var g=Pixastic.prepareData(a),h=a.options.rect,i=h.width,j=h.height,k=4*i,l=j,m=Math.random;do{var n=(l-1)*k,o=i;do{var p=n+4*(o-1);if(m()<b){if(d)var q=-f+m()*e,r=g[p]+q,s=g[p+1]+q,t=g[p+2]+q;else var r=g[p]-f+m()*e,s=g[p+1]-f+m()*e,t=g[p+2]-f+m()*e;0>r&&(r=0),0>s&&(s=0),0>t&&(t=0),r>255&&(r=255),s>255&&(s=255),t>255&&(t=255),g[p]=r,g[p+1]=s,g[p+2]=t}}while(--o)}while(--l);return!0}},checkSupport:function(){return Pixastic.Client.hasCanvasImageData()}};
+/*
+ * Pixastic Lib - Noise filter - v0.1.0
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * License: [http://www.pixastic.com/lib/license.txt]
+ */
+
+Pixastic.Actions.noise = {
+
+	process : function(params) {
+		var amount = 0;
+		var strength = 0;
+		var mono = false;
+
+		if (typeof params.options.amount != "undefined")
+			amount = parseFloat(params.options.amount)||0;
+		if (typeof params.options.strength != "undefined")
+			strength = parseFloat(params.options.strength)||0;
+		if (typeof params.options.mono != "undefined")
+			mono = !!(params.options.mono && params.options.mono != "false");
+
+		amount = Math.max(0,Math.min(1,amount));
+		strength = Math.max(0,Math.min(1,strength));
+
+		var noise = 128 * strength;
+		var noise2 = noise / 2;
+
+		if (Pixastic.Client.hasCanvasImageData()) {
+			var data = Pixastic.prepareData(params);
+			var rect = params.options.rect;
+			var w = rect.width;
+			var h = rect.height;
+			var w4 = w*4;
+			var y = h;
+			var random = Math.random;
+
+			do {
+				var offsetY = (y-1)*w4;
+				var x = w;
+				do {
+					var offset = offsetY + (x-1)*4;
+					if (random() < amount) {
+						if (mono) {
+							var pixelNoise = - noise2 + random() * noise;
+							var r = data[offset] + pixelNoise;
+							var g = data[offset+1] + pixelNoise;
+							var b = data[offset+2] + pixelNoise;
+						} else {
+							var r = data[offset] - noise2 + (random() * noise);
+							var g = data[offset+1] - noise2 + (random() * noise);
+							var b = data[offset+2] - noise2 + (random() * noise);
+						}
+
+						if (r < 0 ) r = 0;
+						if (g < 0 ) g = 0;
+						if (b < 0 ) b = 0;
+						if (r > 255 ) r = 255;
+						if (g > 255 ) g = 255;
+						if (b > 255 ) b = 255;
+
+						data[offset] = r;
+						data[offset+1] = g;
+						data[offset+2] = b;
+					}
+				} while (--x);
+			} while (--y);
+			return true;
+		}
+	},
+	checkSupport : function() {
+		return Pixastic.Client.hasCanvasImageData();
+	}
+}
+

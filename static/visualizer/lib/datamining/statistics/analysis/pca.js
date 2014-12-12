@@ -1,1 +1,136 @@
-define(["./../matrix-tools","./../../math/matrix","./../../math/decompositions"],function(a,b,c){function d(c,d){0!==arguments.length&&("undefined"==typeof d&&(d="center"),c instanceof b||(c=new b(c)),this.source=c.clone(),this.columnMeans=a.mean(c),this.columnStdDev=a.standardDeviation(c,this.columnMeans),this.analysisMethod=d,this.sourceDimensions=c.columns,this.onlyCovarianceMatrixAvailable=!1,this.overwriteSourceMatrix=!1)}function e(c,d,e){var f=a.center(d,c.columnMeans,e);if("standardize"===c.analysisMethod){for(var g=0,h=c.columnStdDev.length;h>g;g++)if(0===c.columnStdDev[g])throw"Standard deviation cannot be zero (cannot standardize the constant variable at column index "+g+").";a.standardize(f,c.columnStdDev,!0)}return new b(e?d:f)}function f(a){var b=a.singularValues.length;a.componentProportions=new Array(b),a.componentCumulative=new Array(b);for(var c=0,d=0;b>d;d++)c+=Math.abs(a.eigenvalues[d]);c=0===c?0:1/c;for(var d=0;b>d;d++)a.componentProportions[d]=Math.abs(a.eigenvalues[d])*c;a.componentCumulative[0]=a.componentProportions[0];for(var d=1,e=a.componentCumulative.length;e>d;d++)a.componentCumulative[d]=a.componentCumulative[d-1]+a.componentProportions[d]}return d.fromCovarianceMatrix=function(a,c){if(c instanceof b||(c=new b(c)),!c.isSquare())throw"Covariance matrix must be square";var e=new d;return e.columnMeans=a,e.covarianceMatrix=c,e.analysisMethod="center",e.onlyCovarianceMatrixAvailable=!0,e.sourceDimensions=c.rows,e},d.fromCorrelationMatrix=function(a,c,e){if(e instanceof b||(e=new b(e)),!e.isSquare())throw"Correlation matrix must be square";var f=new d;return f.columnMeans=a,f.columnStdDev=c,f.covarianceMatrix=e,f.analysisMethod="standardize",f.onlyCovarianceMatrixAvailable=!0,f.sourceDimensions=e.rows,f},d.prototype={compute:function(){if(this.onlyCovarianceMatrixAvailable){var a=new c.EigenvalueDecomposition(this.covarianceMatrix);this.eigenvalues=a.RealEigenvalues,this.eigenvectors=a.eigenvectors,this.singularValues=new Array(this.eigenvalues.length)}else{var d=this.source.rows,g=e(this,this.source,this.overwriteSourceMatrix),h=new c.SingularValueDecomposition(g);this.singularValues=h.diagonal(),this.eigenvectors=h.V,this.result=h.U.mmul(b.diag(this.singularValues)),this.eigenvalues=new Array(this.singularValues.length);for(var i=0,j=this.singularValues.length;j>i;i++)this.eigenvalues[i]=this.singularValues[i]*this.singularValues[i]/(d-1)}f(this)},transform:function(a,c){if(void 0===this.eigenvectors)throw"The analysis must have been computed first.";if(a instanceof b||(a=new b(a)),a.columns!==this.sourceDimensions)throw"The input data should have the same number of columns as the original data.";if(0>c||c>this.singularValues.length)throw"The specified number of dimensions must be equal or less than the number of components available in the analysis";var d=a.rows,f=a.columns;a=e(this,a,!1);for(var g=b.zeros(d,c),h=0;d>h;h++)for(var i=0;c>i;i++)for(var j=0;f>j;j++)g[h][i]+=a[h][j]*this.eigenvectors[j][i];return g},numberOfComponents:function(a){if(0>a||a>1)throw"Threshold should be a value between 0 and 1.";for(var b=0,c=this.componentCumulative.length;c>b;b++)if(this.componentCumulative[b]>=a)return b+1;return this.componentCumulative.length}},d});
+// https://github.com/accord-net/framework/blob/development/Sources/Accord.Statistics/Analysis/PrincipalComponentAnalysis.cs?source=cc
+define(["./../matrix-tools","./../../math/matrix","./../../math/decompositions"], function(MTools, Matrix, DC){
+
+    function PrincipalComponentAnalysis(data, method) {
+        if(arguments.length === 0) return; // For static instanciators
+        if(typeof(method)==='undefined') method = "center";
+        if(!(data instanceof Matrix)) data = new Matrix(data);
+                
+        this.source = data.clone();
+        this.columnMeans = MTools.mean(data);
+        this.columnStdDev = MTools.standardDeviation(data, this.columnMeans);
+        this.analysisMethod = method;
+        this.sourceDimensions = data.columns;
+        this.onlyCovarianceMatrixAvailable = false;
+        this.overwriteSourceMatrix = false;
+    }
+    
+    PrincipalComponentAnalysis.fromCovarianceMatrix = function(mean, covariance) {
+        if(!(covariance instanceof Matrix)) covariance = new Matrix(covariance);
+        if(!covariance.isSquare())
+            throw "Covariance matrix must be square";
+            
+        var pca = new PrincipalComponentAnalysis();
+        pca.columnMeans = mean;
+        pca.covarianceMatrix = covariance;
+        pca.analysisMethod = "center";
+        pca.onlyCovarianceMatrixAvailable = true;
+        pca.sourceDimensions = covariance.rows;
+        
+        return pca;
+    }
+    
+    PrincipalComponentAnalysis.fromCorrelationMatrix = function(mean, stdDev, correlation) {
+        if(!(correlation instanceof Matrix)) correlation = new Matrix(correlation);
+        if(!correlation.isSquare())
+            throw "Correlation matrix must be square";
+            
+        var pca = new PrincipalComponentAnalysis();
+        pca.columnMeans = mean;
+        pca.columnStdDev = stdDev;
+        pca.covarianceMatrix = correlation;
+        pca.analysisMethod = "standardize";
+        pca.onlyCovarianceMatrixAvailable = true;
+        pca.sourceDimensions = correlation.rows;
+        
+        return pca;
+    }
+    
+    PrincipalComponentAnalysis.prototype = {
+        compute : function() {
+            if(!this.onlyCovarianceMatrixAvailable) {
+                var rows = this.source.rows;
+                var matrix = adjust(this, this.source, this.overwriteSourceMatrix);
+                var svd = new DC.SingularValueDecomposition(matrix)
+                
+                this.singularValues = svd.diagonal();
+                this.eigenvectors = svd.V;
+                this.result = svd.U.mmul(Matrix.diag(this.singularValues));
+                this.eigenvalues = new Array(this.singularValues.length);
+                for(var i = 0, ii = this.singularValues.length; i < ii; i++)
+                    this.eigenvalues[i] = this.singularValues[i] * this.singularValues[i] / (rows - 1);
+            }
+            else {
+                var evd = new DC.EigenvalueDecomposition(this.covarianceMatrix);
+                this.eigenvalues = evd.RealEigenvalues;
+                this.eigenvectors = evd.eigenvectors;
+                this.singularValues = new Array(this.eigenvalues.length);
+                // sort values
+            }
+            
+            createComponents(this);
+        },
+        transform : function(data, dimensions) {
+            if(this.eigenvectors===undefined) throw "The analysis must have been computed first.";
+            if(!(data instanceof Matrix)) data = new Matrix(data);
+            if(data.columns !== this.sourceDimensions) throw "The input data should have the same number of columns as the original data.";
+            if(dimensions < 0 || dimensions > this.singularValues.length) throw "The specified number of dimensions must be equal or less than the number of components available in the analysis";
+            var rows = data.rows, cols = data.columns;
+            data = adjust(this, data, false);
+            var r = Matrix.zeros(rows, dimensions);
+
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < dimensions; j++)
+                    for (var k = 0; k < cols; k++)
+                        r[i][j] += data[i][k] * this.eigenvectors[k][j];
+            return r;
+        },
+        numberOfComponents : function(threshold) {
+            if (threshold < 0 || threshold > 1.0) throw "Threshold should be a value between 0 and 1.";
+            for (var i = 0, ii = this.componentCumulative.length; i < ii; i++) {
+                if (this.componentCumulative[i] >= threshold)
+                    return i + 1;
+            }
+            return this.componentCumulative.length;
+        }
+    };
+    
+    function adjust(pca, matrix, inPlace) {
+        var result = MTools.center(matrix, pca.columnMeans, inPlace);
+        if(pca.analysisMethod === "standardize") {
+            for (var j = 0, jj = pca.columnStdDev.length; j < jj; j++)
+                if(pca.columnStdDev[j] === 0)
+                    throw "Standard deviation cannot be zero (cannot standardize the constant variable at column index " + j + ").";
+            MTools.standardize(result, pca.columnStdDev, true);
+        }
+        if(inPlace)
+            return new Matrix(matrix);
+        else
+            return new Matrix(result);
+    }
+    
+    function createComponents(pca) {
+        var numComponents = pca.singularValues.length;
+        pca.componentProportions = new Array(numComponents);
+        pca.componentCumulative = new Array(numComponents);
+        
+        var sum = 0;
+        for (var i = 0; i < numComponents; i++)
+            sum += Math.abs(pca.eigenvalues[i]);
+        sum = (sum === 0) ? 0 : (1 / sum);
+        
+        for (var i = 0; i < numComponents; i++)
+            pca.componentProportions[i] = Math.abs(pca.eigenvalues[i]) * sum;
+        
+        pca.componentCumulative[0] = pca.componentProportions[0];
+        for (var i = 1, ii = pca.componentCumulative.length; i < ii; i++)
+            pca.componentCumulative[i] = pca.componentCumulative[i - 1] + pca.componentProportions[i];
+        
+        /*var components = new Array(pca.singularValues.length);
+        for (var i = 0, ii = components.length; i < ii; i++)
+            components[i] = new PrincipalComponent(pca, i);*/
+    }
+    
+    return PrincipalComponentAnalysis;
+
+});

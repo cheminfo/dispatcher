@@ -1,1 +1,473 @@
-define(function(){function a(a,b){"undefined"==typeof b&&(b=0);for(var c=0,d=a.length,e=a[0].length,f=0;d>f;f++)for(var g=0;e>g;g++)c+=a[f][g]*Math.log(a[f][g]+b);return-c}function b(a,b){"undefined"==typeof b&&(b=0);var c,d=a.length,e=a[0].length;if(-1===b){c=[0];for(var f=d*e,g=0;d>g;g++)for(var h=0;e>h;h++)c[0]+=a[g][h];c[0]/=f}else if(0===b){c=new Array(e);for(var f=d,h=0;e>h;h++){c[h]=0;for(var g=0;d>g;g++)c[h]+=a[g][h];c[h]/=f}}else{if(1!==b)throw"Invalid dimension.";c=new Array(d);for(var f=e,h=0;d>h;h++){c[h]=0;for(var g=0;e>g;g++)c[h]+=a[h][g];c[h]/=f}}return c}function c(a,b,c){for(var e=d(a,b,c),f=e.length,g=0;f>g;g++)e[g]=Math.sqrt(e[g]);return e}function d(a,c,d){"undefined"==typeof d&&(d=!0),"undefined"==typeof c&&(c=b(a));var e=a.length;if(0===e)return[];for(var f=a[0].length,g=new Array(f),h=0;f>h;h++){for(var i=0,j=0,k=0,l=0;e>l;l++)k=a[l][h]-c[h],i+=k,j+=k*k;g[h]=d?(j-i*i/e)/(e-1):(j-i*i/e)/e}return g}function e(a){for(var b=a.length,c=a[0].length,d=new Array(c),e=0;c>e;e++){for(var f=new Array(b),g=0;b>g;g++)f[g]=a[g][e];f.sort();var h=f.length;d[e]=h%2===0?.5*(f[h/2]+f[h/2-1]):f[Math.floor(h/2)]}return d}function f(a){for(var b=a.length,c=a[0].length,d=new Array(c),e=0;c>e;e++){for(var f=new Array(b),g=0;b>g;f[g++]=0);for(var h=new Array(b),i=0,j=0;b>j;j++){var k=h.indexOf(a[j][e]);k>=0?f[k]++:(h[i]=a[j][e],f[i]=1,i++)}for(var l=0,m=0,j=0;i>j;j++)f[j]>l&&(l=f[j],m=j);d[e]=h[m]}return d}function g(a,c){"undefined"==typeof c&&(c=!0);for(var d=b(a),e=a.length,f=d.length,g=new Array(f),h=0;f>h;h++){for(var i=0,j=0,k=0;e>k;k++){var l=a[k][h]-d[h];i+=l*l,j+=l*l*l}var m=i/e,n=j/e,o=n/Math.pow(m,1.5);if(c){var p=Math.sqrt(e*(e-1)),q=e-2;g[h]=p/q*o}else g[h]=o}return g}function h(a,c){"undefined"==typeof c&&(c=!0);for(var d=b(a),e=a.length,f=a[0].length,g=new Array(f),h=0;f>h;h++){for(var i=0,j=0,k=0;e>k;k++){var l=a[k][h]-d[h];i+=l*l,j+=l*l*l*l}var m=i/e,n=j/e;if(c){var o=i/(e-1),p=e*(e+1)/((e-1)*(e-2)*(e-3)),q=j/(o*o),r=(e-1)*(e-1)/((e-2)*(e-3));g[h]=p*q-3*r}else g[h]=n/(m*m)-3}return g}function i(a){for(var b=a.length,d=c(a),e=d.length,f=new Arrray(e),g=Math.sqrt(b),h=0;e>h;h++)f[h]=d[h]/g;return f}function j(a,b){return k(a,void 0,b)}function k(a,c,d){"undefined"==typeof d&&(d=0),"undefined"==typeof c&&(0===d?c=a.length-1:1===d&&(c=a[0].length-1));var e=b(a,d),f=a.length;if(0===f)return[[]];var g,h=a[0].length;if(0===d){g=new Array(h);for(var i=0;h>i;g[i++]=new Array(h));for(var i=0;h>i;i++)for(var j=i;h>j;j++){for(var k=0,l=0;f>l;l++)k+=(a[l][j]-e[j])*(a[l][i]-e[i]);k/=c,g[i][j]=k,g[j][i]=k}}else{if(1!==d)throw"Invalid dimension.";g=new Array(f);for(var i=0;f>i;g[i++]=new Array(f));for(var i=0;f>i;i++)for(var j=i;f>j;j++){for(var k=0,l=0;h>l;l++)k+=(a[j][l]-e[j])*(a[i][l]-e[i]);k/=c,g[i][j]=k,g[j][i]=k}}return g}function l(a){for(var d=b(a),e=c(a,!0,d),f=m(a,d,e),g=a.length,h=a[0].length,i=new Array(h),j=0;h>j;i[j++]=new Array(h));for(var j=0;h>j;j++)for(var k=j;h>k;k++){for(var l=0,n=0,o=f.length;o>n;n++)l+=f[n][k]*f[n][j];l/=g-1,i[j][k]=l,i[k][j]=l}return i}function m(a,d,e){return"undefined"==typeof d&&(d=b(a)),"undefined"==typeof e&&(e=c(a,!0,d)),o(n(a,d,!1),e,!0)}function n(a,c,d){"undefined"==typeof c&&(c=b(a)),"undefined"==typeof d&&(d=!1);var e=a;if(!d){var f=a.length;e=new Array(f);for(var g=0;f>g;g++)e[g]=new Array(a[g].length)}for(var g=0;f>g;g++)for(var h=e[g],i=0,j=h.length;j>i;i++)h[i]=a[g][i]-c[i];return e}function o(a,b,d){"undefined"==typeof b&&(b=c(a)),"undefined"==typeof d&&(d=!1);var e=a,f=a.length;if(!d){e=new Array(f);for(var g=0;f>g;g++)e[g]=new Array(a[g].length)}for(var g=0;f>g;g++)for(var h=e[g],i=a[g],j=0,k=h.length;k>j;j++)0===b[j]||isNaN(b[j])||(h[j]=i[j]/b[j]);return e}function p(a,c){var d=b(a),e=a.length;if(0===e)return[];for(var f=a[0].length,g=new Array(f),h=0;f>h;h++){for(var i=0,j=0,k=0,l=0;e>l;l++){var m=a[l][h]-d[h],n=c[l];i+=n*m*m,k+=n,j+=n*n}g[h]=i*(k/(k*k-j))}return g}function q(a,b,c){"undefined"==typeof c&&(c=0);var d=a.length;if(0===d)return[];var e,f=a[0].length;if(0===c){e=new Array(f);for(var g=0;f>g;e[g++]=0);for(var g=0;d>g;g++)for(var h=a[g],i=b[g],j=0;f>j;j++)e[j]+=h[j]*i}else{if(1!==c)throw"Invalid dimension.";e=new Array(d);for(var g=0;d>g;e[g++]=0);for(var j=0;d>j;j++)for(var h=a[j],i=b[j],g=0;f>g;g++)e[j]+=h[g]*i}var k=t(b);if(0!==k)for(var g=0,l=e.length;l>g;g++)e[g]/=k;return e}function r(a,b,c,d){"undefined"==typeof d&&(d=0),"undefined"==typeof c&&(c=q(a,b,d));for(var e=0,f=0,g=0,h=b.length;h>g;g++)e+=b[g],f+=b[g]*b[g];var i=e/(e*e-f);return s(a,b,c,i,d)}function s(a,b,c,d){"undefined"==typeof dimension&&(dimension=0),"undefined"==typeof c&&(c=q(a,b,dimension)),"undefined"==typeof d&&(d=1);var e=a.length;if(0===e)return[[]];var f,g=a[0].length;if(0===dimension){f=new Array(g);for(var h=0;g>h;f[h++]=new Array(g));for(var h=0;g>h;h++)for(var i=h;g>i;i++){for(var j=0,k=0;e>k;k++)j+=b[k]*(a[k][i]-c[i])*(a[k][h]-c[h]);f[h][i]=j*d,f[i][h]=j*d}}else{if(1!==dimension)throw"Invalid dimension";f=new Array(e);for(var h=0;e>h;f[h++]=new Array(e));for(var h=0;e>h;h++)for(var i=h;e>i;i++){for(var j=0,k=0;g>k;k++)j+=b[k]*(a[i][k]-c[i])*(a[h][k]-c[h]);f[h][i]=j*d,f[i][h]=j*d}}return f}function t(a){for(var b=0,c=a.length,d=0;c>d;d++)b+=a[d];return b}return{entropy:a,mean:b,standardDeviation:c,variance:d,median:e,mode:f,skewness:g,kurtosis:h,standardError:i,covariance:j,scatter:k,correlation:l,zScores:m,center:n,standardize:o,weightedVariance:p,weightedMean:q,weightedCovariance:r,weightedScatter:s}});
+// https://github.com/accord-net/framework/blob/development/Sources/Accord.Statistics/Tools.cs
+define(function(){
+    
+    function entropy(matrix, eps) {
+        if(typeof(eps)==='undefined') eps = 0;
+        var sum = 0, l1 = matrix.length, l2 = matrix[0].length;
+        for(var i = 0; i < l1; i++)
+            for(var j = 0; j < l2; j++)
+                sum += matrix[i][j] * Math.log(matrix[i][j] + eps);
+        return -sum;
+    }
+    
+    function mean(matrix, dimension) {
+        if(typeof(dimension)==='undefined') dimension = 0;
+        var rows = matrix.length;
+        var cols = matrix[0].length;
+        var theMean;
+        
+        if(dimension === -1) {
+            theMean = [0];
+            var N = rows * cols;
+            for(var i = 0; i < rows; i++)
+                for(var j = 0; j < cols; j++)
+                    theMean[0] += matrix[i][j];
+            theMean[0] /= N;
+        }
+        else if(dimension === 0) {
+            theMean = new Array(cols);
+            var N = rows;
+            
+            for (var j = 0; j < cols; j++) {
+                theMean[j] = 0;
+                for(var i = 0; i < rows; i++)
+                    theMean[j] += matrix[i][j];
+                theMean[j] /= N;
+            }
+        }
+        else if(dimension === 1) {
+            theMean = new Array(rows);
+            var N = cols;
+            
+            for (var j = 0; j < rows; j++) {
+                theMean[j] = 0;
+                for (var i = 0; i < cols; i++)
+                    theMean[j] += matrix[j][i];
+                theMean[j] /= N;
+            }
+        }
+        else
+            throw "Invalid dimension.";
+        return theMean;
+    }
+    
+    function standardDeviation(matrix, means, unbiased) {
+        var vari = variance(matrix, means, unbiased), l = vari.length;
+        for(var i = 0; i < l; i++)
+            vari[i] = Math.sqrt(vari[i]);
+        return vari;
+    }
+    
+    function variance(matrix, means, unbiased) {
+        if(typeof(unbiased)==='undefined') unbiased = true;
+        if(typeof(means)==='undefined') means = mean(matrix);
+        var rows = matrix.length;
+        if(rows === 0) return [];
+        var cols = matrix[0].length;
+        var vari = new Array(cols);
+        
+        for(var j = 0; j < cols; j++) {
+            var sum1 = 0, sum2 = 0, x = 0;
+            for(var i = 0; i < rows; i++) {
+                x = matrix[i][j] - means[j];
+                sum1 += x;
+                sum2 += x * x;
+            }
+            
+            if(unbiased)
+                vari[j] = (sum2 - ((sum1 * sum1) / rows)) / (rows - 1);
+            else
+                vari[j] = (sum2 - ((sum1 * sum1) / rows)) / rows;
+        }
+        return vari;
+    }
+    
+    function median(matrix) {
+        var rows = matrix.length, cols = matrix[0].length;
+        var medians = new Array(cols);
+        
+        for(var i = 0; i < cols; i++) {
+            var data = new Array(rows);
+            for(var j = 0; j < rows; j++)
+                data[j] = matrix[j][i];
+            data.sort();
+            var N = data.length;
+            if(N % 2 === 0)
+                medians[i] = (data[N / 2] + data[(N / 2) - 1]) * 0.5;
+            else
+                medians[i] = data[Math.floor(N / 2)]; 
+        }
+        return medians;
+    }
+    
+    function mode(matrix) {
+        var rows = matrix.length, cols = matrix[0].length;
+        var modes = new Array(cols);
+        for(var i = 0; i < cols; i++) {
+            var itemCount = new Array(rows);
+            for(var k = 0; k < rows; itemCount[k++]=0);
+            var itemArray = new Array(rows);
+            var count = 0;
+            
+            for(var j = 0; j < rows; j++) {
+                var index = itemArray.indexOf(matrix[j][i]);
+                if(index >= 0)
+                    itemCount[index]++;
+                else {
+                    itemArray[count] = matrix[j][i];
+                    itemCount[count] = 1;
+                    count++;
+                }
+            }
+            
+            var maxValue = 0, maxIndex = 0;
+            for(var j = 0; j < count; j++) {
+                if(itemCount[j] > maxValue) {
+                    maxValue = itemCount[j];
+                    maxIndex = j;
+                }
+            }
+            
+            modes[i] = itemArray[maxIndex];
+        }
+        return modes;
+    }
+    
+    function skewness(matrix, unbiased) {
+        if(typeof(unbiased)==='undefined') unbiased = true;
+        var means = mean(matrix);
+        var n = matrix.length, l = means.length;
+        var skew = new Array(l);
+        
+        for(var j = 0; j < l; j++) {
+            var s2 = 0, s3 = 0;
+            for(var i = 0; i < n; i++) {
+                var dev = matrix[i][j] - means[j];
+                s2 += dev * dev;
+                s3 += dev * dev * dev;
+            }
+            
+            var m2 = s2 / n;
+            var m3 = s3 / n;
+            var g = m3 / Math.pow(m2, 3 / 2);
+            
+            if(unbiased) {
+                var a = Math.sqrt(n * (n - 1));
+                var b = n - 2;
+                skew[j] = (a / b) * g;
+            }
+            else
+                skew[j] = g;
+        }
+        
+        return skew;
+    }
+    
+    function kurtosis(matrix, unbiased) {
+        if(typeof(unbiased)==='undefined') unbiased = true;
+        var means = mean(matrix);
+        var n = matrix.length, m = matrix[0].length;
+        var kurt = new Array(m);
+        
+        for(var j = 0; j < m; j++) {
+            var s2 = 0, s4 = 0;
+            for(var i = 0; i < n; i++) {
+                var dev = matrix[i][j] - means[j];
+                s2 += dev * dev;
+                s4 += dev * dev * dev * dev;
+            }
+            var m2 = s2 / n;
+            var m4 = s4 / n;
+            
+            if(unbiased) {
+                var v = s2 / (n-1);
+                var a = (n * (n + 1)) / ((n - 1) * (n - 2) * (n - 3));
+                var b = s4 / (v * v);
+                var c = ((n - 1) * (n - 1)) / ((n - 2) * (n - 3));
+                kurt[j] = a * b - 3 * c;
+            }
+            else
+                kurt[j] = m4 / (m2 * m2) - 3;
+        }
+        return kurt;
+    }
+    
+    function standardError(matrix) {
+        var samples = matrix.length;
+        var standardDeviations = standardDeviation(matrix), l = standardDeviations.length;
+        var standardErrors = new Arrray(l);
+        var sqrtN = Math.sqrt(samples);
+        
+        for(var i = 0; i < l; i++)
+            standardErrors[i] = standardDeviations[i] / sqrtN;
+        return standardErrors;
+    }
+    
+    function covariance(matrix, dimension) {
+        return scatter(matrix, undefined, dimension);
+    }
+    
+    function scatter(matrix, divisor, dimension) {
+        if(typeof(dimension)==='undefined') dimension = 0;
+                if(typeof(divisor)==='undefined') {
+            if(dimension===0)
+                divisor = matrix.length-1;
+            else if(dimension===1)
+                divisor = matrix[0].length-1;
+        }
+        var means = mean(matrix, dimension);
+        var rows = matrix.length;
+        if(rows===0) return [[]];
+        var cols = matrix[0].length;
+        var cov;
+        
+        if(dimension === 0) {
+            cov = new Array(cols);
+            for(var i = 0; i < cols; cov[i++]=new Array(cols));
+            for(var i = 0; i < cols; i++) {
+                for(var j = i; j < cols ; j++) {
+                    var s = 0;
+                    for(var k = 0; k < rows; k++)
+                        s += (matrix[k][j] - means[j]) * (matrix[k][i] - means[i]);
+                    s /= divisor;
+                    cov[i][j] = s;
+                    cov[j][i] = s;
+                }
+            }
+        }
+        else if(dimension === 1) {
+            cov = new Array(rows);
+            for(var i = 0; i < rows; cov[i++]=new Array(rows));
+            for (var i = 0; i < rows; i++) {
+                for(var j = i; j < rows; j++) {
+                    var s = 0;
+                    for (var k = 0; k < cols; k++)
+                        s += (matrix[j][k] - means[j]) * (matrix[i][k] - means[i]);
+                    s /= divisor;
+                    cov[i][j] = s;
+                    cov[j][i] = s;
+                }
+            }
+        }
+        else
+            throw "Invalid dimension.";
+        
+        return cov;
+    }
+    
+    function correlation(matrix) {
+        var means = mean(matrix);
+        var standardDeviations = standardDeviation(matrix, true, means);
+        var scores = zScores(matrix, means, standardDeviations);
+        var rows = matrix.length, cols = matrix[0].length;
+        
+        var cor = new Array(cols);
+        for(var i = 0; i < cols; cor[i++]=new Array(cols));
+        for(var i = 0; i < cols; i++) {
+            for(var j = i; j < cols; j++) {
+                var c = 0;
+                for(var k = 0, l = scores.length; k < l; k++)
+                    c += scores[k][j] * scores[k][i];
+                c /= rows - 1;
+                cor[i][j] = c;
+                cor[j][i] = c;
+            }
+        }
+        return cor;
+    }
+    
+    function zScores(matrix, means, standardDeviations) {
+        if(typeof(means)==='undefined') means = mean(matrix);
+        if(typeof(standardDeviations)==='undefined') standardDeviations = standardDeviation(matrix, true, means);
+        return standardize(center(matrix, means, false), standardDeviations, true);
+    }
+    
+    function center(matrix, means, inPlace) {
+        if(typeof(means)==='undefined') means = mean(matrix);
+        if(typeof(inPlace)==='undefined') inPlace = false;
+        var result = matrix;
+        
+        if(!inPlace) {
+            var l = matrix.length
+            result = new Array(l);
+            for(var i = 0; i < l; i++)
+                result[i] = new Array(matrix[i].length);
+        }
+        
+        for(var i = 0; i < l; i++) {
+            var row = result[i];
+            for(var j = 0, jj = row.length; j < jj; j++)
+                row[j] = matrix[i][j] - means[j];
+        }
+        return result;
+    }
+    
+    function standardize(matrix, standardDeviations, inPlace) {
+        if(typeof(standardDeviations)==='undefined') standardDeviations = standardDeviation(matrix);
+        if(typeof(inPlace)==='undefined') inPlace = false;
+        var result = matrix, l = matrix.length;
+        
+        if(!inPlace) {
+            result = new Array(l);
+            for(var i = 0; i < l; i++)
+                result[i] = new Array(matrix[i].length);
+        }
+        
+        for(var i = 0; i < l; i++) {
+            var resultRow = result[i];
+            var sourceRow = matrix[i];
+            for(var j = 0, jj = resultRow.length; j < jj; j++) {
+                if(standardDeviations[j] !== 0 && !isNaN(standardDeviations[j]))
+                    resultRow[j] = sourceRow[j] / standardDeviations[j];
+            }
+        }
+        return result;
+    }
+    
+    function weightedVariance(matrix, weights) {
+        var means = mean(matrix);
+        var rows = matrix.length;
+        if(rows === 0) return [];
+        var cols = matrix[0].length;
+        var vari = new Array(cols);
+        
+        for(var j = 0; j < cols; j++) {
+            var sum = 0;
+            var a = 0, b = 0;
+            
+            for(var i = 0; i < rows; i++) {
+                var z = matrix[i][j] - means[j];
+                var w = weights[i];
+                
+                sum += w * (z * z);
+                b += w;
+                a += w * w;
+            }
+            
+            vari[j] = sum * (b / (b * b - a));
+        }
+        
+        return vari;
+    }
+    
+    function weightedMean(matrix, weights, dimension) {
+        if(typeof(dimension)==='undefined') dimension = 0;
+        var rows = matrix.length;
+        if(rows===0) return [];
+        var cols = matrix[0].length;
+        var means;
+        
+        if(dimension === 0) {
+            means = new Array(cols);
+            for(var i = 0; i < cols; means[i++]=0);
+            for (var i = 0; i < rows; i++) {
+                var row = matrix[i];
+                var w = weights[i];
+                for (var j = 0; j < cols; j++)
+                    means[j] += row[j] * w;
+            }
+        }
+        else if(dimension === 1) {
+            means = new Array(rows);
+            for(var i = 0; i < rows; means[i++]=0);
+            for (var j = 0; j < rows; j++) {
+                var row = matrix[j];
+                var w = weights[j];
+                for (var i = 0; i < cols; i++)
+                    means[j] += row[i] * w;
+            }
+        }
+        else
+            throw "Invalid dimension.";
+            
+        var weightSum = sum(weights);
+        if(weightSum !== 0)
+            for (var i = 0, ii = means.length; i < ii; i++)
+                means[i] /= weightSum;
+        return means;
+    }
+    
+    function weightedCovariance(matrix, weights, means, dimension) {
+        if(typeof(dimension)==='undefined') dimension = 0;
+        if(typeof(means)==='undefined') means = weightedMean(matrix, weights, dimension);
+        var s1 = 0, s2 = 0;
+        for(var i = 0, ii = weights.length; i < ii; i++) {
+            s1 += weights[i];
+            s2 += weights[i] * weights[i];
+        }
+        var factor = s1 / (s1 * s1 - s2);
+        return weightedScatter(matrix, weights, means, factor, dimension);
+    }
+    
+    function weightedScatter(matrix, weights, means, factor, dimensions) {
+        if(typeof(dimension)==='undefined') dimension = 0;
+        if(typeof(means)==='undefined') means = weightedMean(matrix, weights, dimension);
+        if(typeof(factor)==='undefined') factor = 1;
+        var rows = matrix.length;
+        if(rows === 0) return [[]];
+        var cols = matrix[0].length;
+        var cov;
+        
+        if(dimension === 0) {
+            cov = new Array(cols);
+            for(var i = 0; i < cols; cov[i++]=new Array(cols));
+            for(var i = 0; i < cols; i++) {
+                for(var j = i; j < cols; j++) {
+                    var s = 0;
+                    for(var k = 0; k < rows; k++)
+                        s += weights[k] * (matrix[k][j] - means[j]) * (matrix[k][i] - means[i]);
+                    cov[i][j] = s * factor;
+                    cov[j][i] = s * factor;
+                }
+            }
+        }
+        else if(dimension === 1) {
+            cov = new Array(rows);
+            for(var i = 0; i < rows; cov[i++]=new Array(rows));
+            for (var i = 0; i < rows; i++) {
+                for (var j = i; j < rows; j++) {
+                    var s = 0;
+                    for (var k = 0; k < cols; k++)
+                        s += weights[k] * (matrix[j][k] - means[j]) * (matrix[i][k] - means[i]);
+                    cov[i][j] = s * factor;
+                    cov[j][i] = s * factor;
+                }
+            }
+        }
+        else
+            throw "Invalid dimension";
+        
+        return cov;
+    }
+    
+    // private
+    function sum(vector) {
+        var sum = 0, l = vector.length;
+        for(var i = 0; i < l; i++)
+            sum += vector[i];
+        return sum;
+    }
+    
+    return {
+        entropy: entropy,
+        mean: mean,
+        standardDeviation: standardDeviation,
+        variance: variance,
+        median: median,
+        mode: mode,
+        skewness: skewness,
+        kurtosis: kurtosis,
+        standardError: standardError,
+        covariance: covariance,
+        scatter: scatter,
+        correlation: correlation,
+        zScores: zScores,
+        center: center,
+        standardize: standardize,
+        weightedVariance: weightedVariance,
+        weightedMean: weightedMean,
+        weightedCovariance: weightedCovariance,
+        weightedScatter: weightedScatter
+    };
+    
+});
