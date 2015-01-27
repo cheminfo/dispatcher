@@ -4,7 +4,6 @@
       "type": "device1",
       "description": "The first device",
       "name": "mydevice",
-      "port": "/dev/tty.USBxx",
       "prefix": ""
     }
   ],

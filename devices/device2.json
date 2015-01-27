@@ -18,5 +18,6 @@
         }
     },
     "refresh": 1000,
-    "nbParam": 26
+    "nbParam": 26,
+    "multiLog": false
 }

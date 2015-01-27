@@ -8,5 +8,6 @@
         "dir": "sqlite"
     },
     "epochRefreshInterval": 10000,
-    "refresh": 5000
+    "refresh": 5000,
+    "mulitLog": false
 }
