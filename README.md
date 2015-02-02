@@ -70,11 +70,116 @@ Global parameters in this file allow to define:
 * port: the name of the device. For a zigbee hub it could be on linux: ``/dev/ttyUSB0`` or on macosx: ``/dev/tty.SLAB_USBtoUART``. If connected directly on the computer is could be on macosx ``/dev/tty.usbmodem1451``.
 * baudrate: for a zigbee hub from [Shuncom](http://www.shuncomwireless.com/) the speed should be 38400. When connecting directly with an Arduino it should be by default 9600.
 
-## devices
+## Dispatcher configuration
+There are two places where to define configuration files.
+1. ``` configs/myconfig.json ```. Here you define the boards that are physically connected to the computer via a serial board, and the list and type of devices associated to that board
+2. devices/mydevice.json. Here you define a type of device, which is mainly characterized by it’s parameters (A, B etc…)
 
-Each device is defined by a file in ``./devices``folder. A device may be the gaz controller or the bioreactor controller. You will need to define for each board which parameters are used and what are the corresponding name / value of this parameter.
+###### Board
+The configuration contains the list of boards that the dispatcher should be looking for. The basic structure for the configuration file is: 
+```json
+[
+  {
+    "devices": {}
+  },
+  {
+    "devices": {}
+  }
+]
+```
+Each element in the array represents a board that is physically connected (via a serial port) to the machine that is running the dispatcher (here the raspberry pi). 
+If there is only one board connected, then you don’t have to use an array:
+```json
+{
+  "devices": {}
+}
+```
 
-You may also define how often this device has to be updated.
+The best way to connect several boards is to define one board per file and to specify several configuration files when launching the dispatcher.
+A board has several parameters:
+```json
+{
+  "devices": {},
+  "port": "/dev/tty.SLAB_USBtoUART",
+  "baudrate": 38400,
+  "sqlite": {},
+  "serialResponseTimeout": 259
+}
+```
+**baudrate**: the serial connection’s data rate
+**port**: the serial connection’s port.
+The port can be a regular expression:  
+```json
+"port": {
+  "dir": "/dev",
+  "regexp": "usbmodem.*"
+}
+```
+**sqlite** (optional): the sqlite database configuration. This configuration can be overridden in the device configuration.
+**serialResponseTimeout** (optional): This manages the time (in milseconds) the serial port should be waiting for a response. It’s important to set this parameter correctly! (you should use trial and error…). If this parameter is too small, you will send new commands before having the entire response to the previous commands. If you set this parameter too high, the command queue will get bigger and bigger and you will have high latency.
+**devices**: Each board can have several devices. If the board has zigbee, then you can have several devices defined, therefore it’s an array
+
+```json
+"devices" : [
+    {
+        "type":"mlog",
+        "description":"Mlog device",
+        "prefix":"$A",
+        "id": "$A",
+        "sqlite": {}
+    }
+]
+```
+
+**devices**:
+* **type**: the type of device. Devices are specified in separate configuration files and this parameter enables to identify it.
+* **description**: A description of the device
+* **prefix**: the prefix that should be use when sending commands through the serial port.
+ This is important for zigbee devices since commands must be prefixed. Leave empty if it’s not a zigbee device
+* **id**: a unique identifier for the device. For zigbee devices, use the prefix
+* **sqlite**: the sqlite can be configured per device. If not specified in the device, the sqlite config of the board is used.
+
+###### Devices
+Device configuration files are on separate files and correspond to a type in the main configuration file. So if you have a device in the main config file with the type “abc”, the loading procedure will look for the file devices/abc.json. This system enables to have several devices with the same parameters without duplicating them in the config file. (will be useful for solar decathlon)
+Here is the structure of a device configuration file: 
+```json
+{
+    "parameters": {
+        "A": {
+            "label": "Internal temperature",
+            "name": "internalTemperature",
+            "factor": 0.01
+        },
+        "B": {
+            "label": "External temperature",
+            "name": "externalTemperature",
+            "factor": 0.01
+        },
+        "C": {
+            "label": "Target temperature",
+            "type": "number",
+            "factor": 0.01,
+            "editable": true
+        }
+    },
+    "refresh": 1000,
+    "nbParam": 26,
+    "multiLog": false
+}
+```
+
+**parameters**: key/value where the key is the parameter id
+* **label**: parameter label
+* **name**: ?? (i don’t think this is used…)
+* **factor**: the multiplication factor to get the correct value for the given units
+* **unit**: the unit measure (celsius, bar, perc. humidity etc…) (not used yet)
+**multiLog**: weather the device is multilog or not. When multilog, the log content is persisted to the database.
+**nbParam**: the total number of parameters the device can have (A-Z ⇒ 26, A-Z,AA-AZ ⇒ 52)
+**refresh**: the period of refresh in miliseconds. For a multilog device, a refresh will save new 
+
+data to the database. For a non-multilog device, a refresh will put the latest parameter values in cache.
+
+Each board can have several devices. If the board has zigbee, then you can have several devices defined.
 
 For Developpers
 ===============
