@@ -57,19 +57,6 @@ You may create any new file in this ``./configs`` folder. For example you could 
 node server.js --config bioreactor
 ```
 
-## configs
-
-The configuration files are stored in ``./configs``.
-
-In a config file you will define all the devices that should be monitored (as an array) as well as their type. A device is characterised by :
-* type: corresponds to the name of a file that is in the folder ``./devices`` and that will describe exactly the feature of this type of device.
-* description: free name
-* prefix: the prefix that has to be send to communicate to this device. If you connect directly the device to the computer this should be empty, if you use a master/slave configuration with zigbee this should contain the address of the device.
-* id: ID of the device. Each device should have a unique ID and this will be used to stored in the corresponding database. This should correspond to the ID of the device that is defined using the "q" parameter in the configuration menu and that is calculated based on the ASCII code table. For example, $A (ASCII $: 36, A: 65) should be defined using 36 * 256 + 65 = 9281. On a board you would then enter "q9281"
-Global parameters in this file allow to define:
-* port: the name of the device. For a zigbee hub it could be on linux: ``/dev/ttyUSB0`` or on macosx: ``/dev/tty.SLAB_USBtoUART``. If connected directly on the computer is could be on macosx ``/dev/tty.usbmodem1451``.
-* baudrate: for a zigbee hub from [Shuncom](http://www.shuncomwireless.com/) the speed should be 38400. When connecting directly with an Arduino it should be by default 9600.
-
 ## Dispatcher configuration
 There are two places where to define configuration files.
 1. ``` configs/myconfig.json ```. Here you define the boards that are physically connected to the computer via a serial board, and the list and type of devices associated to that board
@@ -106,9 +93,9 @@ A board has several parameters:
   "serialResponseTimeout": 259
 }
 ```
-**baudrate**: the serial connection’s data rate
-**port**: the serial connection’s port.
-The port can be a regular expression:  
+**baudrate**: the serial connection’s data rate. For a zigbee hub from [Shuncom](http://www.shuncomwireless.com/) the speed should be 38400. When connecting directly with an Arduino it should be 9600.
+**port**: the serial connection’s port. For a zigbee hub it could be on linux: ``/dev/ttyUSB0`` or on macosx: ``/dev/tty.SLAB_USBtoUART``. If connected directly on the computer is could be on macosx ``/dev/tty.usbmodem1451``.
+The port can be a regular expression: (usefull because names can change when replugged)
 ```json
 "port": {
   "dir": "/dev",
@@ -117,6 +104,7 @@ The port can be a regular expression:
 ```
 **sqlite** (optional): the sqlite database configuration. This configuration can be overridden in the device configuration.
 **serialResponseTimeout** (optional): This manages the time (in milseconds) the serial port should be waiting for a response. It’s important to set this parameter correctly! (you should use trial and error…). If this parameter is too small, you will send new commands before having the entire response to the previous commands. If you set this parameter too high, the command queue will get bigger and bigger and you will have high latency.
+**description**: Describes what this config does
 **devices**: Each board can have several devices. If the board has zigbee, then you can have several devices defined, therefore it’s an array
 
 ```json
@@ -134,9 +122,9 @@ The port can be a regular expression:
 **devices**:
 * **type**: the type of device. Devices are specified in separate configuration files and this parameter enables to identify it.
 * **description**: A description of the device
-* **prefix**: the prefix that should be use when sending commands through the serial port.
+* **prefix**: the prefix that should be use when sending commands through the serial port. If you connect directly the device to the computer this should be empty, if you use a master/slave configuration with zigbee this should contain the address of the device. The prefix usually is a ``$`` or a ``%`` followed by a letter, for example ``$A``
  This is important for zigbee devices since commands must be prefixed. Leave empty if it’s not a zigbee device
-* **id**: a unique identifier for the device. For zigbee devices, use the prefix
+* **id**: a unique identifier for the device. For zigbee devices, use the prefix. The id should to how the id of the device was defined with the "q" command, using ASCII table conversions. For example, $A (ASCII $: 36, A: 65) should be defined using 36 * 256 + 65 = 9281. On a board it corresponds to the command "q9281".
 * **sqlite**: the sqlite can be configured per device. If not specified in the device, the sqlite config of the board is used.
 
 ###### Devices
