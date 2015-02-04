@@ -434,6 +434,9 @@ function save(entry, options) {
             maxRecords.push(options.maxRecords[names[i]])
     }
 
+    if(entry.id) {
+        debug('Trying to insert an entry with an id\n' + JSON.stringify(entry));
+    }
     var createTablesFn = entry.id ? createTables1 : createTables;
     var insertEntryFn = entry.id ? insertEntry1 : insertEntry;
 
