@@ -143,12 +143,15 @@ function doCRequest(that, device) {
 
         that.data.entry[id] = that.data.entry[id] || {};
 
+	status.active=false;
+        if(! entries) {
+            debug('cmd: '+cmd+' - Unexpected error..., response: ', response);
+        } else if(entries.length > 1) {
+            debug('cmd: '+cmd+' - Unexpected error..., ', entries.length, ', multilog is ', multiLog);
+        } else {
+        	status.active = (entries.length === 1);
+	}
 
-        if(entries.length > 1) {
-            debug('Unexpected error..., ', entries.length, ', multilog is ', multiLog);
-        }
-
-        status.active = (entries.length === 1);
         if(status.active) {
             debug('active');
             that.data.deviceIds[id] = entries[0].deviceId;
