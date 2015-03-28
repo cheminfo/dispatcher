@@ -594,6 +594,7 @@ function getWrappedDB(id, options, mode) {
     if(!pdb) {
         debug('opening database', dbloc);
         var db = new sqlite.cached.Database(dbloc, mode);
+	if (! db.open) return; // probably we try to open in READONLY a database that does not exists
         pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
         pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
     }
