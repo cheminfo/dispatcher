@@ -5,7 +5,7 @@ Requirements
 Have gcc installed (C/C++ compiler)
 On Mac OSX, this means you must have XCode install (available for free from the appstore) and start it once to accept the licence !
 
-Launch the server
+Launch the servers
 =======
 Start your server.
 
@@ -36,8 +36,8 @@ Server configuration
 For advanced users, you can edit the server configuration. You must create a file named ```serverConfig.json```. You can use ```defaultServerConfig.json``` as a template.
 
 ```
-cp serverConfigDefault.json appconfig.json       # Copy from template
-vim appconfig.json                               # Edit
+cp defaultServerConfig.json serverConfig.json       # Copy from template
+vim serverConfig.json                               # Edit
 ```
 
 For changes to be effective you must relaunch the server.
@@ -255,7 +255,7 @@ ln -s /usr/local/node/latest/bin/npm /usr/local/bin/npm
 cd /usr/local/node
 git clone "https://github.com/cheminfo/dispatcher.git"
 cd dispatcher
-cp default.json appconfig.json
+cp defaultAppconfig.json appconfig.json
 npm install
 ```
 
