@@ -84,7 +84,7 @@
 	    "editable":false
         }
     },
-    "refresh":1000,
+    "refresh":10000,
     "nbParam": 52,
     "multiLog": false
 }
