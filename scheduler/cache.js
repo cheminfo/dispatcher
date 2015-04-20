@@ -4,6 +4,7 @@ var _ = require('lodash'),
     debug = require('debug')('cache'),
     database = require('../db/database'),
     parser = require('../lib/parser'),
+    util = require('../util/util'),
     Promise = require('bluebird');
 
 var lastIds = {};
@@ -85,15 +86,19 @@ function doMultilogRequest(that, device) {
 
         status.active = (entries.length >= 1);
         if(status.active) {
+            // TODO: check that the lastId corresponds to the first id in the entries list
+            var devId = util.deviceIdStringToNumber(id);
+            if(devId !== entries[0].deviceId) {
+                throw new Error('Device id of entries does not correspond to device id of request');
+            }
+
             that.data.deviceIds[id] = entries[0].deviceId;
             status.nbFailures = 0;
         }
 
         if(entries.length === 0) {
-            debug('Unexpected error... m command should return at least 1 result');
-            doingMultiLog = false;
-            status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
-            status.failure = 'Device did not respond';
+            // catch will handle this situation
+            throw new Error('Unexpected error... m command should return at least 1 result');
         }
 
         if(entries.length === 1) {
