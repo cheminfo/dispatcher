@@ -86,10 +86,13 @@ function doMultilogRequest(that, device) {
 
         status.active = (entries.length >= 1);
         if(status.active) {
-            // TODO: check that the lastId corresponds to the first id in the entries list
             var devId = util.deviceIdStringToNumber(id);
             if(devId !== entries[0].deviceId) {
                 throw new Error('Device id of entries does not correspond to device id of request');
+            }
+
+            if(lastId !== entries[0].id) {
+                throw new Error('The first id of entries does not correspond to the last seen id');
             }
 
             that.data.deviceIds[id] = entries[0].deviceId;
