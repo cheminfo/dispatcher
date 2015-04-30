@@ -2,15 +2,15 @@
   "name": "test",
   "version": "0.0.0",
   "dependencies": {
-    "serialport": "~1.4.5",
-    "express": "~4.8.7",
     "bluebird": "~2.3.2",
-    "minimist": "~1.1.0",
-    "debug": "~2.0.0",
-    "lodash": "~2.4.1",
-    "sqlite3": "~2.2.7",
-    "squel": "~3.8.1",
     "body-parser": "~1.8.4",
-    "fs-extra": "~0.12.0"
+    "debug": "~2.0.0",
+    "express": "~4.8.7",
+    "fs-extra": "~0.12.0",
+    "lodash": "~2.4.1",
+    "minimist": "~1.1.0",
+    "serialport": "~1.6.2",
+    "sqlite3": "^3.0.5",
+    "squel": "~3.8.1"
   }
 }
