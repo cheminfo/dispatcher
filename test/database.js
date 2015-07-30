@@ -8,7 +8,6 @@ const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
-console.log(SECOND, MINUTE, HOUR, DAY);
 
 var params = [0, 0, 0];
 var charCode = 'A'.charCodeAt(0) - 1;
@@ -45,7 +44,7 @@ function getTime(idx) {
 }
 function toParams(v, j) {
     var x = getTime(j);
-    var obj = {parameters: {}, deviceId: 'dbperf', epoch: x};
+    var obj = {parameters: {}, deviceId: 'dbtest', epoch: x};
     for (var i = 0; i < v.length; i++) {
         obj.parameters[params[i]] = v[i];
     }
@@ -60,7 +59,14 @@ var options = {
         "day": 300
     }
 };
-var saved;
+
+function saved1Fast() {
+    return database.saveFast(d1, options);
+}
+
+function saved2Fast() {
+    return database.saveFast(d2, options);
+}
 
 function saved1() {
     return database.save(d1, options);
@@ -70,33 +76,35 @@ function saved2() {
     return database.save(d2, options);
 }
 
+
+
 function getEntries() {
-    return database.get('dbperf', options);
+    delete options.mean;
+    delete options.fields;
+    return database.get('dbtest', options);
 }
 
 function getMeanEntries(mean) {
-    return database.get('dbperf', _.assign(options, {
+    return database.get('dbtest', _.assign(options, {
         mean: mean,
         fields: params
     }));
 }
 
-describe('Database test', function () {
+describe('Test database with normal save', function () {
     before(function () {
-        return database.drop('dbperf', options);
+        return database.drop('dbtest', options);
     });
 
     beforeEach(function () {
-        console.log('before test');
-        saved = saved1().then(saved2);
-        return saved;
+        return saved1().then(saved2);
     });
 
     afterEach(function () {
-        return database.drop('dbperf', options);
+        return database.drop('dbtest', options);
     });
 
-    it('save', function () {
+    it('save entries', function () {
         return getEntries()
             .then(function (records) {
                 records = records.map(function (r) {
@@ -123,6 +131,53 @@ describe('Database test', function () {
     });
 
     it('save day', function () {
+        return getMeanEntries('day')
+            .then(function (records) {
+                records.should.eql(days);
+            });
+    });
+});
+
+describe('Test database with fast save', function () {
+    before(function () {
+        return database.drop('dbtest', options);
+    });
+
+    beforeEach(function () {
+        return saved1Fast().then(saved2Fast);
+    });
+
+    afterEach(function () {
+        return database.drop('dbtest', options);
+    });
+
+    it('save entries fast ', function () {
+        return getEntries()
+            .then(function (records) {
+                records = records.map(function (r) {
+                    delete r.timestamp;
+                    return r;
+                });
+                records.should.eql(entries);
+            });
+    });
+
+    it('save fast minute', function () {
+        return getMeanEntries('minute')
+            .then(function (records) {
+
+                records.should.eql(minutes)
+            })
+    });
+
+    it('save fast hour', function () {
+        return getMeanEntries('hour')
+            .then(function (records) {
+                records.should.eql(hours);
+            });
+    });
+
+    it('save fast day', function () {
         return getMeanEntries('day')
             .then(function (records) {
                 records.should.eql(days);
