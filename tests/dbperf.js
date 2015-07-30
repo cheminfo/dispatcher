@@ -25,7 +25,7 @@ d = _.map(d,function() {
 
 
 database.save(d, {
-    "dir": "../sqlite",
+    "dir": __dirname + '/../sqlite',
     "maxRecords": {
         "entry": 100000,
         "minute": 10000,

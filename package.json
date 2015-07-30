@@ -9,8 +9,16 @@
     "fs-extra": "~0.12.0",
     "lodash": "~2.4.1",
     "minimist": "~1.1.0",
-    "serialport": "~1.6.2",
+    "serialport": "~1.7.4",
     "sqlite3": "^3.0.5",
     "squel": "~3.8.1"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "mocha-better-spec-reporter": "^2.1.1",
+    "should": "^7.0.2"
+  },
+  "scripts": {
+    "test": "mocha --require should --reporter mocha-better-spec-reporter --recursive"
   }
 }

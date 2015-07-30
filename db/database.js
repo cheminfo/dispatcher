@@ -13,6 +13,7 @@ var PromiseWrapper = require('../util/PromiseWrapper'),
 var dbs = [];
 
 exports = module.exports = {
+    drop: drop,
     save: save,
     get: get,
     query: query,
@@ -286,25 +287,49 @@ function keepRecentMeanEpoch(wdb, maxNb) {
     }
 }
 
+function getValues(entry) {
+    var values = [];
+    for(var key in entry.parameters) {
+        var value = entry.parameters[key];
+        if(typeof value === 'string') value = "'" + value + "'";
+        if(entry.parameters[key] === null) {
+            values.push('NULL');
+        }
+        else {
+            values.push(entry.parameters[key]);
+        }
+    }
+    return values;
+}
+
+function insertEntries(wdb, entries) {
+    return function() {
+        if(!entries.length) {
+            return Promise.resolve();
+        }
+        var keys = _.keys(entry.parameters);
+        var values = new Array(entries.length);
+
+        for (var i = 0; i < entries.length; i++) {
+            values[i] = getValues(entries[i]);
+        }
+
+        var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
+            ' values ';
+        for(var i = 0; i < values.length; i++) {
+            values[i] = '(' + entries[i].epoch + ',' + values[i].join(',') + ')';
+        }
+        command += values.join(',') + ';';
+        return wdb.run(command);
+    };
+}
+
 function insertEntry(wdb, entry) {
     return function() {
         var keys = _.keys(entry.parameters);
-        var values = [];
-        for(var i=0; i<keys.length; i++) {
-            var value = entry.parameters[keys[i]];
-            if(typeof value === 'string') value = "'" + value + "'";
-            if(entry.parameters[keys[i]] === null) {
-                values.push('NULL');
-            }
-            else {
-                values.push(entry.parameters[keys[i]]);
-            }
-
-        }
-
-
+        var values = getValues(entry);
         var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
-            ' values(' + entry.epoch + ',' + values.join(',') + ')';
+            ' values (' + entry.epoch + ',' + values.join(',') + ')';
         return wdb.run(command);
     }
 }
@@ -348,15 +373,14 @@ function getEntryMean(wdb, entry) {
 
 function insertEntryMean(wdb, entry) {
     return function(res) {
-        var query = '';
+        // res contains mean values from database
+        var queries = new Array(means.length);
         var columns = _.chain(entry.parameters)
             .keys()
             .map(mapMeanCol)
             .flatten().value();
 
-        var promises = [];
         for(var i=0; i<means.length; i++) {
-
             var epoch = entry.epoch-(entry.epoch%means[i].modulo);
             var values;
             if(res[i].length === 0) {
@@ -388,12 +412,11 @@ function insertEntryMean(wdb, entry) {
                     }).value();
             }
 
-            query += "INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");";
+
+            queries[i] = wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");");
             //promises.push(wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");"));
         }
-        //query += "END TRANSACTION;";
-        //return Promise.all(promises);
-        return wdb.run(query);
+        return Promise.all(queries);
     }
 }
 
@@ -533,7 +556,7 @@ function get(deviceId, options) {
 
 
     res.catch(handleError);
-    
+
     return res;
 }
 
@@ -587,14 +610,12 @@ function getWrappedDB(id, options, mode) {
     options = options || {};
     var dir = options.dir || './sqlite/';
 
-
     var file = id + '.sqlite';
     var dbloc = path.join(dir, file);
     var pdb = dbs[id];
     if(!pdb) {
         debug('opening database', dbloc);
         var db = new sqlite.cached.Database(dbloc, mode);
-	if (! db.open) return; // probably we try to open in READONLY a database that does not exists
         pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
         pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
     }
@@ -615,6 +636,19 @@ function getLastId(deviceId) {
             return res.id;
         });
 
+    res.catch(handleError);
+    return res;
+}
+
+function drop(deviceId, options) {
+    debug('drop table ' + deviceId);
+    var wdb = getWrappedDB(deviceId, options);
+    var queries = means.map(function(v) {
+        var q = 'drop table if exists ' + v.name + ';';
+        return wdb.run(q);
+    });
+    queries.push(wdb.run('drop table if exists entry;'));
+    var res = Promise.all(queries);
     res.catch(handleError);
     return res;
 }
