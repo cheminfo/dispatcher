@@ -317,14 +317,12 @@ function insertEntries(wdb, entries) {
 
         for (var i = 0; i < entries.length; i++) {
             values[i] = getValues(entries[i]);
+            values[i].unshift(entries[i].epoch);
         }
 
         var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
-            ' values ';
-        for(var i = 0; i < values.length; i++) {
-            values[i] = '(' + entries[i].epoch + ',' + values[i].join(',') + ')';
-        }
-        command += values.join(',') + ';';
+            ' values (' + values.join('),(') + ')';
+
         return wdb.run(command);
     };
 }
