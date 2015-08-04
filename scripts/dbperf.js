@@ -61,7 +61,7 @@ function saveDummy() {
 
 function timerStep(msg) {
     return function() {
-        console.log(msg + ' ' + timer.step('ms'));
+        console.log(msg + ' ' + timer.step('Ms'));
     }
 }
 

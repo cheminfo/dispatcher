@@ -291,17 +291,19 @@ function keepRecentMeanEpoch(wdb, maxNb) {
 }
 
 function getValues(entry) {
-    var values = [];
-    for(var key in entry.parameters) {
-        var value = entry.parameters[key];
-        if(typeof value === 'string') value = "'" + value + "'";
-        if(entry.parameters[key] === null) {
-            values.push('NULL');
+    var parameters = Object.keys(entry.parameters);
+    var values = new Array(parameters.length);
+    for (var i = 0; i < parameters.length; i++) {
+        var value = entry.parameters[parameters[i]];
+        //if(typeof value === 'string') value = "'" + value + "'";
+        if(value === null) {
+            values[i] = 'NULL';
         }
         else {
-            values.push(entry.parameters[key]);
+            values[i] = value;
         }
     }
+
     return values;
 }
 
@@ -397,7 +399,8 @@ function getEntriesMean(wdb, entries) {
             var command = 'SELECT * FROM ' + means[i].name + ' WHERE epoch=' + setJoin(epochs, ' OR epoch=') + ' ORDER BY epoch ASC;';
             if(epochs.size) promises.push(wdb.all(command));
         }
-        return Promise.all(promises);
+        var prom = Promise.all(promises);
+        return prom;
     }
 }
 
@@ -448,7 +451,8 @@ function insertEntryMean(wdb, entry) {
             queries[i] = wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");");
             //promises.push(wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");"));
         }
-        return Promise.all(queries);
+        var prom = Promise.all(queries);
+        return prom;
     }
 }
 
@@ -467,10 +471,14 @@ function insertEntriesMean(wdb, entries) {
             idxEntries[i] = {};
             for(var j=0; j<entries.length; j++) {
                 var epoch = entries[j].epoch - (entries[j].epoch % means[i].modulo);
-                var values = _.chain(parameters).map(function(param) {
-                    var val = entries[j].parameters[param];
-                    return [val, val, val, 1];
-                }).flatten().value();
+                var values = new Array(parameters.length * 4);
+                for(var k=0; k<parameters.length; k++) {
+                    var idx = k*4;
+                    var val = entries[j].parameters[parameters[k]];
+                    values[idx] = values[idx+1] = values[idx+2] = val;
+                    values[idx+3] = 1;
+                }
+
                 if(idxEntries[i][epoch]) {
                     idxEntries[i][epoch].push(values);
                 } else {
@@ -524,7 +532,8 @@ function insertEntriesMean(wdb, entries) {
             queries.push(wdb.run(command));
         }
 
-        return Promise.all(queries);
+        var prom =  Promise.all(queries);
+        return prom;
     };
 }
 
