@@ -1,14 +1,19 @@
-function formatTime(time, format) {
-    if (format) {
-        if (format === 'ms') {
-            return time + 'ms';
+var perfNow = require('performance-now');
+
+function formatTime(time, unit, precision) {
+    precision = precision || 0;
+    unit = unit || 'Ms';
+    if (unit) {
+        if(unit === 'ms') {
+            return (time * 1000).toFixed(precision) + '\u00B5s';
         }
-        if (format === 's') {
-            return (time / 1000) + 's';
+        if (unit === 'Ms') {
+            return time.toFixed(precision) + 'ms';
+        }
+        if (unit === 's') {
+            return (time / 1000).toFixed(precision) + 's';
         }
     }
-    else
-        return time;
 }
 
 function Timer() {
@@ -23,27 +28,27 @@ function Timer() {
 Timer.prototype = {
     start: function () {
         if (this._paused) {
-            this._start = Date.now() - this._elapsed;
+            this._start = perfNow() - this._elapsed;
             this._paused = false;
         } else if (!this._started) {
-            this._start = Date.now();
+            this._start = perfNow();
             this._started = true;
         }
     },
     pause: function () {
         if (this._started && !this._paused) {
             this._paused = true;
-            this._elapsed = Date.now() - this._start;
+            this._elapsed = perfNow() - this._start;
         }
     },
     time: function (format) {
         if (this._started && !this._paused) {
-            return formatTime(Date.now() - this._start, format);
+            return formatTime(perfNow() - this._start, format);
         }
     },
     step: function (format) {
         if (this._started && !this._paused) {
-            var now = Date.now();
+            var now = perfNow();
             var time = now - this._start;
             this._start = now;
             this._total += time;
@@ -53,13 +58,13 @@ Timer.prototype = {
     },
     lap: function (format) {
         if (this._started && !this._paused) {
-            var time = Date.now() - this._start;
+            var time = perfNow() - this._start;
             this._laps.push(time);
             return formatTime(this._total, format);
         }
     },
     sum: function (name) {
-        var elapsed = Date.now() - this._start;
+        var elapsed = perfNow() - this._start;
         if (name) {
             if (!this._sums[name]) {
                 this._sums[name] = 0;
