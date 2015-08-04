@@ -321,7 +321,7 @@ function insertEntries(wdb, entries) {
         var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
             ' values ';
         for(var i = 0; i < values.length; i++) {
-            values[i] = '(' + entries[i].epoch + ',' + values[i].join(',') + ')';
+            values[i] = '(' + values[i].join(',') + ')';
         }
         command += values.join(',') + ';';
         return wdb.run(command);
