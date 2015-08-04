@@ -801,6 +801,7 @@ function getWrappedDB(id, options, mode) {
         var db = new sqlite.cached.Database(dbloc, mode);
         pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
         pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
+        dbs[id] = pdb;
     }
     return pdb;
 }
