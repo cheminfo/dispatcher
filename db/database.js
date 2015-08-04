@@ -17,7 +17,7 @@ var dbs = [];
 exports = module.exports = {
     drop: drop,
     save: save,
-    saveFast: saveNew,
+    saveFast: saveFast,
     get: get,
     query: query,
     status: status,
@@ -292,15 +292,15 @@ function keepRecentMeanEpoch(wdb, maxNb) {
 
 function getValues(entry) {
     var parameters = Object.keys(entry.parameters);
-    var values = new Array(parameters.length);
+    var values = new Array(parameters.length + 1);
+    values[0] = entry.epoch;
     for (var i = 0; i < parameters.length; i++) {
         var value = entry.parameters[parameters[i]];
-        //if(typeof value === 'string') value = "'" + value + "'";
         if(value === null) {
-            values[i] = 'NULL';
+            values[i+1] = 'NULL';
         }
         else {
-            values[i] = value;
+            values[i+1] = value;
         }
     }
 
@@ -314,10 +314,8 @@ function insertEntries(wdb, entries) {
         }
         var keys = _.keys(entries[0].parameters);
         var values = new Array(entries.length);
-
         for (var i = 0; i < entries.length; i++) {
             values[i] = getValues(entries[i]);
-            values[i].unshift(entries[i].epoch);
         }
 
         var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
@@ -332,7 +330,7 @@ function insertEntry(wdb, entry) {
         var keys = _.keys(entry.parameters);
         var values = getValues(entry);
         var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
-            ' values (' + entry.epoch + ',' + values.join(',') + ')';
+            ' values (' + values.join(',') + ')';
         return wdb.run(command);
     }
 }
@@ -545,7 +543,9 @@ function test() {
         .then(createTables1(wdb));
 }
 
-function saveNew(entries, options) {
+function saveFast(entries, options) {
+    var timer = new Timer();
+    timer.start();
     if(!options.maxRecords) {
         return Promise.reject(new Error('maxRecords option is mandatory'));
     }
@@ -584,10 +584,8 @@ function saveNew(entries, options) {
         }
     }
 
-    var timer = new Timer();
-    timer.start();
     //insertEntryFn = insertEntry;
-    var res =  Promise.resolve().then(writeEntries());
+    var res =  Promise.resolve().then(timerStep('before write entries')).then(writeEntries());
 
     if(saveCount % cleanPeriod === 0) {
         res = res.then(getAllEntryIds(wdb)).then(timerStep('get all entry ids'))
@@ -601,7 +599,8 @@ function saveNew(entries, options) {
 
     function writeEntries(ok) {
         return function() {
-            return Promise.resolve().then(insertEntryFn(wdb, entries)).then(continueEntries, ok ? null : adminDB);
+            return Promise.resolve().then(insertEntryFn(wdb, entries)).then(timerStep('save entries'))
+                .then(continueEntries, ok ? null : adminDB);
         };
     }
 

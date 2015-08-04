@@ -61,7 +61,7 @@ function saveDummy() {
 
 function timerStep(msg) {
     return function() {
-        console.log(msg + ' ' + timer.step('Ms'));
+        console.log(msg + ' ' + timer.step('ms'));
     }
 }
 
@@ -73,9 +73,9 @@ timer.start();
 
 Promise.resolve()
     .then(dbDrop)
-    .then(saveDummy).then(timerStep('initial drop and dummy save\t'))
-    .then(dbSave).then(timerStep('normal save\t\t\t'))
-    .then(dbDrop)
+    //.then(saveDummy).then(timerStep('initial drop and dummy save\t'))
+    //.then(dbSave).then(timerStep('normal save\t\t\t'))
+    //.then(dbDrop)
     .then(saveDummy).then(timerStep('Second drop and dummy save\t'))
     .then(dbSaveFast).then(timerStep('fast save\t\t\t'))
     .catch(handleError);
