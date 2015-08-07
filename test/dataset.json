@@ -1,0 +1,181 @@
+{
+  "days": [
+    {
+      "A_min": 1,
+      "A_max": 1,
+      "B_min": 4,
+      "B_max": 4,
+      "C_min": 3,
+      "C_max": 3,
+      "A_mean": 1,
+      "B_mean": 4,
+      "C_mean": 3,
+      "epoch": 946771200
+    },
+    {
+      "A_min": 0,
+      "A_max": 9,
+      "B_min": 1,
+      "B_max": 9,
+      "C_min": 1,
+      "C_max": 7,
+      "A_mean": 3,
+      "B_mean": 4,
+      "C_mean": 4,
+      "epoch": 946684800
+    }
+  ],
+  "minutes": [
+    {
+      "A_min": 1,
+      "A_max": 1,
+      "B_min": 4,
+      "B_max": 4,
+      "C_min": 3,
+      "C_max": 3,
+      "A_mean": 1,
+      "B_mean": 4,
+      "C_mean": 3,
+      "epoch": 946771200
+    },
+    {
+      "A_min": 2,
+      "A_max": 9,
+      "B_min": 3,
+      "B_max": 7,
+      "C_min": 4,
+      "C_max": 4,
+      "A_mean": 5,
+      "B_mean": 5,
+      "C_mean": 4,
+      "epoch": 946688400
+    },
+    {
+      "A_min": 1,
+      "A_max": 6,
+      "B_min": 1,
+      "B_max": 2,
+      "C_min": 1,
+      "C_max": 6,
+      "A_mean": 3,
+      "B_mean": 1,
+      "C_mean": 3,
+      "epoch": 946684860
+    },
+    {
+      "A_min": 0,
+      "A_max": 6,
+      "B_min": 3,
+      "B_max": 9,
+      "C_min": 3,
+      "C_max": 7,
+      "A_mean": 2,
+      "B_mean": 6,
+      "C_mean": 5,
+      "epoch": 946684800
+    }
+  ],
+  "entries": [
+    {
+      "id": 7,
+      "epoch": 946771200,
+      "A": 1,
+      "B": 4,
+      "C": 3
+    },
+    {
+      "id": 6,
+      "epoch": 946688400,
+      "A": 9,
+      "B": 7,
+      "C": 4
+    },
+    {
+      "id": 5,
+      "epoch": 946688400,
+      "A": 2,
+      "B": 3,
+      "C": 4
+    },
+    {
+      "id": 4,
+      "epoch": 946684860,
+      "A": 1,
+      "B": 1,
+      "C": 1
+    },
+    {
+      "id": 3,
+      "epoch": 946684860,
+      "A": 6,
+      "B": 2,
+      "C": 6
+    },
+    {
+      "id": 9,
+      "epoch": 946684800,
+      "A": 0,
+      "B": 8,
+      "C": 5
+    },
+    {
+      "id": 8,
+      "epoch": 946684800,
+      "A": 6,
+      "B": 4,
+      "C": 7
+    },
+    {
+      "id": 2,
+      "epoch": 946684800,
+      "A": 4,
+      "B": 3,
+      "C": 7
+    },
+    {
+      "id": 1,
+      "epoch": 946684800,
+      "A": 1,
+      "B": 9,
+      "C": 3
+    }
+  ],
+  "hours": [
+    {
+      "A_min": 1,
+      "A_max": 1,
+      "B_min": 4,
+      "B_max": 4,
+      "C_min": 3,
+      "C_max": 3,
+      "A_mean": 1,
+      "B_mean": 4,
+      "C_mean": 3,
+      "epoch": 946771200
+    },
+    {
+      "A_min": 2,
+      "A_max": 9,
+      "B_min": 3,
+      "B_max": 7,
+      "C_min": 4,
+      "C_max": 4,
+      "A_mean": 5,
+      "B_mean": 5,
+      "C_mean": 4,
+      "epoch": 946688400
+    },
+    {
+      "A_min": 0,
+      "A_max": 6,
+      "B_min": 1,
+      "B_max": 9,
+      "C_min": 1,
+      "C_max": 7,
+      "A_mean": 3,
+      "B_mean": 4,
+      "C_mean": 4,
+      "epoch": 946684800
+    }
+  ]
+}
