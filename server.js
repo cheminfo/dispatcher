@@ -45,6 +45,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json({
     limit: serverConfig.bodyLimit
 }));
+
 app.use(bodyParser.urlencoded({
     extended: true,
     limit: serverConfig.bodyLimit

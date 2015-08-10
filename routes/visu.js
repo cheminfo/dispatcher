@@ -21,7 +21,6 @@ function getFiles(dir) {
     } catch(err) {
         return null;
     }
-
 }
 
 function getJsonFiles(dir) {
