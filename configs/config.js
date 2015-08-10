@@ -8,14 +8,13 @@ var Config = exports = module.exports = function Config(name) {
     // default.json contains default values for mandatory parameters
     this.config = [];
     this.addConfiguration(name);
-
 };
 
 Config.prototype.addConfiguration = function(name) {
-    var def = require('./default.json');
+    var def = require(__dirname + './default.json');
     var config;
     if(name) {
-        config = require('./'+name+'.json');
+        config = require(__dirname + '/'+ name + '.json');
 
         if(!(config instanceof Array)) {
             config = [config];
@@ -116,7 +115,7 @@ function processConf(conf) {
     // The configuration varibale will eventually contain both
     // the basic configuration and the devices configuration
     for(var i=0; i<conf.devices.length; i++) {
-        _.merge(conf.devices[i], require('../devices/'+conf.devices[i].type+'.json'));
+        _.merge(conf.devices[i], require(__dirname + '/../devices/'+conf.devices[i].type+'.json'));
     }
 
     // Don't let a prefix be undefined if it's the only one

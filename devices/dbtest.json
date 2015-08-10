@@ -1,0 +1,22 @@
+{
+  "parameters":{
+    "A": {
+      "label": "test db param A",
+      "name": "",
+      "factor": 0.01
+    },
+    "B": {
+      "label": "Test db param B",
+      "name":"",
+      "factor": 0.01
+    },
+    "C": {
+      "label": "Test db param C",
+      "name":"",
+      "factor": 0.01
+    }
+  },
+  "refresh":5000,
+  "nbParam": 3,
+  "multiLog": true
+}

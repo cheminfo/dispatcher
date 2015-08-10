@@ -1,8 +1,9 @@
 'use strict';
 
 var request = require('supertest');
-var app = require('./bootstrap/data-api-bootstrap');
-
+var bootstrap = require('./bootstrap/data-api-bootstrap');
+var app = bootstrap.app;
+var config = bootstrap.config;
 
 app.get('/user', function(req, res){
     res.send(200, { name: 'tobi' });
@@ -13,7 +14,7 @@ describe('save', function() {
     it('should save', function(done) {
         agent.get('/user')
             .expect('Content-Type', /json/)
-            .expect('Content-Length', '20')
+            .expect('Content-Length', '15')
             .expect(200, done);
     });
 });

@@ -8,7 +8,7 @@ var debug = require('debug')('main'),
     SerialQueueManager = require('./lib/SerialQueueManager'),
     EpochManager = require('./scheduler/epoch'),
     CacheDatabase = require('./db/CacheDatabase'),
-    Filter = require('./lib/filter'),
+    n = require('./lib/filter'),
     Cache = require('./scheduler/cache'),
     database = require('./db/database'),
     Config = require('./configs/config'),
@@ -60,7 +60,7 @@ app.set("serveraddress", ipValid ? serverConfig.ipaddress : network.getMyIp() ||
 
 
 // Initialize modules
-var modules = ['navview', 'visu', 'config'];
+var modules = ['navview', 'visu', 'config', 'database'];
 debug('Mounting modules', modules);
 
 for(var i=0; i<modules.length; i++) {
@@ -196,47 +196,6 @@ app.post('/command',
         });
     });
 
-app.get('/database/all/:filter', validateFilter, function(req, res) {
-    var all = {};
-});
-
-var queryValidator = [
-    {name: 'fields', required: false},
-    {name: 'device', required: true},
-    {name: 'limit', required: false},
-    {name: 'mean', required: false}
-];
-
-
-app.get('/database/:device', middleware.validateParameters(_.flatten([queryValidator, {name:'filter', required: false}])), function(req, res) {
-    var deviceId = idStringToNumber(res.locals.parameters.device);
-
-    var fields = res.locals.parameters.fields || '*';
-    var mean = res.locals.parameters.mean || 'entry';
-    var limit = res.locals.parameters.limit || 10;
-    fields = fields.split(',');
-    var options = {
-        limit: limit,
-        fields: fields,
-        mean: mean
-    };
-
-
-    database.get(deviceId, options).then(function(result) {
-        switch(res.locals.parameters.filter) {
-            case 'chart':
-                var chart = filter.chartFromDatabaseEntries(result, res.locals.parameters.device);
-                return res.status(200).json(chart);
-            default:
-                var data = filter.normalizeData(result, res.locals.parameters.device);
-                return res.status(200).json(data);
-        }
-
-    }).catch(function(err) {
-        return res.status(400).json('Database error');
-    });
-});
-
 function findDevice(id) {
     for(var i=0; i<config.length; i++) {
         var d;
@@ -365,12 +324,4 @@ function getAppconfig() {
         fs.copySync('./defaultAppconfig.json', './appconfig.json');
         return getAppconfig();
     }
-}
-
-function idStringToNumber(idString) {
-    return idString.charCodeAt(0) * 256 + idString.charCodeAt(1);
-}
-
-function idNumberToString(idNumber) {
-
 }
