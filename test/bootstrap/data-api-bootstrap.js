@@ -1,9 +1,8 @@
 'use strict';
 var app = require('express')();
-var Config = require('../../configs/config');
+var config = require('../../configs/config');
 
 // Create configuration
-var config = new Config();
 config.addConfiguration('dbtest');
 
 // Initialize modules

@@ -3,15 +3,12 @@ var _ = require('lodash'),
     path = require('path'),
     fs = require('fs-extra');
 
-var Config = exports = module.exports = function Config(name) {
-    // load config
-    // default.json contains default values for mandatory parameters
+function Config() {
     this.config = [];
-    this.addConfiguration(name);
 };
 
 Config.prototype.addConfiguration = function(name) {
-    var def = require(__dirname + './default.json');
+    var def = require(__dirname + '/default.json');
     var config;
     if(name) {
         config = require(__dirname + '/'+ name + '.json');
@@ -132,3 +129,5 @@ function addUtility(conf) {
         return idx > -1 ? this.devices[idx] : null;
     }
 }
+
+exports = module.exports = new Config();

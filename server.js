@@ -11,7 +11,7 @@ var debug = require('debug')('main'),
     n = require('./lib/filter'),
     Cache = require('./scheduler/cache'),
     database = require('./db/database'),
-    Config = require('./configs/config'),
+    config = require('./configs/config'),
     express = require('express'),
     middleware = require('./middleware/common'),
     _ = require('lodash'),
@@ -254,14 +254,13 @@ function restart() {
             configName = configName.trim().split(',');
 
 
-            config = new Config();
             for(var i=0; i<configName.length; i++) {
                 config.addConfiguration(configName[i]);
             }
 
             // The configuration variable
             var conf = config.config;
-            filter = new Filter(config);
+            filter = new Filter();
 
             // A hash to easily retrieve serial managers from a device id
 
