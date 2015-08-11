@@ -4,7 +4,7 @@
       "type":"dbtest",
       "description":"db test fake device",
       "prefix":"",
-      "id": "$A"
+      "id": "dbtest"
     }
 
   ],

@@ -8,6 +8,8 @@ const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
+var dbName = 'dbtest';
+
 
 var params = [0, 0, 0];
 var charCode = 'A'.charCodeAt(0) - 1;
@@ -44,7 +46,7 @@ function getTime(idx) {
 }
 function toParams(v, j) {
     var x = getTime(j);
-    var obj = {parameters: {}, deviceId: 'dbtest', epoch: x};
+    var obj = {parameters: {}, deviceId: dbName, epoch: x};
     for (var i = 0; i < v.length; i++) {
         obj.parameters[params[i]] = v[i];
     }
@@ -76,17 +78,17 @@ function saveFast() {
 }
 
 function drop() {
-    return database.drop('dbtest', options);
+    return database.drop(dbName, options);
 }
 
 function getEntries() {
     delete options.mean;
     delete options.fields;
-    return database.get('dbtest', options);
+    return database.get(dbName, options);
 }
 
 function getMeanEntries(mean) {
-    return database.get('dbtest', _.assign(options, {
+    return database.get(dbName, _.assign(options, {
         mean: mean,
         fields: params
     }));

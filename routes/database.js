@@ -1,9 +1,13 @@
 var router = require('express').Router(),
     middleware = require('../middleware/common'),
     util = require('../util/util'),
-    filter = require('../');
+    Filter = require('../lib/filter'),
+    database = require('../db/database'),
+    config = require('../configs/config');
+    _ = require('lodash');
 
 exports  = module.exports = router;
+var filter = new Filter();
 
 var queryValidator = [
     {name: 'fields', required: false},
@@ -12,9 +16,8 @@ var queryValidator = [
     {name: 'mean', required: false}
 ];
 
-app.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {name:'filter', required: false}])), function(req, res) {
+router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {name:'filter', required: false}])), function(req, res) {
     var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
-
     var fields = res.locals.parameters.fields || '*';
     var mean = res.locals.parameters.mean || 'entry';
     var limit = res.locals.parameters.limit || 10;
@@ -24,7 +27,6 @@ app.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {na
         fields: fields,
         mean: mean
     };
-
 
     database.get(deviceId, options).then(function(result) {
         switch(res.locals.parameters.filter) {
@@ -38,5 +40,18 @@ app.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {na
 
     }).catch(function(err) {
         return res.status(400).json('Database error');
+    });
+});
+
+router.put('/:device', middleware.validateParameters(queryValidator), function(req, res) {
+    var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
+    var device = config.findPluggedDevice(deviceId);
+    if(!device) {
+        return res.status(400).json('Invalid device');
+    }
+    database.save(req.body, device.sqlite).then(function() {
+        return res.status(200).json({ok: true});
+    }).catch(function() {
+        return res.status(400).json('Database error')
     });
 });

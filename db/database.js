@@ -799,6 +799,9 @@ function status(deviceId) {
 }
 
 function getWrappedDB(id, options, mode) {
+    if(!id) {
+        throw new Error('Invalid device id');
+    }
     options = options || {};
     var dir = options.dir || './sqlite/';
 
