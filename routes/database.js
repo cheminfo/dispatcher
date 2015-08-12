@@ -74,6 +74,9 @@ router.get('/last/:device',
     function (req, res) {
         database.last(res.locals.deviceId).then(function(data) {
             return res.status(200).json(data);
+        }).catch(function(err) {
+            if(err.errno === 1) return res.status(404).json('not found');
+            return res.status(400).json('Database error');
         });
     }
 );

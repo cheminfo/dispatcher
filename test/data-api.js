@@ -1,7 +1,7 @@
 'use strict';
 
 var request = require('supertest');
-var app = require('./bootstrap/data-api-bootstrap');
+var app = require('../bootstrap/data-api-bootstrap');
 var data = require('./data');
 var dataset = require('./dataset.json');
 var _ = require('lodash');

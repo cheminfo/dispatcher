@@ -168,6 +168,12 @@ function getLastEntryId(wdb) {
     }
 }
 
+function getLastEntry(wdb) {
+    return function() {
+        return wdb.get('SELECT * FROM entry ORDER BY id DESC');
+    }
+}
+
 function getAllEntries(wdb) {
     return function() {
         return wdb.all('SELECT * FROM entry');
@@ -754,9 +760,10 @@ function get(deviceId, options) {
 }
 
 function last(id) {
-    var query = 'select * from entry order by id DESC';
     var wdb = getWrappedDB(id);
-    return wdb.get(query);
+    var res =  Promise.resolve().then(getLastEntry(wdb));
+    res.catch(handleError);
+    return res;
 }
 
 function filterOut(out) {
