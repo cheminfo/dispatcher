@@ -27,7 +27,7 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
         fields: fields,
         mean: mean
     };
-
+console.log('hello');
     database.get(deviceId, options).then(function(result) {
         switch(res.locals.parameters.filter) {
             case 'chart':
@@ -45,11 +45,23 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
 
 router.put('/:device', middleware.validateParameters(queryValidator), function(req, res) {
     var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
+    console.log('device id', deviceId);
     var device = config.findPluggedDevice(deviceId);
     if(!device) {
         return res.status(400).json('Invalid device');
     }
-    database.save(filter.deepenEntries(req.body), device.sqlite).then(function() {
+
+    var entry = req.body;
+    if(Array.isArray(entry)) {
+        entry.forEach(function(e) {
+            e.deviceId = deviceId;
+        });
+    } else {
+        entry.deviceId = deviceId;
+    }
+
+    entry = filter.deepenEntries(entry);
+    database.save(entry, device.sqlite).then(function() {
         return res.status(200).json({ok: true});
     }).catch(function() {
         return res.status(400).json('Database error')

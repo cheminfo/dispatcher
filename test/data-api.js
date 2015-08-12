@@ -36,7 +36,6 @@ describe('REST api', function() {
         agent.put('/database/dbtest')
         .send({
                 epoch: new Date('2001-01-01').getTime() / 1000 | 0,
-                deviceId: 'dbtest',
                 parameters: {
                     A: 3,
                     B: 8,
