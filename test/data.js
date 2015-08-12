@@ -109,5 +109,6 @@ exports = module.exports = {
     getMeanEntries: getMeanEntries,
     save: save,
     saveFast: saveFast,
-    drop: drop
+    drop: drop,
+    name: dbName
 };

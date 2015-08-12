@@ -4,9 +4,9 @@ var router = require('express').Router(),
     Filter = require('../lib/filter'),
     database = require('../db/database'),
     config = require('../configs/config');
-    _ = require('lodash');
+_ = require('lodash');
 
-exports  = module.exports = router;
+exports = module.exports = router;
 var filter = new Filter();
 
 var queryValidator = [
@@ -16,7 +16,10 @@ var queryValidator = [
     {name: 'mean', required: false}
 ];
 
-router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {name:'filter', required: false}])), function(req, res) {
+router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {
+    name: 'filter',
+    required: false
+}])), function (req, res) {
     var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
     var fields = res.locals.parameters.fields || '*';
     var mean = res.locals.parameters.mean || 'entry';
@@ -27,9 +30,8 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
         fields: fields,
         mean: mean
     };
-console.log('hello');
-    database.get(deviceId, options).then(function(result) {
-        switch(res.locals.parameters.filter) {
+    database.get(deviceId, options).then(function (result) {
+        switch (res.locals.parameters.filter) {
             case 'chart':
                 var chart = filter.chartFromDatabaseEntries(result, res.locals.parameters.device);
                 return res.status(200).json(chart);
@@ -38,32 +40,40 @@ console.log('hello');
                 return res.status(200).json(data);
         }
 
-    }).catch(function(err) {
+    }).catch(function (err) {
         return res.status(400).json('Database error');
     });
 });
 
-router.put('/:device', middleware.validateParameters(queryValidator), function(req, res) {
-    var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
-    console.log('device id', deviceId);
-    var device = config.findPluggedDevice(deviceId);
-    if(!device) {
-        return res.status(400).json('Invalid device');
-    }
+router.put('/:device',
+    middleware.validateParameters(queryValidator),
+    middleware.checkDevice,
+    function (req, res) {
+
 
     var entry = req.body;
-    if(Array.isArray(entry)) {
-        entry.forEach(function(e) {
-            e.deviceId = deviceId;
+    if (Array.isArray(entry)) {
+        entry.forEach(function (e) {
+            e.deviceId = res.locals.deviceId;
         });
     } else {
-        entry.deviceId = deviceId;
+        entry.deviceId = res.locals.deviceId;
     }
 
     entry = filter.deepenEntries(entry);
-    database.save(entry, device.sqlite).then(function() {
+    database.save(entry, res.locals.device.sqlite).then(function () {
         return res.status(200).json({ok: true});
-    }).catch(function() {
+    }).catch(function () {
         return res.status(400).json('Database error')
     });
 });
+
+router.get('/last/:device',
+    middleware.validateParameters(queryValidator),
+    middleware.checkDevice,
+    function (req, res) {
+        database.last(res.locals.deviceId).then(function(data) {
+            return res.status(200).json(data);
+        });
+    }
+);

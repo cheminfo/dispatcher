@@ -22,7 +22,8 @@ exports = module.exports = {
     query: query,
     status: status,
     getLastId: getLastId,
-    test: test
+    test: test,
+    last: last
 };
 
 // epoch value is in seconds
@@ -750,6 +751,12 @@ function get(deviceId, options) {
     res.catch(handleError);
 
     return res;
+}
+
+function last(id) {
+    var query = 'select * from entry order by id DESC';
+    var wdb = getWrappedDB(id);
+    return wdb.get(query);
 }
 
 function filterOut(out) {

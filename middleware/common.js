@@ -1,5 +1,7 @@
 var _ = require('lodash');
 var debug = require('debug')('middleware');
+var config = require('../configs/config');
+var util = require('../util/util');
 
 exports.validateParameters = function (params) {
     if (!(params instanceof Array))
@@ -50,4 +52,15 @@ exports.validateParameters = function (params) {
         res.locals.parameters = _.merge(res.locals.parameters || {}, validParameters);
         next();
     };
+};
+
+exports.checkDevice = function(req, res, next) {
+    var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
+    var device = config.findPluggedDevice(deviceId);
+    if (!device) {
+        return res.status(400).json('Invalid device');
+    }
+    res.locals.deviceId = deviceId;
+    res.locals.device = device;
+    next();
 };

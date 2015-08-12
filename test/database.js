@@ -2,7 +2,12 @@
 
 var dataset = require('./dataset.json');
 var data = require('./data');
-
+var database = require('../db/database');
+var _ = require('lodash');
+var maxId = Math.max.apply(null, _.pluck(dataset.entries, 'id'));
+var lastEntry = _.filter(dataset.entries, function(e) {
+    return e.id === maxId;
+})[0];
 
 describe('Test database with normal save', function () {
     before(function () {
@@ -98,5 +103,25 @@ describe('Test database with fast save', function () {
     });
 });
 
+describe('test database getters', function () {
+    before(function () {
+        return data.drop();
+    });
+
+    beforeEach(function () {
+        return data.saveFast();
+    });
+
+    afterEach(function () {
+        return data.drop();
+    });
+
+    it('should get the last entry', function () {
+        return database.last('dbtest').then(function (data) {
+            delete data.timestamp;
+            data.should.eql(lastEntry);
+        });
+    });
+});
 
 
