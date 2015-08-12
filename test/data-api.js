@@ -10,7 +10,7 @@ app.get('/user', function(req, res){
 });
 
 describe('REST api', function() {
-    before(function() {
+    beforeEach(function() {
         return data.drop().then(data.saveFast);
     });
 

@@ -49,7 +49,7 @@ router.put('/:device', middleware.validateParameters(queryValidator), function(r
     if(!device) {
         return res.status(400).json('Invalid device');
     }
-    database.save(req.body, device.sqlite).then(function() {
+    database.save(filter.deepenEntries(req.body), device.sqlite).then(function() {
         return res.status(200).json({ok: true});
     }).catch(function() {
         return res.status(400).json('Database error')
