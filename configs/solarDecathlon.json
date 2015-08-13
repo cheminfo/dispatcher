@@ -1,10 +1,10 @@
 {
   "devices": [
     {
-      "type": "solar1",
+      "type": "solar2",
       "description": "The solar decathon device",
-      "prefix": "$I",
-      "id": "$I"
+      "prefix": "$J",
+      "id": "$J"
     }
   ],
   "serialResponseTimeout": 250,
