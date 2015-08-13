@@ -69,7 +69,7 @@ Cache.prototype.start = function() {
 };
 
 function doMultilogRequest(that, device) {
-
+    var nbParam = device.nbParam;
     var lastId = lastIds[device.id];
     doingMultiLog = true;
     var cmd = device.prefix +  'm' + lastId;
@@ -80,7 +80,10 @@ function doMultilogRequest(that, device) {
     status.failure = '';
     debug('Send multilog command', cmd);
     return that.requestManager.addRequest(cmd).then(function(response) {
-        var entries = parser.parse(cmd, response);
+        var entries = parser.parse(cmd, response, {
+            nbParam: nbParam,
+            hasEvent: device.hasEvent
+        });
         that.data.entry[id] = that.data.entry[id] || {};
 
 
@@ -128,6 +131,7 @@ function doMultilogRequest(that, device) {
 
 function doCRequest(that, device) {
     var nbParam = device.nbParam;
+    var nbParamCompact = device.nbParamCompact;
     var cmdLetter = 'c';
     var cmd = device.prefix + cmdLetter;
     var id =  device.id;
@@ -141,7 +145,8 @@ function doCRequest(that, device) {
         // Pass the response given by the serial device to the parser
         try {
             var entries = parser.parse(cmd, response, {
-                nbParam: nbParam
+                nbParamCompact: nbParamCompact,
+                hasEvent: device.hasEvent
             });
         }
         catch(err) {

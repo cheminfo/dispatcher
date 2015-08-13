@@ -151,7 +151,7 @@ Here is the structure of a device configuration file:
         }
     },
     "refresh": 1000,
-    "nbParam": 26,
+    "nbParamCompact": 26,
     "multiLog": false
 }
 ```

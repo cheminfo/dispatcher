@@ -20,6 +20,6 @@
     }
   },
   "refresh": 1000,
-  "nbParam": 26,
+  "nbParamCompact": 26,
   "multiLog": false
 }

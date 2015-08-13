@@ -17,6 +17,6 @@
     }
   },
   "refresh":5000,
-  "nbParam": 3,
+  "nbParamCompact": 3,
   "multiLog": true
 }

@@ -85,6 +85,6 @@
         }
     },
     "refresh":10000,
-    "nbParam": 52,
+    "nbParamCompact": 52,
     "multiLog": false
 }

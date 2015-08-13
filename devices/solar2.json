@@ -1,0 +1,25 @@
+{
+  "parameters":{
+    "A": {
+      "label": "Temperature",
+      "name":"temperature"
+    },
+    "B": {
+      "label": "Relative Humidity",
+      "name": "humidity"
+    },
+    "C":{
+      "label": "Microphone",
+      "name": "microphone"
+    },
+    "D":{
+      "label": "Luminosity (LUX)",
+      "name": "luminosity"
+    }
+  },
+  "multiLog": true,
+  "hasEvent": false,
+  "refresh": 5000,
+  "nbParam": 4,
+  "nbParamCompact": 4
+}

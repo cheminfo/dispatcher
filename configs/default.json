@@ -9,5 +9,8 @@
     },
     "epochRefreshInterval": 10000,
     "refresh": 5000,
-    "mulitLog": false
+    "mulitLog": false,
+    "hasEvent": true,
+    "nbParamCompact": 26,
+    "nbParamCompact": 26
 }
