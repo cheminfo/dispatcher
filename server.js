@@ -268,6 +268,7 @@ function restart() {
             // First level of config describes the plugged devices,
             // i.e. a device connected to the usb port
             // We have one serial manager per plugged device
+            debug('number of usb devices ' + conf.length);
             for(var i=0; i<conf.length; i++) {
                 var requestManager = new SerialQueueManager(conf[i]);
                 requestManager.init();

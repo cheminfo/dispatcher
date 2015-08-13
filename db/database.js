@@ -700,6 +700,7 @@ function save(entry, options) {
     }
 
     function adminDB() {
+        debug('insert failed, database administration');
         return Promise.resolve().then(createTablesFn(wdb)).then(timerStep('create tables'))
             .then(createIndexes(wdb)).then(timerStep('create indexes'))
             .then(getTableInfo(wdb)).then(timerStep('get table info'))

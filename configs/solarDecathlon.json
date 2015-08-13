@@ -15,7 +15,9 @@
   ],
   "serialResponseTimeout": 250,
   "epochRefreshInterval": 2000,
-  "port": "/dev/ttyUSB0",
+  "port": {
+    "regexp": "ttyUSB\\d+"
+  },
   "baudrate": 38400,
   "sqlite": {
     "dir": "sqlite",

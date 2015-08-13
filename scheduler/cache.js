@@ -8,7 +8,7 @@ var _ = require('lodash'),
     Promise = require('bluebird');
 
 var lastIds = {};
-var doingMultiLog = false;
+var doingMultiLog = {};
 var data = {};
 var Cache = exports = module.exports = function Cache(requestManager, config, options) {
     this.intervals = [];
@@ -32,7 +32,6 @@ Cache.prototype.get = function(key) {
 
 Cache.prototype.start = function() {
     var that = this;
-
     for(var i=0; i<that.data.devices.length; i++) {
         (function(i) {
             var delay= that.options.delay || that.data.devices[i].refresh || this.config.refresh;
@@ -45,7 +44,7 @@ Cache.prototype.start = function() {
                 var multiLog = that.data.devices[i].multiLog;
 
 
-                if(multiLog && !doingMultiLog) {
+                if(multiLog && !doingMultiLog[that.data.devices[i].id]) {
                     debug('Updating multilog');
                     getLastId(that, that.data.devices[i]).then(function(lastId) {
                         debug('Last id successfully retrieved from database: ' + lastId);
@@ -71,7 +70,7 @@ Cache.prototype.start = function() {
 function doMultilogRequest(that, device) {
     var nbParam = device.nbParam;
     var lastId = lastIds[device.id];
-    doingMultiLog = true;
+    doingMultiLog[device.id] = true;
     var cmd = device.prefix +  'm' + lastId;
     var id =  device.id;
     that.data.status[id] = that.data.status[id] || { id: id};
@@ -108,7 +107,7 @@ function doMultilogRequest(that, device) {
         }
 
         if(entries.length === 1) {
-            doingMultiLog = false;
+            doingMultiLog[device.id] = false;
         }
 
         if(entries.length > 1) {
@@ -125,7 +124,7 @@ function doMultilogRequest(that, device) {
         debug('rejected...', err);
         status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
         status.failure  = msg;
-        doingMultiLog = false;
+        doingMultiLog[device.id] = false;
     });
 }
 
