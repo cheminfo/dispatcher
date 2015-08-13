@@ -24,6 +24,8 @@ Config.prototype.addConfiguration = function(name) {
 
 
     for(var i=0; i<config.length; i++) {
+        // the default.json file contains all the default
+        // configuration parameters of the device
         _.defaults(config[i], def);
         processConf(config[i]);
         checkPluggedDevice(config[i]);
@@ -111,6 +113,7 @@ function processConf(conf) {
 
     // The configuration varibale will eventually contain both
     // the basic configuration and the devices configuration
+    // merged together. The device configuratin has precedence
     for(var i=0; i<conf.devices.length; i++) {
         _.merge(conf.devices[i], require(__dirname + '/../devices/'+conf.devices[i].type+'.json'));
     }
