@@ -114,8 +114,23 @@ function processConf(conf) {
     // The configuration varibale will eventually contain both
     // the basic configuration and the devices configuration
     // merged together. The device configuratin has precedence
+    var idxToRemove = [];
     for(var i=0; i<conf.devices.length; i++) {
-        _.merge(conf.devices[i], require(__dirname + '/../devices/'+conf.devices[i].type+'.json'));
+        try {
+            var deviceConfig = require(__dirname + '/../devices/'+conf.devices[i].type+'.json');
+        } catch(e) {
+            console.error('Could not load configuration type ' + conf.devices[i].type);
+            idxToRemove.push(i);
+            continue;
+        }
+        _.merge(conf.devices[i], deviceConfig);
+    }
+
+    // Reverse loop because we are splicing in the loop
+    for (i = conf.devices.length - 1; i >= 0; i -= 1) {
+        if(idxToRemove.indexOf(i) > -1) {
+            conf.devices.splice(i, 1);
+        }
     }
 
     // Don't let a prefix be undefined if it's the only one
