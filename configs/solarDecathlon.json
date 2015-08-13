@@ -1,10 +1,16 @@
 {
   "devices": [
     {
-      "type": "solar2",
-      "description": "The solar decathon device",
+      "type": "solarRoom",
+      "description": "Solar decathlon room 1",
       "prefix": "$H",
       "id": "$H"
+    },
+    {
+      "type": "solarRoom",
+      "description": "Solar decathlon room 2",
+      "prefix": "$J",
+      "id": "$J"
     }
   ],
   "serialResponseTimeout": 250,
