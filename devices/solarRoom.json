@@ -19,7 +19,7 @@
   },
   "multiLog": true,
   "hasEvent": false,
-  "refresh": 5000,
+  "refresh": 2000,
   "nbParam": 4,
   "nbParamCompact": 4
 }

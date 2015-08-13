@@ -1,0 +1,25 @@
+{
+  "parameters":{
+    "A": {
+      "label": "Temperature Room",
+      "name":"temperature_room"
+    },
+    "B": {
+      "label": "Temperature fridge",
+      "name": "temp_fridge"
+    },
+    "C":{
+      "label": "Temperature freezer",
+      "name": "temp_freezer"
+    },
+    "D":{
+      "label": "Relative Humidity",
+      "name": "humidity"
+    }
+  },
+  "multiLog": true,
+  "hasEvent": false,
+  "refresh": 2000,
+  "nbParam": 4,
+  "nbParamCompact": 4
+}

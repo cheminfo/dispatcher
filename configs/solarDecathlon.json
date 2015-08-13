@@ -3,11 +3,12 @@
     {
       "type": "solar2",
       "description": "The solar decathon device",
-      "prefix": "$J",
-      "id": "$J"
+      "prefix": "$H",
+      "id": "$H"
     }
   ],
   "serialResponseTimeout": 250,
+  "epochRefreshInterval": 2000,
   "port": "/dev/ttyUSB0",
   "baudrate": 38400,
   "sqlite": {
