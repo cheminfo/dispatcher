@@ -78,9 +78,7 @@ function createTables1(wdb) {
         promises.push(wdb.run('CREATE TABLE IF NOT EXISTS entry(' +
             'id INTEGER PRIMARY KEY NOT NULL,' +
             'epoch INTEGER NOT NULL,' +
-            'timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,' +
-            'event INTEGER,' +
-            'eventParam INTEGER);'));
+            'timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);'));
 
         for (var i = 0; i < means.length; i++) {
             promises.push(wdb.run('CREATE TABLE IF NOT EXISTS ' + means[i].name + '(epoch INTEGER PRIMARY KEY NOT NULL);'));
@@ -315,22 +313,40 @@ function getValues(entry) {
             values[i + 1] = value;
         }
     }
-
     return values;
 }
 
-function insertEntries(wdb, entries) {
+function getValuesWithId(entry) {
+    var parameters = Object.keys(entry.parameters);
+    var values = new Array(parameters.length + 2);
+    values[0] = entry.id;
+    values[1] = entry.epoch;
+    for (var i = 0; i < parameters.length; i++) {
+        var value = entry.parameters[parameters[i]];
+        if (value === null) {
+            values[i + 2] = 'NULL';
+        }
+        else {
+            values[i + 2] = value;
+        }
+    }
+    return values;
+}
+
+function insertEntries(wdb, entries, withId) {
     return function () {
+        var getValuesFn = withId ? getValuesWithId : getValues;
         if (!entries.length) {
             return Promise.resolve();
         }
         var keys = _.keys(entries[0].parameters);
         var values = new Array(entries.length);
         for (var i = 0; i < entries.length; i++) {
-            values[i] = getValues(entries[i]);
+            values[i] = getValuesFn(entries[i]);
         }
 
-        var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
+        var col = (withId ? 'id, ' : '') + 'epoch, ';
+        var command = 'INSERT INTO entry (' + col + '"' + keys.join('","') + '")' +
             ' values ';
         for (var i = 0; i < values.length; i++) {
             values[i] = '(' + values[i].join(',') + ')';
@@ -461,8 +477,7 @@ function insertEntryMean(wdb, entry) {
             queries[i] = wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");");
             //promises.push(wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");"));
         }
-        var prom = Promise.all(queries);
-        return prom;
+        return Promise.all(queries);
     }
 }
 
@@ -559,6 +574,7 @@ function test() {
 }
 
 function saveFast(entries, options) {
+    debug('save fast');
     var timer = new Timer();
     timer.start();
     if (!options.maxRecords) {
@@ -570,7 +586,7 @@ function saveFast(entries, options) {
     }
 
     entries = entries.filter(function (e) {
-        var epochIsOk = e.epoch >= minEpochValue
+        var epochIsOk = e.epoch >= minEpochValue;
         if (!epochIsOk) debug('Not saving an entry because epoch to small');
         return epochIsOk;
     });
@@ -588,9 +604,8 @@ function saveFast(entries, options) {
             maxRecords.push(options.maxRecords[names[i]])
     }
 
-
-    var createTablesFn = createTables;
-    var insertEntryFn = insertEntries;
+    var hasId = entries[0].id !== undefined;
+    var createTablesFn = hasId ? createTables1 : createTables;
 
     function timerStep(msg) {
         return function (arg) {
@@ -599,7 +614,6 @@ function saveFast(entries, options) {
         }
     }
 
-    //insertEntryFn = insertEntry;
     var res = Promise.resolve().then(timerStep('before write entries')).then(writeEntries());
 
     if (saveCount % cleanPeriod === 0) {
@@ -614,7 +628,7 @@ function saveFast(entries, options) {
 
     function writeEntries(ok) {
         return function () {
-            return Promise.resolve().then(insertEntryFn(wdb, entries)).then(timerStep('save entries'))
+            return Promise.resolve().then(insertEntries(wdb, entries, hasId)).then(timerStep('save entries'))
                 .then(continueEntries, ok ? null : adminDB);
         };
     }
@@ -637,7 +651,7 @@ function saveFast(entries, options) {
 }
 
 function save(entry, options) {
-
+    debug('save normal');
 
     if (entry instanceof Array) {
         return saveEntryArray(entry, options);
