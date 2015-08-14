@@ -49,22 +49,22 @@ var means = [
 
 function mapMeanCol(col) {
     return [
-        col+'_min',
-        col+'_max',
-        col+'_sum',
-        col+'_nb'
+        col + '_min',
+        col + '_max',
+        col + '_sum',
+        col + '_nb'
     ];
 }
 
 function createTables(wdb) {
-    return function() {
+    return function () {
         var promises = [];
         promises.push(wdb.run('CREATE TABLE IF NOT EXISTS entry(' +
             'id INTEGER PRIMARY KEY AUTOINCREMENT,' +
             'epoch INTEGER NOT NULL,' +
             'timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);'));
 
-        for(var i=0; i<means.length; i++) {
+        for (var i = 0; i < means.length; i++) {
             promises.push(wdb.run('CREATE TABLE IF NOT EXISTS ' + means[i].name + '(epoch INTEGER PRIMARY KEY NOT NULL);'));
         }
 
@@ -73,7 +73,7 @@ function createTables(wdb) {
 }
 
 function createTables1(wdb) {
-    return function() {
+    return function () {
         var promises = [];
         promises.push(wdb.run('CREATE TABLE IF NOT EXISTS entry(' +
             'id INTEGER PRIMARY KEY NOT NULL,' +
@@ -82,7 +82,7 @@ function createTables1(wdb) {
             'event INTEGER,' +
             'eventParam INTEGER);'));
 
-        for(var i=0; i<means.length; i++) {
+        for (var i = 0; i < means.length; i++) {
             promises.push(wdb.run('CREATE TABLE IF NOT EXISTS ' + means[i].name + '(epoch INTEGER PRIMARY KEY NOT NULL);'));
         }
 
@@ -91,11 +91,11 @@ function createTables1(wdb) {
 }
 
 function createIndexes(wdb) {
-    return function() {
+    return function () {
         var promises = [];
 
         promises.push(wdb.run('CREATE INDEX IF NOT EXISTS entry_epoch_idx ON entry(epoch)'));
-        for(var i=0; i<means.length; i++) {
+        for (var i = 0; i < means.length; i++) {
             promises.push(wdb.run('CREATE INDEX IF NOT EXISTS ' + means[i].name + '_epoch ON minute(epoch)'));
         }
 
@@ -105,11 +105,11 @@ function createIndexes(wdb) {
 
 
 function getTableInfo(wdb) {
-    return function() {
+    return function () {
         var promises = [];
         promises.push(wdb.all("PRAGMA table_info(entry);"));
 
-        for(var i=0; i<means.length; i++) {
+        for (var i = 0; i < means.length; i++) {
             promises.push(wdb.all("PRAGMA table_info(" + means[i].name + ");"));
         }
 
@@ -119,7 +119,7 @@ function getTableInfo(wdb) {
 
 
 function createMissingColumns(wdb, wantedColumns) {
-    return function(res) {
+    return function (res) {
         // result comes from getTableInfo
         // expected length of res is 4
         var names = _.pluck(means, 'name');
@@ -129,7 +129,7 @@ function createMissingColumns(wdb, wantedColumns) {
         var promises = [];
         var i;
 
-        for(i=0; i<missingColumns.length; i++) {
+        for (i = 0; i < missingColumns.length; i++) {
 //            promises.push(wdb.run('ALTER TABLE entry ADD COLUMN $col INT;', {
 //                $col: missingColumns[i]
 //            }));
@@ -139,12 +139,11 @@ function createMissingColumns(wdb, wantedColumns) {
         var meanWantedColumns = _.chain(wantedColumns).map(mapMeanCol).flatten().value();
 
 
-
-        for(i=0; i<names.length; i++) {
-            var ecol = _.pluck(res[i+1], 'name');
+        for (i = 0; i < names.length; i++) {
+            var ecol = _.pluck(res[i + 1], 'name');
             var mcol = _.difference(meanWantedColumns, ecol);
 
-            for(var j=0; j<mcol.length; j++) {
+            for (var j = 0; j < mcol.length; j++) {
                 /*promises.push(wdb.run('ALTER TABLE $name ADD COLUMN $col INT;', {
                  $name: names[i],
                  $col: mcol[j]
@@ -157,52 +156,52 @@ function createMissingColumns(wdb, wantedColumns) {
 }
 
 function getAllEntryIds(wdb) {
-    return function() {
+    return function () {
         return wdb.all('SELECT id FROM entry;');
     }
 }
 
 function getLastEntryId(wdb) {
-    return function() {
+    return function () {
         return wdb.get('SELECT id FROM entry ORDER BY id DESC');
     }
 }
 
 function getLastEntry(wdb) {
-    return function() {
+    return function () {
         return wdb.get('SELECT * FROM entry ORDER BY id DESC');
     }
 }
 
 function getAllEntries(wdb) {
-    return function() {
+    return function () {
         return wdb.all('SELECT * FROM entry');
     }
 }
 
 function getEntries(wdb, options) {
-    return function() {
+    return function () {
         var conditions = [];
         var fields = options.fields;
 
-        if(options.epochFrom) {
+        if (options.epochFrom) {
             conditions.push('epoch>=' + options.epochFrom);
         }
-        if(options.epochTo) {
+        if (options.epochTo) {
             conditions.push('epoch<=' + options.epochTo);
         }
 
-        if(options.from) {
+        if (options.from) {
             conditions.push('id>=' + options.from);
         }
-        if(options.to) {
+        if (options.to) {
             conditions.push('id<=' + options.to);
         }
 
 
         var condition = (conditions.length) === 0 ? '' : ' WHERE ' + conditions.join(' AND ');
         var query;
-        if(fields.indexOf('*') === -1) {
+        if (fields.indexOf('*') === -1) {
             fields.push('id', 'epoch');
             fields = _.unique(fields);
             query = 'SELECT "' + fields.join('","') + '" FROM entry';
@@ -219,27 +218,31 @@ function getEntries(wdb, options) {
 }
 
 function getMeanEntries(wdb, options) {
-    return function() {
+    return function () {
         var conditions = [];
         var fields = options.fields;
-        if(!options.fields) fields = ['*'];
+        if (!options.fields) fields = ['*'];
         else {
-            fields = _.chain(fields).map(function(c) {return [c+'_min', c + '_max']}).push(
-                _.map(fields, function(c) {return c + '_sum' +  '/' + c + '_nb as ' + c + '_mean'})
+            fields = _.chain(fields).map(function (c) {
+                return [c + '_min', c + '_max']
+            }).push(
+                _.map(fields, function (c) {
+                    return c + '_sum' + '/' + c + '_nb as ' + c + '_mean'
+                })
             ).flatten().value();
         }
 
-        if(options.epochFrom) {
+        if (options.epochFrom) {
             conditions.push('epoch>=' + options.epochFrom);
         }
-        if(options.epochTo) {
+        if (options.epochTo) {
             conditions.push('epoch<=' + options.epochTo);
         }
 
 
         var condition = (conditions.length) === 0 ? '' : ' WHERE ' + conditions.join(' AND ');
         var query;
-        if(fields.indexOf('*') > -1) {
+        if (fields.indexOf('*') > -1) {
             query = 'SELECT * FROM ' + options.mean;
         }
         else {
@@ -250,17 +253,17 @@ function getMeanEntries(wdb, options) {
 
         query += condition;
         query += ' ORDER BY epoch ' + options.order;
-        query += ' LIMIT '  + options.limit;
+        query += ' LIMIT ' + options.limit;
         return wdb.all(query);
     };
 
 }
 
 function keepRecentIds(wdb, maxIds) {
-    return function(res) {
+    return function (res) {
         var ids = _.pluck(res, 'id');
         ids.sort().reverse();
-        if(ids.length > maxIds) {
+        if (ids.length > maxIds) {
             return wdb.run('DELETE FROM entry WHERE id<=' + ids[maxIds]);
         }
         else return true;
@@ -268,9 +271,9 @@ function keepRecentIds(wdb, maxIds) {
 }
 
 function getAllMeanEpoch(wdb) {
-    return function() {
+    return function () {
         var promises = [];
-        for(var i=0; i<means.length; i++) {
+        for (var i = 0; i < means.length; i++) {
             promises.push(wdb.all("SELECT epoch FROM " + means[i].name + " ORDER BY epoch DESC"));
         }
 
@@ -279,17 +282,19 @@ function getAllMeanEpoch(wdb) {
 }
 
 function keepRecentMeanEpoch(wdb, maxNb) {
-    return function(res) {
+    return function (res) {
         var promises = [];
-        if(!(maxNb instanceof Array)) {
-            maxNb = _.times(means.length, function() { return maxNb; });
+        if (!(maxNb instanceof Array)) {
+            maxNb = _.times(means.length, function () {
+                return maxNb;
+            });
         }
 
-        if(maxNb.length !== means.length) {
+        if (maxNb.length !== means.length) {
             throw new Error('Unexpected length of parameter maxNb');
         }
-        for(var i=0; i<means.length; i++) {
-            if(res[i].length > maxNb) {
+        for (var i = 0; i < means.length; i++) {
+            if (res[i].length > maxNb) {
                 promises.push(wdb.run('DELETE FROM ' + means[i].name + ' where epoch<=' + res[i][maxNb[i]].epoch))
             }
         }
@@ -303,11 +308,11 @@ function getValues(entry) {
     values[0] = entry.epoch;
     for (var i = 0; i < parameters.length; i++) {
         var value = entry.parameters[parameters[i]];
-        if(value === null) {
-            values[i+1] = 'NULL';
+        if (value === null) {
+            values[i + 1] = 'NULL';
         }
         else {
-            values[i+1] = value;
+            values[i + 1] = value;
         }
     }
 
@@ -315,8 +320,8 @@ function getValues(entry) {
 }
 
 function insertEntries(wdb, entries) {
-    return function() {
-        if(!entries.length) {
+    return function () {
+        if (!entries.length) {
             return Promise.resolve();
         }
         var keys = _.keys(entries[0].parameters);
@@ -327,7 +332,7 @@ function insertEntries(wdb, entries) {
 
         var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
             ' values ';
-        for(var i = 0; i < values.length; i++) {
+        for (var i = 0; i < values.length; i++) {
             values[i] = '(' + values[i].join(',') + ')';
         }
         command += values.join(',') + ';';
@@ -336,7 +341,7 @@ function insertEntries(wdb, entries) {
 }
 
 function insertEntry(wdb, entry) {
-    return function() {
+    return function () {
         var keys = _.keys(entry.parameters);
         var values = getValues(entry);
         var command = 'INSERT INTO entry (epoch, "' + keys.join('","') + '")' +
@@ -347,13 +352,13 @@ function insertEntry(wdb, entry) {
 
 
 function insertEntry1(wdb, entry) {
-    return function() {
+    return function () {
         var keys = _.keys(entry.parameters);
         var values = [];
-        for(var i=0; i<keys.length; i++) {
+        for (var i = 0; i < keys.length; i++) {
             var value = entry.parameters[keys[i]];
-            if(typeof value === 'string') value = "'" + value + "'";
-            if(entry.parameters[keys[i]] === null) {
+            if (typeof value === 'string') value = "'" + value + "'";
+            if (entry.parameters[keys[i]] === null) {
                 values.push('NULL');
             }
             else {
@@ -371,10 +376,10 @@ function insertEntry1(wdb, entry) {
 function setJoin(s, txt) {
     var r = '';
     var count = 0;
-    for(var el of s) {
+    for (var el of s) {
         r += el;
         count++;
-        if(count !== s.size) {
+        if (count !== s.size) {
             r += txt;
         }
     }
@@ -382,11 +387,11 @@ function setJoin(s, txt) {
 }
 
 function getEntryMean(wdb, entry) {
-    return function() {
+    return function () {
 
         var promises = [];
-        for(var i=0; i<means.length; i++) {
-            var epoch = entry.epoch-(entry.epoch%means[i].modulo);
+        for (var i = 0; i < means.length; i++) {
+            var epoch = entry.epoch - (entry.epoch % means[i].modulo);
             promises.push(wdb.all('SELECT * FROM ' + means[i].name + ' WHERE epoch=' + epoch));
         }
 
@@ -395,15 +400,15 @@ function getEntryMean(wdb, entry) {
 }
 
 function getEntriesMean(wdb, entries) {
-    return function() {
+    return function () {
         var promises = [];
-        for(var i = 0; i < means.length; i++) {
+        for (var i = 0; i < means.length; i++) {
             var epochs = new Set();
-            for(var j = 0; j<entries.length; j++) {
+            for (var j = 0; j < entries.length; j++) {
                 epochs.add(entries[j].epoch - (entries[j].epoch % means[i].modulo));
             }
             var command = 'SELECT * FROM ' + means[i].name + ' WHERE epoch=' + setJoin(epochs, ' OR epoch=') + ' ORDER BY epoch ASC;';
-            if(epochs.size) promises.push(wdb.all(command));
+            if (epochs.size) promises.push(wdb.all(command));
         }
         var prom = Promise.all(promises);
         return prom;
@@ -411,9 +416,8 @@ function getEntriesMean(wdb, entries) {
 }
 
 
-
 function insertEntryMean(wdb, entry) {
-    return function(res) {
+    return function (res) {
         // res contains mean values from database
         var queries = new Array(means.length);
         var columns = _.chain(entry.parameters)
@@ -421,14 +425,14 @@ function insertEntryMean(wdb, entry) {
             .map(mapMeanCol)
             .flatten().value();
 
-        for(var i=0; i<means.length; i++) {
-            var epoch = entry.epoch-(entry.epoch%means[i].modulo);
+        for (var i = 0; i < means.length; i++) {
+            var epoch = entry.epoch - (entry.epoch % means[i].modulo);
             var values;
-            if(res[i].length === 0) {
+            if (res[i].length === 0) {
                 values = _.chain(entry.parameters)
                     .keys()
                     // Order is min, max, sum, nb
-                    .map(function(col) {
+                    .map(function (col) {
                         return [
                             entry.parameters[col], entry.parameters[col], entry.parameters[col], 1
                         ]
@@ -439,14 +443,14 @@ function insertEntryMean(wdb, entry) {
             else {
                 values = _.chain(entry.parameters)
                     .keys()
-                    .map(function(col) {
+                    .map(function (col) {
                         var meanCol = _.chain(col).map(mapMeanCol).flatten().value();
                         return [
                             Math.min(res[i][0][meanCol[0]], entry.parameters[col]), Math.max(res[i][0][meanCol[1]], entry.parameters[col]), res[i][0][meanCol[2]] + entry.parameters[col], res[i][0][meanCol[3]] + 1
                         ];
                     })
-                    .flatten().map(function(val) {
-                        if(val === null) {
+                    .flatten().map(function (val) {
+                        if (val === null) {
                             return 'NULL'
                         }
                         return val;
@@ -463,7 +467,7 @@ function insertEntryMean(wdb, entry) {
 }
 
 function insertEntriesMean(wdb, entries) {
-    return function(res) {
+    return function (res) {
         var queries = [];
         var columns = _.chain(entries[0].parameters)
             .keys()
@@ -473,19 +477,19 @@ function insertEntriesMean(wdb, entries) {
         var parameters = Object.keys(entries[0].parameters);
 
         var idxEntries = new Array(means.length);
-        for(var i=0; i<means.length; i++) {
+        for (var i = 0; i < means.length; i++) {
             idxEntries[i] = {};
-            for(var j=0; j<entries.length; j++) {
+            for (var j = 0; j < entries.length; j++) {
                 var epoch = entries[j].epoch - (entries[j].epoch % means[i].modulo);
                 var values = new Array(parameters.length * 4);
-                for(var k=0; k<parameters.length; k++) {
-                    var idx = k*4;
+                for (var k = 0; k < parameters.length; k++) {
+                    var idx = k * 4;
                     var val = entries[j].parameters[parameters[k]];
-                    values[idx] = values[idx+1] = values[idx+2] = val;
-                    values[idx+3] = 1;
+                    values[idx] = values[idx + 1] = values[idx + 2] = val;
+                    values[idx + 3] = 1;
                 }
 
-                if(idxEntries[i][epoch]) {
+                if (idxEntries[i][epoch]) {
                     idxEntries[i][epoch].push(values);
                 } else {
                     idxEntries[i][epoch] = [values];
@@ -494,32 +498,33 @@ function insertEntriesMean(wdb, entries) {
         }
 
 
-        for(var i=0; i<means.length; i++) {
+        for (var i = 0; i < means.length; i++) {
             var oldMean = res[i];
-            var epochs = _.pluck(oldMean, 'epoch').map(function(v) {
+            var epochs = _.pluck(oldMean, 'epoch').map(function (v) {
                 return v.toString();
             });
-            for(var key in idxEntries[i]) {
+            for (var key in idxEntries[i]) {
                 var idx = epochs.indexOf(key);
-                if(idx > -1) {
-                    idxEntries[i][key].push(columns.map(function(col) {
+                if (idx > -1) {
+                    idxEntries[i][key].push(columns.map(function (col) {
                         return oldMean[idx][col];
                     }));
                 }
-                idxEntries[i][key] = idxEntries[i][key].reduce(function(prev, current) {
+                idxEntries[i][key] = idxEntries[i][key].reduce(function (prev, current) {
                     var result = current;
-                    if(!prev) {
+                    if (!prev) {
                         return result;
                     }
-                    for(var k=0; k<current.length; k++) {
-                        switch(k % 4) {
+                    for (var k = 0; k < current.length; k++) {
+                        switch (k % 4) {
                             case 0:
                                 result[k] = Math.min(prev[k], current[k]);
                                 break;
                             case 1:
                                 result[k] = Math.max(prev[k], current[k]);
                                 break;
-                            case 2: case 3:
+                            case 2:
+                            case 3:
                                 result[k] = prev[k] + current[k];
                                 break;
                         }
@@ -531,14 +536,14 @@ function insertEntriesMean(wdb, entries) {
             }
             var keys = Object.keys(idxEntries[i]);
             var arr = new Array(keys.length);
-            for(var j=0; j<keys.length; j++) {
+            for (var j = 0; j < keys.length; j++) {
                 arr[j] = idxEntries[i][keys[j]];
             }
             var command = "INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + arr.join('),(') + ");";
             queries.push(wdb.run(command));
         }
 
-        var prom =  Promise.all(queries);
+        var prom = Promise.all(queries);
         return prom;
     };
 }
@@ -556,48 +561,48 @@ function test() {
 function saveFast(entries, options) {
     var timer = new Timer();
     timer.start();
-    if(!options.maxRecords) {
+    if (!options.maxRecords) {
         return Promise.reject(new Error('maxRecords option is mandatory'));
     }
 
-    if(!(entries instanceof Array)) {
+    if (!(entries instanceof Array)) {
         entries = [entries];
     }
 
-    entries = entries.filter(function(e) {
+    entries = entries.filter(function (e) {
         var epochIsOk = e.epoch >= minEpochValue
-        if(!epochIsOk) debug('Not saving an entry because epoch to small');
+        if (!epochIsOk) debug('Not saving an entry because epoch to small');
         return epochIsOk;
     });
 
-    if(entries.length === 0) return Promise.resolve();
+    if (entries.length === 0) return Promise.resolve();
 
     var deviceId = entries[0].deviceId;
     var wdb = getWrappedDB(deviceId, options);
 
     // max records
     var names = _.pluck(means, 'name');
-    var maxRecords= [];
-    for(var i=0; i<names.length; i++) {
-        if(options.maxRecords[names[i]])
+    var maxRecords = [];
+    for (var i = 0; i < names.length; i++) {
+        if (options.maxRecords[names[i]])
             maxRecords.push(options.maxRecords[names[i]])
     }
 
 
-    var createTablesFn =  createTables;
-    var insertEntryFn =  insertEntries;
+    var createTablesFn = createTables;
+    var insertEntryFn = insertEntries;
 
     function timerStep(msg) {
-        return function(arg) {
+        return function (arg) {
             debug(msg + ' ' + timer.step('ms'));
             return arg;
         }
     }
 
     //insertEntryFn = insertEntry;
-    var res =  Promise.resolve().then(timerStep('before write entries')).then(writeEntries());
+    var res = Promise.resolve().then(timerStep('before write entries')).then(writeEntries());
 
-    if(saveCount % cleanPeriod === 0) {
+    if (saveCount % cleanPeriod === 0) {
         res = res.then(getAllEntryIds(wdb)).then(timerStep('get all entry ids'))
             .then(keepRecentIds(wdb, options.maxRecords.entry)).then(timerStep('keep recent ids'))
             .then(getAllMeanEpoch(wdb, maxRecords)).then(timerStep('get all mean epoch'))
@@ -608,7 +613,7 @@ function saveFast(entries, options) {
     res.catch(handleError);
 
     function writeEntries(ok) {
-        return function() {
+        return function () {
             return Promise.resolve().then(insertEntryFn(wdb, entries)).then(timerStep('save entries'))
                 .then(continueEntries, ok ? null : adminDB);
         };
@@ -627,46 +632,46 @@ function saveFast(entries, options) {
             .then(createMissingColumns(wdb, _.keys(entries[0].parameters))).then(timerStep('create missing columns'))
             .then(writeEntries(true));
     }
+
     return res;
 }
 
 function save(entry, options) {
 
 
-    if(entry instanceof Array) {
+    if (entry instanceof Array) {
         return saveEntryArray(entry, options);
     }
 
     // Don't save anything that has a small epoch
     // This means the device's epoch has not yet
     // been updated
-    if(entry.epoch < minEpochValue) {
+    if (entry.epoch < minEpochValue) {
         debug('Not saving because small epoch');
         return Promise.resolve();
     }
     var wdb = getWrappedDB(entry.deviceId, options);
 
 
-    if(!options.maxRecords) {
+    if (!options.maxRecords) {
         return Promise.reject(new Error('maxRecords option is mandatory'));
     }
     var names = _.pluck(means, 'name');
-    var maxRecords= [];
-    for(var i=0; i<names.length; i++) {
-        if(options.maxRecords[names[i]])
+    var maxRecords = [];
+    for (var i = 0; i < names.length; i++) {
+        if (options.maxRecords[names[i]])
             maxRecords.push(options.maxRecords[names[i]])
     }
 
-    if(entry.id) {
+    if (entry.id) {
         debug('Trying to insert an entry with an id\n' + JSON.stringify(entry));
     }
     var createTablesFn = entry.id ? createTables1 : createTables;
     var insertEntryFn = entry.id ? insertEntry1 : insertEntry;
 
 
-
     function timerStep(msg) {
-        return function(arg) {
+        return function (arg) {
             debug(msg + ' ' + timer.step('ms'));
             return arg;
         }
@@ -675,9 +680,9 @@ function save(entry, options) {
     var timer = new Timer();
     timer.start();
 
-    var res =  Promise.resolve().then(writeEntry());
+    var res = Promise.resolve().then(writeEntry());
 
-    if(saveCount % cleanPeriod === 0) {
+    if (saveCount % cleanPeriod === 0) {
         res = res.then(getAllEntryIds(wdb)).then(timerStep('get all entry ids'))
             .then(keepRecentIds(wdb, options.maxRecords.entry)).then(timerStep('keep recent ids'))
             .then(getAllMeanEpoch(wdb, maxRecords)).then(timerStep('get all mean epoch'))
@@ -688,7 +693,7 @@ function save(entry, options) {
     res.catch(handleError);
 
     function writeEntry(ok) {
-        return function() {
+        return function () {
             return Promise.resolve().then(insertEntryFn(wdb, entry)).then(continueEntry, ok ? null : adminDB);
         };
     }
@@ -707,17 +712,17 @@ function save(entry, options) {
             .then(createMissingColumns(wdb, _.keys(entry.parameters))).then(timerStep('create missing columns'))
             .then(writeEntry(true));
     }
+
     return res;
 }
-
 
 
 function saveEntryArray(entries, options) {
     debug('Save entry array begin');
     var promise = Promise.resolve();
-    for(var i=0; i<entries.length; i++) {
-        (function(i) {
-            promise = promise.then(function() {
+    for (var i = 0; i < entries.length; i++) {
+        (function (i) {
+            promise = promise.then(function () {
                 debug('Save another entry');
                 return save(entries[i], options);
             });
@@ -728,7 +733,7 @@ function saveEntryArray(entries, options) {
 }
 
 function get(deviceId, options) {
-    if(!deviceId) {
+    if (!deviceId) {
         throw new Error('Invalid device id');
     }
     var defaultOptions = {
@@ -742,11 +747,11 @@ function get(deviceId, options) {
     var wdb = getWrappedDB(deviceId, options, sqlite.OPEN_READONLY);
 
     var fn;
-    if(options.mean && options.mean !== 'entry') fn = getMeanEntries(wdb, options);
+    if (options.mean && options.mean !== 'entry') fn = getMeanEntries(wdb, options);
     else fn = getEntries(wdb, options);
 
 
-    var res =  Promise.resolve()
+    var res = Promise.resolve()
         .then(fn);
 
 
@@ -757,30 +762,30 @@ function get(deviceId, options) {
 
 function last(id) {
     var wdb = getWrappedDB(id);
-    var res =  Promise.resolve().then(getLastEntry(wdb));
+    var res = Promise.resolve().then(getLastEntry(wdb));
     res.catch(handleError);
     return res;
 }
 
 function filterOut(out) {
-    if(!(out instanceof Array)) {
+    if (!(out instanceof Array)) {
         out = [out];
     }
     var paramReg = /^([A-Z]{1,2})(_mean)?$/;
 
-    for(var i=0; i<out.length; i++) {
-        out[i].parameters =  {};
+    for (var i = 0; i < out.length; i++) {
+        out[i].parameters = {};
         // Unflatten
-        for(var key in out[i]) {
+        for (var key in out[i]) {
             var m = paramReg.exec(key);
-            if(m && m[1]) {
+            if (m && m[1]) {
                 out[i].parameters[m[1]] = out[i][key];
                 delete out[i][key];
             }
         }
     }
 
-    if(out.length === 1) {
+    if (out.length === 1) {
         return out[0];
     }
     return out;
@@ -809,7 +814,7 @@ function status(deviceId) {
 }
 
 function getWrappedDB(id, options, mode) {
-    if(!id) {
+    if (!id) {
         throw new Error('Invalid device id');
     }
     options = options || {};
@@ -818,7 +823,7 @@ function getWrappedDB(id, options, mode) {
     var file = id + '.sqlite';
     var dbloc = path.join(dir, file);
     var pdb = dbs[id];
-    if(!pdb) {
+    if (!pdb) {
         debug('opening database', dbloc);
         var db = new sqlite.cached.Database(dbloc, mode);
         pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
@@ -838,7 +843,7 @@ function getLastId(deviceId) {
     var wdb = getWrappedDB(deviceId);
     var res = Promise.resolve()
         .then(getLastEntryId(wdb))
-        .then(function(res) {
+        .then(function (res) {
             return res.id;
         });
 
@@ -849,7 +854,7 @@ function getLastId(deviceId) {
 function drop(deviceId, options) {
     debug('drop table ' + deviceId);
     var wdb = getWrappedDB(deviceId, options);
-    var queries = means.map(function(v) {
+    var queries = means.map(function (v) {
         var q = 'drop table if exists ' + v.name + ';';
         return wdb.run(q);
     });

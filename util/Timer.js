@@ -4,7 +4,7 @@ function formatTime(time, unit, precision) {
     precision = precision || 0;
     unit = unit || 'Ms';
     if (unit) {
-        if(unit === 'ms') {
+        if (unit === 'ms') {
             return (time * 1000).toFixed(precision) + '\u00B5s';
         }
         if (unit === 'Ms') {

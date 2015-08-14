@@ -10,9 +10,9 @@ var argv = require('minimist')(process.argv.slice(2));
 var nbParam = argv.params || 5;
 var params = new Array(nbParam);
 var c = 0;
-var charCode = 'A'.charCodeAt(0) -1 ;
-params = _.map(params, function() {
-   return String.fromCharCode(++charCode);
+var charCode = 'A'.charCodeAt(0) - 1;
+params = _.map(params, function () {
+    return String.fromCharCode(++charCode);
 });
 
 var n = argv.entries || 20;
@@ -32,24 +32,24 @@ var options = {
 };
 
 function createData() {
-    var obj = {parameters:{}, deviceId: 'dbperf', epoch: Date.now()};
-    for(var i=0; i<params.length; i++) {
-        obj.parameters[params[i]] = Math.floor((Math.random()+1)*10);
+    var obj = {parameters: {}, deviceId: 'dbperf', epoch: Date.now()};
+    for (var i = 0; i < params.length; i++) {
+        obj.parameters[params[i]] = Math.floor((Math.random() + 1) * 10);
     }
     return obj;
 }
 
 function dbSave() {
-        return database.save(d, options);
+    return database.save(d, options);
 }
 
 function dbSaveFast() {
-        return database.saveFast(d, options);
+    return database.saveFast(d, options);
 
 }
 
 function dbDrop() {
-        return database.drop('dbperf', options);
+    return database.drop('dbperf', options);
 }
 
 function saveDummy() {
@@ -57,10 +57,8 @@ function saveDummy() {
 }
 
 
-
-
 function timerStep(msg) {
-    return function() {
+    return function () {
         console.log(msg + ' ' + timer.step('ms'));
     }
 }

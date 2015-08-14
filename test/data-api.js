@@ -7,7 +7,7 @@ var dataset = require('./dataset.json');
 var _ = require('lodash');
 
 var maxId = Math.max.apply(null, _.pluck(dataset.entries, 'id'));
-var lastEntry = _.filter(dataset.entries, function(e) {
+var lastEntry = _.filter(dataset.entries, function (e) {
     return e.id === maxId;
 })[0];
 
@@ -70,8 +70,8 @@ describe('REST api', function () {
     it('should return the last element', function (done) {
         return agent.get('/database/last/' + data.name)
             .expect('Content-Type', /json/)
-            .end(function(err, res) {
-                if(err) done(err);
+            .end(function (err, res) {
+                if (err) done(err);
                 var r = res.body;
                 delete r.timestamp;
                 r.should.eql(lastEntry);

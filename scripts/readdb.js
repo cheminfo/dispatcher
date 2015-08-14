@@ -6,8 +6,8 @@ var Filter = require('../lib/filter');
 var nbParam = 3;
 var params = new Array(nbParam);
 var c = 0;
-var charCode = 'A'.charCodeAt(0) -1 ;
-params = _.map(params, function() {
+var charCode = 'A'.charCodeAt(0) - 1;
+params = _.map(params, function () {
     return String.fromCharCode(++charCode);
 });
 var deviceId = 'dbperf';
@@ -17,10 +17,10 @@ console.log(params);
 var n = 20;
 var d = new Array(n);
 
-d = _.map(d,function(val, key) {
-    var obj = {parameters:{}, deviceId: deviceId, epoch: Date.now() + key*10000};
-    for(var i=0; i<params.length; i++) {
-        obj.parameters[params[i]] = Math.floor((Math.random()+1)*10);
+d = _.map(d, function (val, key) {
+    var obj = {parameters: {}, deviceId: deviceId, epoch: Date.now() + key * 10000};
+    for (var i = 0; i < params.length; i++) {
+        obj.parameters[params[i]] = Math.floor((Math.random() + 1) * 10);
     }
     return obj;
 });
@@ -34,10 +34,10 @@ database.save(d, {
         "hour": 7200,
         "day": 300
     }
-}).then(function() {
+}).then(function () {
     var fields = 'A,B,C';
     var mean = 'minute';
-    var limit =  10;
+    var limit = 10;
     fields = fields.split(',');
     var options = {
         dir: '../sqlite',
@@ -47,7 +47,7 @@ database.save(d, {
     };
 
     return database.get(deviceId, options);
-}).then(function(result) {
+}).then(function (result) {
     var filter = new Filter();
     console.log(filter.normalizeData(result, deviceId));
 });

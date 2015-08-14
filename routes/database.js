@@ -51,31 +51,31 @@ router.put('/:device',
     function (req, res) {
 
 
-    var entry = req.body;
-    if (Array.isArray(entry)) {
-        entry.forEach(function (e) {
-            e.deviceId = res.locals.deviceId;
-        });
-    } else {
-        entry.deviceId = res.locals.deviceId;
-    }
+        var entry = req.body;
+        if (Array.isArray(entry)) {
+            entry.forEach(function (e) {
+                e.deviceId = res.locals.deviceId;
+            });
+        } else {
+            entry.deviceId = res.locals.deviceId;
+        }
 
-    entry = filter.deepenEntries(entry);
-    database.save(entry, res.locals.device.sqlite).then(function () {
-        return res.status(200).json({ok: true});
-    }).catch(function () {
-        return res.status(400).json('Database error')
+        entry = filter.deepenEntries(entry);
+        database.save(entry, res.locals.device.sqlite).then(function () {
+            return res.status(200).json({ok: true});
+        }).catch(function () {
+            return res.status(400).json('Database error')
+        });
     });
-});
 
 router.get('/last/:device',
     middleware.validateParameters(queryValidator),
     middleware.checkDevice,
     function (req, res) {
-        database.last(res.locals.deviceId).then(function(data) {
+        database.last(res.locals.deviceId).then(function (data) {
             return res.status(200).json(data);
-        }).catch(function(err) {
-            if(err.errno === 1) return res.status(404).json('not found');
+        }).catch(function (err) {
+            if (err.errno === 1) return res.status(404).json('not found');
             return res.status(400).json('Database error');
         });
     }

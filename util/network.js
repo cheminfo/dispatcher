@@ -1,5 +1,5 @@
-var os=require('os');
-var ifaces=os.networkInterfaces();
+var os = require('os');
+var ifaces = os.networkInterfaces();
 
 exports = module.exports = {
     getMyIps: getMyIps,
@@ -8,10 +8,10 @@ exports = module.exports = {
 };
 
 function getMyIps() {
-    var ips =[];
+    var ips = [];
     for (var dev in ifaces) {
-        ifaces[dev].forEach(function(details){
-            if (details.family=='IPv4' && details.internal === false) {
+        ifaces[dev].forEach(function (details) {
+            if (details.family == 'IPv4' && details.internal === false) {
                 ips.push(details.address);
             }
         });
@@ -23,7 +23,7 @@ function getMyIps() {
 function getMyIp() {
     var r = getMyIps();
 
-    if(r.length === 0) return undefined;
+    if (r.length === 0) return undefined;
     else return r[0];
 }
 

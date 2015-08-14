@@ -5,7 +5,7 @@ var data = require('./data');
 var database = require('../db/database');
 var _ = require('lodash');
 var maxId = Math.max.apply(null, _.pluck(dataset.entries, 'id'));
-var lastEntry = _.filter(dataset.entries, function(e) {
+var lastEntry = _.filter(dataset.entries, function (e) {
     return e.id === maxId;
 })[0];
 

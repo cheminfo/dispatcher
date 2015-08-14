@@ -6,30 +6,30 @@ var EpochScheduler = exports = module.exports = function EpochScheduler(reqManag
     this.requestManager = reqManager;
 };
 
-EpochScheduler.prototype.start = function() {
+EpochScheduler.prototype.start = function () {
     var that = this;
 
     // Every x seconds, update epoch of all devices
-    var delay= that.config.epochRefreshInterval;
-    var sendEvent=function() {
-        for(var i=0; i<that.config.devices.length; i++) {
-            (function(i) {
-                var now = Math.round(new Date().getTime()/1000); // now in seconds
-                that.requestManager.addRequest(that.config.devices[i].prefix+'e'+now).then(function() {
+    var delay = that.config.epochRefreshInterval;
+    var sendEvent = function () {
+        for (var i = 0; i < that.config.devices.length; i++) {
+            (function (i) {
+                var now = Math.round(new Date().getTime() / 1000); // now in seconds
+                that.requestManager.addRequest(that.config.devices[i].prefix + 'e' + now).then(function () {
                     // nothing to do
-                }, function() {
+                }, function () {
                     // we need to put a callback here otherwise bluebird is not happy
                 });
             })(i)
         }
     };
-    if(!this.interval) {
+    if (!this.interval) {
         this.interval = setIntervalAndExecute(sendEvent, delay);
     }
 };
 
-EpochScheduler.prototype.stop = function() {
-    if(this.interval) {
+EpochScheduler.prototype.stop = function () {
+    if (this.interval) {
         clearInterval(this.interval);
         this.interval = null;
     }
@@ -39,5 +39,5 @@ EpochScheduler.prototype.stop = function() {
 // A version of setInterval that executes as soon as it is called
 function setIntervalAndExecute(fn, t) {
     fn();
-    return(setInterval(fn, t));
+    return (setInterval(fn, t));
 }

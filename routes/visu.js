@@ -6,7 +6,7 @@ var router = require('express').Router(),
     path = require('path'),
     debug = require('debug')('visualizer-routes');
 
-exports  = module.exports = router;
+exports = module.exports = router;
 
 
 router.get('/configs/table', getJsonFiles('configs'));
@@ -15,31 +15,31 @@ router.get('/devices/table', getJsonFiles('devices'));
 
 function getFiles(dir) {
     try {
-        return fs.readdirSync(dir).filter(function(file) {
+        return fs.readdirSync(dir).filter(function (file) {
             return !fs.statSync(path.join(dir, file)).isDirectory();
         });
-    } catch(err) {
+    } catch (err) {
         return null;
     }
 }
 
 function getJsonFiles(dir) {
-    return function(req, res) {
+    return function (req, res) {
         var files = getFiles(dir);
-        if(!files) {
+        if (!files) {
             return res.json(400).json({});
         }
-        files = files.filter(function(file) {
+        files = files.filter(function (file) {
             return file.indexOf('.json') > -1;
         });
 
         var result = [];
-        for(var i=0; i<files.length; i++) {
+        for (var i = 0; i < files.length; i++) {
             result.push({
                 name: files[i],
                 value: {
                     type: 'object',
-                    url: path.join('/',dir, files[i]),
+                    url: path.join('/', dir, files[i]),
                     timeout: 0
                 }
             });
