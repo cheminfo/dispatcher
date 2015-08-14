@@ -1,11 +1,11 @@
 "use strict";
-var _ = require('lodash'),
-    EventEmitter = require('events').EventEmitter,
+var EventEmitter = require('events').EventEmitter,
     debug = require('debug')('cache'),
     database = require('../db/database'),
     parser = require('../lib/parser'),
     util = require('../util/util'),
-    Promise = require('bluebird');
+    Promise = require('bluebird'),
+    _ = require('lodash');
 
 var lastIds = {};
 var doingMultiLog = {};
@@ -116,7 +116,7 @@ function doMultilogRequest(that, device) {
             that.data.entry[id] = _.last(entries);
             status.lastUpdate = entries[entries.length-1].epoch;
             lastIds[device.id] = entries[entries.length-1].id;
-            that.emit('newdata', device.id, entries.slice(1));
+            that.emit('newdata', device.id, entries.slice(1), true);
             doMultilogRequest(that, device);
         }
 
@@ -131,7 +131,6 @@ function doMultilogRequest(that, device) {
 }
 
 function doCRequest(that, device) {
-    var nbParam = device.nbParam;
     var nbParamCompact = device.nbParamCompact;
     var cmdLetter = 'c';
     var cmd = device.prefix + cmdLetter;
@@ -141,7 +140,7 @@ function doCRequest(that, device) {
     return that.requestManager.addRequest(cmd).then(function(response) {
         //debug('response to c command ' + cmd + ' received');
         var status = that.data.status[id];
-        status.lastTrial = new Date().getTime();
+        status.lastTrial = Date.now();
         status.failure = '';
         // Pass the response given by the serial device to the parser
         try {
@@ -161,7 +160,7 @@ function doCRequest(that, device) {
         if(! entries) {
             debug('cmd: '+cmd+' - Unexpected error..., response: ', response);
         } else if(entries.length > 1) {
-            debug('cmd: '+cmd+' - Unexpected error..., ', entries.length, ', multilog is ', multiLog);
+            debug('cmd: '+cmd+' - Unexpected error..., ', entries.length);
         } else {
         	status.active = (entries.length === 1);
 	}
@@ -173,11 +172,11 @@ function doCRequest(that, device) {
             status.lastUpdate = entries[0].epoch;
             status.nbFailures = 0;
             that.data.entry[id] = entries[0];
-            that.emit('data', that.data.entry[id]);
+            // Last argument for fast save
+            that.emit('data', that.data.entry[id], true);
             if(isNew) {
-                that.emit('newdata', id, that.data.entry[id]);
+                that.emit('newdata', id, that.data.entry[id], true);
             }
-
         }
         else {
             that.data.entry[id].parameters = that.data.entry[id].parameters || {};

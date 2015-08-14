@@ -9,8 +9,6 @@ var debug = require('debug')('CacheDatabase'),
 var CacheDatabase = exports = module.exports = function CacheDatabase(cache, config) {
     this.cache = cache;
     this.config = config;
-    //require('../configs/config').get();
-
 };
 
 CacheDatabase.prototype.start = function() {
@@ -21,7 +19,7 @@ CacheDatabase.prototype.stop = function() {
     this.cache.removeListener('newdata', onNewData);
 };
 
-function onNewData(id, data) {
+function onNewData(id, data, fast) {
     debug('CacheDatabased received new data from cache');
     // Keep only the parameters that are explicitly defined in the
     // configuration of the devices
@@ -62,5 +60,9 @@ function onNewData(id, data) {
         return;
     }
 
-    db.save(d, specOptions);
+    if(fast) {
+        db.saveFast(d, specOptions);
+    } else {
+        db.save(d, specOptions);
+    }
 }
