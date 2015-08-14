@@ -714,7 +714,6 @@ function save(entry, options) {
 
 function saveEntryArray(entries, options) {
     debug('Save entry array begin');
-    var d = new Date().getTime();
     var promise = Promise.resolve();
     for(var i=0; i<entries.length; i++) {
         (function(i) {
@@ -725,10 +724,6 @@ function saveEntryArray(entries, options) {
         })(i)
 
     }
-    // Log performance when done
-    promise.then(function() {
-        var delta = new Date().getTime() - d;
-    });
     return promise;
 }
 

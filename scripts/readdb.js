@@ -18,7 +18,7 @@ var n = 20;
 var d = new Array(n);
 
 d = _.map(d,function(val, key) {
-    var obj = {parameters:{}, deviceId: deviceId, epoch: new Date().getTime() + key*10000};
+    var obj = {parameters:{}, deviceId: deviceId, epoch: Date.now() + key*10000};
     for(var i=0; i<params.length; i++) {
         obj.parameters[params[i]] = Math.floor((Math.random()+1)*10);
     }

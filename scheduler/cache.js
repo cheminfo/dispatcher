@@ -75,7 +75,7 @@ function doMultilogRequest(that, device) {
     var id =  device.id;
     that.data.status[id] = that.data.status[id] || { id: id};
     var status = that.data.status[id];
-    status.lastTrial = new Date().getTime();
+    status.lastTrial = Date.now();
     status.failure = '';
     debug('Send multilog command', cmd);
     return that.requestManager.addRequest(cmd).then(function(response) {
@@ -188,7 +188,7 @@ function doCRequest(that, device) {
         var msg = (err instanceof Error) ? err.message : err;
         var status = that.data.status[device.id];
         if(status) {
-            status.lastTrial = new Date().getTime();
+            status.lastTrial = Date.now();
             status.nbFailures = status.nbFailures ?  (status.nbFailures+1) : 1;
             status.failure = msg;
         }
