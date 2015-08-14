@@ -1,10 +1,12 @@
+'use strict';
+
 var router = require('express').Router(),
     middleware = require('../middleware/common'),
     util = require('../util/util'),
     Filter = require('../lib/filter'),
     database = require('../db/database'),
-    config = require('../configs/config');
-_ = require('lodash');
+    config = require('../configs/config'),
+    _ = require('lodash');
 
 exports = module.exports = router;
 var filter = new Filter();
@@ -40,7 +42,7 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
                 return res.status(200).json(data);
         }
 
-    }).catch(function (err) {
+    }).catch(function () {
         return res.status(400).json('Database error');
     });
 });

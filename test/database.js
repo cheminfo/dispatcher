@@ -122,6 +122,15 @@ describe('test database getters', function () {
             data.should.eql(lastEntry);
         });
     });
+
+    it('reading a database that does not exist should reject', function () {
+        return database.get('notexist').then(function () {
+            throw new Error('Promise was unexpectedly fullfilled');
+        }, function (err) {
+            err.should.be.an.instanceof(Error);
+            err.message.should.eql('Database does not exist');
+        });
+    });
 });
 
 

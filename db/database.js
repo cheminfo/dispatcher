@@ -9,7 +9,8 @@ var PromiseWrapper = require('../util/PromiseWrapper'),
     _ = require('lodash'),
     debug = require('debug')('database'),
     path = require('path'),
-    Timer = require('../util/Timer');
+    Timer = require('../util/Timer'),
+    fs = require('fs-extra');
 
 
 var dbs = [];
@@ -22,7 +23,6 @@ exports = module.exports = {
     query: query,
     status: status,
     getLastId: getLastId,
-    test: test,
     last: last
 };
 
@@ -567,12 +567,6 @@ function handleError(err) {
     debug('Error: ', err);
 }
 
-function test() {
-    var wdb = getWrappedDB('1000');
-    return Promise.resolve()
-        .then(createTables1(wdb));
-}
-
 function saveFast(entries, options) {
     debug('save fast');
     var timer = new Timer();
@@ -747,31 +741,32 @@ function saveEntryArray(entries, options) {
 }
 
 function get(deviceId, options) {
-    if (!deviceId) {
-        throw new Error('Invalid device id');
-    }
-    var defaultOptions = {
-        order: 'DESC',
-        limit: 500,
-        fields: ['*']
-    };
+    return Promise.resolve().then(function() {
+        if (!deviceId) {
+            throw new Error('Invalid device id');
+        }
+        var defaultOptions = {
+            order: 'DESC',
+            limit: 500,
+            fields: ['*']
+        };
 
-    _.defaults(options, defaultOptions);
+        _.defaults(options, defaultOptions);
 
-    var wdb = getWrappedDB(deviceId, options, sqlite.OPEN_READONLY);
+        // Last argument for read-only mode
+        // Will throw if database file does not exist
+        var wdb = getWrappedDB(deviceId, options, true);
+        var fn;
+        if (options.mean && options.mean !== 'entry') fn = getMeanEntries(wdb, options);
+        else fn = getEntries(wdb, options);
 
-    var fn;
-    if (options.mean && options.mean !== 'entry') fn = getMeanEntries(wdb, options);
-    else fn = getEntries(wdb, options);
+        var res = Promise.resolve()
+            .then(fn);
 
+        res.catch(handleError);
 
-    var res = Promise.resolve()
-        .then(fn);
-
-
-    res.catch(handleError);
-
-    return res;
+        return res;
+    });
 }
 
 function last(id) {
@@ -827,19 +822,24 @@ function status(deviceId) {
     return Promise.all(promises);
 }
 
-function getWrappedDB(id, options, mode) {
+function getWrappedDB(id, options, readOnly) {
     if (!id) {
         throw new Error('Invalid device id');
     }
+
     options = options || {};
     var dir = options.dir || './sqlite/';
 
     var file = id + '.sqlite';
     var dbloc = path.join(dir, file);
+
     var pdb = dbs[id];
     if (!pdb) {
         debug('opening database', dbloc);
-        var db = new sqlite.cached.Database(dbloc, mode);
+        if(readOnly && !fs.existsSync(dbloc)) {
+            throw new Error('Database does not exist');
+        }
+        var db = new sqlite.cached.Database(dbloc);
         pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
         pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
         dbs[id] = pdb;
