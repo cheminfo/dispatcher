@@ -211,6 +211,7 @@ function getLastId(that, device) {
     var cmd = device.prefix + 'q';
     return that.requestManager.addRequest(cmd).then(function (deviceId) {
         // Remove newline
+        debug('device id from q ' + deviceId);
         deviceId = deviceId.slice(0, deviceId.length - 2);
         return database.getLastId(deviceId);
     });
