@@ -2,11 +2,13 @@
   "parameters":{
     "A": {
       "label": "Temperature",
-      "name":"temperature"
+      "name":"temperature",
+      "factor": 0.01
     },
     "B": {
       "label": "Relative Humidity",
-      "name": "humidity"
+      "name": "humidity",
+      "factor": 0.1
     },
     "C":{
       "label": "Microphone",
