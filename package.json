@@ -21,6 +21,7 @@
     "supertest": "^1.0.1"
   },
   "scripts": {
-    "test": "mocha --require should --reporter mocha-better-spec-reporter --recursive"
+    "test": "mocha --require should --reporter mocha-better-spec-reporter --recursive",
+    "id": "node scripts/getId.js"
   }
 }
