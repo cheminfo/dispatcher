@@ -1,5 +1,5 @@
 {
-	"version": "2.9.7",
+	"version": "2.26.3",
 	"grid": {
 		"layers": {
 			"Default layer": {
@@ -30,7 +30,9 @@
 								]
 							],
 							"grids": [
-								[]
+								[
+									"hmain"
+								]
 							],
 							"xLabel": [
 								""
@@ -68,14 +70,29 @@
 							"shiftxtozero": [
 								[]
 							],
-							"xastime": [
-								[]
+							"xaxismodification": [
+								"timestamptotime"
 							],
 							"wheelAction": [
 								"none"
 							],
+							"wheelbaseline": [
+								0
+							],
 							"fullOut": [
 								"both"
+							],
+							"FitYToAxisOnFromTo": [
+								[]
+							],
+							"legend": [
+								"topright"
+							],
+							"mouseTracking": [
+								[]
+							],
+							"selectScatter": [
+								[]
 							]
 						}
 					],
@@ -90,17 +107,20 @@
 									1
 								],
 								"strokewidth": "1",
-								"plotcontinuous": [
-									"continuous"
-								],
+								"strokestyle": "1",
+								"plotcontinuous": "continuous",
 								"peakpicking": [],
 								"markers": [
 									"markers"
 								],
+								"markerShape": "1",
+								"markerSize": 2,
 								"normalize": "none",
 								"optimizeSlots": [
 									"slots"
-								]
+								],
+								"degrade": 0,
+								"monotoneous": []
 							}
 						]
 					]
@@ -109,12 +129,12 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 82,
-						"top": 1
+						"left": 38,
+						"top": 0
 					},
 					"size": {
 						"width": 72,
-						"height": 57
+						"height": 55
 					},
 					"zIndex": 0,
 					"display": true,
@@ -130,7 +150,7 @@
 					"name": "Default layer"
 				}
 			},
-			"id": 1,
+			"id": 14,
 			"vars_in": [
 				{
 					"rel": "chart",
@@ -181,12 +201,12 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 1,
+						"left": 0,
 						"top": 0
 					},
 					"size": {
-						"width": 32,
-						"height": 61
+						"width": 37,
+						"height": 28
 					},
 					"zIndex": 0,
 					"display": true,
@@ -202,7 +222,7 @@
 					"name": "Default layer"
 				}
 			},
-			"id": 2,
+			"id": 15,
 			"vars_in": [
 				{
 					"rel": "value",
@@ -294,14 +314,14 @@
 								"name": "device",
 								"destination": "url",
 								"label": "Device (zigbee id)",
-								"defaultvalue": "$A",
+								"defaultvalue": "$H",
 								"fieldtype": "text"
 							},
 							{
 								"name": "limit",
 								"destination": "query",
 								"label": "Limit",
-								"defaultvalue": "10",
+								"defaultvalue": "100",
 								"fieldtype": "text"
 							},
 							{
@@ -326,8 +346,8 @@
 			"layers": {
 				"Default layer": {
 					"position": {
-						"left": 34,
-						"top": 1
+						"left": 0,
+						"top": 29
 					},
 					"size": {
 						"width": 37,
@@ -347,7 +367,7 @@
 					"name": "Default layer"
 				}
 			},
-			"id": 3,
+			"id": 16,
 			"vars_in": [
 				{}
 			],
@@ -428,7 +448,7 @@
 				"general": [
 					{
 						"script": [
-							"setInterval(function(){\n    API.doAction('updateSearch');\n} , 5000);\n"
+							"setInterval(function(){\n    API.doAction('updateSearch');\n} , 50000);\n"
 						]
 					}
 				]
@@ -445,6 +465,62 @@
 					]
 				]
 			}
+		}
+	],
+	"aliases": [
+		{}
+	],
+	"custom_filters": [
+		{
+			"sections": {
+				"modules": [
+					{
+						"sections": {},
+						"groups": {
+							"modules": [
+								[
+									{}
+								]
+							]
+						}
+					}
+				],
+				"filtersLib": [
+					{
+						"sections": {},
+						"groups": {
+							"filters": [
+								[
+									{}
+								]
+							]
+						}
+					}
+				],
+				"filters": [
+					{
+						"sections": {},
+						"groups": {
+							"filter": [
+								{
+									"name": [
+										null
+									],
+									"script": [
+										null
+									]
+								}
+							],
+							"libs": [
+								[
+									{}
+								]
+							]
+						}
+					}
+				]
+			},
+			"groups": {}
 		}
 	]
 }
