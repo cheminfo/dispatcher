@@ -62,6 +62,37 @@ Config.prototype.findPluggedDevice = function(id) {
     return null;
 };
 
+Config.prototype.loadFromArgs = function() {
+    cmdArgs = require('../util/cmdArgs');
+    var configName = cmdArgs('config', 'default');
+    debug('config name', configName);
+    var configurations = configName.trim().split(',');
+
+
+    for (var i = 0; i < configurations.length; i++) {
+        this.addConfiguration(configurations[i]);
+    }
+};
+
+Config.prototype.getAppconfig = function () {
+    try {
+        return require('../appconfig.json');
+    } catch (err) {
+        fs.copySync('../defaultAppconfig.json', '../appconfig.json');
+        return getAppconfig();
+    }
+};
+
+Config.prototype.getServerConfig = function() {
+    try {
+        return require('../serverConfig.json');
+    }
+    catch (err) {
+        fs.copySync('../defaultServerConfig.json', '../serverConfig.json');
+        return getServerConfig();
+    }
+};
+
 
 function checkPluggedDevice(conf) {
     if(!conf) {
@@ -147,5 +178,4 @@ function addUtility(conf) {
         return idx > -1 ? this.devices[idx] : null;
     }
 }
-
 exports = module.exports = new Config();

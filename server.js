@@ -1,7 +1,7 @@
 "use strict";
 
 var debug = require('debug')('main'),
-    argv = require('minimist')(process.argv.slice(2)),
+    cmdArgs = require('./util/cmdArgs'),
     fs = require('fs-extra'),
     network = require('./util/network'),
     Promise = require('bluebird'),
@@ -16,10 +16,10 @@ var debug = require('debug')('main'),
     middleware = require('./middleware/common'),
     _ = require('lodash'),
     app = express(),
-    serverConfig = getServerConfig();
+    serverConfig = config.getServerConfig();
 
 
-var filter, appconfig = getAppconfig();
+var filter, appconfig = config.getAppconfig();
 var requestManagers = [], requestManagersHash = {};
 var caches = [], cachesHash = {};
 var epochs = [], epochsHash = {};
@@ -234,7 +234,7 @@ function restart() {
     return new Promise(function (resolve, reject) {
         debug('restart');
         appconfig = JSON.parse(fs.readFileSync('appconfig.json'));
-        defaultView = getOption('view', 'dispatcher');
+        defaultView = cmdArgs('view', 'dispatcher');
         stopSchedulers();
         debug('schedulers stopped');
         stopManagers().then(function () {
@@ -251,14 +251,7 @@ function restart() {
 
 
             // Load configuration file
-            var configName = getOption('config', 'default');
-            debug('config name', configName);
-            configName = configName.trim().split(',');
-
-
-            for (i = 0; i < configName.length; i++) {
-                config.addConfiguration(configName[i]);
-            }
+            config.loadFromArgs();
 
             // The configuration variable
             var conf = config.config;
@@ -302,28 +295,6 @@ function restart() {
             reject('Failed restart');
         });
     });
-    function getOption(name, def) {
-        var opt = (argv[name] && (typeof argv[name] === 'string')) ? argv[name] : null;
-        return opt || appconfig[name] || def;
-    }
 
 }
 
-function getServerConfig() {
-    try {
-        return require('./serverConfig.json');
-    }
-    catch (err) {
-        fs.copySync('./defaultServerConfig.json', './serverConfig.json');
-        return getServerConfig();
-    }
-}
-
-function getAppconfig() {
-    try {
-        return require('./appconfig.json');
-    } catch (err) {
-        fs.copySync('./defaultAppconfig.json', './appconfig.json');
-        return getAppconfig();
-    }
-}

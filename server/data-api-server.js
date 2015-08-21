@@ -1,14 +1,18 @@
 'use strict';
 
 var app = require('../bootstrap/data-api-bootstrap');
-var serverConfig = require('../serverConfig.json');
+var config = require('../configs/config');
+
+// Initialize configuration
+var appconfig = config.getAppconfig();
+var serverConfig = config.getServerConfig();
+config.loadFromArgs();
 
 var ipaddr = serverConfig.ipaddress || '127.0.0.1';
 
 app.set("port", serverConfig.port || 8000);
 app.set("ipaddr", ipaddr); // by default we listen to all the ips
 app.set("serveraddress", ipaddr);
-
 
 // Initialize modules
 var modules = ['database'];
