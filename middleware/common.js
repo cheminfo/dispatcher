@@ -55,12 +55,17 @@ exports.validateParameters = function (params) {
 };
 
 exports.checkDevice = function (req, res, next) {
-    var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
-    var device = config.findPluggedDevice(deviceId);
-    if (!device) {
-        return res.status(400).json('Invalid device');
-    }
-    res.locals.deviceId = deviceId;
-    res.locals.device = device;
-    next();
+        var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
+        var force = res.locals.parameters.force;
+        var device = config.findPluggedDevice(deviceId);
+        if (!device) {
+            if(!force) {
+                return res.status(400).json('Invalid device');
+            } else {
+                device = null;
+            }
+        }
+        res.locals.deviceId = deviceId;
+        res.locals.device = device;
+        next();
 };

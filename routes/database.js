@@ -43,7 +43,7 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
         }
 
     }).catch(function (err) {
-        console.log(err)
+        console.log(err);
         return res.status(400).json('Database error');
     });
 });
