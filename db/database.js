@@ -431,6 +431,10 @@ function getEntriesMean(wdb, entries) {
     }
 }
 
+function toNULL(val) {
+    if (val === null) return 'NULL';
+    return val;
+}
 
 function insertEntryMean(wdb, entry) {
     return function (res) {
@@ -451,28 +455,31 @@ function insertEntryMean(wdb, entry) {
                     .map(function (col) {
                         return [
                             entry.parameters[col], entry.parameters[col], entry.parameters[col], 1
-                        ]
+                        ];
                     })
-                    .flatten().value();
+                    .flatten().map(toNULL).value();
 
             }
             else {
                 values = _.chain(entry.parameters)
                     .keys()
                     .map(function (col) {
+                        var vals;
                         var meanCol = _.chain(col).map(mapMeanCol).flatten().value();
+                        // Handle null value in entry or in mean
+                        if (res[i][0][meanCol[2]] === null && entry.parameters[col] === null) {
+                            return [null, null, null, null];
+                        } else if (res[i][0][meanCol[2]] === null) {
+                            return [entry.parameters[col], entry.parameters[col], entry.parameters[col], 1];
+                        } else if (entry.parameters[col] === null) {
+                            return [res[i][0][meanCol[0]], res[i][0][meanCol[1]], res[i][0][meanCol[2]], res[i][0][meanCol[3]]];
+                        }
                         return [
                             Math.min(res[i][0][meanCol[0]], entry.parameters[col]), Math.max(res[i][0][meanCol[1]], entry.parameters[col]), res[i][0][meanCol[2]] + entry.parameters[col], res[i][0][meanCol[3]] + 1
                         ];
                     })
-                    .flatten().map(function (val) {
-                        if (val === null) {
-                            return 'NULL'
-                        }
-                        return val;
-                    }).value();
+                    .flatten().map(toNULL).value();
             }
-
 
             queries[i] = wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");");
             //promises.push(wdb.run("INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + epoch + "," + values.join(',') + ");"));
@@ -501,7 +508,7 @@ function insertEntriesMean(wdb, entries) {
                     var idx = k * 4;
                     var val = entries[j].parameters[parameters[k]];
                     values[idx] = values[idx + 1] = values[idx + 2] = val;
-                    values[idx + 3] = 1;
+                    values[idx + 3] = val === null ? null : 1;
                 }
 
                 if (idxEntries[i][epoch]) {
@@ -530,7 +537,18 @@ function insertEntriesMean(wdb, entries) {
                     if (!prev) {
                         return result;
                     }
+
                     for (var k = 0; k < current.length; k++) {
+                        if (prev[k] === null && current[k] === null) {
+                            result[k] = null;
+                            continue;
+                        } else if (prev[k] === null) {
+                            result[k] = current[k];
+                            continue;
+                        } else if (current[k] === null) {
+                            result[k] = prev[k];
+                            continue;
+                        }
                         switch (k % 4) {
                             case 0:
                                 result[k] = Math.min(prev[k], current[k]);
@@ -546,14 +564,19 @@ function insertEntriesMean(wdb, entries) {
                     }
                     return result;
                 });
-
                 idxEntries[i][key].unshift(key);
             }
+
             var keys = Object.keys(idxEntries[i]);
             var arr = new Array(keys.length);
             for (var j = 0; j < keys.length; j++) {
-                arr[j] = idxEntries[i][keys[j]];
+                arr[j] = idxEntries[i][keys[j]].map(function (r) {
+                    if (r === null) return 'NULL';
+                    return r;
+                });
+
             }
+
             var command = "INSERT OR REPLACE INTO " + means[i].name + "(epoch," + columns.join(',') + ")" + " VALUES(" + arr.join('),(') + ");";
             queries.push(wdb.run(command));
         }
@@ -741,7 +764,7 @@ function saveEntryArray(entries, options) {
 }
 
 function get(deviceId, options) {
-    return Promise.resolve().then(function() {
+    return Promise.resolve().then(function () {
         if (!deviceId) {
             throw new Error('Invalid device id');
         }
@@ -836,7 +859,7 @@ function getWrappedDB(id, options, readOnly) {
     var pdb = dbs[id];
     if (!pdb) {
         debug('opening database', dbloc);
-        if(readOnly && !fs.existsSync(dbloc)) {
+        if (readOnly && !fs.existsSync(dbloc)) {
             throw new Error('Database does not exist');
         }
         var db = new sqlite.cached.Database(dbloc);

@@ -1,8 +1,8 @@
 'use strict';
 
 var dataset = require('./dataset.json');
-var data = require('./data');
-var database = require('../db/database');
+var data = require('../data');
+var database = require('../../../db/database');
 var _ = require('lodash');
 var maxId = Math.max.apply(null, _.pluck(dataset.entries, 'id'));
 var lastEntry = _.filter(dataset.entries, function (e) {
@@ -11,6 +11,9 @@ var lastEntry = _.filter(dataset.entries, function (e) {
 
 describe('Test database with normal save', function () {
     before(function () {
+        data.setName('dbtest');
+        data.setData1([[1, 9, 3], [4, 3, 7], [6, 2, 6], [1, 1, 1], [2, 3, 4], [9, 7, 4], [1, 4, 3]]);
+        data.setData2([[6, 4, 7], [0, 8, 5]]);
         return data.drop();
     });
 

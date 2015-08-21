@@ -1,6 +1,6 @@
 'use strict';
 
-var database = require('../db/database');
+var database = require('../../db/database');
 var _ = require('lodash');
 
 const SECOND = 1000;
@@ -10,16 +10,14 @@ const DAY = 24 * HOUR;
 
 var dbName = 'dbtest';
 
-
-var params = [0, 0, 0];
+var params = [0,0,0];
 var charCode = 'A'.charCodeAt(0) - 1;
 params = params.map(function () {
     return String.fromCharCode(++charCode);
 });
-var d1 = [[1, 9, 3], [4, 3, 7], [6, 2, 6], [1, 1, 1], [2, 3, 4], [9, 7, 4], [1, 4, 3]];
-d1 = d1.map(toParams);
-var d2 = [[6, 4, 7], [0, 8, 5]];
-d2 = d2.map(toParams);
+var d1 = [];
+var d2 = [];
+
 
 
 function getTime(idx) {
@@ -37,16 +35,19 @@ function getTime(idx) {
         case 5:
             t = time + HOUR;
             break;
-        default:
+        case 6:
             t = time + DAY;
+            break;
+        default:
+            t = time + 2 * DAY;
             break;
     }
 
     return Math.round(t / SECOND);
 }
 function toParams(v, j) {
-    var x = getTime(j);
-    var obj = {parameters: {}, deviceId: dbName, epoch: x};
+    var epoch = getTime(j);
+    var obj = {parameters: {}, deviceId: dbName, epoch: epoch};
     for (var i = 0; i < v.length; i++) {
         obj.parameters[params[i]] = v[i];
     }
@@ -95,7 +96,7 @@ function getMeanEntries(mean) {
 }
 
 var options = {
-    "dir": __dirname + '/../sqlite',
+    "dir": __dirname + '/../../sqlite',
     "maxRecords": {
         "entry": 100000,
         "minute": 10000,
@@ -110,5 +111,17 @@ exports = module.exports = {
     save: save,
     saveFast: saveFast,
     drop: drop,
-    name: dbName
+    setData1: function(data) {
+        d1 = data;
+        d1 = d1.map(toParams);
+
+    },
+    setData2: function(data) {
+        d2 = data;
+        d2 = d2.map(toParams);
+    },
+    setName: function(name) {
+        dbName = name;
+        exports.name = name;
+    }
 };

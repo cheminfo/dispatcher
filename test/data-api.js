@@ -2,8 +2,8 @@
 
 var request = require('supertest');
 var app = require('../bootstrap/data-api-bootstrap');
-var data = require('./data');
-var dataset = require('./dataset.json');
+var data = require('./database/data');
+var dataset = require('./database/normal/dataset.json');
 var _ = require('lodash');
 
 var maxId = Math.max.apply(null, _.pluck(dataset.entries, 'id'));
@@ -11,16 +11,18 @@ var lastEntry = _.filter(dataset.entries, function (e) {
     return e.id === maxId;
 })[0];
 
-app.get('/user', function (req, res) {
-    res.send(200, {name: 'tobi'});
-});
-
 describe('REST api', function () {
-    beforeEach(function () {
-        return data.drop().then(data.saveFast);
+    before(function() {
+        data.setName('dbtest');
+        data.setData1([[1, 9, 3], [4, 3, 7], [6, 2, 6], [1, 1, 1], [2, 3, 4], [9, 7, 4], [1, 4, 3]]);
+        data.setData2([[6, 4, 7], [0, 8, 5]]);
     });
 
-    after(function () {
+    beforeEach(function () {
+        return data.saveFast();
+    });
+
+    afterEach(function () {
         return data.drop();
     });
 
@@ -68,7 +70,7 @@ describe('REST api', function () {
     });
 
     it('should return the last element', function (done) {
-        return agent.get('/database/last/' + data.name)
+        agent.get('/database/last/' + data.name)
             .expect('Content-Type', /json/)
             .end(function (err, res) {
                 if (err) done(err);

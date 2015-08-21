@@ -15,11 +15,11 @@ params = _.map(params, function () {
     return String.fromCharCode(++charCode);
 });
 
+
 var n = argv.entries || 20;
 var d = new Array(n);
 var dummy = createData();
 d = _.map(d, createData);
-
 
 var options = {
     "dir": __dirname + '/../sqlite',

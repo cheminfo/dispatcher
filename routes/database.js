@@ -42,7 +42,8 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
                 return res.status(200).json(data);
         }
 
-    }).catch(function () {
+    }).catch(function (err) {
+        console.log(err)
         return res.status(400).json('Database error');
     });
 });

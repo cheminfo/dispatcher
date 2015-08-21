@@ -1,0 +1,214 @@
+{
+  "entries": [
+    {
+      "epoch": 946857600,
+      "B": null,
+      "C": null,
+      "A": 4
+    },
+    {
+      "epoch": 946771200,
+      "B": 4,
+      "C": 3,
+      "A": 1
+    },
+    {
+      "epoch": 946688400,
+      "B": null,
+      "C": null,
+      "A": 9
+    },
+    {
+      "epoch": 946688400,
+      "B": 3,
+      "C": 4,
+      "A": 2
+    },
+    {
+      "epoch": 946684860,
+      "B": null,
+      "C": 1,
+      "A": null
+    },
+    {
+      "epoch": 946684860,
+      "B": 2,
+      "C": 6,
+      "A": 6
+    },
+    {
+      "epoch": 946684800,
+      "B": 8,
+      "C": null,
+      "A": null
+    },
+    {
+      "epoch": 946684800,
+      "B": null,
+      "C": null,
+      "A": 6
+    },
+    {
+      "epoch": 946684800,
+      "B": null,
+      "C": null,
+      "A": null
+    },
+    {
+      "epoch": 946684800,
+      "B": null,
+      "C": null,
+      "A": null
+    }
+  ],
+  "minute": [
+    {
+      "A_min": 4,
+      "A_max": 4,
+      "B_min": null,
+      "B_max": null,
+      "C_min": null,
+      "C_max": null,
+      "A_mean": 4,
+      "B_mean": null,
+      "C_mean": null,
+      "epoch": 946857600
+    },
+    {
+      "A_min": 1,
+      "A_max": 1,
+      "B_min": 4,
+      "B_max": 4,
+      "C_min": 3,
+      "C_max": 3,
+      "A_mean": 1,
+      "B_mean": 4,
+      "C_mean": 3,
+      "epoch": 946771200
+    },
+    {
+      "A_min": 2,
+      "A_max": 9,
+      "B_min": 3,
+      "B_max": 3,
+      "C_min": 4,
+      "C_max": 4,
+      "A_mean": 5,
+      "B_mean": 3,
+      "C_mean": 4,
+      "epoch": 946688400
+    },
+    {
+      "A_min": 6,
+      "A_max": 6,
+      "B_min": 2,
+      "B_max": 2,
+      "C_min": 1,
+      "C_max": 6,
+      "A_mean": 6,
+      "B_mean": 2,
+      "C_mean": 3,
+      "epoch": 946684860
+    },
+    {
+      "A_min": 6,
+      "A_max": 6,
+      "B_min": 8,
+      "B_max": 8,
+      "C_min": null,
+      "C_max": null,
+      "A_mean": 6,
+      "B_mean": 8,
+      "C_mean": null,
+      "epoch": 946684800
+    }
+  ],
+  "hour": [
+    {
+      "A_min": 4,
+      "A_max": 4,
+      "B_min": null,
+      "B_max": null,
+      "C_min": null,
+      "C_max": null,
+      "A_mean": 4,
+      "B_mean": null,
+      "C_mean": null,
+      "epoch": 946857600
+    },
+    {
+      "A_min": 1,
+      "A_max": 1,
+      "B_min": 4,
+      "B_max": 4,
+      "C_min": 3,
+      "C_max": 3,
+      "A_mean": 1,
+      "B_mean": 4,
+      "C_mean": 3,
+      "epoch": 946771200
+    },
+    {
+      "A_min": 2,
+      "A_max": 9,
+      "B_min": 3,
+      "B_max": 3,
+      "C_min": 4,
+      "C_max": 4,
+      "A_mean": 5,
+      "B_mean": 3,
+      "C_mean": 4,
+      "epoch": 946688400
+    },
+    {
+      "A_min": 6,
+      "A_max": 6,
+      "B_min": 2,
+      "B_max": 8,
+      "C_min": 1,
+      "C_max": 6,
+      "A_mean": 6,
+      "B_mean": 5,
+      "C_mean": 3,
+      "epoch": 946684800
+    }
+  ],
+  "day": [
+    {
+      "A_min": 4,
+      "A_max": 4,
+      "B_min": null,
+      "B_max": null,
+      "C_min": null,
+      "C_max": null,
+      "A_mean": 4,
+      "B_mean": null,
+      "C_mean": null,
+      "epoch": 946857600
+    },
+    {
+      "A_min": 1,
+      "A_max": 1,
+      "B_min": 4,
+      "B_max": 4,
+      "C_min": 3,
+      "C_max": 3,
+      "A_mean": 1,
+      "B_mean": 4,
+      "C_mean": 3,
+      "epoch": 946771200
+    },
+    {
+      "A_min": 2,
+      "A_max": 9,
+      "B_min": 2,
+      "B_max": 8,
+      "C_min": 1,
+      "C_max": 6,
+      "A_mean": 5,
+      "B_mean": 4,
+      "C_mean": 3,
+      "epoch": 946684800
+    }
+  ]
+}
