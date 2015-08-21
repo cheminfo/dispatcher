@@ -8,7 +8,7 @@ function idStringToNumber(idString) {
 }
 
 function idNumberToString(idNumber) {
-    // TODO: implement
+    return String.fromCharCode(idNumber / 256 | 0) + String.fromCharCode(idNumber % 256);
 }
 
 exports = module.exports = {

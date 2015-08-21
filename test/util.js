@@ -7,4 +7,9 @@ describe('test utility functions', function() {
          util.deviceIdStringToNumber('dbtest').should.be.eql('dbtest');
          (util.deviceIdStringToNumber() === undefined).should.be.true;
      });
+
+    it('should convert id number to id string', function() {
+        util.deviceIdNumberToString(9290).should.be.eql('$J');
+        util.deviceIdNumberToString(9009).should.be.eql('#1');
+    });
 });
