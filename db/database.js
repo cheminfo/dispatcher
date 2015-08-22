@@ -10,7 +10,8 @@ var PromiseWrapper = require('../util/PromiseWrapper'),
     debug = require('debug')('database'),
     path = require('path'),
     Timer = require('../util/Timer'),
-    fs = require('fs-extra');
+    fs = require('fs-extra'),
+    sanitizeFilename = require('sanitize-filename');
 
 
 var dbs = [];
@@ -853,7 +854,7 @@ function getWrappedDB(id, options, readOnly) {
     options = options || {};
     var dir = options.dir || './sqlite/';
 
-    var file = id + '.sqlite';
+    var file = sanitizeFilename(id + '.sqlite');
     var dbloc = path.join(dir, file);
 
     var pdb = dbs[id];

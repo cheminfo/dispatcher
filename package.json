@@ -10,6 +10,7 @@
     "lodash": "~2.4.1",
     "minimist": "~1.1.0",
     "performance-now": "^0.2.0",
+    "sanitize-filename": "^1.4.2",
     "serialport": "~1.7.4",
     "sqlite3": "^3.0.5",
     "squel": "~3.8.1"
