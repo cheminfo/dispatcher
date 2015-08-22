@@ -26,7 +26,7 @@ function getFiles(dir) {
 function getJsonFiles(dir) {
     return function (req, res) {
         var files = getFiles(dir);
-        if (!files) {
+        if (!files) {ch
             return res.json(400).json({});
         }
         files = files.filter(function (file) {

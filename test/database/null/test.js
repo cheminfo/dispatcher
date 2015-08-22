@@ -14,8 +14,9 @@ function cleanEntries(entries) {
 describe('Save null values (normal save)', function() {
     before(function() {
         data.setName('dbnull');
-        data.setData1([[null, null, null], [null, null, null], [6, 2, 6], [null, null, 1], [2, 3, 4], [9, null, null], [1, 4, 3],[4,null, null]]);
-        data.setData2([[6, null, null], [null, 8, null]]);
+        data.clearData();
+        data.addData([[null, null, null], [null, null, null], [6, 2, 6], [null, null, 1], [2, 3, 4], [9, null, null], [1, 4, 3],[4,null, null]]);
+        data.addData([[6, null, null], [null, 8, null]]);
         return Promise.resolve().then(data.drop).then(data.save);
     });
 

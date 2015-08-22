@@ -1,3 +1,7 @@
+/*
+    Test the data rest api
+ */
+
 'use strict';
 
 var request = require('supertest');
@@ -13,9 +17,11 @@ var lastEntry = _.filter(dataset.entries, function (e) {
 
 describe('REST api', function () {
     before(function() {
+        //
         data.setName('$Z');
-        data.setData1([[1, 9, 3], [4, 3, 7], [6, 2, 6], [1, 1, 1], [2, 3, 4], [9, 7, 4], [1, 4, 3]]);
-        data.setData2([[6, 4, 7], [0, 8, 5]]);
+        data.clearData();
+        data.addData([[1, 9, 3], [4, 3, 7], [6, 2, 6], [1, 1, 1], [2, 3, 4], [9, 7, 4], [1, 4, 3]]);
+        data.addData([[6, 4, 7], [0, 8, 5]]);
     });
 
     beforeEach(function () {

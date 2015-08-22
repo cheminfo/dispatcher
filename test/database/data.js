@@ -1,3 +1,8 @@
+/*
+    A helper to simplify the generation and saving
+    of data in database tests
+ */
+
 'use strict';
 
 var database = require('../../db/database');
@@ -15,8 +20,8 @@ var charCode = 'A'.charCodeAt(0) - 1;
 params = params.map(function () {
     return String.fromCharCode(++charCode);
 });
-var d1 = [];
-var d2 = [];
+
+var d = [];
 
 
 
@@ -54,28 +59,32 @@ function toParams(v, j) {
     return obj;
 }
 
-function saveData1Fast() {
-    return database.saveFast(d1, options);
+function saveOne(i) {
+    return function() {
+        return database.save(d[i], options);
+    }
 }
 
-function saveData2Fast() {
-    return database.saveFast(d2, options);
-}
-
-function saveData1() {
-    return database.save(d1, options);
-}
-
-function saveData2() {
-    return database.save(d2, options);
+function saveOneFast(i) {
+    return function() {
+        return database.saveFast(d[i], options);
+    }
 }
 
 function save() {
-    return saveData1().then(saveData2);
+    var prom = Promise.resolve();
+    for(var i = 0; i < d.length; i++) {
+        prom = prom.then(saveOne(i));
+    }
+    return prom;
 }
 
 function saveFast() {
-    return saveData1Fast().then(saveData2Fast);
+    var prom = Promise.resolve();
+    for(var i = 0; i < d.length; i++) {
+        prom = prom.then(saveOneFast(i));
+    }
+    return prom;
 }
 
 function drop() {
@@ -95,6 +104,19 @@ function getMeanEntries(mean) {
     }));
 }
 
+function addData(data) {
+    d.push(data.map(toParams));
+}
+
+function clearData() {
+    d = [];
+}
+
+function setName(name) {
+    dbName = name;
+    exports.name = name;
+}
+
 var options = {
     "dir": __dirname + '/../../sqlite',
     "maxRecords": {
@@ -111,17 +133,7 @@ exports = module.exports = {
     save: save,
     saveFast: saveFast,
     drop: drop,
-    setData1: function(data) {
-        d1 = data;
-        d1 = d1.map(toParams);
-
-    },
-    setData2: function(data) {
-        d2 = data;
-        d2 = d2.map(toParams);
-    },
-    setName: function(name) {
-        dbName = name;
-        exports.name = name;
-    }
+    addData: addData,
+    clearData: clearData,
+    setName: setName
 };
