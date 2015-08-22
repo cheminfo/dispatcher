@@ -88,9 +88,8 @@ function doMultilogRequest(that, device) {
 
         status.active = (entries.length >= 1);
         if (status.active) {
-            var devId = util.deviceIdStringToNumber(id);
-            if (devId !== entries[0].deviceId) {
-                throw new Error('Device id of entries does not correspond to device id of request. Entry device id: ' + entries[0].deviceId + '. Request device id: ' + devId);
+            if (id !== entries[0].deviceId) {
+                throw new Error('Device id of entries does not correspond to device id of request. Entry device id: ' + entries[0].deviceId + '. Request device id: ' + id);
             }
 
             // Make sure of continuity
@@ -198,7 +197,6 @@ function doCRequest(that, device) {
 
 
 function getLastId(that, device) {
-
     // If it is a multilog, we want to know what the last id is
     // We look in the cache, if we don't find it we look for the
     // last id in the database, if we don't find it we use the m
@@ -210,12 +208,11 @@ function getLastId(that, device) {
     // Does not yet exist
     var cmd = device.prefix + 'q';
     return that.requestManager.addRequest(cmd).then(function (deviceId) {
-        // Remove newline
         debug('device id from q ' + deviceId);
-        deviceId = deviceId.slice(0, deviceId.length - 2);
+        // Remove newline
+        deviceId = util.deviceIdNumberToString(parseInt(deviceId.slice(0, deviceId.length - 2)));
         return database.getLastId(deviceId);
     });
-
 }
 
 Cache.prototype.stop = function () {

@@ -13,7 +13,7 @@ var lastEntry = _.filter(dataset.entries, function (e) {
 
 describe('REST api', function () {
     before(function() {
-        data.setName('dbtest');
+        data.setName('$Z');
         data.setData1([[1, 9, 3], [4, 3, 7], [6, 2, 6], [1, 1, 1], [2, 3, 4], [9, 7, 4], [1, 4, 3]]);
         data.setData2([[6, 4, 7], [0, 8, 5]]);
     });
@@ -28,20 +28,20 @@ describe('REST api', function () {
 
     var agent = request.agent(app);
     it('should get entries', function (done) {
-        agent.get('/database/dbtest')
+        agent.get('/database/' + data.name)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200, dataset.filteredEntries, done);
     });
 
     it('should get entries with a limit', function (done) {
-        agent.get('/database/dbtest?limit=2')
+        agent.get('/database/' + data.name + '?limit=2')
             .expect('Content-Type', /json/)
             .expect(200, dataset.filteredEntries.slice(0, 2), done);
     });
 
     it('should save entries', function (done) {
-        agent.put('/database/dbtest')
+        agent.put('/database/' + data.name)
             .send({
                 epoch: new Date('2001-01-01').getTime() / 1000 | 0,
                 parameters: {

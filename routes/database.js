@@ -6,7 +6,8 @@ var router = require('express').Router(),
     Filter = require('../lib/filter'),
     database = require('../db/database'),
     config = require('../configs/config'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    debug = require('debug')('router:database');
 
 exports = module.exports = router;
 var filter = new Filter();
@@ -22,7 +23,7 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
     name: 'filter',
     required: false
 }])), function (req, res) {
-    var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
+    var deviceId = res.locals.parameters.device;
     var fields = res.locals.parameters.fields || '*';
     var mean = res.locals.parameters.mean || 'entry';
     var limit = res.locals.parameters.limit || 10;

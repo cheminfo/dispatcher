@@ -11,7 +11,7 @@ var lastEntry = _.filter(dataset.entries, function (e) {
 
 describe('Test database with normal save', function () {
     before(function () {
-        data.setName('dbtest');
+        data.setName('$Z');
         data.setData1([[1, 9, 3], [4, 3, 7], [6, 2, 6], [1, 1, 1], [2, 3, 4], [9, 7, 4], [1, 4, 3]]);
         data.setData2([[6, 4, 7], [0, 8, 5]]);
         return data.drop();
@@ -120,9 +120,15 @@ describe('test database getters', function () {
     });
 
     it('should get the last entry', function () {
-        return database.last('dbtest').then(function (data) {
+        return database.last(data.name).then(function (data) {
             delete data.timestamp;
             data.should.eql(lastEntry);
+        });
+    });
+
+    it('should get the last id from the database', function() {
+        return database.getLastId(data.name).then(function(result) {
+            result.should.be.eql(9);
         });
     });
 

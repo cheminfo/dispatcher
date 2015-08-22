@@ -3,8 +3,8 @@
     {
       "type":"dbtest",
       "description":"db test fake device",
-      "prefix":"",
-      "id": "dbtest"
+      "prefix":"$Z",
+      "id": "$Z"
     }
 
   ],

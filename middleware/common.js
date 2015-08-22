@@ -55,7 +55,7 @@ exports.validateParameters = function (params) {
 };
 
 exports.checkDevice = function (req, res, next) {
-    var deviceId = util.deviceIdStringToNumber(res.locals.parameters.device);
+    var deviceId = res.locals.parameters.device;
     var device = config.findPluggedDevice(deviceId);
     if (!device) {
         return res.status(400).json('Invalid device');
