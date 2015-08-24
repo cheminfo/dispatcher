@@ -233,7 +233,7 @@ function restart() {
     process.chdir(__dirname);
     return new Promise(function (resolve, reject) {
         debug('restart');
-        appconfig = JSON.parse(fs.readFileSync('appconfig.json'));
+        appconfig = JSON.parse(fs.readFileSync('general.config.json'));
         defaultView = cmdArgs('view', 'dispatcher');
         stopSchedulers();
         debug('schedulers stopped');

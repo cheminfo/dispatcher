@@ -32,12 +32,11 @@ You can also create your own views and save them easily.
 
 Server configuration
 =========
-```serverConfig.json``` contains all the server configuration option, like ip address and port. By default, the ip address is automatically detected and the port used is 80.
-For advanced users, you can edit the server configuration. You must create a file named ```serverConfig.json```. You can use ```defaultServerConfig.json``` as a template.
+```server.config.json``` contains all the server configuration option, like ip address and port. By default, the ip address is automatically detected and the port used is 80.
+For advanced users, you can edit the server configuration.
 
 ```
-cp defaultServerConfig.json serverConfig.json       # Copy from template
-vim serverConfig.json                               # Edit
+vim server.config.json                               # Edit
 ```
 
 For changes to be effective you must relaunch the server.
@@ -255,7 +254,6 @@ ln -s /usr/local/node/latest/bin/npm /usr/local/bin/npm
 cd /usr/local/node
 git clone "https://github.com/cheminfo/dispatcher.git"
 cd dispatcher
-cp defaultAppconfig.json appconfig.json
 npm install
 ```
 
@@ -267,7 +265,7 @@ apt-get install monit
 
 Known issues
 ===========
-* Getting an error when saving file in the nav view: it could be that what you are trying to save is too large. Open the server configuration file ```serverConfig.json``` and edit the ```bodyLimit``` option. Increase it.
+* Getting an error when saving file in the nav view: it could be that what you are trying to save is too large. Open the server configuration file ```server.config.json``` and edit the ```bodyLimit``` option. Increase it.
 
 
 

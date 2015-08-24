@@ -1,0 +1,5 @@
+{
+    "config": "default",
+    "view": "admin",
+    "useLactame": true
+}

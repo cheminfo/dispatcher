@@ -12,14 +12,14 @@ exports = module.exports = router;
 
 router.get('/appconfig', function (req, res) {
     // Create it if it does not exist
-    if (!fs.existsSync('./appconfig.json')) {
-        fs.copy('./default.json', './appconfig.json', function (err) {
+    if (!fs.existsSync('./general.config.json')) {
+        fs.copy('./default.json', './general.config.json', function (err) {
             if (err) return res.status(500).json({});
-            return res.status(200).json(fs.readJsonSync('./appconfig.json'));
+            return res.status(200).json(fs.readJsonSync('./general.config.json'));
         })
     }
     else {
-        return res.status(200).json(fs.readJsonSync('./appconfig.json'));
+        return res.status(200).json(fs.readJsonSync('./general.config.json'));
     }
 });
 
@@ -46,7 +46,7 @@ router.post('/save/appconfig',
             return res.status(400).json({});
         }
 
-        fs.writeJson('./appconfig.json', content, function (err) {
+        fs.writeJson('./general.config.json', content, function (err) {
             if (err) {
                 return res.status(500).json({});
             }
