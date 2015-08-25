@@ -6,6 +6,8 @@ var network = require('../util/network'),
     serverConfig = config.getServerConfig(),
     debug = require('debug')('server');
 
+config.loadFromArgs();
+
 var bodyParser = require('body-parser');
 app.use(bodyParser.json({
     limit: serverConfig.bodyLimit
