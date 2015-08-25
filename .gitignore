@@ -1,7 +1,5 @@
 node_modules/
 general.config.json
+server.config.json
 .idea/workspace.xml
 sqlite
-db/sqlite
-static/.idea
-server.config.json
