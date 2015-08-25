@@ -1,13 +1,13 @@
 'use strict';
 
 var router = require('express').Router(),
-    config = require('../configs/config');
+    config = require('../configs/config'),
+    cmdArgs = require('../util/cmdArgs');
 
 exports = module.exports = router;
 
 // The root element redirects to the default visualizer view
 router.get('/', function (req, res) {
-    appconfig = config.getAppconfig();
     var defaultView = cmdArgs('view', 'dispatcher');
     var useLactame = cmdArgs('useLactame', false);
     res.set({
