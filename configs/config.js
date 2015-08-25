@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash'),
     debug = require('debug')('config'),
     path = require('path'),
@@ -8,11 +10,12 @@ function Config() {
 }
 
 Config.prototype.addConfiguration = function (name) {
-    var def = require(path.join(__dirname, 'plugged/default.json'));
+    debug('add configuration ' + name);
+    var def = fs.readJsonSync(path.join(__dirname, 'plugged/default.json'));
     var config;
     if (!name.endsWith('.json')) name = name + '.json';
     if (name) {
-        config = require(path.join(__dirname, 'plugged', name));
+        config = fs.readJsonSync(path.join(__dirname, 'plugged', name));
         if (!(config instanceof Array)) {
             config = [config];
         }
@@ -58,7 +61,8 @@ Config.prototype.findPluggedDevice = function (id) {
 };
 
 Config.prototype.loadFromArgs = function () {
-    cmdArgs = require('../util/cmdArgs');
+    debug('load from args');
+    var cmdArgs = require('../util/cmdArgs');
     var configName = cmdArgs('config', 'default');
     debug('config name', configName);
     var configurations = configName.trim().split(',');
@@ -71,7 +75,7 @@ Config.prototype.loadFromArgs = function () {
 
 Config.prototype.getAppconfig = function (stop) {
     try {
-        return require('../general.config.json');
+        return fs.readJsonSync(path.join(__dirname, '../general.config.json'));
     } catch (err) {
         if (stop) throw new Error('Could not get app config');
         fs.copySync(
@@ -83,14 +87,15 @@ Config.prototype.getAppconfig = function (stop) {
 
 Config.prototype.getServerConfig = function (stop) {
     try {
-        return require('../server.config.json');
+        return fs.readJsonSync(path.join(__dirname, '../server.config.json'));
     }
     catch (err) {
+        debug('Could not read server config file, copying default');
         if (stop) throw new Error('Could not get server config');
         fs.copySync(
             path.join(__dirname, '../default.server.config.json'),
             path.join(__dirname, '../server.config.json'));
-        return this.getServerConfig();
+        return this.getServerConfig(true);
     }
 };
 
@@ -104,9 +109,14 @@ function checkPluggedDevice(conf) {
         if (!fs.existsSync(conf.sqlite.dir)) {
             // Create the directory
             debug('The sqlite directory does not exist. We will try creating it.');
-            if (!fs.mkdirsSync(conf.sqlite.dir)) {
-                throw new Error('Config Error: The sqlite directory ' + conf.sqlite.dir + ' does not exist and unable to create it');
+            try {
+                if (!fs.mkdirsSync(conf.sqlite.dir)) {
+                    throw new Error('Config Error: The sqlite directory ' + conf.sqlite.dir + ' does not exist and unable to create it');
+                }
+            } catch(e) {
+                console.log('aonethunoaetuh');
             }
+
 
         }
     }
@@ -150,7 +160,7 @@ function processConf(conf) {
     for (var i = 0; i < conf.devices.length; i++) {
         var deviceFile = path.join(__dirname, 'devices', conf.devices[i].type + '.json');
         try {
-            var deviceConfig = require(deviceFile);
+            var deviceConfig = fs.readJsonSync(deviceFile);
         } catch (e) {
             console.error('Could not load configuration type ' + conf.devices[i].type + ' from ' + deviceFile);
             idxToRemove.push(i);

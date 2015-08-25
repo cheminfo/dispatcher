@@ -19,10 +19,11 @@
     "mocha": "^2.2.5",
     "mocha-better-spec-reporter": "^2.1.1",
     "should": "^7.0.2",
+    "should-promised": "^0.3.1",
     "supertest": "^1.0.1"
   },
   "scripts": {
-    "test": "mocha --require should --reporter mocha-better-spec-reporter --recursive",
+    "test": "mocha --require should --require=should-promised --reporter mocha-better-spec-reporter --recursive",
     "id": "node scripts/getId.js"
   }
 }
