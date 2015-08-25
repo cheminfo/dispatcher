@@ -5,6 +5,8 @@ var _ = require('lodash'),
     path = require('path'),
     fs = require('fs-extra');
 
+var loadedConfigs = {};
+
 function Config() {
     this.config = [];
 }
@@ -14,6 +16,7 @@ Config.prototype.addConfiguration = function (name) {
     var def = fs.readJsonSync(path.join(__dirname, 'plugged/default.json'));
     var config;
     if (!name.endsWith('.json')) name = name + '.json';
+    if(loadedConfigs[name]) return;
     if (name) {
         config = fs.readJsonSync(path.join(__dirname, 'plugged', name));
         if (!(config instanceof Array)) {
@@ -34,6 +37,7 @@ Config.prototype.addConfiguration = function (name) {
         addUtility(config[i]);
         this.config.push(config[i]);
     }
+    loadedConfigs[name] = true;
 };
 
 Config.prototype.findDeviceById = function (id) {
