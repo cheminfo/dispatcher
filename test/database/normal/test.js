@@ -127,19 +127,22 @@ describe('test database getters', function () {
         });
     });
 
-    it('should get the last id from the database', function() {
-        return database.getLastId(data.name).then(function(result) {
+    it('should get the last id from the database', function () {
+        return database.getLastId(data.name).then(function (result) {
             result.should.be.eql(9);
         });
     });
 
-    it('reading a database that does not exist should reject', function () {
-        return database.get('notexist').then(function () {
-            throw new Error('Promise was unexpectedly fullfilled');
-        }, function (err) {
-            err.should.be.an.instanceof(Error);
-            err.message.should.eql('Database does not exist');
-        });
+    it('get should reject when database does not exist', function () {
+        return database.get('notexist').should.be.rejectedWith('Database does not exist');
+    });
+
+    it('getLastId should reject when database does not exist', function() {
+        return database.getLastId('notexist').should.be.rejectedWith('Database does not exist');
+    });
+
+    it('last should reject when database does not exist', function() {
+        return database.last('notexist').should.be.rejectedWith('Database does not exist');
     });
 });
 

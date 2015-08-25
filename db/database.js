@@ -4,7 +4,6 @@
 // e.g. save a new device entry
 
 var PromiseWrapper = require('../util/PromiseWrapper'),
-    Promise = require('bluebird'),
     sqlite = require('sqlite3'),
     _ = require('lodash'),
     debug = require('debug')('database'),
@@ -12,7 +11,6 @@ var PromiseWrapper = require('../util/PromiseWrapper'),
     Timer = require('../util/Timer'),
     fs = require('fs-extra'),
     sanitizeFilename = require('sanitize-filename');
-
 
 var dbs = [];
 
@@ -22,7 +20,6 @@ exports = module.exports = {
     saveFast: saveFast,
     get: get,
     query: query,
-    status: status,
     getLastId: getLastId,
     last: last
 };
@@ -587,7 +584,7 @@ function insertEntriesMean(wdb, entries) {
     };
 }
 
-function handleError(err) {
+function logError(err) {
     debug('Error: ', err);
 }
 
@@ -642,7 +639,7 @@ function saveFast(entries, options) {
     }
     saveCount += 1;
 
-    res.catch(handleError);
+    res.catch(logError);
 
     function writeEntries(ok) {
         return function () {
@@ -722,7 +719,7 @@ function save(entry, options) {
     }
     saveCount += 1;
 
-    res.catch(handleError);
+    res.catch(logError);
 
     function writeEntry(ok) {
         return function () {
@@ -765,7 +762,7 @@ function saveEntryArray(entries, options) {
 }
 
 function get(deviceId, options) {
-    return Promise.resolve().then(function () {
+    var prom = Promise.resolve().then(function () {
         if (!deviceId) {
             throw new Error('Invalid device id');
         }
@@ -784,20 +781,20 @@ function get(deviceId, options) {
         if (options.mean && options.mean !== 'entry') fn = getMeanEntries(wdb, options);
         else fn = getEntries(wdb, options);
 
-        var res = Promise.resolve()
+        return Promise.resolve()
             .then(fn);
-
-        res.catch(handleError);
-
-        return res;
     });
+    prom.catch(logError);
+    return prom;
 }
 
-function last(id) {
-    var wdb = getWrappedDB(id);
-    var res = Promise.resolve().then(getLastEntry(wdb));
-    res.catch(handleError);
-    return res;
+function last(id, options) {
+    var prom = Promise.resolve().then(function() {
+        var wdb = getWrappedDB(id, options, true);
+        return Promise.resolve().then(getLastEntry(wdb));
+    });
+    prom.catch(logError);
+    return prom;
 }
 
 function filterOut(out) {
@@ -822,28 +819,6 @@ function filterOut(out) {
         return out[0];
     }
     return out;
-}
-
-function status(deviceId) {
-    var wdb = getWrappedDB(deviceId);
-    var first, last;
-
-    var promises = [];
-    promises.push(getEntries(wdb, {
-        limit: 1,
-        order: 'asc',
-        fields: ['*']
-    })());
-
-    promises.push(getEntries(wdb, {
-        limit: 1,
-        order: 'desc',
-        fields: ['*']
-    })());
-
-    promises.push(wdb.run('SELECT count(*) FROM entry'));
-
-    return Promise.all(promises);
 }
 
 function getWrappedDB(id, options, readOnly) {
@@ -872,32 +847,38 @@ function getWrappedDB(id, options, readOnly) {
 }
 
 function query(id) {
-    var wdb = getWrappedDB(id);
-    [].shift.apply(arguments);
-    return wdb.all.apply(wdb, arguments);
+    var prom = Promise.resolve().then(function () {
+        var wdb = getWrappedDB(id);
+        [].shift.apply(arguments);
+        return wdb.all.apply(wdb, arguments);
+    });
+    prom.catch(logError);
+    return prom;
 }
 
-function getLastId(deviceId) {
-    var wdb = getWrappedDB(deviceId);
-    var res = Promise.resolve()
-        .then(getLastEntryId(wdb))
-        .then(function (res) {
-            return res.id;
-        });
-
-    res.catch(handleError);
-    return res;
+function getLastId(deviceId, options) {
+    var prom = Promise.resolve().then(function () {
+        var wdb = getWrappedDB(deviceId, options, true);
+        return Promise.resolve()
+            .then(getLastEntryId(wdb))
+            .then(function (res) {
+                return res.id;
+            });
+    });
+    return prom;
 }
 
 function drop(deviceId, options) {
-    debug('drop table ' + deviceId);
-    var wdb = getWrappedDB(deviceId, options);
-    var queries = means.map(function (v) {
-        var q = 'drop table if exists ' + v.name + ';';
-        return wdb.run(q);
+    var prom = Promise.resolve().then(function () {
+        debug('drop table ' + deviceId);
+        var wdb = getWrappedDB(deviceId, options);
+        var queries = means.map(function (v) {
+            var q = 'drop table if exists ' + v.name + ';';
+            return wdb.run(q);
+        });
+        queries.push(wdb.run('drop table if exists entry;'));
+        return Promise.all(queries);
     });
-    queries.push(wdb.run('drop table if exists entry;'));
-    var res = Promise.all(queries);
-    res.catch(handleError);
-    return res;
+    prom.catch(logError);
+    return prom;
 }
