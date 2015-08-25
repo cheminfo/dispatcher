@@ -8,7 +8,8 @@ var SerialQueueManager = require('../lib/SerialQueueManager'),
     CacheDatabase = require('../db/CacheDatabase'),
     config = require('../configs/config'),
     debug = require('debug')('deviceManager'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    path = require('path');
 
 var appconfig = config.getAppconfig();
 var caches, cachesHash, epochs, epochsHash, serialManagers, serialManagersHash, cacheDatabases;
@@ -63,7 +64,7 @@ function stopCacheDatabases() {
 }
 
 function restart() {
-    process.chdir(__dirname);
+    process.chdir(path.join(__dirname, '../'));
     return Promise.resolve().then(function () {
         debug('restart');
         stopSchedulers();
