@@ -21,7 +21,7 @@
   },
   "multiLog": true,
   "hasEvent": false,
-  "refresh": 2000,
+  "refresh": 5000,
   "nbParam": 4,
   "nbParamCompact": 4
 }
