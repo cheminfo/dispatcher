@@ -8,7 +8,7 @@ var debug = require('debug')('central'),
 
 process.chdir(path.join(__dirname, '..'));
 
-if(cmdArgs('no-devices', false)) {
+if(!cmdArgs('noDevices', false)) {
     var deviceManager = require('../devices/manager');
     deviceManager.restart().catch(function(err) {
         console.error('An error occured while restarting the device manager', err);

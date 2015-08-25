@@ -5,6 +5,6 @@ var config = require('../configs/config');
 var appconfig = config.getAppconfig();
 
 exports = module.exports = function (name, def) {
-    var opt = (argv[name] && (typeof argv[name] === 'string')) ? argv[name] : null;
+    var opt = (argv[name]) ? argv[name] : null;
     return opt || appconfig[name] || def;
 };

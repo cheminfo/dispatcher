@@ -16,7 +16,10 @@ Config.prototype.addConfiguration = function (name) {
     var def = fs.readJsonSync(path.join(__dirname, 'plugged/default.json'));
     var config;
     if (!name.endsWith('.json')) name = name + '.json';
-    if(loadedConfigs[name]) return;
+    if(loadedConfigs[name]) {
+        debug('skip configuration ' + name + ', already exists');
+        return;
+    }
     if (name) {
         config = fs.readJsonSync(path.join(__dirname, 'plugged', name));
         if (!(config instanceof Array)) {
