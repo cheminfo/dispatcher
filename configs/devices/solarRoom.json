@@ -5,18 +5,19 @@
       "name":"temperature",
       "factor": 0.01
     },
-    "B": {
+    "B":{
+      "label": "Luminosity (LUX)",
+      "name": "luminosity"
+    },
+    "C":{
+      "label": "pressure",
+      "name": "pressure",
+      "factor": 10
+    },
+    "D": {
       "label": "Relative Humidity",
       "name": "humidity",
       "factor": 0.1
-    },
-    "C":{
-      "label": "Microphone",
-      "name": "microphone"
-    },
-    "D":{
-      "label": "Luminosity (LUX)",
-      "name": "luminosity"
     }
   },
   "multiLog": true,

@@ -655,6 +655,7 @@ function saveFast(entries, options) {
     }
 
     function adminDB() {
+        debug('admin DB');
         return Promise.resolve().then(createTablesFn(wdb)).then(timerStep('create tables'))
             .then(createIndexes(wdb)).then(timerStep('create indexes'))
             .then(getTableInfo(wdb)).then(timerStep('get table info'))

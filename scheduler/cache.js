@@ -51,7 +51,6 @@ Cache.prototype.start = function () {
                         doMultilogRequest(that, that.data.devices[i]);
                     }).catch(function () {
                         // TODO: Be more specific. Do this only if error is that table entry does not exist...
-                        debug('shoud go here because')
                         lastIds[that.data.devices[i].id] = 0;
                         doMultilogRequest(that, that.data.devices[i]);
                     });

@@ -5,14 +5,14 @@
       "name":"temperature_room",
       "factor": 0.01
     },
-    "B": {
-      "label": "Temperature fridge",
-      "name": "temp_fridge",
-      "factor": 0.01
-    },
-    "C":{
+    "B":{
       "label": "Temperature freezer",
       "name": "temp_freezer",
+      "factor": 0.01
+    },
+    "C": {
+      "label": "Temperature fridge",
+      "name": "temp_fridge",
       "factor": 0.01
     },
     "D":{
