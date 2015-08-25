@@ -5,10 +5,15 @@
 'use strict';
 
 var request = require('supertest');
-var app = require('../bootstrap/data-api-bootstrap');
+var server = require('../server/server');
 var data = require('./database/data');
 var dataset = require('./database/normal/dataset.json');
+var config = require('../configs/config');
 var _ = require('lodash');
+
+config.addConfiguration('dbtest');
+server.mountModules('database');
+var app = server.getExpress();
 
 var maxId = Math.max.apply(null, _.pluck(dataset.entries, 'id'));
 var lastEntry = _.filter(dataset.entries, function (e) {
