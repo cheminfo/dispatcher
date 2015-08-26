@@ -8,30 +8,32 @@ var debug = require('debug')('central'),
 
 process.chdir(path.join(__dirname, '..'));
 
-if(!cmdArgs('noDevices', false)) {
+// Initialize device communication
+if (!cmdArgs('noDevices', false)) {
     var deviceManager = require('../devices/manager');
-    deviceManager.restart().catch(function(err) {
+    deviceManager.restart().catch(function (err) {
         console.error('An error occured while restarting the device manager', err);
     });
 }
 
-
-var app = server.getExpress();
-
-// Static files
-// TODO: move this elsewhere
-app.use('/', express.static(path.join(__dirname, '../static')));
-app.use('/configs', express.static(path.join(__dirname, '../configs/plugged')));
-app.use('/devices', express.static(path.join(__dirname, '../configs/devices')));
-
 // Initialize modules
-var modules = [
-    'navview',
-    'visu',
-    'config',
-    'database',
-    {routeFile: '../routes/visu-redirect', route: '/'}
-];
+if (!cmdArgs('noInterface')) {
+    var app = server.getExpress();
 
-server.mountModules(modules);
-server.run();
+    // Static files
+    // TODO: move this elsewhere
+    app.use('/', express.static(path.join(__dirname, '../static')));
+    app.use('/configs', express.static(path.join(__dirname, '../configs/plugged')));
+    app.use('/devices', express.static(path.join(__dirname, '../configs/devices')));
+    var modules = [
+        'navview',
+        'visu',
+        'config',
+        'database',
+        'scores',
+        {routeFile: '../routes/visu-redirect', route: '/'}
+    ];
+    server.mountModules(modules);
+    server.run();
+}
+

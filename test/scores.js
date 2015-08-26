@@ -69,7 +69,7 @@ describe('Test light scores', function () {
     it('complex case', function () {
         doData(complexData);
         return data.saveFast().then(function () {
-            return scores.light('$Z');
+            return scores.luminosity('$Z');
         }).should.be.eventually.be.approximately(10, 0.0001);
     });
 });
@@ -90,3 +90,20 @@ describe('Test humidity scores', function () {
         }).should.be.eventually.be.approximately(10, 0.0001);
     });
 });
+
+//describe('Test all', function() {
+//    before(function () {
+//        return data.drop();
+//    });
+//
+//    afterEach(function () {
+//        return data.drop();
+//    });
+//
+//    it('complex case', function () {
+//        doData(complexData);
+//        return data.saveFast().then(function () {
+//            return scores.all('$Z');
+//        }).should.be.eventually.be.approximately(10, 0.0001);
+//    });
+//});

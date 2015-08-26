@@ -12,7 +12,7 @@
     },
     "C": {
       "label": "Test db param C",
-      "name":"light",
+      "name":"luminosity",
       "factor": 0.01
     }
   },

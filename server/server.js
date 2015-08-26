@@ -18,12 +18,13 @@ app.use(bodyParser.urlencoded({
     limit: serverConfig.bodyLimit
 }));
 
-
 var ipaddress = serverConfig.ipaddress || '';
 var ipValid = network.validateIp(ipaddress);
 app.set("port", serverConfig.port || 80);
 app.set("ipaddr", ipValid ? serverConfig.ipaddress : ''); // by default we listen to all the ips
 app.set("serveraddress", ipValid ? serverConfig.ipaddress : network.getMyIp() || '127.0.0.1');
+app.set('view engine', 'ejs');
+
 
 
 function getExpress() {
