@@ -12,8 +12,7 @@
     },
     "C": {
       "label": "Test db param C",
-      "name":"light",
-      "factor": 0.01
+      "name":"light"
     }
   },
   "refresh":5000,
