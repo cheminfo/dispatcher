@@ -23,10 +23,10 @@ function doData(d) {
 
 var complexData = [
     {data: [2600, 0, 40000], time: cTime},
-    {data: [2800, 450, 32500], time: moment(cTime).add(1, 'hour')},
-    {data: [3000, 650, 38000], time: moment(cTime).add(2, 'hour')},
-    {data: [10000, 1000, 400000], time: eTime},
-    {data: [10000, 1000, 400000], time: lTime}
+    {data: [2800, 4500, 32500], time: moment(cTime).add(1, 'hour')},
+    {data: [3000, 6500, 38000], time: moment(cTime).add(2, 'hour')},
+    {data: [10000, 4000, 400000], time: eTime},
+    {data: [10000, 4000, 400000], time: lTime}
 ];
 
 describe('Test temperature scores', function () {
@@ -70,6 +70,23 @@ describe('Test light scores', function () {
         doData(complexData);
         return data.saveFast().then(function () {
             return scores.light('$Z');
+        }).should.be.eventually.be.approximately(10, 0.0001);
+    });
+});
+
+describe('Test humidity scores', function () {
+    before(function () {
+        return data.drop();
+    });
+
+    afterEach(function () {
+        return data.drop();
+    });
+
+    it('complex case', function () {
+        doData(complexData);
+        return data.saveFast().then(function () {
+            return scores.humidity('$Z');
         }).should.be.eventually.be.approximately(10, 0.0001);
     });
 });
