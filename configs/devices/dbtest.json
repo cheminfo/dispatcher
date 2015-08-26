@@ -12,10 +12,11 @@
     },
     "C": {
       "label": "Test db param C",
-      "name":"light"
+      "name":"light",
+      "factor": 0.01
     }
   },
-  "refresh":5000,
+  "refresh": 5000,
   "nbParamCompact": 3,
   "multiLog": true
 }
