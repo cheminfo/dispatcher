@@ -67,7 +67,6 @@ Config.prototype.getParamByName = function (deviceId, name) {
 
 Config.prototype.getMergedDevices = function () {
     return _(this.config).pluck('devices').flatten().value();
-
 };
 
 Config.prototype.findPluggedDevice = function (id) {

@@ -18,5 +18,17 @@ router.get('/device/:device', middleware.validateParameters({name: 'device', req
 });
 
 router.get('/all', function (req, res) {
-
+    var devices = config.getMergedDevices();
+    var prom = new Array(devices.length);
+    for (var i = 0; i < devices.length; i++) {
+        prom[i] = scores.all(devices[i].id);
+    }
+    Promise.all(prom).then(function(data) {
+        for (var i = 0; i < data.length; i++) {
+            data[i].name = devices[i].id;
+        }
+        res.render('scores/scores',{teams: data});
+    }, function() {
+        res.status(400);
+    });
 });
