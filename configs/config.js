@@ -16,7 +16,7 @@ Config.prototype.addConfiguration = function (name) {
     var def = fs.readJsonSync(path.join(__dirname, 'plugged/default.json'));
     var config;
     if (!name.endsWith('.json')) name = name + '.json';
-    if(loadedConfigs[name]) {
+    if (loadedConfigs[name]) {
         debug('skip configuration ' + name + ', already exists');
         return;
     }
@@ -51,6 +51,18 @@ Config.prototype.findDeviceById = function (id) {
         }
     }
     return null;
+};
+
+Config.prototype.getParamByName = function (deviceId, name) {
+    var device = this.findDeviceById(deviceId);
+    if (!device) return null;
+    var param;
+    for (var key in device.parameters) {
+        if (device.parameters[key].name === name) {
+            param = key;
+        }
+    }
+    return param === undefined ? null : param;
 };
 
 Config.prototype.getMergedDevices = function () {
@@ -116,15 +128,9 @@ function checkPluggedDevice(conf) {
         if (!fs.existsSync(conf.sqlite.dir)) {
             // Create the directory
             debug('The sqlite directory does not exist. We will try creating it.');
-            try {
-                if (!fs.mkdirsSync(conf.sqlite.dir)) {
-                    throw new Error('Config Error: The sqlite directory ' + conf.sqlite.dir + ' does not exist and unable to create it');
-                }
-            } catch(e) {
-                console.log('aonethunoaetuh');
+            if (!fs.mkdirsSync(conf.sqlite.dir)) {
+                throw new Error('Config Error: The sqlite directory ' + conf.sqlite.dir + ' does not exist and unable to create it');
             }
-
-
         }
     }
 

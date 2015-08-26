@@ -23,38 +23,16 @@ params = params.map(function () {
 
 var d = [];
 
-
-
-function getTime(idx) {
-    var t, time = new Date('2000-01-01').getTime();
-    switch (idx) {
-        case 0:
-        case 1:
-            t = time;
-            break;
-        case 2:
-        case 3:
-            t = time + MINUTE;
-            break;
-        case 4:
-        case 5:
-            t = time + HOUR;
-            break;
-        case 6:
-            t = time + DAY;
-            break;
-        default:
-            t = time + 2 * DAY;
-            break;
-    }
-
+function getTime(time) {
+    var t = new Date(time).getTime();
     return Math.round(t / SECOND);
 }
-function toParams(v, j) {
-    var epoch = getTime(j);
+
+function toParams(v) {
+    var epoch = getTime(v.time);
     var obj = {parameters: {}, deviceId: dbName, epoch: epoch};
-    for (var i = 0; i < v.length; i++) {
-        obj.parameters[params[i]] = v[i];
+    for (var i = 0; i < v.data.length; i++) {
+        obj.parameters[params[i]] = v.data[i];
     }
     return obj;
 }

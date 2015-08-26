@@ -36,10 +36,10 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
     database.get(deviceId, options).then(function (result) {
         switch (res.locals.parameters.filter) {
             case 'chart':
-                var chart = filter.chartFromDatabaseEntries(result, res.locals.parameters.device);
+                var chart = filter.chartFromDatabaseEntries(result, deviceId);
                 return res.status(200).json(chart);
             default:
-                var data = filter.normalizeData(result, res.locals.parameters.device);
+                var data = filter.normalizeData(result, deviceId);
                 return res.status(200).json(data);
         }
 

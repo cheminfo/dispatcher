@@ -14,19 +14,33 @@ var _ = require('lodash');
 config.addConfiguration('dbtest');
 server.mountModules('database');
 var app = server.getExpress();
+var moment = require('moment');
 
 var maxId = Math.max.apply(null, _.pluck(dataset.entries, 'id'));
 var lastEntry = _.filter(dataset.entries, function (e) {
     return e.id === maxId;
 })[0];
 
+var bTime = '1999-12-31T19:00:00.0-0500';
+
 describe('REST api', function () {
     before(function() {
-        //
         data.setName('$Z');
         data.clearData();
-        data.addData([[1, 9, 3], [4, 3, 7], [6, 2, 6], [1, 1, 1], [2, 3, 4], [9, 7, 4], [1, 4, 3]]);
-        data.addData([[6, 4, 7], [0, 8, 5]]);
+        data.addData([
+            {data: [1, 9, 3], time: bTime},
+            {data: [4, 3, 7], time: bTime},
+            {data: [6, 2, 6], time: moment(bTime).add(1, 'minute')},
+            {data: [1, 1, 1], time: moment(bTime).add(1, 'minute')},
+            {data: [2, 3, 4], time: moment(bTime).add(1, 'hour')},
+            {data: [9, 7, 4], time: moment(bTime).add(1, 'hour')},
+            {data: [1, 4, 3], time: moment(bTime).add(1, 'day')}
+        ]);
+        data.addData([
+            {data: [6, 4, 7], time: bTime},
+            {data: [0, 8, 5], time: bTime}
+        ]);
+        return data.drop();
     });
 
     beforeEach(function () {

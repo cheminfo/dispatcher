@@ -3,6 +3,7 @@
 var data = require('../data');
 var dataset = require('./dataset');
 var database = require('../../../db/database');
+var moment = require('moment');
 
 function cleanEntries(entries) {
     entries.forEach(function(entry) {
@@ -11,12 +12,26 @@ function cleanEntries(entries) {
     });
 }
 
+var bTime = '1999-12-31T19:00:00.0-0500';
+
 describe('Save null values (normal save)', function() {
     before(function() {
         data.setName('dbnull');
         data.clearData();
-        data.addData([[null, null, null], [null, null, null], [6, 2, 6], [null, null, 1], [2, 3, 4], [9, null, null], [1, 4, 3],[4,null, null]]);
-        data.addData([[6, null, null], [null, 8, null]]);
+        data.addData([
+            {data: [null, null, null], time: bTime},
+            {data: [null, null, null], time: bTime},
+            {data: [6, 2, 6], time: moment(bTime).add(1, 'minute')},
+            {data: [null, null, 1], time: moment(bTime).add(1, 'minute')},
+            {data: [2, 3, 4], time: moment(bTime).add(1, 'hour')},
+            {data: [9, null, null], time: moment(bTime).add(1, 'hour')},
+            {data: [1, 4, 3], time: moment(bTime).add(1, 'day')},
+            {data: [4,null, null], time: moment(bTime).add(2, 'day')}
+        ]);
+        data.addData([
+            {data: [6, null, null], time: bTime},
+            {data: [null, 8, null], time: bTime}
+        ]);
         return Promise.resolve().then(data.drop).then(data.save);
     });
 
