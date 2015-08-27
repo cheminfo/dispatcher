@@ -12,19 +12,7 @@ var SerialQueueManager = require('../lib/SerialQueueManager'),
     path = require('path');
 
 var appconfig = config.getAppconfig();
-var caches, cachesHash, epochs, epochsHash, serialManagers, serialManagersHash, cacheDatabases;
-resetState();
-
-function resetState() {
-    debug('reset state');
-    caches = [];
-    cachesHash = {};
-    epochs = [];
-    epochsHash = {};
-    serialManagers = [];
-    serialManagersHash = {};
-    cacheDatabases = [];
-}
+var caches=[], cachesHash={}, epochs=[], epochsHash={}, serialManagers=[], serialManagersHash={}, cacheDatabases=[];
 
 
 function findDevice(id) {
@@ -73,7 +61,6 @@ function restart() {
             debug('managers stopped');
             stopCacheDatabases();
             // Reset some vars
-            resetState();
 
             // Load configuration file
             config.loadFromArgs();
