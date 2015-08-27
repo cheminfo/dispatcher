@@ -33,6 +33,9 @@ if (!cmdArgs('noInterface')) {
         'scores',
         {routeFile: '../routes/visu-redirect', route: '/'}
     ];
+    if(!(cmdArgs('noDevices'))) {
+        modules.push('devices');
+    }
     server.mountModules(modules);
     server.run();
 }
