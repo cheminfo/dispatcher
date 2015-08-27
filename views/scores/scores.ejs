@@ -10,10 +10,10 @@
     <% for(var i = 0; i < teams.length; i++) { %>
     <tr>
         <td><%= teams[i].name %> </td>
-        <td><%= teams[i].temperature === null ? 'N/A' : teams[i].temperature %></td>
-        <td><%= teams[i].luminosity === null ? 'N/A' : teams[i].luminosity %></td>
-        <td><%= teams[i].humidity === null ? 'N/A' : teams[i].humidity %></td>
-        <td><%= teams[i].total === null ? 'N/A' : teams[i].total%></td>
+        <td><%= teams[i].temperature === null ? 'N/A' : teams[i].temperature.toFixed(2) %></td>
+        <td><%= teams[i].luminosity === null ? 'N/A' : teams[i].luminosity.toFixed(2) %></td>
+        <td><%= teams[i].humidity === null ? 'N/A' : teams[i].humidity.toFixed(2) %></td>
+        <td><%= teams[i].total === null ? 'N/A' : teams[i].total.toFixed(2)%></td>
     </tr>
     <% } %>
 </table>
