@@ -15,13 +15,13 @@ exports = module.exports = router;
 var validateFilter = middleware.validateParameters({type: 'filter', name: 'filter'});
 var validateDevice = middleware.validateParameters({type: 'device', name: 'device'});
 
-router.get('/restart', function (req, res) {
-    deviceManager.restart().then(function () {
-        return res.status(200).json({ok: true});
-    }, function (err) {
-        return res.status(500).json({ok: false, message: err});
-    });
-});
+//router.get('/restart', function (req, res) {
+//    deviceManager.restart().then(function () {
+//        return res.status(200).json({ok: true});
+//    }, function (err) {
+//        return res.status(500).json({ok: false, message: err});
+//    });
+//});
 
 router.get('/status', function (req, res) {
     return res.json(deviceManager.cachesHash[device].data.status);
