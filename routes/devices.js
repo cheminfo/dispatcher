@@ -3,7 +3,9 @@
 var router = require('express').Router(),
     deviceManager = require('../devices/manager'),
     middleware = require('../middleware/common'),
-    config = require('../configs/config');
+    config = require('../configs/config'),
+    _ = require('lodash'),
+    Filter = require('../lib/filter');
 
 
 
@@ -55,9 +57,10 @@ router.get('/all/:filter', validateFilter, function (req, res) {
     // for easy display in a table
     //var entry = deviceManager.cachesHash[device].get('entry');
     var entry = {}, status = {};
-    for (var i = 0; i < caches.length; i++) {
-        entry = _.merge(entry, filter[res.locals.parameters.filter](caches[i].get('entry')));
-        status = _.merge(status, caches[i].get('status'));
+    var filter = new Filter();
+    for (var i = 0; i < deviceManager.caches.length; i++) {
+        entry = _.merge(entry, filter[res.locals.parameters.filter](deviceManager.caches[i].get('entry')));
+        status = _.merge(status, deviceManager.caches[i].get('status'));
     }
     var all = {
         config: config.getMergedDevices(),
@@ -99,7 +102,6 @@ router.post('/command',
     middleware.validateParameters([{name: 'command', required: true}, {name: 'device', required: true}]),
     function (req, res) {
         var deviceId = res.locals.parameters.device;
-        var reqManager = deviceManager.serialManagersHash[deviceId];
         var pluggedDevice = config.findPluggedDevice(deviceId);
         var prefix = pluggedDevice.findDeviceById(deviceId).prefix;
         if (!deviceId) {
@@ -107,6 +109,11 @@ router.post('/command',
         }
 
         var cmd = res.locals.parameters.command;
+        var reqManager = deviceManager.serialManagersHash[deviceId];
+        if(!reqManager) {
+            console.log('hello', deviceManager.serialManagersHash);
+            return res.status(400).json({});
+        }
         reqManager.addRequest(prefix + cmd).then(function (result) {
             return res.send(result);
         }, function () {
