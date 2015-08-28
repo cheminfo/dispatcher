@@ -1,994 +1,1004 @@
 {
   "grid": {
-	"layers": {
-	  "Default layer": {
-		"name": "Default layer"
-	  }
-	},
-	"xWidth": 10,
-	"yHeight": 10
+    "layers": {
+      "Default layer": {
+        "name": "Default layer"
+      }
+    },
+    "xWidth": 10,
+    "yHeight": 10
   },
-  "version": "2.26.3",
+  "version": "2.27.0",
   "modules": [
-	{
-	  "url": "modules/types/server_interaction/webservice_cron/",
-	  "configuration": {
-		"sections": {},
-		"groups": {
-		  "group": [
-			{
-			  "max": [
-				10
-			  ]
-			}
-		  ],
-		  "cronInfos": [
-			[
-			  {
-				"variable": "",
-				"url": "/devices/all/visualizer",
-				"datatype": "json",
-				"repeat": "20"
-			  }
-			]
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 1,
-			"top": 0
-		  },
-		  "size": {
-			"width": 47.977777767181394,
-			"height": 23.977777767181397
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "Cron get all",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": true,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 1,
-	  "vars_in": [],
-	  "actions_in": [
-		{}
-	  ],
-	  "title": "Cron get all",
-	  "vars_out": [
-		{
-		  "event": "onUpdateResult",
-		  "rel": "result",
-		  "jpath": [],
-		  "name": "data"
-		}
-	  ],
-	  "actions_out": {}
-	},
-	{
-	  "url": "modules/types/display/template-twig/",
-	  "configuration": {
-		"sections": {},
-		"groups": {
-		  "group": [
-			{
-			  "template": [
-				"<p style=\"font-size: 14px;\"><span style=\"color: red;\">Current device: </span>{{currentDevice}}</p>\n<p style=\"font-size: 14px;\"><span style=\"color: red;\">Current parameter: </span>{{currentParameter}}</p>\n\n"
-			  ]
-			}
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 93.00000200271606,
-			"top": 36.00000114440918
-		  },
-		  "size": {
-			"width": 25.977777767181397,
-			"height": 7.977777767181396
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "Currently selected",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": true,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 2,
-	  "vars_in": [
-		{
-		  "rel": "value",
-		  "name": "currentDevice"
-		},
-		{
-		  "rel": "value",
-		  "name": "currentParameter"
-		}
-	  ],
-	  "actions_in": {
-		"rel": [
-		  null
-		],
-		"name": [
-		  null
-		]
-	  },
-	  "title": "Currently selected",
-	  "vars_out": {},
-	  "actions_out": {}
-	},
-	{
-	  "url": "modules/types/server_interaction/webservice_search/",
-	  "configuration": {
-		"sections": {
-		  "postvariables": [
-			{
-			  "sections": {},
-			  "groups": {
-				"postvariables": [
-				  [
-					{
-					  "name": "device",
-					  "destination": "query",
-					  "variable": "currentDevice",
-					  "filter": "none"
-					}
-				  ]
-				]
-			  }
-			}
-		  ]
-		},
-		"groups": {
-		  "group": [
-			{
-			  "url": [
-				"/devices/command"
-			  ],
-			  "method": [
-				"POST"
-			  ],
-			  "dataType": [
-				"form"
-			  ],
-			  "showStatus": [
-				[]
-			  ],
-			  "button": [
-				[
-				  "button"
-				]
-			  ],
-			  "buttonlabel": [
-				"Send"
-			  ],
-			  "buttonlabel_exec": [
-				"Sending..."
-			  ],
-			  "onloadsearch": [
-				[]
-			  ],
-			  "debounce": [
-				0
-			  ],
-			  "resultfilter": [
-				"return data;"
-			  ],
-			  "askConfirm": [
-				[]
-			  ],
-			  "confirmText": [
-				"Are you sure?"
-			  ]
-			}
-		  ],
-		  "headers": [
-			[
-			  {}
-			]
-		  ],
-		  "searchparams": [
-			[
-			  {
-				"name": "command",
-				"destination": "query",
-				"label": "Command",
-				"fieldtype": "text"
-			  }
-			]
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 50.000002002716066,
-			"top": 36.00000114440918
-		  },
-		  "size": {
-			"width": 41.977777767181394,
-			"height": 11.977777767181397
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "Send a command to current device",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": true,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 3,
-	  "vars_in": [
-		{}
-	  ],
-	  "actions_in": [
-		{}
-	  ],
-	  "title": "Send a command to current device",
-	  "vars_out": [
-		{
-		  "event": "onSearchReturn",
-		  "rel": "results",
-		  "jpath": [],
-		  "name": "cmdResult"
-		}
-	  ],
-	  "actions_out": [
-		{
-		  "jpath": []
-		}
-	  ]
-	},
-	{
-	  "url": "modules/types/display/single_value/",
-	  "configuration": {
-		"sections": {},
-		"groups": {
-		  "group": [
-			{
-			  "defaultvalue": [
-				null
-			  ],
-			  "fontcolor": [
-				[
-				  0,
-				  0,
-				  0,
-				  1
-				]
-			  ],
-			  "font": [
-				null
-			  ],
-			  "fontsize": [
-				null
-			  ],
-			  "align": [
-				"left"
-			  ],
-			  "valign": [
-				null
-			  ],
-			  "sprintf": [
-				null
-			  ],
-			  "sprintfOrder": [
-				null
-			  ],
-			  "preformatted": [
-				[
-				  "pre"
-				]
-			  ],
-			  "append": [
-				null
-			  ],
-			  "maxEntries": [
-				null
-			  ]
-			}
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 50.000002002716066,
-			"top": 49.00000114440918
-		  },
-		  "size": {
-			"width": 41.977777767181394,
-			"height": 30.977777767181397
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "Untitled",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": true,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 4,
-	  "vars_in": [
-		{
-		  "rel": "value",
-		  "name": "cmdResult"
-		}
-	  ],
-	  "actions_in": {
-		"rel": [
-		  null
-		],
-		"name": [
-		  null
-		]
-	  },
-	  "title": "Untitled",
-	  "vars_out": {},
-	  "actions_out": {}
-	},
-	{
-	  "url": "modules/types/client_interaction/code_executor/",
-	  "configuration": {
-		"sections": {},
-		"groups": {
-		  "group": [
-			{
-			  "display": [
-				[
-				  "editor",
-				  "buttons"
-				]
-			  ],
-			  "execOnLoad": [
-				[]
-			  ],
-			  "script": [
-				"var data = this.get('data');\n\nvar config = data.config;\nconsole.log(data, config);\nthis.set('config', config);\n"
-			  ]
-			}
-		  ],
-		  "libs": [
-			[
-			  {}
-			]
-		  ],
-		  "buttons": [
-			[
-			  {
-				"name": "button1",
-				"label": "Execute"
-			  }
-			]
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 0,
-			"top": 25.000000762939454
-		  },
-		  "size": {
-			"width": 48.977777767181394,
-			"height": 15.977777767181397
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": true,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 5,
-	  "vars_in": [
-		{
-		  "rel": "inputValue",
-		  "name": "data"
-		}
-	  ],
-	  "actions_in": [
-		{}
-	  ],
-	  "title": "",
-	  "vars_out": [
-		{
-		  "event": "onScriptEnded",
-		  "rel": "outputValue",
-		  "jpath": [
-			"config"
-		  ],
-		  "name": "config"
-		}
-	  ],
-	  "actions_out": []
-	},
-	{
-	  "url": "modules/types/edition/slick_grid/",
-	  "configuration": {
-		"sections": {},
-		"groups": {
-		  "group": [
-			{
-			  "slickCheck": [
-				[
-				  "enableCellNavigation",
-				  "rowNumbering",
-				  "forceFitColumns",
-				  "highlightScroll",
-				  "autoFocus",
-				  "editable"
-				]
-			  ],
-			  "autoColumns": [
-				[]
-			  ],
-			  "toolbar": [
-				[]
-			  ],
-			  "colorjpath": [
-				[]
-			  ],
-			  "slick.defaultColumnWidth": [
-				null
-			  ],
-			  "slick.rowHeight": [
-				null
-			  ],
-			  "slick.selectionModel": [
-				"row"
-			  ],
-			  "filterRow": [
-				null
-			  ],
-			  "justInTimeFilter": [
-				[]
-			  ]
-			}
-		  ],
-		  "cols": [
-			[
-			  {
-				"name": "id",
-				"jpath": [
-				  "id"
-				],
-				"editor": "none",
-				"formatter": "typerenderer"
-			  },
-			  {
-				"name": "description",
-				"jpath": [
-				  "description"
-				],
-				"editor": "none",
-				"formatter": "typerenderer"
-			  }
-			]
-		  ],
-		  "groupings": [
-			[
-			  {
-				"getter": []
-			  }
-			]
-		  ],
-		  "actionOutButtons": [
-			[
-			  {}
-			]
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 50.000002002716066,
-			"top": 0
-		  },
-		  "size": {
-			"width": 27.977777767181397,
-			"height": 34.977777767181394
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": true,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 6,
-	  "vars_in": [
-		{
-		  "rel": "list",
-		  "name": "config"
-		}
-	  ],
-	  "actions_in": [
-		{}
-	  ],
-	  "title": "",
-	  "vars_out": [
-		{
-		  "event": "onSelect",
-		  "rel": "row",
-		  "jpath": [
-			"id"
-		  ],
-		  "name": "currentDevice"
-		},
-		{
-		  "event": "onSelect",
-		  "rel": "row",
-		  "jpath": [
-			"parameters"
-		  ],
-		  "name": "currentParameters"
-		}
-	  ],
-	  "actions_out": [
-		{
-		  "event": "onSelect",
-		  "rel": "row",
-		  "jpath": [],
-		  "name": "triggerDeviceStatus"
-		}
-	  ]
-	},
-	{
-	  "url": "modules/types/edition/slick_grid/",
-	  "configuration": {
-		"sections": {},
-		"groups": {
-		  "group": [
-			{
-			  "slickCheck": [
-				[
-				  "enableCellNavigation",
-				  "rowNumbering",
-				  "forceFitColumns",
-				  "highlightScroll"
-				]
-			  ],
-			  "autoColumns": [
-				[]
-			  ],
-			  "toolbar": [
-				[]
-			  ],
-			  "colorjpath": [
-				[]
-			  ],
-			  "slick.defaultColumnWidth": [
-				null
-			  ],
-			  "slick.rowHeight": [
-				null
-			  ],
-			  "slick.selectionModel": [
-				"row"
-			  ],
-			  "filterRow": [
-				null
-			  ],
-			  "justInTimeFilter": [
-				[]
-			  ]
-			}
-		  ],
-		  "cols": [
-			[
-			  {
-				"jpath": [],
-				"editor": "none",
-				"formatter": "typerenderer"
-			  }
-			]
-		  ],
-		  "groupings": [
-			[
-			  {
-				"getter": []
-			  }
-			]
-		  ],
-		  "actionOutButtons": [
-			[
-			  {}
-			]
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 79.00000200271606,
-			"top": 0
-		  },
-		  "size": {
-			"width": 39.977777767181394,
-			"height": 34.977777767181394
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": true,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 7,
-	  "vars_in": [
-		{
-		  "rel": "list",
-		  "name": "params"
-		}
-	  ],
-	  "actions_in": [
-		{}
-	  ],
-	  "title": "",
-	  "vars_out": [
-		{
-		  "event": "onSelect",
-		  "rel": "row",
-		  "jpath": [
-			"param"
-		  ],
-		  "name": "currentParameter"
-		}
-	  ],
-	  "actions_out": [
-		{
-		  "jpath": []
-		}
-	  ]
-	},
-	{
-	  "url": "modules/types/client_interaction/code_executor/",
-	  "configuration": {
-		"sections": {},
-		"groups": {
-		  "group": [
-			{
-			  "display": [
-				[
-				  "editor",
-				  "buttons"
-				]
-			  ],
-			  "execOnLoad": [
-				[]
-			  ],
-			  "script": [
-				"var params = this.get('currentParameters');\n\n// Convert to array to display in table\n\nvar arr = [];\nvar count = 0;\nfor(var key in params) {\n    arr[count] = params[key];\n    arr[count].param = key;\n    ++count;\n}\n\nthis.set('params', arr);"
-			  ]
-			}
-		  ],
-		  "libs": [
-			[
-			  {}
-			]
-		  ],
-		  "buttons": [
-			[
-			  {
-				"name": "button1",
-				"label": "Execute"
-			  }
-			]
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 0,
-			"top": 42.00000114440918
-		  },
-		  "size": {
-			"width": 48.977777767181394,
-			"height": 37.977777767181394
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": true,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 8,
-	  "vars_in": [
-		{
-		  "rel": "inputValue",
-		  "name": "currentParameters"
-		}
-	  ],
-	  "actions_in": [
-		{}
-	  ],
-	  "title": "",
-	  "vars_out": [
-		{
-		  "event": "onScriptEnded",
-		  "rel": "outputValue",
-		  "jpath": [
-			"params"
-		  ],
-		  "name": "params"
-		}
-	  ],
-	  "actions_out": []
-	},
-	{
-	  "url": "modules/types/edition/object_editor/",
-	  "configuration": {
-		"sections": {},
-		"groups": {
-		  "group": [
-			{
-			  "editable": [
-				"view"
-			  ],
-			  "expanded": [
-				[]
-			  ],
-			  "storeObject": [
-				[]
-			  ],
-			  "displayValue": [
-				[]
-			  ],
-			  "output": [
-				"new"
-			  ],
-			  "storedObject": [
-				"{}"
-			  ]
-			}
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 93.00000200271606,
-			"top": 45.00000114440918
-		  },
-		  "size": {
-			"width": 25.977777767181397,
-			"height": 34.977777767181394
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "Current device status",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": true,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 9,
-	  "vars_in": [
-		{
-		  "rel": "value",
-		  "name": "status"
-		}
-	  ],
-	  "actions_in": [
-		{}
-	  ],
-	  "vars_out": [
-		{
-		  "jpath": []
-		}
-	  ],
-	  "title": "Current device status",
-	  "actions_out": []
-	},
-	{
-	  "url": "modules/types/server_interaction/webservice_search/",
-	  "configuration": {
-		"sections": {
-		  "postvariables": [
-			{
-			  "sections": {},
-			  "groups": {
-				"postvariables": [
-				  [
-					{
-					  "name": "device",
-					  "destination": "url",
-					  "variable": "currentDevice",
-					  "filter": "none"
-					}
-				  ]
-				]
-			  }
-			}
-		  ]
-		},
-		"groups": {
-		  "group": [
-			{
-			  "url": [
-				"/devices/status/{device}"
-			  ],
-			  "method": [
-				"GET"
-			  ],
-			  "dataType": [
-				"form"
-			  ],
-			  "showStatus": [
-				[]
-			  ],
-			  "button": [
-				[
-				  "button"
-				]
-			  ],
-			  "buttonlabel": [
-				"Get current device status"
-			  ],
-			  "buttonlabel_exec": [
-				"Sending..."
-			  ],
-			  "onloadsearch": [
-				[]
-			  ],
-			  "debounce": [
-				0
-			  ],
-			  "resultfilter": [
-				"return data;"
-			  ],
-			  "askConfirm": [
-				[]
-			  ],
-			  "confirmText": [
-				"Are you sure?"
-			  ]
-			}
-		  ],
-		  "headers": [
-			[
-			  {}
-			]
-		  ],
-		  "searchparams": [
-			[
-			  {
-				"destination": "url",
-				"fieldtype": "text"
-			  }
-			]
-		  ]
-		}
-	  },
-	  "layers": {
-		"Default layer": {
-		  "position": {
-			"left": 102,
-			"top": 75
-		  },
-		  "size": {
-			"width": 42,
-			"height": 12
-		  },
-		  "zIndex": 0,
-		  "display": true,
-		  "title": "Send a command to current device",
-		  "bgColor": [
-			255,
-			255,
-			255,
-			0
-		  ],
-		  "wrapper": false,
-		  "created": true,
-		  "name": "Default layer"
-		}
-	  },
-	  "id": 10,
-	  "vars_in": [
-		{}
-	  ],
-	  "actions_in": [
-		{
-		  "rel": "doSearch",
-		  "name": "triggerDeviceStatus"
-		}
-	  ],
-	  "title": "Send a command to current device",
-	  "vars_out": [
-		{
-		  "event": "onSearchReturn",
-		  "rel": "results",
-		  "jpath": [],
-		  "name": "status"
-		}
-	  ],
-	  "actions_out": [
-		{
-		  "jpath": []
-		}
-	  ]
-	}
+    {
+      "url": "modules/types/server_interaction/webservice_cron/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "max": [
+                10
+              ]
+            }
+          ],
+          "cronInfos": [
+            [
+              {
+                "variable": "a",
+                "url": "../devices/all/visualizer",
+                "datatype": "json",
+                "repeat": "20"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 1,
+            "top": 0
+          },
+          "size": {
+            "width": 48,
+            "height": 24
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Cron get all",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 1,
+      "vars_in": [],
+      "actions_in": [
+        {}
+      ],
+      "title": "Cron get all",
+      "vars_out": [
+        {
+          "event": "onUpdateResult",
+          "rel": "result",
+          "jpath": [],
+          "name": "data"
+        }
+      ],
+      "actions_out": {},
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/display/template-twig/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "template": [
+                "<p style=\"font-size: 14px;\"><span style=\"color: red;\">Current device: </span>{{currentDevice}}</p>\n<p style=\"font-size: 14px;\"><span style=\"color: red;\">Current parameter: </span>{{currentParameter}}</p>\n\n"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 93.00000200271606,
+            "top": 36.00000114440918
+          },
+          "size": {
+            "width": 26,
+            "height": 8
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Currently selected",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 2,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "currentDevice"
+        },
+        {
+          "rel": "value",
+          "name": "currentParameter"
+        }
+      ],
+      "actions_in": {
+        "rel": [
+          null
+        ],
+        "name": [
+          null
+        ]
+      },
+      "title": "Currently selected",
+      "vars_out": {},
+      "actions_out": {},
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/server_interaction/webservice_search/",
+      "configuration": {
+        "sections": {
+          "postvariables": [
+            {
+              "sections": {},
+              "groups": {
+                "postvariables": [
+                  [
+                    {
+                      "name": "device",
+                      "destination": "query",
+                      "variable": "currentDevice",
+                      "filter": "none"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "groups": {
+          "group": [
+            {
+              "url": [
+                "../devices/command"
+              ],
+              "method": [
+                "POST"
+              ],
+              "dataType": [
+                "form"
+              ],
+              "showStatus": [
+                []
+              ],
+              "button": [
+                [
+                  "button"
+                ]
+              ],
+              "buttonlabel": [
+                "Send"
+              ],
+              "buttonlabel_exec": [
+                "Sending..."
+              ],
+              "onloadsearch": [
+                []
+              ],
+              "debounce": [
+                0
+              ],
+              "resultfilter": [
+                "return data;"
+              ],
+              "askConfirm": [
+                []
+              ],
+              "confirmText": [
+                "Are you sure?"
+              ]
+            }
+          ],
+          "headers": [
+            [
+              {}
+            ]
+          ],
+          "searchparams": [
+            [
+              {
+                "name": "command",
+                "destination": "query",
+                "label": "Command",
+                "fieldtype": "text"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 50.000002002716066,
+            "top": 36.00000114440918
+          },
+          "size": {
+            "width": 42,
+            "height": 12
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Send a command to current device",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 3,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "Send a command to current device",
+      "vars_out": [
+        {
+          "event": "onSearchReturn",
+          "rel": "results",
+          "jpath": [],
+          "name": "cmdResult"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/display/single_value/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "defaultvalue": [
+                null
+              ],
+              "fontcolor": [
+                [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "font": [
+                null
+              ],
+              "fontsize": [
+                null
+              ],
+              "align": [
+                "left"
+              ],
+              "valign": [
+                null
+              ],
+              "sprintf": [
+                null
+              ],
+              "sprintfOrder": [
+                null
+              ],
+              "preformatted": [
+                [
+                  "pre"
+                ]
+              ],
+              "append": [
+                null
+              ],
+              "maxEntries": [
+                null
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 50.000002002716066,
+            "top": 49.00000114440918
+          },
+          "size": {
+            "width": 42,
+            "height": 31
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Untitled",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 4,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "cmdResult"
+        }
+      ],
+      "actions_in": {
+        "rel": [
+          null
+        ],
+        "name": [
+          null
+        ]
+      },
+      "title": "Untitled",
+      "vars_out": {},
+      "actions_out": {},
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "script": [
+                "var data = this.get('data');\n\nvar config = data.config;\nconsole.log(data, config);\nthis.set('config', config);\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 25.000000762939454
+          },
+          "size": {
+            "width": 49,
+            "height": 16
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 5,
+      "vars_in": [
+        {
+          "rel": "inputValue",
+          "name": "data"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "vars_out": [
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "config"
+          ],
+          "name": "config"
+        }
+      ],
+      "actions_out": [],
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll",
+                  "autoFocus",
+                  "editable"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "filterRow": [
+                null
+              ],
+              "justInTimeFilter": [
+                []
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "name": "id",
+                "jpath": [
+                  "id"
+                ],
+                "editor": "none",
+                "formatter": "typerenderer"
+              },
+              {
+                "name": "description",
+                "jpath": [
+                  "description"
+                ],
+                "editor": "none",
+                "formatter": "typerenderer"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 50.000002002716066,
+            "top": 0
+          },
+          "size": {
+            "width": 28,
+            "height": 35
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 6,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "config"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "vars_out": [
+        {
+          "event": "onSelect",
+          "rel": "row",
+          "jpath": [
+            "id"
+          ],
+          "name": "currentDevice"
+        },
+        {
+          "event": "onSelect",
+          "rel": "row",
+          "jpath": [
+            "parameters"
+          ],
+          "name": "currentParameters"
+        }
+      ],
+      "actions_out": [
+        {
+          "event": "onSelect",
+          "rel": "row",
+          "jpath": [],
+          "name": "triggerDeviceStatus"
+        }
+      ],
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "filterRow": [
+                null
+              ],
+              "justInTimeFilter": [
+                []
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "jpath": [],
+                "editor": "none",
+                "formatter": "typerenderer"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 79.00000200271606,
+            "top": 0
+          },
+          "size": {
+            "width": 40,
+            "height": 35
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 7,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "params"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "vars_out": [
+        {
+          "event": "onSelect",
+          "rel": "row",
+          "jpath": [
+            "param"
+          ],
+          "name": "currentParameter"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "script": [
+                "var params = this.get('currentParameters');\n\n// Convert to array to display in table\n\nvar arr = [];\nvar count = 0;\nfor(var key in params) {\n    arr[count] = params[key];\n    arr[count].param = key;\n    ++count;\n}\n\nthis.set('params', arr);"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 42.00000114440918
+          },
+          "size": {
+            "width": 49,
+            "height": 38
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 8,
+      "vars_in": [
+        {
+          "rel": "inputValue",
+          "name": "currentParameters"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "vars_out": [
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "params"
+          ],
+          "name": "params"
+        }
+      ],
+      "actions_out": [],
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/edition/object_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                "view"
+              ],
+              "expanded": [
+                []
+              ],
+              "storeObject": [
+                []
+              ],
+              "displayValue": [
+                []
+              ],
+              "output": [
+                "new"
+              ],
+              "storedObject": [
+                "{}"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 93,
+            "top": 45
+          },
+          "size": {
+            "width": 26,
+            "height": 35
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Current device status",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 9,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "status"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "Current device status",
+      "actions_out": [],
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/server_interaction/webservice_search/",
+      "configuration": {
+        "sections": {
+          "postvariables": [
+            {
+              "sections": {},
+              "groups": {
+                "postvariables": [
+                  [
+                    {
+                      "name": "device",
+                      "destination": "url",
+                      "variable": "currentDevice",
+                      "filter": "none"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "groups": {
+          "group": [
+            {
+              "url": [
+                "../devices/status/{device}"
+              ],
+              "method": [
+                "GET"
+              ],
+              "dataType": [
+                "form"
+              ],
+              "showStatus": [
+                []
+              ],
+              "button": [
+                [
+                  "button"
+                ]
+              ],
+              "buttonlabel": [
+                "Get current device status"
+              ],
+              "buttonlabel_exec": [
+                "Sending..."
+              ],
+              "onloadsearch": [
+                []
+              ],
+              "debounce": [
+                0
+              ],
+              "resultfilter": [
+                "return data;"
+              ],
+              "askConfirm": [
+                []
+              ],
+              "confirmText": [
+                "Are you sure?"
+              ]
+            }
+          ],
+          "headers": [
+            [
+              {}
+            ]
+          ],
+          "searchparams": [
+            [
+              {
+                "destination": "url",
+                "fieldtype": "text"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 102,
+            "top": 75
+          },
+          "size": {
+            "width": 42,
+            "height": 12
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Send a command to current device",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 10,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {
+          "rel": "doSearch",
+          "name": "triggerDeviceStatus"
+        }
+      ],
+      "title": "Send a command to current device",
+      "vars_out": [
+        {
+          "event": "onSearchReturn",
+          "rel": "results",
+          "jpath": [],
+          "name": "status"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "zindex": 10
+    }
   ],
   "variables": [
-	{
-	  "varname": "param",
-	  "jpath": [
-		"param"
-	  ]
-	}
+    {
+      "varname": "param",
+      "jpath": [
+        "param"
+      ]
+    }
   ],
   "pouchvariables": [],
   "configuration": {
-	"title": "No title"
+    "title": "No title"
   },
   "aliases": []
 }

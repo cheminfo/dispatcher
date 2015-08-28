@@ -992,7 +992,7 @@
 					"group": [
 						{
 							"url": [
-								"/database/{device}"
+								"../database/{device}"
 							],
 							"method": [
 								"GET"

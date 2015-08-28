@@ -1,4 +1,5 @@
 {
     "config": "default",
-    "view": "admin"
+    "view": "plotter",
+    "useLactame": true
 }

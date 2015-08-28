@@ -1,526 +1,536 @@
 {
-	"version": "2.26.3",
-	"grid": {
-		"layers": {
-			"Default layer": {
-				"name": "Default layer"
-			}
-		},
-		"xWidth": 10,
-		"yHeight": 10
-	},
-	"modules": [
-		{
-			"url": "modules/types/science/spectra/spectra_displayer/",
-			"configuration": {
-				"sections": {},
-				"groups": {
-					"group": [
-						{
-							"graphurl": [
-								""
-							],
-							"flip": [
-								[]
-							],
-							"displayAxis": [
-								[
-									"y",
-									"x"
-								]
-							],
-							"grids": [
-								[
-									"hmain"
-								]
-							],
-							"xLabel": [
-								""
-							],
-							"yTopSpacing": [
-								0
-							],
-							"yBottomSpacing": [
-								0
-							],
-							"xLeftSpacing": [
-								0
-							],
-							"xRightSpacing": [
-								0
-							],
-							"yLabel": [
-								""
-							],
-							"minX": [
-								""
-							],
-							"maxX": [
-								""
-							],
-							"minY": [
-								""
-							],
-							"maxY": [
-								""
-							],
-							"zoom": [
-								"x"
-							],
-							"shiftxtozero": [
-								[]
-							],
-							"xaxismodification": [
-								"timestamptotime"
-							],
-							"wheelAction": [
-								"none"
-							],
-							"wheelbaseline": [
-								0
-							],
-							"fullOut": [
-								"both"
-							],
-							"FitYToAxisOnFromTo": [
-								[]
-							],
-							"legend": [
-								"topright"
-							],
-							"mouseTracking": [
-								[]
-							],
-							"selectScatter": [
-								[]
-							]
-						}
-					],
-					"plotinfos": [
-						[
-							{
-								"variable": "searchResult",
-								"plotcolor": [
-									1,
-									1,
-									255,
-									1
-								],
-								"strokewidth": "1",
-								"strokestyle": "1",
-								"plotcontinuous": "continuous",
-								"peakpicking": [],
-								"markers": [
-									"markers"
-								],
-								"markerShape": "1",
-								"markerSize": 2,
-								"normalize": "none",
-								"optimizeSlots": [
-									"slots"
-								],
-								"degrade": 0,
-								"monotoneous": []
-							}
-						]
-					]
-				}
-			},
-			"layers": {
-				"Default layer": {
-					"position": {
-						"left": 38,
-						"top": 0
-					},
-					"size": {
-						"width": 72,
-						"height": 55
-					},
-					"zIndex": 0,
-					"display": true,
-					"title": "Untitled",
-					"bgColor": [
-						255,
-						255,
-						255,
-						0
-					],
-					"wrapper": true,
-					"created": true,
-					"name": "Default layer"
-				}
-			},
-			"id": 14,
-			"vars_in": [
-				{
-					"rel": "chart",
-					"name": "searchResult"
-				}
-			],
-			"actions_in": [
-				{}
-			],
-			"title": "Untitled",
-			"vars_out": [
-				{
-					"jpath": []
-				}
-			],
-			"actions_out": [
-				{
-					"jpath": []
-				}
-			]
-		},
-		{
-			"url": "modules/types/edition/object_editor/",
-			"configuration": {
-				"sections": {},
-				"groups": {
-					"group": [
-						{
-							"editable": [
-								"view"
-							],
-							"expanded": [
-								[]
-							],
-							"storeObject": [
-								[]
-							],
-							"output": [
-								"new"
-							],
-							"storedObject": [
-								"{}"
-							]
-						}
-					]
-				}
-			},
-			"layers": {
-				"Default layer": {
-					"position": {
-						"left": 0,
-						"top": 0
-					},
-					"size": {
-						"width": 37,
-						"height": 28
-					},
-					"zIndex": 0,
-					"display": true,
-					"title": "Untitled",
-					"bgColor": [
-						255,
-						255,
-						255,
-						0
-					],
-					"wrapper": true,
-					"created": true,
-					"name": "Default layer"
-				}
-			},
-			"id": 15,
-			"vars_in": [
-				{
-					"rel": "value",
-					"name": "searchResult"
-				}
-			],
-			"actions_in": {},
-			"vars_out": [
-				{
-					"jpath": []
-				}
-			],
-			"title": "Untitled",
-			"actions_out": {}
-		},
-		{
-			"url": "modules/types/server_interaction/webservice_search/",
-			"configuration": {
-				"sections": {
-					"postvariables": [
-						{
-							"sections": {},
-							"groups": {
-								"postvariables": [
-									[
-										{
-											"destination": "data",
-											"filter": "none"
-										}
-									]
-								]
-							}
-						}
-					]
-				},
-				"groups": {
-					"group": [
-						{
-							"url": [
-								"/database/{device}?filter=chart"
-							],
-							"method": [
-								"GET"
-							],
-							"dataType": [
-								"form"
-							],
-							"showStatus": [
-								[]
-							],
-							"button": [
-								[
-									"button"
-								]
-							],
-							"buttonlabel": [
-								"GET"
-							],
-							"buttonlabel_exec": [
-								"Getting data..."
-							],
-							"onloadsearch": [
-								[
-									"button"
-								]
-							],
-							"debounce": [
-								0
-							],
-							"resultfilter": [
-								"return data;"
-							],
-							"askConfirm": [
-								[]
-							],
-							"confirmText": [
-								"Are you sure?"
-							]
-						}
-					],
-					"headers": [
-						[
-							{}
-						]
-					],
-					"searchparams": [
-						[
-							{
-								"name": "device",
-								"destination": "url",
-								"label": "Device (zigbee id)",
-								"defaultvalue": "$H",
-								"fieldtype": "text"
-							},
-							{
-								"name": "limit",
-								"destination": "query",
-								"label": "Limit",
-								"defaultvalue": "100",
-								"fieldtype": "text"
-							},
-							{
-								"name": "fields",
-								"destination": "query",
-								"label": "Fields (comma-separated)",
-								"defaultvalue": "A",
-								"fieldtype": "text"
-							},
-							{
-								"name": "mean",
-								"destination": "query",
-								"label": "Time scale",
-								"defaultvalue": "entry",
-								"fieldtype": "combo",
-								"fieldoptions": "entry:Entry;minute:Minute;hour:Hour;day:Day"
-							}
-						]
-					]
-				}
-			},
-			"layers": {
-				"Default layer": {
-					"position": {
-						"left": 0,
-						"top": 29
-					},
-					"size": {
-						"width": 37,
-						"height": 26
-					},
-					"zIndex": 0,
-					"display": true,
-					"title": "Untitled",
-					"bgColor": [
-						255,
-						255,
-						255,
-						0
-					],
-					"wrapper": true,
-					"created": true,
-					"name": "Default layer"
-				}
-			},
-			"id": 16,
-			"vars_in": [
-				{}
-			],
-			"actions_in": [
-				{
-					"rel": "doSearch",
-					"name": "updateSearch"
-				}
-			],
-			"title": "Untitled",
-			"vars_out": [
-				{
-					"event": "onSearchReturn",
-					"rel": "results",
-					"jpath": [],
-					"name": "searchResult"
-				}
-			],
-			"actions_out": [
-				{
-					"jpath": []
-				}
-			]
-		}
-	],
-	"variables": [
-		{
-			"jpath": [
-				""
-			]
-		}
-	],
-	"pouchvariables": [
-		{}
-	],
-	"configuration": {
-		"title": "No title"
-	},
-	"actionscripts": [
-		{
-			"sections": {},
-			"groups": {
-				"action": [
-					{
-						"name": [
-							null
-						],
-						"script": [
-							null
-						]
-					}
-				]
-			}
-		}
-	],
-	"crons": [
-		{}
-	],
-	"couch_replication": [
-		{
-			"sections": {},
-			"groups": {
-				"couch": [
-					[
-						{
-							"direction": "both",
-							"continuous": []
-						}
-					]
-				]
-			}
-		}
-	],
-	"init_script": [
-		{
-			"sections": {},
-			"groups": {
-				"general": [
-					{
-						"script": [
-							"setInterval(function(){\n    API.doAction('updateSearch');\n} , 50000);\n"
-						]
-					}
-				]
-			}
-		}
-	],
-	"actionfiles": [
-		{
-			"sections": {},
-			"groups": {
-				"action": [
-					[
-						{}
-					]
-				]
-			}
-		}
-	],
-	"aliases": [
-		{}
-	],
-	"custom_filters": [
-		{
-			"sections": {
-				"modules": [
-					{
-						"sections": {},
-						"groups": {
-							"modules": [
-								[
-									{}
-								]
-							]
-						}
-					}
-				],
-				"filtersLib": [
-					{
-						"sections": {},
-						"groups": {
-							"filters": [
-								[
-									{}
-								]
-							]
-						}
-					}
-				],
-				"filters": [
-					{
-						"sections": {},
-						"groups": {
-							"filter": [
-								{
-									"name": [
-										null
-									],
-									"script": [
-										null
-									]
-								}
-							],
-							"libs": [
-								[
-									{}
-								]
-							]
-						}
-					}
-				]
-			},
-			"groups": {}
-		}
-	]
+  "version": "2.27.0",
+  "grid": {
+    "layers": {
+      "Default layer": {
+        "name": "Default layer"
+      }
+    },
+    "xWidth": 10,
+    "yHeight": 10
+  },
+  "modules": [
+    {
+      "url": "modules/types/science/spectra/spectra_displayer/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "graphurl": [
+                ""
+              ],
+              "flip": [
+                []
+              ],
+              "displayAxis": [
+                [
+                  "y",
+                  "x"
+                ]
+              ],
+              "grids": [
+                [
+                  "hmain"
+                ]
+              ],
+              "xLabel": [
+                ""
+              ],
+              "yTopSpacing": [
+                0
+              ],
+              "yBottomSpacing": [
+                0
+              ],
+              "xLeftSpacing": [
+                0
+              ],
+              "xRightSpacing": [
+                0
+              ],
+              "yLabel": [
+                ""
+              ],
+              "minX": [
+                ""
+              ],
+              "maxX": [
+                ""
+              ],
+              "minY": [
+                ""
+              ],
+              "maxY": [
+                ""
+              ],
+              "zoom": [
+                "x"
+              ],
+              "shiftxtozero": [
+                []
+              ],
+              "xaxismodification": [
+                "timestamptotime"
+              ],
+              "wheelAction": [
+                "none"
+              ],
+              "wheelbaseline": [
+                0
+              ],
+              "fullOut": [
+                "both"
+              ],
+              "FitYToAxisOnFromTo": [
+                []
+              ],
+              "legend": [
+                "topright"
+              ],
+              "mouseTracking": [
+                []
+              ],
+              "selectScatter": [
+                []
+              ]
+            }
+          ],
+          "plotinfos": [
+            [
+              {
+                "variable": "searchResult",
+                "plotcolor": [
+                  1,
+                  1,
+                  255,
+                  1
+                ],
+                "strokewidth": "1",
+                "strokestyle": "1",
+                "plotcontinuous": "continuous",
+                "peakpicking": [],
+                "markers": [
+                  "markers"
+                ],
+                "markerShape": "1",
+                "markerSize": 2,
+                "normalize": "none",
+                "optimizeSlots": [
+                  "slots"
+                ],
+                "degrade": 0,
+                "monotoneous": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 38,
+            "top": 0
+          },
+          "size": {
+            "width": 72,
+            "height": 55
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Untitled",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 1,
+      "vars_in": [
+        {
+          "rel": "chart",
+          "name": "searchResult"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "Untitled",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/object_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                "view"
+              ],
+              "expanded": [
+                []
+              ],
+              "storeObject": [
+                []
+              ],
+              "output": [
+                "new"
+              ],
+              "storedObject": [
+                "{}"
+              ],
+              "displayValue": [
+                null
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 37,
+            "height": 28
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Untitled",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 2,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "searchResult"
+        }
+      ],
+      "actions_in": {
+        "rel": [
+          null
+        ],
+        "name": [
+          null
+        ]
+      },
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "Untitled",
+      "actions_out": {}
+    },
+    {
+      "url": "modules/types/server_interaction/webservice_search/",
+      "configuration": {
+        "sections": {
+          "postvariables": [
+            {
+              "sections": {},
+              "groups": {
+                "postvariables": [
+                  [
+                    {
+                      "destination": "data",
+                      "filter": "none"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "groups": {
+          "group": [
+            {
+              "url": [
+                "../database/{device}?filter=chart"
+              ],
+              "method": [
+                "GET"
+              ],
+              "dataType": [
+                "form"
+              ],
+              "showStatus": [
+                []
+              ],
+              "button": [
+                [
+                  "button"
+                ]
+              ],
+              "buttonlabel": [
+                "GET"
+              ],
+              "buttonlabel_exec": [
+                "Getting data..."
+              ],
+              "onloadsearch": [
+                [
+                  "button"
+                ]
+              ],
+              "debounce": [
+                0
+              ],
+              "resultfilter": [
+                "return data;"
+              ],
+              "askConfirm": [
+                []
+              ],
+              "confirmText": [
+                "Are you sure?"
+              ]
+            }
+          ],
+          "headers": [
+            [
+              {}
+            ]
+          ],
+          "searchparams": [
+            [
+              {
+                "name": "device",
+                "destination": "url",
+                "label": "Device (zigbee id)",
+                "defaultvalue": "$H",
+                "fieldtype": "text"
+              },
+              {
+                "name": "limit",
+                "destination": "query",
+                "label": "Limit",
+                "defaultvalue": "100",
+                "fieldtype": "text"
+              },
+              {
+                "name": "fields",
+                "destination": "query",
+                "label": "Fields (comma-separated)",
+                "defaultvalue": "A",
+                "fieldtype": "text"
+              },
+              {
+                "name": "mean",
+                "destination": "query",
+                "label": "Time scale",
+                "defaultvalue": "entry",
+                "fieldtype": "combo",
+                "fieldoptions": "entry:Entry;minute:Minute;hour:Hour;day:Day"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 29
+          },
+          "size": {
+            "width": 37,
+            "height": 26
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Untitled",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 3,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {
+          "rel": "doSearch",
+          "name": "updateSearch"
+        }
+      ],
+      "title": "Untitled",
+      "vars_out": [
+        {
+          "event": "onSearchReturn",
+          "rel": "results",
+          "jpath": [],
+          "name": "searchResult"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "jpath": [
+        ""
+      ]
+    }
+  ],
+  "pouchvariables": [
+    {}
+  ],
+  "configuration": {
+    "title": "No title"
+  },
+  "actionscripts": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          {
+            "name": [
+              null
+            ],
+            "script": [
+              null
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "crons": [
+    {}
+  ],
+  "couch_replication": [
+    {
+      "sections": {},
+      "groups": {
+        "couch": [
+          [
+            {
+              "direction": "both",
+              "continuous": []
+            }
+          ]
+        ]
+      }
+    }
+  ],
+  "init_script": [
+    {
+      "sections": {},
+      "groups": {
+        "general": [
+          {
+            "script": [
+              "setInterval(function(){\n    API.doAction('updateSearch');\n} , 50000);\n"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "actionfiles": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          [
+            {}
+          ]
+        ]
+      }
+    }
+  ],
+  "aliases": [
+    {}
+  ],
+  "custom_filters": [
+    {
+      "sections": {
+        "modules": [
+          {
+            "sections": {},
+            "groups": {
+              "modules": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filtersLib": [
+          {
+            "sections": {},
+            "groups": {
+              "filters": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filters": [
+          {
+            "sections": {},
+            "groups": {
+              "filter": [
+                {
+                  "name": [
+                    null
+                  ],
+                  "script": [
+                    null
+                  ]
+                }
+              ],
+              "libs": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "groups": {}
+    }
+  ]
 }
