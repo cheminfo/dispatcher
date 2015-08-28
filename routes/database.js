@@ -24,15 +24,12 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
     required: false
 }])), function (req, res) {
     var deviceId = res.locals.parameters.device;
-    var fields = res.locals.parameters.fields || '*';
-    var mean = res.locals.parameters.mean || 'entry';
-    var limit = res.locals.parameters.limit || 10;
-    fields = fields.split(',');
-    var options = {
-        limit: limit,
-        fields: fields,
-        mean: mean
-    };
+    var options = (res.locals.device && res.locals.device.sqlite) || {};
+    options.fields = res.locals.parameters.fields || '*';
+    options.mean = res.locals.parameters.mean || 'entry';
+    options.limit = res.locals.parameters.limit || 10;
+    options.fields = options.fields.split(',');
+
     database.get(deviceId, options).then(function (result) {
         switch (res.locals.parameters.filter) {
             case 'chart':
@@ -53,8 +50,7 @@ router.put('/:device',
     middleware.validateParameters(queryValidator),
     middleware.checkDevice,
     function (req, res) {
-
-
+        var options = (res.locals.device && res.locals.device.sqlite) || {};
         var entry = req.body;
         if (Array.isArray(entry)) {
             entry.forEach(function (e) {
@@ -65,7 +61,7 @@ router.put('/:device',
         }
 
         entry = filter.deepenEntries(entry);
-        database.save(entry, res.locals.device.sqlite).then(function () {
+        database.save(entry, options).then(function () {
             return res.status(200).json({ok: true});
         }).catch(function (err) {
             debug('database error (save)', err);
@@ -77,7 +73,8 @@ router.get('/last/:device',
     middleware.validateParameters(queryValidator),
     middleware.checkDevice,
     function (req, res) {
-        database.last(res.locals.deviceId).then(function (data) {
+        var options = (res.locals.device && res.locals.device.sqlite) || {};
+        database.last(res.locals.parameters.device, options).then(function (data) {
             return res.status(200).json(data);
         }).catch(function (err) {
             debug('database error (get last): ' + err);

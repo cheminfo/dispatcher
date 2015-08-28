@@ -31,7 +31,8 @@ exports.validateParameters = function (params) {
                         }
                         break;
                     case 'device':
-                        var regexp = /^.{2}$/;
+                        // can be anything but should not contain dots or slashes
+                        var regexp = /^[^\.\/]+$/;
                         if (!value.match(regexp)) {
                             debug(paramName + ' did not pass device validation');
                             return res.status(400).json('parameter ' + paramName + ' must match regular expression: ', regexp.toString());
@@ -57,9 +58,6 @@ exports.validateParameters = function (params) {
 exports.checkDevice = function (req, res, next) {
     var deviceId = res.locals.parameters.device;
     var device = config.findPluggedDevice(deviceId);
-    if (!device) {
-        return res.status(400).json('Invalid device');
-    }
     res.locals.deviceId = deviceId;
     res.locals.device = device;
     next();
