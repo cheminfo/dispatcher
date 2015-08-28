@@ -838,6 +838,7 @@ function getWrappedDB(id, options, readOnly) {
     if (!pdb) {
         debug('opening database', dbloc);
         if (readOnly && !fs.existsSync(dbloc)) {
+            debug('read only and database does not exist');
             throw new Error('Database does not exist');
         }
         var db = new sqlite.cached.Database(dbloc);

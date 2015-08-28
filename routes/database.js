@@ -42,7 +42,7 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
 
     }).catch(function (err) {
         debug('database, filter error (get entries): ' + err);
-        return res.status(400).json('Database error');
+        return res.status(400).json(err.message);
     });
 });
 
@@ -65,7 +65,7 @@ router.put('/:device',
             return res.status(200).json({ok: true});
         }).catch(function (err) {
             debug('database error (save)', err);
-            return res.status(400).json('Database error')
+            return res.status(400).json(err.message)
         });
     });
 
@@ -79,7 +79,7 @@ router.get('/last/:device',
         }).catch(function (err) {
             debug('database error (get last): ' + err);
             if (err.errno === 1) return res.status(404).json('not found');
-            return res.status(400).json('Database error');
+            return res.status(400).json(err.message);
         });
     }
 );
