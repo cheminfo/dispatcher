@@ -14,6 +14,8 @@ var PromiseWrapper = require('../util/PromiseWrapper'),
 
 var dbs = [];
 
+var defaultSqliteOptions = require('../configs/plugged/default.json').sqlite;
+
 exports = module.exports = {
     drop: drop,
     save: save,
@@ -826,12 +828,11 @@ function getWrappedDB(id, options, readOnly) {
     if (!id) {
         throw new Error('Invalid device id');
     }
-
     options = options || {};
-    var dir = options.dir || './sqlite/';
+    _.defaults(options, defaultSqliteOptions);
 
     var file = sanitizeFilename(id + '.sqlite');
-    var dbloc = path.join(dir, file);
+    var dbloc = path.join(options.dir, file);
 
     var pdb = dbs[id];
     if (!pdb) {

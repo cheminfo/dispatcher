@@ -5,7 +5,13 @@
     "baudrate": 38400,
     "serialResponseTimeout": 125,
     "sqlite": {
-        "dir": "sqlite"
+        "dir": "sqlite",
+        "maxRecords": {
+            "entry": 100000,
+            "minute": 10000,
+            "hour": 7200,
+            "day": 300
+        }
     },
     "epochRefreshInterval": 10000,
     "refresh": 5000,
