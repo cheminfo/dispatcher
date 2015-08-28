@@ -21,10 +21,7 @@ if (!cmdArgs('noInterface')) {
     var app = server.getExpress();
 
     // Static files
-    // TODO: move this elsewhere
     app.use('/', express.static(path.join(__dirname, '../static')));
-    app.use('/configs', express.static(path.join(__dirname, '../configs/plugged')));
-    app.use('/devices', express.static(path.join(__dirname, '../configs/devices')));
     var modules = [
         'navview',
         'visu',

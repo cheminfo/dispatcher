@@ -23,10 +23,7 @@ var validateDevice = middleware.validateParameters({type: 'device', name: 'devic
 //    });
 //});
 
-router.get('/status', function (req, res) {
-    return res.json(deviceManager.cachesHash[device].data.status);
-});
-
+// Get device status: lastActive etc...
 router.get('/status/:device',
     validateDevice,
     function (req, res) {
@@ -34,23 +31,6 @@ router.get('/status/:device',
         var device = res.locals.parameters.device;
         return res.json(deviceManager.cachesHash[device].data.status[device]);
     });
-
-router.get('/param/:device/:param',
-    middleware.validateParameters([{name: 'device', type: 'device'}, {name: 'param'}]),
-    function (req, res) {
-        var device = res.locals.parameters.device;
-        var param = res.locals.parameters.param;
-        return res.json(deviceManager.cachesHash[device].data.param[device][param]);
-    }
-);
-
-router.get('/param/:device',
-    validateDevice,
-    function (req, res) {
-        var device = res.locals.parameters.device;
-        return res.json(deviceManager.cachesHash[device].data.param[device]);
-    }
-);
 
 router.get('/all/:filter', validateFilter, function (req, res) {
     // visualizer filter converts object to an array
@@ -83,18 +63,6 @@ router.get('/save',
             return res.json({ok: true});
         }, function () {
             return res.status(500, {ok: false});
-        });
-    });
-
-router.get('/command/:device/:command',
-    middleware.validateParameters([{name: 'device', type: 'device'}, {name: 'command'}]),
-    function (req, res) {
-        var idx = _.findIndex(characters, {'id': res.locals.parameters.device});
-        var prefix = devices[idx].prefix;
-        serialManager.addRequest(prefix + res.locals.parameters.command).then(function (entries) {
-            return res.json(entries);
-        }, function () {
-            return res.status(500);
         });
     });
 
