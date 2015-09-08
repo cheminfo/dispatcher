@@ -76,7 +76,8 @@ describe('REST api', function () {
                 }
             })
             .expect('Content-Type', /json/)
-            .expect(200, {ok: true}, function () {
+            .expect(200, {ok: true}, function (err) {
+                if(err) return done(err);
                 data.getEntries().then(function (data) {
                     var d = data[0];
                     delete d.timestamp;
@@ -97,12 +98,12 @@ describe('REST api', function () {
     it('should return the last element', function (done) {
         agent.get('/database/last/' + data.name)
             .expect('Content-Type', /json/)
-            .end(function (err, res) {
+            .expect(200, function (err, res) {
                 if (err) done(err);
                 var r = res.body;
                 delete r.timestamp;
                 r.should.eql(lastEntry);
                 return done();
-            })
+            });
     });
 });
