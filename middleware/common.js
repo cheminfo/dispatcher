@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var debug = require('debug')('middleware');
 var config = require('../configs/config');
@@ -21,8 +23,8 @@ exports.validateParameters = function (params) {
                 return res.status(400).json('required parameter: ' + paramName);
             }
 
-            if (param.type && value) {
-                switch (param.type) {
+            if (param.name && value) {
+                switch (param.name) {
                     case 'enum':
                         var enums = param.possible || [];
                         if (enums.indexOf(value) === -1) {
@@ -45,6 +47,7 @@ exports.validateParameters = function (params) {
                             debug(paramName + ' did not pass the filter validation');
                             return res.status(400).json('the filter ' + value + ' does not exist');
                         }
+                        break;
                 }
             }
 
@@ -61,4 +64,8 @@ exports.checkDevice = function (req, res, next) {
     res.locals.deviceId = deviceId;
     res.locals.device = device;
     next();
+};
+
+exports.noop = function(req, res, next) {
+    return next();
 };
