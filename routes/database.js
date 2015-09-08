@@ -2,6 +2,7 @@
 
 var router = require('express').Router(),
     middleware = require('../middleware/common'),
+    authMiddleware = require('../middleware/auth'),
     util = require('../util/util'),
     Filter = require('../lib/filter'),
     database = require('../db/database'),
@@ -18,6 +19,8 @@ var queryValidator = [
     {name: 'limit', required: false},
     {name: 'mean', required: false}
 ];
+
+var authM = config.getAppconfig().authKey ? authMiddleware.simple : middleware.noop;
 
 router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {
     name: 'filter',
@@ -47,6 +50,7 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
 });
 
 router.put('/:device',
+    authM,
     middleware.validateParameters(queryValidator),
     middleware.checkDevice,
     function (req, res) {
