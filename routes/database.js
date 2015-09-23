@@ -22,7 +22,9 @@ var queryValidator = [
 
 var authM = config.getAppconfig().authKey ? authMiddleware.simple : middleware.noop;
 
-router.get('/:device', middleware.validateParameters(queryValidator), function (req, res) {
+router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {
+    name: 'filter', required: false
+}])), function (req, res) {
     var deviceId = res.locals.parameters.device;
     var options = (res.locals.device && res.locals.device.sqlite) || {};
     options.fields = res.locals.parameters.fields || '*';
