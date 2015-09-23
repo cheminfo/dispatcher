@@ -40,14 +40,6 @@ exports.validateParameters = function (params) {
                             return res.status(400).json('parameter ' + paramName + ' must match regular expression: ', regexp.toString());
                         }
                         break;
-                    case 'filter':
-                        var Filter = require('../lib/filter');
-                        var filter = new Filter();
-                        if (!filter[value]) {
-                            debug(paramName + ' did not pass the filter validation');
-                            return res.status(400).json('the filter ' + value + ' does not exist');
-                        }
-                        break;
                 }
             }
 
