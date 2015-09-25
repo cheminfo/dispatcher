@@ -16,7 +16,7 @@ router.get('/', function (req, res) {
     var df = defaultView || 'dispatcher';
     var view;
     if (useLactame) {
-        view = 'visualizer_lactame/index.html?viewURL=../views/' + df + '.json&dataURL=../data/default.json';
+        view = 'visualizer_lactame/index.html?config=../config/default.json&viewURL=../views/' + df + '.json&dataURL=../data/default.json';
     }
     else {
         view = 'visualizer/index.html?config=../config/default.json&viewURL=/views/' + df + '.json&dataURL=../data/default.json';
