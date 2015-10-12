@@ -1,6 +1,6 @@
 {
   "name": "iot-dispatcher",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
     "body-parser": "~1.8.4",
     "debug": "~2.0.0",
