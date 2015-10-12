@@ -3,7 +3,8 @@
 var _ = require('lodash'),
     debug = require('debug')('config'),
     path = require('path'),
-    fs = require('fs-extra');
+    fs = require('fs-extra'),
+    args = require('minimist')(process.argv.slice(2));
 
 var loadedConfigs = {};
 
@@ -98,6 +99,11 @@ Config.prototype.loadFromArgs = function () {
 
 Config.prototype.getAppconfig = function (stop) {
     try {
+        let generalConfig = args.generalConfig;
+        if(!stop && generalConfig) {
+            return fs.readJsonSync(generalConfig);
+        }
+
         return fs.readJsonSync(path.join(__dirname, '../general.config.json'));
     } catch (err) {
         if (stop) throw new Error('Could not get app config');
@@ -110,11 +116,19 @@ Config.prototype.getAppconfig = function (stop) {
 
 Config.prototype.getServerConfig = function (stop) {
     try {
+        var cmdArgs = require('../util/cmdArgs');
+        let serverConfig = cmdArgs('serverConfig');
+        if(!stop && serverConfig) {
+            return fs.readJsonSync(serverConfig);
+        }
         return fs.readJsonSync(path.join(__dirname, '../server.config.json'));
     }
     catch (err) {
         debug('Could not read server config file, copying default');
-        if (stop) throw new Error('Could not get server config');
+        if (stop) {
+            console.log(err);
+            throw new Error('Could not get server config');
+        }
         fs.copySync(
             path.join(__dirname, '../default.server.config.json'),
             path.join(__dirname, '../server.config.json'));
