@@ -11,7 +11,7 @@ function Config() {
     this.config = [];
 }
 
-Config.prototype.addConfiguration = function (name) {
+Config.prototype.addConfiguration = function (name, devices) {
     debug('add configuration ' + name);
     var def = fs.readJsonSync(path.join(__dirname, 'plugged/default.json'));
     var config;
@@ -35,7 +35,7 @@ Config.prototype.addConfiguration = function (name) {
         // the default.json file contains all the default
         // configuration parameters of the device
         _.defaults(config[i], def);
-        processConf(config[i]);
+        processConf(config[i], devices);
         checkPluggedDevice(config[i]);
         addUtility(config[i]);
         this.config.push(config[i]);
@@ -82,12 +82,14 @@ Config.prototype.loadFromArgs = function () {
     debug('load from args');
     var cmdArgs = require('../util/cmdArgs');
     var configName = cmdArgs('config', 'default');
+    var devices = cmdArgs('devices');
+    if (devices) devices = devices.split(',');
     debug('config name', configName);
     var configurations = configName.trim().split(',');
 
 
     for (var i = 0; i < configurations.length; i++) {
-        this.addConfiguration(configurations[i]);
+        this.addConfiguration(configurations[i], devices);
     }
 };
 
@@ -158,7 +160,7 @@ function checkPluggedDevice(conf) {
 }
 
 
-function processConf(conf) {
+function processConf(conf, devices) {
     debug('process conf file');
     //
     if (conf.sqlite && conf.sqlite.dir) {
@@ -167,9 +169,13 @@ function processConf(conf) {
 
     // The configuration varibale will eventually contain both
     // the basic configuration and the devices configuration
-    // merged together. The device configuratin has precedence
+    // merged together. The device configuration has precedence
     var idxToRemove = [];
     for (var i = 0; i < conf.devices.length; i++) {
+        if(devices && devices.indexOf(conf.devices[i].id) === -1) {
+            idxToRemove.push(i);
+            continue;
+        }
         var deviceFile = path.join(__dirname, 'devices', conf.devices[i].type + '.json');
         try {
             var deviceConfig = fs.readJsonSync(deviceFile);
