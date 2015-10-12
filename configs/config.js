@@ -175,10 +175,21 @@ function processConf(conf, devices, dir) {
     // merged together. The device configuration has precedence
     var idxToRemove = [];
     for (var i = 0; i < conf.devices.length; i++) {
-        if(devices && devices.indexOf(conf.devices[i].id) === -1) {
-            idxToRemove.push(i);
-            continue;
+        if(devices) {
+            let matches;
+            for(let j=0; j<devices.length; j++) {
+                let reg = new RegExp(devices[j]);
+                matches = reg.exec(conf.devices[i].id);
+                if(matches) {
+                    break;
+                }
+            }
+            if(!matches) {
+                idxToRemove.push(i);
+                continue;
+            }
         }
+
         var deviceFile = path.join(dir, 'devices', conf.devices[i].type + '.json');
         try {
             var deviceConfig = fs.readJsonSync(deviceFile);
