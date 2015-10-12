@@ -27,5 +27,6 @@
   "scripts": {
     "test": "mocha --require should --require=should-promised --reporter mocha-better-spec-reporter --recursive",
     "id": "node scripts/getId.js"
-  }
+  },
+  "bin": "server/main.js"
 }
