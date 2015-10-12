@@ -11,9 +11,10 @@ function Config() {
     this.config = [];
 }
 
-Config.prototype.addConfiguration = function (name, devices) {
+Config.prototype.addConfiguration = function (name, devices, dir) {
     debug('add configuration ' + name);
-    var def = fs.readJsonSync(path.join(__dirname, 'plugged/default.json'));
+    dir = dir || __dirname;
+    var def = fs.readJsonSync(path.join(dir, 'plugged/default.json'));
     var config;
     if (!name.endsWith('.json')) name = name + '.json';
     if (loadedConfigs[name]) {
@@ -21,7 +22,7 @@ Config.prototype.addConfiguration = function (name, devices) {
         return;
     }
     if (name) {
-        config = fs.readJsonSync(path.join(__dirname, 'plugged', name));
+        config = fs.readJsonSync(path.join(dir, 'plugged', name));
         if (!(config instanceof Array)) {
             config = [config];
         }
@@ -35,7 +36,7 @@ Config.prototype.addConfiguration = function (name, devices) {
         // the default.json file contains all the default
         // configuration parameters of the device
         _.defaults(config[i], def);
-        processConf(config[i], devices);
+        processConf(config[i], devices, dir);
         checkPluggedDevice(config[i]);
         addUtility(config[i]);
         this.config.push(config[i]);
@@ -82,14 +83,16 @@ Config.prototype.loadFromArgs = function () {
     debug('load from args');
     var cmdArgs = require('../util/cmdArgs');
     var configName = cmdArgs('config', 'default');
+    var configDir = cmdArgs('configDir');
+    if(configDir) configDir = path.resolve(path.join(__dirname, '..'), configDir);
     var devices = cmdArgs('devices');
-    if (devices) devices = devices.split(',');
+    if (devices) devices = devices.trim().split(',');
     debug('config name', configName);
     var configurations = configName.trim().split(',');
 
 
     for (var i = 0; i < configurations.length; i++) {
-        this.addConfiguration(configurations[i], devices);
+        this.addConfiguration(configurations[i], devices, configDir);
     }
 };
 
@@ -160,7 +163,7 @@ function checkPluggedDevice(conf) {
 }
 
 
-function processConf(conf, devices) {
+function processConf(conf, devices, dir) {
     debug('process conf file');
     //
     if (conf.sqlite && conf.sqlite.dir) {
@@ -176,7 +179,7 @@ function processConf(conf, devices) {
             idxToRemove.push(i);
             continue;
         }
-        var deviceFile = path.join(__dirname, 'devices', conf.devices[i].type + '.json');
+        var deviceFile = path.join(dir, 'devices', conf.devices[i].type + '.json');
         try {
             var deviceConfig = fs.readJsonSync(deviceFile);
         } catch (e) {
