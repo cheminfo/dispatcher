@@ -14,7 +14,7 @@ function Config() {
 Config.prototype.addConfiguration = function (name, devices, dir) {
     debug('add configuration ' + name);
     dir = dir || __dirname;
-    var def = fs.readJsonSync(path.join(dir, 'plugged/default.json'));
+    var def = fs.readJsonSync(path.join(__dirname, 'plugged/default.json'));
     var config;
     if (!name.endsWith('.json')) name = name + '.json';
     if (loadedConfigs[name]) {
