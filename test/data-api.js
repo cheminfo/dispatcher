@@ -106,4 +106,9 @@ describe('REST api', function () {
                 return done();
             });
     });
+
+    it('should return 404', function() {
+        return agent.get('/database/last/ab')
+        .expect(404);
+    })
 });
