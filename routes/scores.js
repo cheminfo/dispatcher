@@ -23,12 +23,31 @@ router.get('/all', function (req, res) {
     for (var i = 0; i < devices.length; i++) {
         prom[i] = scores.all(devices[i].id);
     }
-    Promise.all(prom).then(function(data) {
+    Promise.all(prom).then(function (data) {
         for (var i = 0; i < data.length; i++) {
             data[i].name = devices[i].id;
         }
-        res.render('scores/scores',{teams: data});
-    }, function() {
+        res.render('scores/scores', {teams: data});
+    }, function () {
         res.status(400);
     });
 });
+
+router.get('/param/:type/:device/:param', middleware.validateParameters({
+        name: 'device', required: true
+    }),
+    function (req, res) {
+        Promise.resolve().then(function() {
+            return scores[req.params.type](res.locals.parameters.device, req.params.param).then(function(score) {
+                res.json({
+                    points: score,
+                    availablePoints: scores.maxPoints(req.params.type)
+                });
+            });
+        }).catch(function() {
+            res.status(400);
+        });
+
+    }
+)
+;

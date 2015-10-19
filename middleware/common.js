@@ -37,7 +37,7 @@ exports.validateParameters = function (params) {
                         var regexp = /^[^\.\/]+$/;
                         if (!value.match(regexp)) {
                             debug(paramName + ' did not pass device validation');
-                            return res.status(400).json('parameter ' + paramName + ' must match regular expression: ', regexp.toString());
+                            return res.status(400).json('parameter ' + paramName + ' is not valid');
                         }
                         break;
                 }

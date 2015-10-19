@@ -8,10 +8,6 @@ var moment = require('moment');
 
 // correct time
 var cTime = '1999-12-31T06:00:00.0-0500';
-// Late
-var lTime = '1999-12-31T19:00:00.0-0500';
-// Early
-var eTime = '1999-12-31T05:00:00.0-0500';
 
 config.addConfiguration('dbtest');
 
@@ -24,9 +20,7 @@ function doData(d) {
 var complexData = [
     {data: [2600, 0, 40000], time: cTime},
     {data: [2800, 4500, 32500], time: moment(cTime).add(1, 'hour')},
-    {data: [3000, 6500, 38000], time: moment(cTime).add(2, 'hour')},
-    {data: [10000, 4000, 400000], time: eTime},
-    {data: [10000, 4000, 400000], time: lTime}
+    {data: [3000, 6500, 38000], time: moment(cTime).add(2, 'hour')}
 ];
 
 describe('Test temperature scores', function () {
