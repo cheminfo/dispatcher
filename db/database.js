@@ -793,7 +793,7 @@ function get(deviceId, options) {
 
 function last(id, options) {
     var prom = Promise.resolve().then(function() {
-        var wdb = getWrappedDB(id, options);
+        var wdb = getWrappedDB(id, options, true);
         return Promise.resolve().then(getLastEntry(wdb));
     });
     prom.catch(logError);

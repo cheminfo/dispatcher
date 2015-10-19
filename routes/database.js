@@ -81,7 +81,7 @@ router.get('/last/:device',
             return res.status(200).json(data);
         }).catch(function (err) {
             debug('database error (get last): ' + err);
-            if (err.errno === 1) return res.status(404).json('not found');
+            if (err.errno === 1 || err.message === 'Database does not exist') return res.status(404).json('not found');
             return res.status(400).json(err.message);
         });
     }
