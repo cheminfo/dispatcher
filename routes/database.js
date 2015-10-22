@@ -22,26 +22,33 @@ var queryValidator = [
 
 var authM = config.getAppconfig().authKey ? authMiddleware.simple : middleware.noop;
 
+function databaseOptions(res, options) {
+    options.fields = res.locals.parameters.fields || '*';
+    options.mean = res.locals.parameters.mean || 'entry';
+    options.limit = res.locals.parameters.limit || 10;
+    options.fields = options.fields.split(',');
+}
+
+function filterResult(res, result) {
+    var deviceId = res.locals.parameters.device;
+    switch (res.locals.parameters.filter) {
+        case 'chart':
+            return filter.chartFromDatabaseEntries(result, deviceId);
+        default:
+            return filter.normalizeData(result, deviceId);
+    }
+}
+
 router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {
     name: 'filter', required: false
 }])), function (req, res) {
     var deviceId = res.locals.parameters.device;
     var options = (res.locals.device && res.locals.device.sqlite) || {};
-    options.fields = res.locals.parameters.fields || '*';
-    options.mean = res.locals.parameters.mean || 'entry';
-    options.limit = res.locals.parameters.limit || 10;
-    options.fields = options.fields.split(',');
+    databaseOptions(res, options);
 
     database.get(deviceId, options).then(function (result) {
-        switch (res.locals.parameters.filter) {
-            case 'chart':
-                var chart = filter.chartFromDatabaseEntries(result, deviceId);
-                return res.status(200).json(chart);
-            default:
-                var data = filter.normalizeData(result, deviceId);
-                return res.status(200).json(data);
-        }
-
+        var data = filterResult(res, result);
+        return res.status(200).json(data);
     }).catch(function (err) {
         debug('database, filter error (get entries): ' + err);
         return res.status(400).json(err.message);
