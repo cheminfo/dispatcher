@@ -12,9 +12,11 @@ function Config() {
     this.config = [];
 }
 
-Config.prototype.addConfiguration = function (name, devices, dir) {
+Config.prototype.addConfiguration = function (name, options) {
+    options = options || {};
+    options.configDir = options.configDir || __dirname;
+
     debug('add configuration ' + name);
-    dir = dir || __dirname;
     var def = fs.readJsonSync(path.join(__dirname, 'plugged/default.json'));
     var config;
     if (!name.endsWith('.json')) name = name + '.json';
@@ -23,7 +25,7 @@ Config.prototype.addConfiguration = function (name, devices, dir) {
         return;
     }
     if (name) {
-        config = fs.readJsonSync(path.join(dir, 'plugged', name));
+        config = fs.readJsonSync(path.join(options.configDir, 'plugged', name));
         if (!(config instanceof Array)) {
             config = [config];
         }
@@ -37,7 +39,7 @@ Config.prototype.addConfiguration = function (name, devices, dir) {
         // the default.json file contains all the default
         // configuration parameters of the device
         _.defaults(config[i], def);
-        processConf(config[i], devices, dir);
+        processConf(config[i], options);
         checkPluggedDevice(config[i]);
         addUtility(config[i]);
         this.config.push(config[i]);
@@ -55,9 +57,9 @@ Config.prototype.findDeviceById = function (id) {
     return null;
 };
 
-Config.prototype.findDevicesByGroup = function(group) {
+Config.prototype.findDevicesByGroup = function (group) {
     var devices = [];
-    for(var i=0; i< this.config.length; i++) {
+    for (var i = 0; i < this.config.length; i++) {
         devices.push(this.config[i].findDevicesByGroup(group));
     }
     return _.flatten(devices);
@@ -91,24 +93,36 @@ Config.prototype.findPluggedDevice = function (id) {
 Config.prototype.loadFromArgs = function () {
     debug('load from args');
     var cmdArgs = require('../util/cmdArgs');
-    var configName = cmdArgs('config', 'default');
+    var config = cmdArgs('config', 'default');
     var configDir = cmdArgs('configDir');
-    if(configDir) configDir = path.resolve(path.join(__dirname, '..'), configDir);
     var devices = cmdArgs('devices');
+    var groups = cmdArgs('groups');
+
+    debug('config name', config);
+    debug('config dir', configDir);
+    debug('devices reg exp', devices);
+    debug('groups', groups);
+
+    if (configDir) configDir = path.resolve(path.join(__dirname, '..'), configDir);
     if (devices) devices = devices.trim().split(',');
-    debug('config name', configName);
-    var configurations = configName.trim().split(',');
+    if (groups) groups = groups.trim().split(',');
+
+    config = config.trim().split(',');
 
 
-    for (var i = 0; i < configurations.length; i++) {
-        this.addConfiguration(configurations[i], devices, configDir);
+    for (var i = 0; i < config.length; i++) {
+        this.addConfiguration(config[i], {
+            devices,
+            configDir,
+            groups
+        });
     }
 };
 
 Config.prototype.getAppconfig = function (stop) {
     try {
         let generalConfig = args.generalConfig;
-        if(!stop && generalConfig) {
+        if (!stop && generalConfig) {
             return fs.readJsonSync(generalConfig);
         }
 
@@ -126,7 +140,7 @@ Config.prototype.getServerConfig = function (stop) {
     try {
         var cmdArgs = require('../util/cmdArgs');
         let serverConfig = cmdArgs('serverConfig');
-        if(!stop && serverConfig) {
+        if (!stop && serverConfig) {
             return fs.readJsonSync(serverConfig);
         }
         return fs.readJsonSync(path.join(__dirname, '../server.config.json'));
@@ -134,7 +148,7 @@ Config.prototype.getServerConfig = function (stop) {
     catch (err) {
         debug('Could not read server config file, copying default');
         if (stop) {
-            console.log(err);
+            console.error(err);
             throw new Error('Could not get server config');
         }
         fs.copySync(
@@ -185,28 +199,46 @@ function checkPluggedDevice(conf) {
 }
 
 
-function processConf(conf, devices, dir) {
+function processConf(conf, options) {
+    var dir = options.configDir;
+    var groups = options.groups;
+    var devices = options.devices;
     debug('process conf file');
-    //
+
     if (conf.sqlite && conf.sqlite.dir) {
         conf.sqlite.dir = path.join(__dirname, '..', conf.sqlite.dir);
     }
 
-    // The configuration varibale will eventually contain both
+    // The configuration variable will eventually contain both
     // the basic configuration and the devices configuration
     // merged together. The device configuration has precedence
     var idxToRemove = [];
     for (var i = 0; i < conf.devices.length; i++) {
-        if(devices) {
-            let matches;
-            for(let j=0; j<devices.length; j++) {
-                let reg = new RegExp(devices[j]);
-                matches = reg.exec(conf.devices[i].id);
-                if(matches) {
+        // Remove all devices that are not in one of the given groups
+        if (groups) {
+            let useConf;
+            for (let j = 0; j < groups.length; j++) {
+                if(!conf.devices[i].groups) continue;
+                if(conf.devices[i].groups.indexOf(groups[j]) > -1) {
+                    useConf = true;
                     break;
                 }
             }
-            if(!matches) {
+            if(!useConf) {
+                idxToRemove.push(i);
+            }
+        }
+        // Remove all devices which id does not conform to the regexp
+        if (devices) {
+            let matches;
+            for (let j = 0; j < devices.length; j++) {
+                let reg = new RegExp(devices[j]);
+                matches = reg.exec(conf.devices[i].id);
+                if (matches) {
+                    break;
+                }
+            }
+            if (!matches) {
                 idxToRemove.push(i);
                 continue;
             }
@@ -244,10 +276,10 @@ function addUtility(conf) {
         return idx > -1 ? this.devices[idx] : null;
     };
 
-    conf.findDevicesByGroup = function(group) {
+    conf.findDevicesByGroup = function (group) {
         var devices = [];
-        for(var i=0; i<this.devices.length; i++) {
-            if(this.devices[i].groups && this.devices[i].groups.indexOf(group) !== -1) {
+        for (var i = 0; i < this.devices.length; i++) {
+            if (this.devices[i].groups && this.devices[i].groups.indexOf(group) !== -1) {
                 devices.push(this.devices[i]);
             }
         }
