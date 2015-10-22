@@ -3,7 +3,7 @@
 var config = require('../configs/config');
 var Filter = require('../lib/filter');
 
-config.addConfiguration('dbtest');
+config.addConfiguration('test/dbtest');
 var filter = new Filter();
 
 describe('Filter functions', function () {

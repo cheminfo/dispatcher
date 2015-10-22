@@ -11,7 +11,7 @@ var dataset = require('./database/normal/dataset.json');
 var config = require('../configs/config');
 var _ = require('lodash');
 
-config.addConfiguration('dbtest');
+config.addConfiguration('test/dbtest');
 server.mountModules('database');
 var app = server.getExpress();
 var moment = require('moment');

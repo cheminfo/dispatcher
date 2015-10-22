@@ -3,9 +3,9 @@
 var config = require('../configs/config');
 var _ = require('lodash');
 
-config.addConfiguration('dbtest');
+config.addConfiguration('test/dbtest');
 
-describe.only('Configuration by group', function() {
+describe('Configuration by group', function() {
     it('Should return empty set of devices', function() {
         var devices =config.findDevicesByGroup('agroup');
         devices.should.be.instanceOf(Array);
@@ -21,6 +21,5 @@ describe.only('Configuration by group', function() {
         devices = config.findDevicesByGroup('group2');
         devices.should.be.instanceOf(Array);
         devices.should.have.length(1);
-        console.log(devices);
     });
 });

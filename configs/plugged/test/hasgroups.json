@@ -1,7 +1,7 @@
 {
   "devices": [
     {
-      "type": "dbtest",
+      "type": "test/dbtest",
       "description": "db test fake device",
       "prefix": "$Z",
       "id": "$Z",
@@ -11,7 +11,7 @@
       ]
     },
     {
-      "type": "dbtest",
+      "type": "test/dbtest",
       "description": "db test fake device",
       "prefix": "$J",
       "id": "$J",
@@ -20,7 +20,7 @@
       ]
     },
     {
-      "type": "dbtest",
+      "type": "test/dbtest",
       "description": "db test fake device",
       "prefix": "$L",
       "id": "$L",

@@ -9,7 +9,7 @@ var moment = require('moment');
 // correct time
 var cTime = '1999-12-31T06:00:00.0-0500';
 
-config.addConfiguration('dbtest');
+config.addConfiguration('test/dbtest');
 
 function doData(d) {
     data.setName('$Z');
