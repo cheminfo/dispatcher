@@ -55,6 +55,14 @@ Config.prototype.findDeviceById = function (id) {
     return null;
 };
 
+Config.prototype.findDevicesByGroup = function(group) {
+    var devices = [];
+    for(var i=0; i< this.config.length; i++) {
+        devices.push(this.config[i].findDevicesByGroup(group));
+    }
+    return _.flatten(devices);
+};
+
 Config.prototype.getParamByName = function (deviceId, name) {
     var device = this.findDeviceById(deviceId);
     if (!device) return null;
@@ -234,6 +242,16 @@ function addUtility(conf) {
             return device.id === id;
         });
         return idx > -1 ? this.devices[idx] : null;
-    }
+    };
+
+    conf.findDevicesByGroup = function(group) {
+        var devices = [];
+        for(var i=0; i<this.devices.length; i++) {
+            if(this.devices[i].groups && this.devices[i].groups.indexOf(group) !== -1) {
+                devices.push(this.devices[i]);
+            }
+        }
+        return devices;
+    };
 }
 exports = module.exports = new Config();

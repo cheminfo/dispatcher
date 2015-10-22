@@ -1,0 +1,44 @@
+{
+  "devices": [
+    {
+      "type": "dbtest",
+      "description": "db test fake device",
+      "prefix": "$Z",
+      "id": "$Z",
+      "groups": [
+        "group1",
+        "group2"
+      ]
+    },
+    {
+      "type": "dbtest",
+      "description": "db test fake device",
+      "prefix": "$J",
+      "id": "$J",
+      "groups": [
+        "group1"
+      ]
+    },
+    {
+      "type": "dbtest",
+      "description": "db test fake device",
+      "prefix": "$L",
+      "id": "$L",
+      "groups": []
+    }
+  ],
+  "port": {
+    "dir": "/dev",
+    "regexp": "usbmodem.*"
+  },
+  "baudrate": 9600,
+  "sqlite": {
+    "dir": "sqlite",
+    "maxRecords": {
+      "entry": 100000,
+      "minute": 10000,
+      "hour": 7200,
+      "day": 300
+    }
+  }
+}
