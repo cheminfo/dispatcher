@@ -32,10 +32,6 @@ describe('Test temperature scores', function () {
         return data.drop();
     });
 
-    //it('should be rejected', function() {
-    //    return scores.temperature('$Z').should.be.rejectedWith('Database does not exist');
-    //});
-
     it('Simple temperature', function () {
         doData([{data: [2700, 0, 0], time: cTime}]);
         return data.saveFast().then(function () {

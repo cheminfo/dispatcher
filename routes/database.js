@@ -15,10 +15,11 @@ var filter = new Filter();
 
 var queryValidator = [
     {name: 'fields', required: false},
-    {name: 'device', required: true},
     {name: 'limit', required: false},
     {name: 'mean', required: false}
 ];
+
+var deviceQueryValidator = _.flatten([queryValidator, {name: 'device', required: true}]);
 
 var authM = config.getAppconfig().authKey ? authMiddleware.simple : middleware.noop;
 
@@ -29,8 +30,7 @@ function databaseOptions(res, options) {
     options.fields = options.fields.split(',');
 }
 
-function filterResult(res, result) {
-    var deviceId = res.locals.parameters.device;
+function filterResult(res, result, deviceId) {
     switch (res.locals.parameters.filter) {
         case 'chart':
             return filter.chartFromDatabaseEntries(result, deviceId);
@@ -39,15 +39,17 @@ function filterResult(res, result) {
     }
 }
 
-router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, {
-    name: 'filter', required: false
-}])), function (req, res) {
+router.get('/:device', middleware.validateParameters(
+    _.flatten([
+        deviceQueryValidator,
+        {name: 'filter', required: false}
+    ])), function (req, res) {
     var deviceId = res.locals.parameters.device;
     var options = (res.locals.device && res.locals.device.sqlite) || {};
     databaseOptions(res, options);
 
     database.get(deviceId, options).then(function (result) {
-        var data = filterResult(res, result);
+        var data = filterResult(res, result, deviceId);
         return res.status(200).json(data);
     }).catch(function (err) {
         debug('database, filter error (get entries): ' + err);
@@ -55,9 +57,43 @@ router.get('/:device', middleware.validateParameters(_.flatten([queryValidator, 
     });
 });
 
+router.get('/group/:group', middleware.validateParameters(
+    _.flatten([
+        queryValidator,
+        {name: 'filter', required: false},
+        {name: 'group', required: true}
+    ])), function (req, res) {
+    var devices = config.findDevicesByGroup(res.locals.parameters.group);
+    var prom = [];
+    for (let i = 0; i < devices.length; i++) {
+        let options = (res.locals.device && res.locals.device.sqlite) || {};
+        databaseOptions(res, options);
+        var p = database.get(devices[i].id, options).then(function (result) {
+            return filterResult(res, result, devices[i].id);
+        });
+        prom.push(p);
+    }
+
+    Promise.all(prom).then(function (results) {
+        var data = {
+            group: res.locals.parameters.group,
+            devices: new Array(results.length)
+        };
+        for (let i = 0; i < results.length; i++) {
+            data.devices[i] = {
+                meta: devices[i],
+                data: results[i]
+            }
+        }
+        return res.status(200).json(data);
+    }).catch(function (e) {
+        return res.status(400).json(e.message);
+    });
+});
+
 router.put('/:device',
     authM,
-    middleware.validateParameters(queryValidator),
+    middleware.validateParameters(deviceQueryValidator),
     middleware.checkDevice,
     function (req, res) {
         var options = (res.locals.device && res.locals.device.sqlite) || {};
@@ -80,7 +116,7 @@ router.put('/:device',
     });
 
 router.get('/last/:device',
-    middleware.validateParameters(queryValidator),
+    middleware.validateParameters(deviceQueryValidator),
     middleware.checkDevice,
     function (req, res) {
         var options = (res.locals.device && res.locals.device.sqlite) || {};
