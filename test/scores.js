@@ -36,68 +36,31 @@ describe('Test temperature scores', function () {
     //    return scores.temperature('$Z').should.be.rejectedWith('Database does not exist');
     //});
 
-    it('1 value', function () {
+    it('Simple temperature', function () {
         doData([{data: [2700, 0, 0], time: cTime}]);
         return data.saveFast().then(function () {
             return scores.temperature('$Z');
         }).should.be.eventually.equal(50);
     });
 
-    it('complex case', function () {
+    it('Complex temperature', function () {
         doData(complexData);
         return data.saveFast().then(function () {
             return scores.temperature('$Z');
         }).should.be.eventually.equal(25);
     });
-});
 
-describe('Test light scores', function () {
-    before(function () {
-        return data.drop();
-    });
-
-    afterEach(function () {
-        return data.drop();
-    });
-
-    it('complex case', function () {
+    it('Complex luminosity', function () {
         doData(complexData);
         return data.saveFast().then(function () {
             return scores.luminosity('$Z');
         }).should.be.eventually.be.approximately(10, 0.0001);
     });
-});
 
-describe('Test humidity scores', function () {
-    before(function () {
-        return data.drop();
-    });
-
-    afterEach(function () {
-        return data.drop();
-    });
-
-    it('complex case', function () {
+    it('Complex humidity', function () {
         doData(complexData);
         return data.saveFast().then(function () {
             return scores.humidity('$Z');
         }).should.be.eventually.be.approximately(10, 0.0001);
     });
 });
-
-//describe('Test all', function() {
-//    before(function () {
-//        return data.drop();
-//    });
-//
-//    afterEach(function () {
-//        return data.drop();
-//    });
-//
-//    it('complex case', function () {
-//        doData(complexData);
-//        return data.saveFast().then(function () {
-//            return scores.all('$Z');
-//        }).should.be.eventually.be.approximately(10, 0.0001);
-//    });
-//});
