@@ -96,23 +96,29 @@ router.put('/:device',
     middleware.validateParameters(deviceQueryValidator),
     middleware.checkDevice,
     function (req, res) {
-        var options = (res.locals.device && res.locals.device.sqlite) || {};
-        var entry = req.body;
-        if (Array.isArray(entry)) {
-            entry.forEach(function (e) {
-                e.deviceId = res.locals.deviceId;
+        try {
+            var options = (res.locals.device && res.locals.device.sqlite) || {};
+            var entry = req.body;
+            if (Array.isArray(entry)) {
+                entry.forEach(function (e) {
+                    e.deviceId = res.locals.deviceId;
+                });
+            } else {
+                entry.deviceId = res.locals.deviceId;
+            }
+
+            entry = filter.deepenEntries(entry);
+            database.save(entry, options).then(function () {
+                return res.status(200).json({ok: true});
+            }).catch(function (err) {
+                debug('database error (save)', err);
+                return res.status(400).json(err.message)
             });
-        } else {
-            entry.deviceId = res.locals.deviceId;
+        } catch(e) {
+            debug('Unexpected error', e);
+            return res.status(500).json({error: 'Unexpected error'});
         }
 
-        entry = filter.deepenEntries(entry);
-        database.save(entry, options).then(function () {
-            return res.status(200).json({ok: true});
-        }).catch(function (err) {
-            debug('database error (save)', err);
-            return res.status(400).json(err.message)
-        });
     });
 
 router.get('/last/:device',
