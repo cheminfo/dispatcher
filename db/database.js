@@ -209,7 +209,9 @@ function getEntries(wdb, options) {
         }
         query += condition;
         query += ' ORDER BY epoch ' + options.order;
-        query += ' LIMIT ' + options.limit;
+        if(options.limit) {
+            query += ' LIMIT ' + options.limit;
+        }
         debug('Get entries');
         return wdb.all(query);
     };
@@ -251,7 +253,9 @@ function getMeanEntries(wdb, options) {
 
         query += condition;
         query += ' ORDER BY epoch ' + options.order;
-        query += ' LIMIT ' + options.limit;
+        if(options.limit) {
+            query += ' LIMIT ' + options.limit;
+        }
         return wdb.all(query);
     };
 
@@ -771,7 +775,6 @@ function get(deviceId, options) {
         }
         var defaultOptions = {
             order: 'DESC',
-            limit: 500,
             fields: ['*']
         };
 
