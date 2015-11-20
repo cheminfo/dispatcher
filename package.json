@@ -14,6 +14,7 @@
     "performance-now": "^0.2.0",
     "sanitize-filename": "^1.4.2",
     "serialport": "~1.7.4",
+    "solar-scores": "0.0.1",
     "sqlite3": "^3.0.5",
     "squel": "~3.8.1"
   },
