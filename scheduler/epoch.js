@@ -1,5 +1,6 @@
 "use strict";
 var _ = require('lodash');
+var debug = require('debug')('epoch');
 
 var EpochScheduler = exports = module.exports = function EpochScheduler(reqManager, config) {
     this.config = config;
@@ -16,9 +17,9 @@ EpochScheduler.prototype.start = function () {
             (function (i) {
                 var now = Math.round(Date.now() / 1000); // now in seconds
                 that.requestManager.addRequest(that.config.devices[i].prefix + 'e' + now).then(function () {
-                    // nothing to do
+                    debug('set epoch request succeeded');
                 }, function () {
-                    // we need to put a callback here otherwise bluebird is not happy
+                    debug('set epoch request failed');
                 });
             })(i)
         }
