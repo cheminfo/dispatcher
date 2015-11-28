@@ -12,6 +12,11 @@ describe('Configuration', function() {
         devices.should.have.length(0);
     });
 
+    it('Should copy sqlite config to device', function() {
+        var device = config.findDeviceById('$Z');
+        config.config[0].sqlite.should.equal(device.sqlite);
+    });
+
     it('Should have groups', function() {
         config.addConfiguration('test/hasgroups');
         var devices = config.findDevicesByGroup('group1');
@@ -29,4 +34,6 @@ describe('Configuration', function() {
         device.parameters.A.custom.should.equal('custom');
         device.parameters.A.name.should.equal('temperature');
     });
+
+
 });

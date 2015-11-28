@@ -215,6 +215,7 @@ function processConf(conf, options) {
     var idxToRemove = [];
     for (var i = 0; i < conf.devices.length; i++) {
         // Remove all devices that are not in one of the given groups
+        conf.devices[i].sqlite = conf.sqlite;
         if (groups) {
             let useConf;
             for (let j = 0; j < groups.length; j++) {
