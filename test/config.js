@@ -5,9 +5,9 @@ var _ = require('lodash');
 
 config.addConfiguration('test/dbtest');
 
-describe('Configuration by group', function() {
+describe.only('Configuration', function() {
     it('Should return empty set of devices', function() {
-        var devices =config.findDevicesByGroup('agroup');
+        var devices = config.findDevicesByGroup('agroup');
         devices.should.be.instanceOf(Array);
         devices.should.have.length(0);
     });
@@ -21,5 +21,12 @@ describe('Configuration by group', function() {
         devices = config.findDevicesByGroup('group2');
         devices.should.be.instanceOf(Array);
         devices.should.have.length(1);
+    });
+
+    it('Should merge device config', function() {
+        config.addConfiguration('test/needsMerge');
+        var device = config.findDeviceById('needsMerge');
+        device.parameters.A.custom.should.equal('custom');
+        device.parameters.A.name.should.equal('temperature');
     });
 });
