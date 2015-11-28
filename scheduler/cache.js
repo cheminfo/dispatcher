@@ -207,7 +207,7 @@ function getLastId(that, device) {
     // Does not yet exist
     // Remove newline
     debug('get last id from device ' + device.id);
-    return database.getLastId(device.id);
+    return database.getLastId(device.id, device.sqlite);
 }
 
 Cache.prototype.stop = function () {
