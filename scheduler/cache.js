@@ -205,13 +205,9 @@ function getLastId(that, device) {
     // Get the device id from database
     // that operation can fail for example if the database
     // Does not yet exist
-    var cmd = device.prefix + 'q';
-    return that.requestManager.addRequest(cmd).then(function (deviceId) {
-        debug('device id from q ' + deviceId);
-        // Remove newline
-        deviceId = util.deviceIdNumberToString(parseInt(deviceId.slice(0, deviceId.length - 2)));
-        return database.getLastId(deviceId);
-    });
+    // Remove newline
+    debug('get last id from device ' + device.id);
+    return database.getLastId(device.id);
 }
 
 Cache.prototype.stop = function () {

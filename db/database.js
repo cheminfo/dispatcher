@@ -655,7 +655,6 @@ function saveFast(entries, options) {
     }
 
     function continueEntries() {
-        timerStep('insert entries');
         return Promise.resolve().then(getEntriesMean(wdb, entries)).then(timerStep('get mean entries'))
             .then(insertEntriesMean(wdb, entries)).then(timerStep('insert mean entries'));
     }
