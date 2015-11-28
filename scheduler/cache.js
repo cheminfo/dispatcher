@@ -1,6 +1,6 @@
 "use strict";
 var EventEmitter = require('events').EventEmitter,
-    debug = require('debug')('cache'),
+    debug = require('debug')('scheduler:cache'),
     database = require('../db/database'),
     parser = require('../lib/parser'),
     util = require('../util/util'),
