@@ -5,7 +5,7 @@ var _ = require('lodash');
 
 config.addConfiguration('test/dbtest');
 
-describe.only('Configuration', function() {
+describe('Configuration', function() {
     it('Should return empty set of devices', function() {
         var devices = config.findDevicesByGroup('agroup');
         devices.should.be.instanceOf(Array);

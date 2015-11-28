@@ -206,7 +206,7 @@ function processConf(conf, options) {
     debug('process conf file');
 
     if (conf.sqlite && conf.sqlite.dir) {
-        conf.sqlite.dir = path.join(__dirname, '..', conf.sqlite.dir);
+        conf.sqlite.dir = path.resolve(path.join(__dirname, '..'), conf.sqlite.dir);
     }
 
     // The configuration variable will eventually contain both
