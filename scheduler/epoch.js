@@ -14,7 +14,7 @@ EpochScheduler.prototype.start = function () {
     var sendEvent = function () {
         for (var i = 0; i < that.config.devices.length; i++) {
             (function (i) {
-                var now = Math.round(new Date().getTime() / 1000); // now in seconds
+                var now = Math.round(Date.now() / 1000); // now in seconds
                 that.requestManager.addRequest(that.config.devices[i].prefix + 'e' + now).then(function () {
                     // nothing to do
                 }, function () {
