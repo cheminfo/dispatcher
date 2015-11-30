@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 var EventEmitter = require('events').EventEmitter,
     debug = require('debug')('scheduler:cache'),
     database = require('../db/database'),
@@ -95,6 +96,19 @@ function doMultilogRequest(that, device) {
             // Except if startig from 0
             if (lastId && lastId !== entries[0].id) {
                 throw new Error('The first id of entries does not correspond to the last seen id. last id: ' + lastId + '. First entries id:' + entries[0].id);
+            }
+
+            var okIdx;
+            for(let i=1; i<entries.length; i++) {
+                if(entries[i].id - entries[i-1].id !== 1) {
+                    okIdx = i-1;
+                    break;
+                }
+            }
+
+            if(okIdx !== undefined) {
+                debug('Entries are not consecutive, using ' + (okIdx+1) + ' first entries');
+                entries = entries.splice(0, okIdx + 1);
             }
 
             that.data.deviceIds[id] = entries[0].deviceId;
