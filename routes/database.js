@@ -28,6 +28,8 @@ function databaseOptions(res, options) {
     options.mean = res.locals.parameters.mean || 'entry';
     options.limit = res.locals.parameters.limit || 10;
     options.fields = options.fields.split(',');
+    options.epochFrom = res.locals.parameters.epochFrom;
+    options.epochTo = res.locals.parameters.epochTo;
 }
 
 function filterResult(res, result, deviceId) {
@@ -42,7 +44,9 @@ function filterResult(res, result, deviceId) {
 router.get('/:device', middleware.validateParameters(
     _.flatten([
         deviceQueryValidator,
-        {name: 'filter', required: false}
+        {name: 'filter', required: false},
+        {name: 'epochFrom', required: false},
+        {name: 'epochTo', required: false}
     ])), function (req, res) {
     var deviceId = res.locals.parameters.device;
     var options = (res.locals.device && res.locals.device.sqlite) || {};

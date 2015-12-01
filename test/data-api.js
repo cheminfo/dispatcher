@@ -65,6 +65,15 @@ describe('REST api', function () {
             .expect(200, dataset.filteredEntries.slice(0, 2), done);
     });
 
+    it('should accept epochFrom and epochTo', function (done) {
+        agent.get('/database/' + data.name + '?epochFrom=946684800&epochTo=946684860')
+            .expect(200)
+            .expect(function (res) {
+                console.log(res.body)
+            })
+            .end(done);
+    });
+
     it('should save entries', function (done) {
         agent.put('/database/' + data.name)
             .send({
