@@ -16,7 +16,9 @@ var filter = new Filter();
 var queryValidator = [
     {name: 'fields', required: false},
     {name: 'limit', required: false},
-    {name: 'mean', required: false}
+    {name: 'mean', required: false},
+    {name: 'epochFrom', required: false},
+    {name: 'epochTo', required: false}
 ];
 
 var deviceQueryValidator = _.flatten([queryValidator, {name: 'device', required: true}]);
@@ -44,9 +46,7 @@ function filterResult(res, result, deviceId) {
 router.get('/:device', middleware.validateParameters(
     _.flatten([
         deviceQueryValidator,
-        {name: 'filter', required: false},
-        {name: 'epochFrom', required: false},
-        {name: 'epochTo', required: false}
+        {name: 'filter', required: false}
     ])), function (req, res) {
     var deviceId = res.locals.parameters.device;
     var options = (res.locals.device && res.locals.device.sqlite) || {};
