@@ -69,7 +69,7 @@ describe('REST api', function () {
         agent.get('/database/' + data.name + '?epochFrom=946684800&epochTo=946684860')
             .expect(200)
             .expect(function (res) {
-                console.log(res.body)
+                res.body.should.have.lengthOf(6)
             })
             .end(done);
     });
