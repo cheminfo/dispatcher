@@ -71,7 +71,8 @@ router.get('/group/:group', middleware.validateParameters(
     _.flatten([
         queryValidator,
         {name: 'filter', required: false},
-        {name: 'group', required: true}
+        {name: 'group', required: true},
+        {name: 'bySensor', required: false }
     ])), function (req, res) {
     var devices = config.findDevicesByGroup(res.locals.parameters.group);
     var prom = [];
@@ -85,16 +86,42 @@ router.get('/group/:group', middleware.validateParameters(
     }
 
     Promise.all(prom).then(function (results) {
-        var data = {
-            group: res.locals.parameters.group,
-            devices: new Array(results.length)
-        };
-        for (let i = 0; i < results.length; i++) {
-            data.devices[i] = {
-                meta: devices[i],
-                data: results[i]
+        var data;
+        if(!res.locals.parameters.bySensor) {
+            data = {
+                group: res.locals.parameters.group,
+                devices: new Array(results.length)
+            };
+            for (let i = 0; i < results.length; i++) {
+                data.devices[i] = {
+                    meta: devices[i],
+                    data: results[i]
+                }
+            }
+        } else {
+            data = {
+                group: res.locals.parameters.group,
+                sensors: []
+            };
+
+            for(let i = 0; i < results.length; i++) {
+                let epoch = results[i].map(function(res) {
+                    return res.epoch;
+                });
+
+                for(let key in devices[i].parameters) {
+                    data.sensors.push({
+                        deviceId: devices[i].id,
+                        meta: devices[i].parameters[key],
+                        epoch: epoch,
+                        data: results[i].map(function(res) {
+                            return res[key];
+                        })
+                    });
+                }
             }
         }
+
         return res.status(200).json(data);
     }).catch(function (e) {
         return res.status(400).json(e.message);
