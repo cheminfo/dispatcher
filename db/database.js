@@ -843,7 +843,11 @@ function getWrappedDB(id, options, readOnly) {
             debug('read only and database does not exist');
             throw new Error('Database does not exist');
         }
-        var db = new sqlite.cached.Database(dbloc);
+        var db = new sqlite.cached.Database(dbloc, function(error) {
+            if(error) {
+                debug('Error occured while opening database ' + dbloc);
+            }
+        });
         pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
         pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
         dbs[id] = pdb;
