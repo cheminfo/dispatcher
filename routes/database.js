@@ -30,6 +30,10 @@ function databaseOptions(res, options) {
     options.fields = res.locals.parameters.fields || '*';
     options.mean = res.locals.parameters.mean || 'entry';
     options.limit = res.locals.parameters.limit || 10;
+    if(options.limit === '0') {
+        options.limit = undefined;
+    }
+
     options.fields = options.fields.split(',');
     options.epochFrom = res.locals.parameters.epochFrom;
     options.epochTo = res.locals.parameters.epochTo;
