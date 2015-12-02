@@ -30,6 +30,7 @@ if (!cmdArgs('noInterface')) {
         'config',
         'database',
         'scores',
+        'solarScores',
         {routeFile: '../routes/visu-redirect', route: '/'}
     ];
     if(!(cmdArgs('noDevices'))) {
