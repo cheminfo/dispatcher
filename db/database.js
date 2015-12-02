@@ -845,7 +845,7 @@ function getWrappedDB(id, options, readOnly) {
         }
         var db = new sqlite.cached.Database(dbloc, function(error) {
             if(error) {
-                debug('Error occured while opening database ' + dbloc);
+                console.error('Error occured while opening database ' + dbloc);
             }
         });
         pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
