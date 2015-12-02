@@ -18,7 +18,8 @@ var queryValidator = [
     {name: 'limit', required: false},
     {name: 'mean', required: false},
     {name: 'epochFrom', required: false},
-    {name: 'epochTo', required: false}
+    {name: 'epochTo', required: false},
+    {name: 'order', required: false}
 ];
 
 var deviceQueryValidator = _.flatten([queryValidator, {name: 'device', required: true}]);
