@@ -32,6 +32,7 @@ function databaseOptions(res, options) {
     options.fields = options.fields.split(',');
     options.epochFrom = res.locals.parameters.epochFrom;
     options.epochTo = res.locals.parameters.epochTo;
+    options.order = res.locals.parameters.order;
 }
 
 function filterResult(res, result, deviceId) {
