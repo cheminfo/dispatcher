@@ -60,6 +60,7 @@ router.get('/:device', middleware.validateParameters(
     if(device) {
         options.dir = device.sqlite.dir
     }
+
     databaseOptions(res, options);
 
     database.get(deviceId, options).then(function (result) {
@@ -141,14 +142,20 @@ router.put('/:device',
     middleware.checkDevice,
     function (req, res) {
         try {
-            var options = (res.locals.device && res.locals.device.sqlite) || {};
+            var deviceId = res.locals.parameters.device;
+            var device = config.findDeviceById(deviceId);
+            var options = {};
+            if(device) {
+                options.dir = device.sqlite.dir;
+            }
+
             var entry = req.body;
             if (Array.isArray(entry)) {
                 entry.forEach(function (e) {
-                    e.deviceId = res.locals.deviceId;
+                    e.deviceId = deviceId;
                 });
             } else {
-                entry.deviceId = res.locals.deviceId;
+                entry.deviceId = deviceId;
             }
 
             entry = filter.deepenEntries(entry);
@@ -169,8 +176,14 @@ router.get('/last/:device',
     middleware.validateParameters(deviceQueryValidator),
     middleware.checkDevice,
     function (req, res) {
-        var options = (res.locals.device && res.locals.device.sqlite) || {};
-        database.last(res.locals.parameters.device, options).then(function (data) {
+        var options = {};
+        var deviceId = res.locals.parameters.device;
+        var device = config.findDeviceById(deviceId);
+        if(device) {
+            options.dir = device.sqlite.dir
+        }
+
+        database.last(deviceId, options).then(function (data) {
             return res.status(200).json(data);
         }).catch(function (err) {
             debug('database error (get last): ' + err);
