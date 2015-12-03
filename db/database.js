@@ -21,7 +21,6 @@ exports = module.exports = {
     save: save,
     saveFast: saveFast,
     get: get,
-    query: query,
     getLastId: getLastId,
     last: last
 };
@@ -615,60 +614,61 @@ function saveFast(entries, options) {
     if (entries.length === 0) return Promise.resolve();
 
     var deviceId = entries[0].deviceId;
-    var wdb = getWrappedDB(deviceId, options);
 
-    // max records
-    var names = _.pluck(means, 'name');
-    var maxRecords = [];
-    for (var i = 0; i < names.length; i++) {
-        if (options.maxRecords[names[i]])
-            maxRecords.push(options.maxRecords[names[i]])
-    }
-
-    var hasId = entries[0].id !== undefined;
-    var createTablesFn = hasId ? createTables1 : createTables;
-
-    function timerStep(msg) {
-        return function (arg) {
-            debug(msg + ' ' + timer.step('ms'));
-            return arg;
+    return getWrappedDB(deviceId, options).then(function(wdb) {
+        // max records
+        var names = _.pluck(means, 'name');
+        var maxRecords = [];
+        for (var i = 0; i < names.length; i++) {
+            if (options.maxRecords[names[i]])
+                maxRecords.push(options.maxRecords[names[i]])
         }
-    }
 
-    var res = Promise.resolve().then(timerStep('before write entries')).then(writeEntries());
+        var hasId = entries[0].id !== undefined;
+        var createTablesFn = hasId ? createTables1 : createTables;
 
-    if (saveCount % cleanPeriod === 0) {
-        res = res.then(getAllEntryIds(wdb)).then(timerStep('get all entry ids'))
-            .then(keepRecentIds(wdb, options.maxRecords.entry)).then(timerStep('keep recent ids'))
-            .then(getAllMeanEpoch(wdb, maxRecords)).then(timerStep('get all mean epoch'))
-            .then(keepRecentMeanEpoch(wdb, 5)).then(timerStep('keep recent mean epoch'));
-    }
-    saveCount += 1;
+        function timerStep(msg) {
+            return function (arg) {
+                debug(msg + ' ' + timer.step('ms'));
+                return arg;
+            }
+        }
 
-    res.catch(logError);
+        var res = Promise.resolve().then(timerStep('before write entries')).then(writeEntries());
 
-    function writeEntries(ok) {
-        return function () {
-            return Promise.resolve().then(insertEntries(wdb, entries, hasId)).then(timerStep('save entries'))
-                .then(continueEntries, ok ? null : adminDB);
-        };
-    }
+        if (saveCount % cleanPeriod === 0) {
+            res = res.then(getAllEntryIds(wdb)).then(timerStep('get all entry ids'))
+                .then(keepRecentIds(wdb, options.maxRecords.entry)).then(timerStep('keep recent ids'))
+                .then(getAllMeanEpoch(wdb, maxRecords)).then(timerStep('get all mean epoch'))
+                .then(keepRecentMeanEpoch(wdb, 5)).then(timerStep('keep recent mean epoch'));
+        }
+        saveCount += 1;
 
-    function continueEntries() {
-        return Promise.resolve().then(getEntriesMean(wdb, entries)).then(timerStep('get mean entries'))
-            .then(insertEntriesMean(wdb, entries)).then(timerStep('insert mean entries'));
-    }
+        res.catch(logError);
 
-    function adminDB() {
-        debug('admin DB');
-        return Promise.resolve().then(createTablesFn(wdb)).then(timerStep('create tables'))
-            .then(createIndexes(wdb)).then(timerStep('create indexes'))
-            .then(getTableInfo(wdb)).then(timerStep('get table info'))
-            .then(createMissingColumns(wdb, _.keys(entries[0].parameters))).then(timerStep('create missing columns'))
-            .then(writeEntries(true));
-    }
+        function writeEntries(ok) {
+            return function () {
+                return Promise.resolve().then(insertEntries(wdb, entries, hasId)).then(timerStep('save entries'))
+                    .then(continueEntries, ok ? null : adminDB);
+            };
+        }
 
-    return res;
+        function continueEntries() {
+            return Promise.resolve().then(getEntriesMean(wdb, entries)).then(timerStep('get mean entries'))
+                .then(insertEntriesMean(wdb, entries)).then(timerStep('insert mean entries'));
+        }
+
+        function adminDB() {
+            debug('admin DB');
+            return Promise.resolve().then(createTablesFn(wdb)).then(timerStep('create tables'))
+                .then(createIndexes(wdb)).then(timerStep('create indexes'))
+                .then(getTableInfo(wdb)).then(timerStep('get table info'))
+                .then(createMissingColumns(wdb, _.keys(entries[0].parameters))).then(timerStep('create missing columns'))
+                .then(writeEntries(true));
+        }
+
+        return res;
+    });
 }
 
 function save(entry, options) {
@@ -685,70 +685,70 @@ function save(entry, options) {
         debug('Not saving because small epoch');
         return Promise.resolve();
     }
-    var wdb = getWrappedDB(entry.deviceId, options);
 
-
-    if (!options.maxRecords) {
-        return Promise.reject(new Error('maxRecords option is mandatory'));
-    }
-    var names = _.pluck(means, 'name');
-    var maxRecords = [];
-    for (var i = 0; i < names.length; i++) {
-        if (options.maxRecords[names[i]])
-            maxRecords.push(options.maxRecords[names[i]])
-    }
-
-    if (entry.id) {
-        debug('Trying to insert an entry with an id\n' + JSON.stringify(entry));
-    }
-    var createTablesFn = entry.id ? createTables1 : createTables;
-    var insertEntryFn = entry.id ? insertEntry1 : insertEntry;
-
-
-    function timerStep(msg) {
-        return function (arg) {
-            debug(msg + ' ' + timer.step('ms'));
-            return arg;
+    return getWrappedDB(entry.deviceId, options).then(function(wdb) {
+        if (!options.maxRecords) {
+            return Promise.reject(new Error('maxRecords option is mandatory'));
         }
-    }
+        var names = _.pluck(means, 'name');
+        var maxRecords = [];
+        for (var i = 0; i < names.length; i++) {
+            if (options.maxRecords[names[i]])
+                maxRecords.push(options.maxRecords[names[i]])
+        }
 
-    var timer = new Timer();
-    timer.start();
+        if (entry.id) {
+            debug('Trying to insert an entry with an id\n' + JSON.stringify(entry));
+        }
+        var createTablesFn = entry.id ? createTables1 : createTables;
+        var insertEntryFn = entry.id ? insertEntry1 : insertEntry;
 
-    var res = Promise.resolve().then(writeEntry());
 
-    if (saveCount % cleanPeriod === 0) {
-        res = res.then(getAllEntryIds(wdb)).then(timerStep('get all entry ids'))
-            .then(keepRecentIds(wdb, options.maxRecords.entry)).then(timerStep('keep recent ids'))
-            .then(getAllMeanEpoch(wdb, maxRecords)).then(timerStep('get all mean epoch'))
-            .then(keepRecentMeanEpoch(wdb, 5)).then(timerStep('keep recent mean epoch'));
-    }
-    saveCount += 1;
+        function timerStep(msg) {
+            return function (arg) {
+                debug(msg + ' ' + timer.step('ms'));
+                return arg;
+            }
+        }
 
-    res.catch(logError);
+        var timer = new Timer();
+        timer.start();
 
-    function writeEntry(ok) {
-        return function () {
-            return Promise.resolve().then(insertEntryFn(wdb, entry)).then(continueEntry, ok ? null : adminDB);
-        };
-    }
+        var res = Promise.resolve().then(writeEntry());
 
-    function continueEntry() {
-        timerStep('insert entry');
-        return Promise.resolve().then(getEntryMean(wdb, entry)).then(timerStep('get mean entry'))
-            .then(insertEntryMean(wdb, entry)).then(timerStep('insert mean entry'));
-    }
+        if (saveCount % cleanPeriod === 0) {
+            res = res.then(getAllEntryIds(wdb)).then(timerStep('get all entry ids'))
+                .then(keepRecentIds(wdb, options.maxRecords.entry)).then(timerStep('keep recent ids'))
+                .then(getAllMeanEpoch(wdb, maxRecords)).then(timerStep('get all mean epoch'))
+                .then(keepRecentMeanEpoch(wdb, 5)).then(timerStep('keep recent mean epoch'));
+        }
+        saveCount += 1;
 
-    function adminDB() {
-        debug('insert failed, database administration');
-        return Promise.resolve().then(createTablesFn(wdb)).then(timerStep('create tables'))
-            .then(createIndexes(wdb)).then(timerStep('create indexes'))
-            .then(getTableInfo(wdb)).then(timerStep('get table info'))
-            .then(createMissingColumns(wdb, _.keys(entry.parameters))).then(timerStep('create missing columns'))
-            .then(writeEntry(true));
-    }
+        res.catch(logError);
 
-    return res;
+        function writeEntry(ok) {
+            return function () {
+                return Promise.resolve().then(insertEntryFn(wdb, entry)).then(continueEntry, ok ? null : adminDB);
+            };
+        }
+
+        function continueEntry() {
+            timerStep('insert entry');
+            return Promise.resolve().then(getEntryMean(wdb, entry)).then(timerStep('get mean entry'))
+                .then(insertEntryMean(wdb, entry)).then(timerStep('insert mean entry'));
+        }
+
+        function adminDB() {
+            debug('insert failed, database administration');
+            return Promise.resolve().then(createTablesFn(wdb)).then(timerStep('create tables'))
+                .then(createIndexes(wdb)).then(timerStep('create indexes'))
+                .then(getTableInfo(wdb)).then(timerStep('get table info'))
+                .then(createMissingColumns(wdb, _.keys(entry.parameters))).then(timerStep('create missing columns'))
+                .then(writeEntry(true));
+        }
+
+        return res;
+    });
 }
 
 
@@ -762,13 +762,12 @@ function saveEntryArray(entries, options) {
                 return save(entries[i], options);
             });
         })(i)
-
     }
     return promise;
 }
 
 function get(deviceId, options) {
-    var prom = Promise.resolve().then(function () {
+    var prom = getWrappedDB(deviceId, options, true).then(function(wdb) {
         if (!deviceId) {
             throw new Error('Invalid device id');
         }
@@ -781,7 +780,6 @@ function get(deviceId, options) {
 
         // Last argument for read-only mode
         // Will throw if database file does not exist
-        var wdb = getWrappedDB(deviceId, options, true);
         var fn;
         if (options.mean && options.mean !== 'entry') fn = getMeanEntries(wdb, options);
         else fn = getEntries(wdb, options);
@@ -789,15 +787,16 @@ function get(deviceId, options) {
         return Promise.resolve()
             .then(fn);
     });
+
     prom.catch(logError);
     return prom;
 }
 
 function last(id, options) {
-    var prom = Promise.resolve().then(function() {
-        var wdb = getWrappedDB(id, options, true);
-        return Promise.resolve().then(getLastEntry(wdb));
+    var prom = getWrappedDB(id, options, true).then(function(wdb) {
+         return Promise.resolve().then(getLastEntry(wdb));
     });
+
     prom.catch(logError);
     return prom;
 }
@@ -827,61 +826,53 @@ function filterOut(out) {
 }
 
 function getWrappedDB(id, options, readOnly) {
-    if (!id) {
-        throw new Error('Invalid device id');
-    }
-    options = options || {};
-    _.defaults(options, defaultSqliteOptions);
-
-    var file = sanitizeFilename(id + '.sqlite');
-    var dbloc = path.join(options.dir, file);
-
-    var pdb = dbs[id];
-    if (!pdb) {
-        debug('opening database', dbloc);
-        if (readOnly && !fs.existsSync(dbloc)) {
-            debug('read only and database does not exist');
-            throw new Error('Database does not exist');
+    return new Promise(function(resolve, reject) {
+        if (!id) {
+            throw new Error('Invalid device id');
         }
-        var db = new sqlite.cached.Database(dbloc, function(error) {
-            if(error) {
-                console.error('Error occured while opening database ' + dbloc);
-                console.error(error);
-            }
-        });
-        pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
-        pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
-        dbs[id] = pdb;
-    }
-    return pdb;
-}
+        options = options || {};
+        _.defaults(options, defaultSqliteOptions);
 
-function query(id) {
-    var prom = Promise.resolve().then(function () {
-        var wdb = getWrappedDB(id);
-        [].shift.apply(arguments);
-        return wdb.all.apply(wdb, arguments);
+        var file = sanitizeFilename(id + '.sqlite');
+        var dbloc = path.join(options.dir, file);
+
+        var pdb = dbs[id];
+        if (!pdb) {
+            debug('opening database', dbloc);
+            if (readOnly && !fs.existsSync(dbloc)) {
+                debug('read only and database does not exist');
+                return reject(new Error('Database does not exist'));
+            }
+            var db = new sqlite.cached.Database(dbloc, function(error) {
+                if(error) {
+                    console.error('Error occured while opening database ' + dbloc);
+                    console.error(error);
+                    return reject(error);
+                }
+
+                pdb = new PromiseWrapper(db, ['all', 'run', 'get']);
+                pdb.run('PRAGMA synchronous = OFF; PRAGMA journal_mode = MEMORY;');
+                dbs[id] = pdb;
+                return resolve(pdb);
+            });
+        } else {
+            return resolve(pdb);
+        }
+
     });
-    prom.catch(logError);
-    return prom;
 }
 
 function getLastId(deviceId, options) {
-    var prom = Promise.resolve().then(function () {
-        var wdb = getWrappedDB(deviceId, options, true);
-        return Promise.resolve()
-            .then(getLastEntryId(wdb))
-            .then(function (res) {
-                return res.id;
-            });
+    return getWrappedDB(deviceId, options, true).then(function(wdb) {
+        return Promise.resolve().then(getLastEntryId(wdb)).then(function (res) {
+            return res.id;
+        });
     });
-    return prom;
 }
 
 function drop(deviceId, options) {
-    var prom = Promise.resolve().then(function () {
-        debug('drop table ' + deviceId);
-        var wdb = getWrappedDB(deviceId, options);
+    debug('drop table ' + deviceId);
+    var prom = getWrappedDB(deviceId, options).then(function(wdb) {
         var queries = means.map(function (v) {
             var q = 'drop table if exists ' + v.name + ';';
             return wdb.run(q);
@@ -889,6 +880,7 @@ function drop(deviceId, options) {
         queries.push(wdb.run('drop table if exists entry;'));
         return Promise.all(queries);
     });
+
     prom.catch(logError);
     return prom;
 }
