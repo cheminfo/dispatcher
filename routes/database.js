@@ -56,7 +56,7 @@ router.get('/:device', middleware.validateParameters(
     ])), function (req, res) {
     var deviceId = res.locals.parameters.device;
     var options = {
-        dir: res.locals.device && res.locals.device.sqlite && res.locals.device.sqlite
+        dir: res.locals.device && res.locals.device.sqlite && res.locals.device.sqlite.dir
     };
     databaseOptions(res, options);
 
