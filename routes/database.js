@@ -55,7 +55,9 @@ router.get('/:device', middleware.validateParameters(
         {name: 'filter', required: false}
     ])), function (req, res) {
     var deviceId = res.locals.parameters.device;
-    var options = (res.locals.device && res.locals.device.sqlite) || {};
+    var options = {
+        dir: res.locals.device && res.locals.device.sqlite && res.locals.device.sqlite
+    };
     databaseOptions(res, options);
 
     database.get(deviceId, options).then(function (result) {
@@ -77,7 +79,9 @@ router.get('/group/:group', middleware.validateParameters(
     var devices = config.findDevicesByGroup(res.locals.parameters.group);
     var prom = [];
     for (let i = 0; i < devices.length; i++) {
-        let options = (res.locals.device && res.locals.device.sqlite) || {};
+        let options = {
+            dir: res.locals.device && res.locals.device.sqlite && res.locals.device.sqlite
+        };
         databaseOptions(res, options);
         var p = database.get(devices[i].id, options).then(function (result) {
             return filterResult(res, result, devices[i].id);
