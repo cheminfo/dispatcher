@@ -80,7 +80,7 @@ router.get('/group/:group', middleware.validateParameters(
     var prom = [];
     for (let i = 0; i < devices.length; i++) {
         let options = {
-            dir: res.locals.device && res.locals.device.sqlite && res.locals.device.sqlite
+            dir: res.locals.device && res.locals.device.sqlite && res.locals.device.sqlite.dir
         };
         databaseOptions(res, options);
         var p = database.get(devices[i].id, options).then(function (result) {
