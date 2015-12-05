@@ -141,6 +141,7 @@ router.put('/:device',
     middleware.validateParameters(deviceQueryValidator),
     middleware.checkDevice,
     function (req, res) {
+        var start = Date.now();
         try {
             var deviceId = res.locals.parameters.device;
             var device = config.findDeviceById(deviceId);
@@ -160,6 +161,7 @@ router.put('/:device',
 
             entry = filter.deepenEntries(entry);
             database.save(entry, options).then(function () {
+                debug('PUT finished in ' + (Date.now() - start) + 'ms');
                 return res.status(200).json({ok: true});
             }).catch(function (err) {
                 debug('database error (save)', err);
